@@ -1,0 +1,2462 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenEsi v2.0 Enigma2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-20 15:33+0200\n"
+"PO-Revision-Date: 2015-10-28 08:56+0000\n"
+"Last-Translator: OpenEsi-Image <openesi@openesi.eu>\n"
+"eurosat/language/fy_NL/)\n"
+"Language: fy_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.10\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: item;text;text=\n"
+"X-Poedit-SearchPath-0: /Users/eleonor/Documents/Sorgenti/enigma2\n"
+"X-Poedit-SearchPath-1: /Users/eleonor/Documents/Sorgenti/multiboot-plugin\n"
+"X-Poedit-SearchPath-2: /Users/eleonor/Documents/Sorgenti/PoEditXml\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid "%H:%M"
+msgstr "%H:%M"
+
+msgid "%d min"
+msgstr "%d min"
+
+msgid "%d.%B %Y"
+msgstr "%d.%B %Y"
+
+msgid "%s (%s)\n"
+msgstr "%s (%s)\n"
+
+msgid "(empty)"
+msgstr "(leech)"
+
+msgid "(show optional DVD audio menu)"
+msgstr "(opsje DVD lûd menu sjen litte)"
+
+msgid "* Only available if more than one interface is active."
+msgstr "* Allinne beskikber by meer dan ien aktieve ynterfaces"
+
+msgid "1.0"
+msgstr "1.0"
+
+msgid "1.1"
+msgstr "1.1"
+
+msgid "1.2"
+msgstr "1.2"
+
+msgid "12V output"
+msgstr "12V útgong"
+
+msgid "13 V"
+msgstr "13 V"
+
+msgid "16:10"
+msgstr "16:10"
+
+msgid "16:10 Letterbox"
+msgstr "16:10 Letterbox"
+
+msgid "16:10 PanScan"
+msgstr "16:10 PanScan"
+
+msgid "16:9"
+msgstr "16:9"
+
+msgid "16:9 Letterbox"
+msgstr "16:9 Letterbox"
+
+msgid "16:9 always"
+msgstr "altiid 16:9"
+
+msgid "18 V"
+msgstr "18 V"
+
+msgid "4:3"
+msgstr "4:3"
+
+msgid "4:3 Letterbox"
+msgstr "4:3 Letterbox"
+
+msgid "4:3 PanScan"
+msgstr "4:3 PanScan"
+
+msgid "<unknown>"
+msgstr "<net bekend>"
+
+msgid "??"
+msgstr "??"
+
+msgid "A"
+msgstr "A"
+
+msgid ""
+"A configuration file (%s) was modified since Installation.\n"
+"Do you want to keep your version?"
+msgstr ""
+"In konfiguraasje triem (%s) wie feroare nei ynstalaasje.\n"
+"Wolle jo jo ferzje hâlde ?"
+
+msgid ""
+"A recording is currently running.\n"
+"What do you want to do?"
+msgstr ""
+"In opnimmen is dwaande.\n"
+"Wat wolle jo dwaan ?"
+
+msgid ""
+"A recording is currently running. Please stop the recording before trying to "
+"configure the positioner."
+msgstr ""
+"Opnimmen is dwaande. Stopje it opnimmen earst foar jo de rotor-ynstellingen "
+"wizigje."
+
+msgid "A required tool (%s) was not found."
+msgstr "In benedicht programma (%s) wie net fûn"
+
+msgid ""
+"A timer failed to record!\n"
+"Disable TV and try again?\n"
+msgstr ""
+"In tiidsbarren koe net opnimme!\n"
+"TV utskeakelje en opnei besykje ?\n"
+
+msgid "About"
+msgstr "Oer"
+
+msgid "About..."
+msgstr "Oer...."
+
+msgid "Activate Picture in Picture"
+msgstr "PIP ynskeakelje"
+
+msgid "Activate network settings"
+msgstr "Netwurk ynstellingen aktief meitsje"
+
+msgid "Adapter settings"
+msgstr "Adapter ynstellingen"
+
+msgid "Add"
+msgstr "Tafoegje"
+
+msgid "Add a mark"
+msgstr "In merker tafoegje"
+
+msgid "Add a new title"
+msgstr "In nije titel tafoegje"
+
+msgid "Add timer"
+msgstr "In tiidsbarren tafoegje"
+
+msgid "Add title"
+msgstr "In titel tafoegje"
+
+msgid "Add to bouquet"
+msgstr "Oan in boeket tafoegje"
+
+msgid "Add to favourites"
+msgstr "Oan favorieten tafoegje"
+
+msgid ""
+"Adjust the color settings so that all the color shades are distinguishable, "
+"but appear as saturated as possible. If you are happy with the result, press "
+"OK to close the video fine-tuning, or use the number keys to select other "
+"test screens."
+msgstr ""
+"Feroarje de ynstellingen sa, da't alle skaad fan 'e kleur fuort is, mar wol "
+"fol fan kleur binne. Ot jo lokkig binne mei it einresultaat, druk OK om "
+"fideo ôfstellen ôf te slúten, of brûk de nûmmer toetsen foar in oar test "
+"skerm."
+
+msgid "After event"
+msgstr "Nei it barren"
+
+msgid "Album"
+msgstr "Album"
+
+msgid "All"
+msgstr "Alles"
+
+msgid "Alpha"
+msgstr "Alpha"
+
+msgid "Alternative services tuner priority"
+msgstr "Alternatief kanaal tuner prioriteit"
+
+msgid "An empty filename is illegal."
+msgstr "Gjin triemnamme is net tastien"
+
+msgid "Arabic"
+msgstr "Arabysk"
+
+msgid ""
+"Are you sure you want to activate this network configuration?\n"
+"\n"
+msgstr ""
+"Wolle jo wier dizze netwurk konfiguraasje aktief meitsje ?\n"
+"\n"
+
+msgid ""
+"Are you sure you want to restart your network interfaces?\n"
+"\n"
+msgstr ""
+"Wolle jo de netwurk interfaces nij starte?\n"
+"\n"
+
+msgid "Artist"
+msgstr "Artyst"
+
+msgid "Ask user"
+msgstr "freechje gebrûker"
+
+msgid "Authoring mode"
+msgstr "Authentikaasje troch"
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "Auto chapter split every ? minutes (0=never)"
+msgstr "Haadstik automatysk eltse ? minuten splitse (0=nea)"
+
+msgid "Auto scart switching"
+msgstr "Auto scart skeakelje"
+
+msgid "Automatic"
+msgstr "Automatysk"
+
+msgid "Automatic Scan"
+msgstr "Automatysk sykjen"
+
+msgid "Available format variables"
+msgstr "Beskikbere variabele formaten"
+
+msgid "B"
+msgstr "B"
+
+msgid "Back"
+msgstr "Werom"
+
+msgid "Background"
+msgstr "Eftergrûn"
+
+msgid "Band"
+msgstr "Bân"
+
+msgid "Bandwidth"
+msgstr "Bânbridte"
+
+msgid "Begin time"
+msgstr "Begjin tiid"
+
+msgid "Behavior of 'pause' when paused"
+msgstr "Gedrach fan 'pause' yn pause mode"
+
+msgid "Behavior of 0 key in PiP-mode"
+msgstr "Gedrach fan 0 toets yn PiP mode"
+
+msgid "Behavior when a movie is started"
+msgstr "Gedrach wannear in film start is"
+
+msgid "Behavior when a movie is stopped"
+msgstr "Gedrach wannear in film stoppe is"
+
+msgid "Behavior when a movie reaches the end"
+msgstr "Gedrach wannear in film bijna op syn ein is."
+
+msgid "Bookmarks"
+msgstr "Boekmerkers"
+
+msgid "Brightness"
+msgstr "Helderens"
+
+msgid "Burn DVD"
+msgstr "In DVD brâne"
+
+msgid "Bus: "
+msgstr "Bus: "
+
+msgid "C-Band"
+msgstr "C-Bân"
+
+msgid "CVBS"
+msgstr "CVBS"
+
+msgid "Cable"
+msgstr "Kabel"
+
+msgid "Cancel"
+msgstr "Ôfbrekke"
+
+msgid "Capacity: "
+msgstr "Skiif-grutte:"
+
+msgid "Change bouquets in quickzap"
+msgstr "Feroarje fan boeket yn quickzap"
+
+msgid "Change pin code"
+msgstr "Feroarje pinkode"
+
+msgid "Channel"
+msgstr "Kanaal"
+
+msgid "Channel:"
+msgstr "Kanaal:"
+
+msgid "Chap."
+msgstr "Haads."
+
+msgid "Chapter"
+msgstr "Haadstik"
+
+msgid "Chapter:"
+msgstr "Haadstik:"
+
+msgid "Check"
+msgstr "Neisjen"
+
+msgid "Cleanup"
+msgstr "Opskjinje"
+
+msgid "Clear before scan"
+msgstr "Wiskje foar sykjen ?"
+
+msgid "Clear log"
+msgstr "Log wiskje"
+
+msgid "Close"
+msgstr "Slúte"
+
+msgid "Coderate HP"
+msgstr "Kode faasje HP"
+
+msgid "Coderate LP"
+msgstr "Kode faasje LP"
+
+msgid "Collection name"
+msgstr "Kolleksje namme"
+
+msgid "Collection settings"
+msgstr "Kolleksje ynstellingen"
+
+msgid "Command order"
+msgstr "Kommando folgoarde"
+
+msgid "Common Interface"
+msgstr "Common Interface"
+
+msgid "Complete"
+msgstr "Kompleet"
+
+msgid "Complex (allows mixing audio tracks and aspects)"
+msgstr "Komplex(lud spoor & aspekt mixen tastien)"
+
+msgid "Configuring"
+msgstr "Oan it ynstellen"
+
+msgid "Conflicting timer"
+msgstr "Tiidsbarren konflikt"
+
+msgid "Connected to"
+msgstr "Ferbûn mei"
+
+msgid "Constellation"
+msgstr "Himmel"
+
+msgid "Content does not fit on DVD!"
+msgstr "Ynhald past net op in DVD !"
+
+msgid "Continue playing"
+msgstr "Kontinu spielje"
+
+msgid "Contrast"
+msgstr "Kontrast"
+
+msgid "Create DVD-ISO"
+msgstr "Meitsje DVD-ISO"
+
+msgid "Creating directory %s failed."
+msgstr "Meitjse fan map %s is mislearre"
+
+msgid "Croatian"
+msgstr "Kroatysk"
+
+msgid "Current settings:"
+msgstr "Hjoeddeiske ynstellingen:"
+
+msgid "Current version:"
+msgstr "Hjoeddeiske ferzje :"
+
+msgid "Customize"
+msgstr "Oanpasse"
+
+msgid "Cut"
+msgstr "Knip"
+
+msgid "Cutlist editor..."
+msgstr "Kniplyst bewurker..."
+
+msgid "Czech"
+msgstr "Tsjechysk"
+
+msgid "DHCP"
+msgstr "DHCP"
+
+msgid "DVB-S"
+msgstr "DVB-S"
+
+msgid "DVB-S2"
+msgstr "DVB-S2"
+
+msgid "Danish"
+msgstr "Deensk"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Deep Standby"
+msgstr "Sliip stand"
+
+msgid "Delete"
+msgstr "Ferwiderje"
+
+msgid "Delete entry"
+msgstr "Ferwiderje ynfier"
+
+msgid "Delete failed!"
+msgstr "Ferwiderjen mislearre!"
+
+msgid "Description"
+msgstr "Beskriuwing"
+
+msgid "Detected NIMs:"
+msgstr "Fûne Tuners:"
+
+msgid "DiSEqC"
+msgstr "DiSEqC"
+
+msgid "DiSEqC A/B"
+msgstr "DiSEqC A/B"
+
+msgid "DiSEqC A/B/C/D"
+msgstr "DiSEqC A/B/C/D"
+
+msgid "DiSEqC mode"
+msgstr "DiSEqC-Mode"
+
+msgid "Direct playback of linked titles without menu"
+msgstr "Direkt ôfspielje fan keppele titels sûnder menu"
+
+msgid "Disable"
+msgstr "Utskeakelje"
+
+msgid "Disable Picture in Picture"
+msgstr "PIP utskeakelje"
+
+msgid "Disabled"
+msgstr "Utskeakele"
+
+msgid "Display 16:9 content as"
+msgstr "16:9 ynhâld sjen litte as"
+
+msgid "Display 4:3 content as"
+msgstr "4:3 ynhâld sjen litte as"
+
+msgid ""
+"Do you really want to check the filesystem?\n"
+"This could take a long time!"
+msgstr "Wolle jo echt it bestânsysteem neisjen ?<br> Dit kin lang duorje !"
+
+msgid "Do you really want to delete %s?"
+msgstr "Wolle jo wier %s ferwiderje?"
+
+msgid "Do you really want to download the plugin \"%s\"?"
+msgstr "Wolle jo wier de plugin \"%s\" binnenhelje ?"
+
+msgid "Do you really want to remove directory %s from the disk?"
+msgstr "Wolle jo echt map %s ferwiderje van skiif ?"
+
+msgid "Do you really want to remove the plugin \"%s\"?"
+msgstr "Wolle jo wier de plugin \"%s\" ferwiderje ?"
+
+msgid "Do you really want to remove your bookmark of %s?"
+msgstr "Wolle jo echt boekmerk fan %s ferwiderje ?"
+
+msgid "Do you want to burn this collection to DVD medium?"
+msgstr "Wolle jo dizze kolleksje nei DVD brâne ?"
+
+msgid "Do you want to do a service scan?"
+msgstr "Wolle jo no nei kanalen sykje ?"
+
+msgid "Do you want to do another manual service scan?"
+msgstr "Wolle jo opnei mei de hân sykje ?"
+
+msgid "Do you want to play DVD in drive?"
+msgstr "Wolle jo de DVD ôfspielje ?"
+
+msgid "Do you want to preview this DVD before burning?"
+msgstr "Wolle jo de DVD besjen foar it brânen ?"
+
+msgid "Do you want to restore your settings?"
+msgstr "Wolle jo jo ynstellingen wêrom sette ?"
+
+msgid "Do you want to resume this playback?"
+msgstr "Wolle jo dit opnimmen fjierder ôfspielje ?"
+
+msgid "Don't stop current event but disable coming events"
+msgstr "Dit barren net stopje, maar oankommende barren útskeakelje"
+
+msgid "Download"
+msgstr "Binnenhelje"
+
+msgid "Downloading"
+msgstr "Binnenheljen fan"
+
+msgid "Downloading plugin information. Please wait..."
+msgstr "Binnenheljen fan ynstekker ynformaasje..."
+
+msgid "Dutch"
+msgstr "Nederlansk"
+
+msgid "E"
+msgstr "E"
+
+msgid "ERROR - failed to scan (%s)!"
+msgstr "Flater - Sykjen mislearre (%s)!"
+
+msgid "East"
+msgstr "East"
+
+msgid "Edit"
+msgstr "Bewurkje"
+
+msgid "Edit DNS"
+msgstr "Wyzigje de DNS"
+
+msgid "Edit chapters of current title"
+msgstr "Bewurkje haadstik fan dizze titel"
+
+msgid "Edit settings"
+msgstr "Wyzigje ynstellingen"
+
+msgid "Edit title"
+msgstr "Bewukje titel"
+
+msgid "Electronic Program Guide"
+msgstr "Elektroniske Programma Gids"
+
+msgid "Enable"
+msgstr "Ynskeakelje"
+
+msgid "Enable 5V for active antenna"
+msgstr "5V ynskeakelje foar hjoeddeiske antenne"
+
+msgid "Enable multiple bouquets"
+msgstr "Mear boeketten sjen litte"
+
+msgid "Enabled"
+msgstr "Ynskeakele"
+
+msgid "Encryption"
+msgstr "Encryption"
+
+msgid "End time"
+msgstr "Eintiid"
+
+msgid "English"
+msgstr "Engelsk"
+
+msgid "Enter main menu..."
+msgstr "Nei it haadmenu..."
+
+msgid "Enter the service pin"
+msgstr "Fier de service pin yn"
+
+msgid "Error"
+msgstr "Flater"
+
+msgid "Error executing plugin"
+msgstr "Flater by útfieren fan ynstekker"
+
+msgid ""
+"Error: %s\n"
+"Retry?"
+msgstr ""
+"Flater: %s\n"
+"Opnei ?"
+
+msgid "Execution finished!!"
+msgstr "Utfiering klear.."
+
+msgid "Exif"
+msgstr "Exif"
+
+msgid "Exit"
+msgstr "ofslúte"
+
+msgid "Exit editor"
+msgstr "Bewurker ofslúte"
+
+msgid "Exit the wizard"
+msgstr "De gucheler ofslúte"
+
+msgid "Expert"
+msgstr "Avansearre"
+
+msgid "Extended Networksetup Plugin..."
+msgstr "Utwreide Netwurkynstellingen Ynstekker..."
+
+msgid "Extended Setup..."
+msgstr "Utwreide Ynstellingen..."
+
+msgid "Extensions"
+msgstr "Utwreidingen"
+
+msgid "FEC"
+msgstr "FEC"
+
+msgid "Factory reset"
+msgstr "Fabryks ynstellingen"
+
+msgid "Failed"
+msgstr "mislearre"
+
+msgid "Fast"
+msgstr "Rap"
+
+msgid "Fast DiSEqC"
+msgstr "Rappe DiSEqC"
+
+msgid "Fast epoch"
+msgstr "Snelle epoch"
+
+msgid "Favourites"
+msgstr "Favoryten"
+
+msgid "Finetune"
+msgstr "Fyn ôfstemme"
+
+msgid "Finished"
+msgstr "Ofrûn"
+
+msgid "Finished configuring your network"
+msgstr "Klear mei ynstellen fan it netwurk"
+
+msgid "Finished restarting your network"
+msgstr "Klear mei it opnei starten fan it netwurk"
+
+msgid "Finnish"
+msgstr "Finsk"
+
+msgid "Flash"
+msgstr "Flash"
+
+msgid "Flashing failed"
+msgstr "Flashen misljearre"
+
+msgid "Format"
+msgstr "Formaat"
+
+msgid "Frame size in full view"
+msgstr "gedielte yn folslein skerm"
+
+msgid "French"
+msgstr "Frans"
+
+msgid "Frequency"
+msgstr "Frekwinsje"
+
+msgid "Frequency bands"
+msgstr "Frekwinsje bânnen"
+
+msgid "Frequency scan step size(khz)"
+msgstr "Frekwinsje sykjen stap grutte(kHz)"
+
+msgid "Frequency steps"
+msgstr "Oantal Frekwinsje stappen"
+
+msgid "Fri"
+msgstr "Fre"
+
+msgid "Friday"
+msgstr "Freed"
+
+msgid "Gateway"
+msgstr "Gateway"
+
+msgid "Genre"
+msgstr "Sjenre"
+
+msgid "German"
+msgstr "Dúts"
+
+msgid "Getting plugin information. Please wait..."
+msgstr "Binnenhelje fan ynstekker ynformaasje...."
+
+msgid "Goto 0"
+msgstr "Gjin nei 0"
+
+msgid "Goto position"
+msgstr "Gjin nei posysje"
+
+msgid "Greek"
+msgstr "Gryks"
+
+msgid "How many minutes do you want to record?"
+msgstr "Hoe folle minuten wolle jo opnimme?"
+
+msgid "Hungarian"
+msgstr "Hongaarsk"
+
+msgid "ISO file is too large for this filesystem!"
+msgstr "ISO triem is te grut foar dit bestânsysteem!"
+
+msgid "ISO path"
+msgstr "ISO paad"
+
+msgid ""
+"If you see this, something is wrong with\n"
+"your scart connection. Press OK to return."
+msgstr ""
+"Ot jo dit leze, is der iets raar skeef mei\n"
+"jo skart oansluting. Druk OK om werom te gean."
+
+msgid ""
+"If your TV has a brightness or contrast enhancement, disable it. If there is "
+"something called \"dynamic\", set it to standard. Adjust the backlight level "
+"to a value suiting your taste. Turn down contrast on your TV as much as "
+"possible.\n"
+"Then turn the brightness setting as low as possible, but make sure that the "
+"two lowermost shades of gray stay distinguishable.\n"
+"Do not care about the bright shades now. They will be set up in the next "
+"step.\n"
+"If you are happy with the result, press OK."
+msgstr ""
+"Skeakelje in helderens of kontrast ferbettering op jo TV út. Is der iets mei "
+"de namme \"dynamysk\", set it nei standert. Set it eftergrûn helderens nivo "
+"nei jo eigen smaak. Set it konstrast sa leech mooglik op jo TV.\n"
+"Dan, set it helderens nivo sa leech as mooglik, mar soargje dat de twa "
+"leechste griistinten krek anwêzig bliuwe\n"
+"Meitsje jo net drok om de helderenstinten no. Die komme werom yn de folgende "
+"stap\n"
+"Binne jo tefreden mei it resultaat, druk OK"
+
+msgid "Increased voltage"
+msgstr "Ferheeche spanning"
+
+msgid "Information"
+msgstr "Ynformaasje"
+
+msgid "Init"
+msgstr "Initialisearje"
+
+msgid "Initialize"
+msgstr "Formattearje HDD"
+
+msgid "Input"
+msgstr "Ynfier"
+
+msgid "Installing"
+msgstr "Oan it ynstallearjen"
+
+msgid "Intermediate"
+msgstr "Yntermediate"
+
+msgid "Invalid directory selected: %s"
+msgstr "Unjildige map selektearre: %s"
+
+msgid "Inversion"
+msgstr "Infertearring"
+
+msgid "Italian"
+msgstr "Italiaansk"
+
+msgid "Job View"
+msgstr "Opdracht oansjoch"
+
+msgid "LNB"
+msgstr "LNB"
+
+msgid "Language"
+msgstr "Taal"
+
+msgid "Language selection"
+msgstr "Taal Kieze"
+
+msgid "Last speed"
+msgstr "Lêste faasje"
+
+msgid "Latitude"
+msgstr "Bridtegraad"
+
+msgid "Left"
+msgstr "Links"
+
+msgid "Letterbox"
+msgstr "Letterbox"
+
+msgid "Limit east"
+msgstr "Limyt east"
+
+msgid "Limit west"
+msgstr "Limyt west"
+
+msgid "Limits off"
+msgstr "Limyten út"
+
+msgid "Limits on"
+msgstr "Limyt oan"
+
+msgid "Link:"
+msgstr "Link:"
+
+msgid "Linked titles with a DVD menu"
+msgstr "Keppele titels mei in DVD menu"
+
+msgid "Lithuanian"
+msgstr "Lithuaniansk"
+
+msgid "Load"
+msgstr "Laad"
+
+msgid "Location"
+msgstr "Doel"
+
+msgid "Longitude"
+msgstr "Lingtegraad"
+
+msgid "Main menu"
+msgstr "Haad menu"
+
+msgid "Mainmenu"
+msgstr "HaadMenu"
+
+msgid "Make this mark an 'in' point"
+msgstr "Markeer dit as in 'yn' punt"
+
+msgid "Make this mark an 'out' point"
+msgstr "Markeer dit as in 'út' punt"
+
+msgid "Make this mark just a mark"
+msgstr "Meitsje dit in gewoan markeer punt"
+
+msgid "Manual Scan"
+msgstr "Hanmatig sykje"
+
+msgid "Manual transponder"
+msgstr "Hanmatige transponder"
+
+msgid "Media player"
+msgstr "Media Spieler"
+
+msgid "Medium is not a writeable DVD!"
+msgstr "Medium is net in skriuwbêre DVD!"
+
+msgid "Medium is not empty!"
+msgstr "Medium is net leech!"
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "Model: "
+msgstr "Model: "
+
+msgid "Modulation"
+msgstr "Modulaasje"
+
+msgid "Modulator"
+msgstr "Modulator"
+
+msgid "Mon"
+msgstr "Moan"
+
+msgid "Mon-Fri"
+msgstr "Moan - Fre"
+
+msgid "Monday"
+msgstr "Moandei"
+
+msgid "Move east"
+msgstr "Draai nei east"
+
+msgid "Move west"
+msgstr "Draai nei west"
+
+msgid "Multi EPG"
+msgstr "Multi EPG"
+
+msgid "Multiple service support"
+msgstr "Kin meardere utstjoeringen oan"
+
+msgid "Multisat"
+msgstr "Multisat"
+
+msgid "N/A"
+msgstr "Net oanwêzig"
+
+msgid "NFI image flashing completed. Press Yellow to Reboot!"
+msgstr "NFI image flashen is klear. Druk giel om nei te starten!"
+
+msgid "NTSC"
+msgstr "NTSC"
+
+msgid "Name"
+msgstr "Namme"
+
+msgid "Nameserver"
+msgstr "Nammeserver"
+
+msgid "Nameserver %d"
+msgstr "Nammeserver %d"
+
+msgid "Nameserver settings"
+msgstr "Nammeserver ynstellingen"
+
+msgid "Netmask"
+msgstr "Netmasker"
+
+msgid "Network Setup"
+msgstr "Netwurk Ynstellingen"
+
+msgid "Network scan"
+msgstr "Netwurk ôfsykje"
+
+msgid "Network setup"
+msgstr "Netwurk ynstellingen"
+
+msgid "Network test"
+msgstr "Netwurk test"
+
+msgid "Network:"
+msgstr "Netwurk:"
+
+msgid "New"
+msgstr "Nij"
+
+msgid "New version:"
+msgstr "Nije ferzje:"
+
+msgid "No"
+msgstr "Nee"
+
+msgid "No (supported) DVDROM found!"
+msgstr "Gjin (ondersteunde) DVDROM fûn!"
+
+msgid "No HDD found or HDD not initialized!"
+msgstr "Gjin hurde skiif fûn of HDD net formatearre!"
+
+msgid "No backup needed"
+msgstr "Gjin backup nedich"
+
+msgid ""
+"No data on transponder!\n"
+"(Timeout reading PAT)"
+msgstr ""
+"Gjin data op transponder\n"
+"(tiid fan lêzen PAT)"
+
+msgid "No details for this image file"
+msgstr "Gjin details beskikber foar dit image triem"
+
+msgid "No event info found, recording indefinitely."
+msgstr "Gjin barren ynfo fûn, giit foar altiid troch mei opnimmen.."
+
+msgid "No free tuner!"
+msgstr "Gjin tuner oer"
+
+msgid "No positioner capable frontend found."
+msgstr "Gjin posysjesyker foarein fûn."
+
+msgid "No tags are set on these movies."
+msgstr "Gjin merkers oanwêzig op dizze films"
+
+msgid "No tuner is configured for use with a diseqc positioner!"
+msgstr "Der is gjin tuner ynsteld foar gebrûk mei in diseqc posysje syker!"
+
+msgid ""
+"No tuner is enabled!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"Gjin tuner aktief!\n"
+"Stel dizze earst yn foar jo kanalen sykje kinne."
+
+msgid ""
+"No working local network adapter found.\n"
+"Please verify that you have attached a network cable and your network is "
+"configured correctly."
+msgstr ""
+"Gjin wurkende netwurk adatpter fûn.\n"
+"Sjoch nei ot in kabel oanslúten is en it netwurk goed ynsteld is."
+
+msgid ""
+"No working wireless network adapter found.\n"
+"Please verify that you have attached a compatible WLAN device and your "
+"network is configured correctly."
+msgstr ""
+"Gjin wurkende triidloaze netwurk adatpter fûn.\n"
+"Sjoch nei ot in WLAN adapter oanslúten is en it netwurk goed ynsteld is."
+
+msgid ""
+"No working wireless network interface found.\n"
+" Please verify that you have attached a compatible WLAN device or enable "
+"your local network interface."
+msgstr ""
+"Gjin wurkende triidloaze netwurk adatpter fûn.\n"
+"Sjoch nei ot in WLAN adapter oanslúten is of skeakelje de lokale netwurk "
+"ynterface yn."
+
+msgid "No, but restart from begin"
+msgstr "Nee, mar start fanôf it begjin"
+
+msgid "No, do nothing."
+msgstr "Nee, doch neat.."
+
+msgid "No, just start my %s %s"
+msgstr "Nee, allinne myn %s %s starte"
+
+msgid "No, scan later manually"
+msgstr "Nee, letter mei de hân sykje"
+
+msgid "None"
+msgstr "Gjin"
+
+msgid "North"
+msgstr "Noard"
+
+msgid "Norwegian"
+msgstr "Noarsk"
+
+msgid ""
+"Nothing to scan!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"Neat te sykjen\n"
+"Earst de tuner ynstellingen dwaan, foar jo senders sykje kinne."
+
+msgid ""
+"Now, use the contrast setting to turn up the brightness of the background as "
+"much as possible, but make sure that you can still see the difference "
+"between the two brightest levels of shades.If you have done that, press OK."
+msgstr ""
+"No, feroare it helderens nivo en set it sa heech, mar wêz seker dat jo "
+"altiid nog it ferskil sjogge tusken de twa helderste skaadnivos.Binne jo "
+"klear, druk OK"
+
+msgid "OK"
+msgstr "Ok"
+
+msgid "OK, guide me through the upgrade process"
+msgstr "Ok, rin troch it bywurkjen proces"
+
+msgid "Off"
+msgstr "Ut"
+
+msgid "On"
+msgstr "Oan"
+
+msgid "One"
+msgstr "Ien"
+
+msgid "PAL"
+msgstr "PAL"
+
+msgid "PIDs"
+msgstr "PIDs"
+
+msgid "Package list update"
+msgstr "Bywurkje pakketlyst  "
+
+msgid "Packet management"
+msgstr "Pakket beheer"
+
+msgid "Parental control"
+msgstr "Alderlik tasjoch"
+
+msgid "Parental control setup"
+msgstr "Alderlik tasjoch"
+
+msgid "Pause movie at end"
+msgstr "Film op pause by ein"
+
+msgid "Pillarbox"
+msgstr "Pillar %s %s"
+
+msgid "Pilot"
+msgstr "Pilot"
+
+msgid "Play"
+msgstr "Ofspylje"
+
+msgid "Play Audio-CD..."
+msgstr "Ofspylje fan Audio-CD..."
+
+msgid "Play recorded movies..."
+msgstr "Opname films ôfspielje..."
+
+msgid "Please change recording endtime"
+msgstr "Graach eintiid fan it opnimmen feroarje."
+
+msgid "Please check your network settings!"
+msgstr "Graach netwurk ynstellingen neisjen!"
+
+msgid "Please choose an extension..."
+msgstr "Kies in uitbreiding..."
+
+msgid "Please do not change any values unless you know what you are doing!"
+msgstr "Feroarje gjin waarden, wannear jo net witte wat jo dogge!"
+
+msgid "Please enter a name for the new bouquet"
+msgstr "Namme ynjefte foar it nije bouquet"
+
+msgid "Please enter a name for the new marker"
+msgstr "Namme ynjefte foar in nije markering"
+
+msgid "Please enter a new filename"
+msgstr "Jou in nije bestânnamme yn"
+
+msgid "Please enter filename (empty = use current date)"
+msgstr "Jou in triemnamme yn (leech = datum fan hjoed)"
+
+msgid "Please enter name of the new directory"
+msgstr "Jou in namme yn foar de nije map"
+
+msgid "Please enter the correct pin code"
+msgstr "Graach de júste pinkode yn jaan"
+
+msgid "Please follow the instructions on the TV"
+msgstr "Folgje de ynstruksjes op TV"
+
+msgid ""
+"Please note that the previously selected media could not be accessed and "
+"therefore the default directory is being used instead."
+msgstr ""
+"Tink der om dat de foarige selektearre media net oansprutsen wurde koe, en "
+"dêrom de standert map brûkt wurd."
+
+msgid "Please press OK to continue."
+msgstr "Druk OK om fierder te gean."
+
+msgid "Please select a playlist to delete..."
+msgstr "Selektearje in ofspiellyst om te ferwiderjen..."
+
+msgid "Please select a playlist..."
+msgstr "Selektearje in ofspiellyst"
+
+msgid "Please select a subservice to record..."
+msgstr "Jou in undersender op, om op te nimmen."
+
+msgid "Please select a subservice..."
+msgstr "Selektearje in undersender..."
+
+msgid "Please select tag to filter..."
+msgstr "Selektearje diel foar it filterjen..."
+
+msgid "Please select the movie path..."
+msgstr "Selektearje it paad nei de film"
+
+msgid "Please set up tuner B"
+msgstr "ynstelle fan tuner B"
+
+msgid "Please set up tuner C"
+msgstr "ynstelle fan tuner C"
+
+msgid "Please set up tuner D"
+msgstr "ynstelle fan tuner D"
+
+msgid ""
+"Please use direction keys to move the PiP window.\n"
+"Press Bouquet +/- to resize the window.\n"
+"Press OK to go back to the TV mode or EXIT to cancel the moving."
+msgstr ""
+"Pylkje knoppen om BIB finster te ferskowen.\n"
+"Druk Bouquet +/- om finstergrutte te feroarjen"
+
+msgid ""
+"Please use the UP and DOWN keys to select your language. Afterwards press "
+"the OK button."
+msgstr "Brúk de op en del toets om jo taal te kiezen. Dernei druk op OK"
+
+msgid "Please wait for activation of your network configuration..."
+msgstr "Wachtsje op it aktief wurden fan de netwurk konfiguraasje"
+
+msgid "Please wait while we configure your network..."
+msgstr "Wachtsje oant it netwurk ynstelt wurden is..."
+
+msgid "Please wait while your network is restarting..."
+msgstr "Wachtsje oant it netwurk opnei start is..."
+
+msgid "Please wait..."
+msgstr "Graach eefkes wachtsje.."
+
+msgid "Please wait... Loading list..."
+msgstr "Lyst wurd laden..."
+
+msgid "Plugins"
+msgstr "Ynstekkers"
+
+msgid "Polarization"
+msgstr "Polarisaasje"
+
+msgid "Polish"
+msgstr "Poolsk"
+
+msgid "Port A"
+msgstr "Poort A"
+
+msgid "Port B"
+msgstr "Poort B"
+
+msgid "Port C"
+msgstr "Poort C"
+
+msgid "Port D"
+msgstr "Poort D"
+
+msgid "Portuguese"
+msgstr "Portugeesk"
+
+msgid "Positioner"
+msgstr "Rotor"
+
+msgid "Positioner setup"
+msgstr "Rotor ynstellingen"
+
+msgid "Power threshold in mA"
+msgstr "Stroom nivo yn mA"
+
+msgid "Predefined transponder"
+msgstr "Foarôf ynstelde transponder"
+
+msgid "Preparing... Please wait"
+msgstr "Foarbereide fan... Eefkes wachtsje"
+
+msgid "Press OK on your remote control to continue."
+msgstr "Druk OK op of ôfstandsbestjinning om fierder te gean."
+
+msgid "Press OK to activate the settings."
+msgstr "Druk Ok om ynstellingen aktief te meitsjen."
+
+msgid "Press OK to edit the settings."
+msgstr "Druk OK om dizze ynstellingen te bewurkjen"
+
+msgid "Press OK to scan"
+msgstr "Druk Ok om te sykjen"
+
+msgid "Press OK to start the scan"
+msgstr "Druk Ok om sykjen te starten"
+
+msgid "Preview"
+msgstr "Foar-oanskouwing"
+
+msgid "Preview menu"
+msgstr "Foarige menu"
+
+msgid "Primary DNS"
+msgstr "Eerste DNS"
+
+msgid "Properties of current title"
+msgstr "Eigenskippen fan dizze titel"
+
+msgid "Protect services"
+msgstr "Befeilich kanalen"
+
+msgid "Provider"
+msgstr "Leveransier"
+
+msgid "Provider to scan"
+msgstr "Utstjoerder ôfsykje"
+
+msgid "Providers"
+msgstr "Providers"
+
+msgid "RF output"
+msgstr "RF Ynstellingen"
+
+msgid "RGB"
+msgstr "RGB"
+
+msgid "Really close without saving settings?"
+msgstr "Slúte sunder op te slaan ?"
+
+msgid "Really delete done timers?"
+msgstr "Ferwiderje diene tiidsbarren?"
+
+msgid "Really exit the subservices quickzap?"
+msgstr "De undersender rapzap ôfslúte?"
+
+msgid "Really reboot now?"
+msgstr "Wier no kompleet opnei starte ?"
+
+msgid "Really restart now?"
+msgstr "Wier no nei starte ?"
+
+msgid "Really shutdown now?"
+msgstr "Wier no kompleet útskeakelje ?"
+
+msgid "Reboot"
+msgstr "kompleet nei starte"
+
+msgid "Record"
+msgstr "Opnimme"
+
+msgid "Recording"
+msgstr "An it opnimmen"
+
+msgid "Recording(s) are in progress or coming up in few seconds!"
+msgstr "In Opnimmen is dwaande of start binnen in pear sekonden!"
+
+msgid "Recordings always have priority"
+msgstr "Opnimmen hat altiid foarrang"
+
+msgid "Refresh rate selection."
+msgstr "Fernij faasje seleksje"
+
+msgid "Remove a mark"
+msgstr "Ferwiderje in Markeerder"
+
+msgid "Remove currently selected title"
+msgstr "Ferwiderje it selektearre bestan"
+
+msgid "Remove plugins"
+msgstr "Ferwiderje ynstekker"
+
+msgid "Remove title"
+msgstr "Ferwiderje de titel"
+
+msgid "Removing directory %s failed. (Maybe not empty.)"
+msgstr "Ferwiderje fan map %s mislearre ( miskien is der net leech )"
+
+msgid "Rename"
+msgstr "Omneame"
+
+msgid "Repeating event currently recording... What do you want to do?"
+msgstr "Herhelle barren an it opnimmen... Wat wolle jo dwaan ?"
+
+msgid "Repeats"
+msgstr "Herhellingen"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Reset and renumerate title names"
+msgstr "Titel nammen opnei oanmeitsje en nûmerje.."
+
+msgid "Resolution"
+msgstr "Skermresolusje"
+
+msgid "Restart"
+msgstr "Opnij starte"
+
+msgid "Restart GUI now?"
+msgstr "GUI no opnij starte?"
+
+msgid "Restart network"
+msgstr "Netwurk nij starte"
+
+msgid "Restart test"
+msgstr "Test nij starte"
+
+msgid "Restart your network connection and interfaces.\n"
+msgstr "netwurk oanslúting en interfaces nij starte.\n"
+
+msgid "Restore"
+msgstr "Werom sette"
+
+msgid "Resume from last position"
+msgstr "Fierder gean fanôf lêste posysje"
+
+msgid "Resuming playback"
+msgstr "Fierder gean mei ôfspieljen"
+
+msgid "Return to movie list"
+msgstr "Werom nei de film lyst"
+
+msgid "Return to previous service"
+msgstr "Werom nei foariche service"
+
+msgid "Rewind speeds"
+msgstr "Werom spiel faasje"
+
+msgid "Right"
+msgstr "Rjochts"
+
+msgid "Rotor turning speed"
+msgstr "Rotor rotaasje faasje"
+
+msgid "Russian"
+msgstr "Russysk"
+
+msgid "S-Video"
+msgstr "S Video"
+
+msgid "Sat"
+msgstr "Sneon"
+
+msgid "Satellite"
+msgstr "Satellyt"
+
+msgid "Satellites"
+msgstr "Satellyten"
+
+msgid "Satfinder"
+msgstr "Sat  syker"
+
+msgid "Sats"
+msgstr "Sats"
+
+msgid "Saturday"
+msgstr "Sneon"
+
+msgid "Save"
+msgstr "Opslaan"
+
+msgid "Scan "
+msgstr "Sykje"
+
+msgid "Scan additional SR"
+msgstr "Sykje op in oanfullende SR"
+
+msgid ""
+"Scans default lamedbs sorted by satellite with a connected dish positioner"
+msgstr ""
+"Sykje standert lame dbs, neffens de sattelyt mei in oanslúten panne ôfsteller"
+
+msgid "Search east"
+msgstr "Sykje east"
+
+msgid "Search west"
+msgstr "Sykje west"
+
+msgid "Secondary DNS"
+msgstr "Twadde DNS"
+
+msgid "Seek"
+msgstr "Sykje"
+
+msgid "Select audio track"
+msgstr "Kies lûd spoor"
+
+msgid "Select channel to record from"
+msgstr "Kies kanaal om fan op te nimmen"
+
+msgid "Select refresh rate"
+msgstr "Kies faasje fan fernije"
+
+msgid "Select video mode"
+msgstr "Kies fideo moadus"
+
+msgid "Send DiSEqC"
+msgstr "Stjoer DiSEqC"
+
+msgid "Send DiSEqC only on satellite change"
+msgstr "Stjoer DiSEqC alline by feroarjen fan satellyt"
+
+msgid "Seperate titles with a main menu"
+msgstr "Aparte triemen mei in haad menu"
+
+msgid "Sequence repeat"
+msgstr "folch oarde herhelling"
+
+msgid "Service"
+msgstr "Kanaal ynfo"
+
+msgid "Service has been added to the favourites."
+msgstr "Kanaal is tafoege oan favorieten."
+
+msgid "Service has been added to the selected bouquet."
+msgstr "Kanaal is tafoege oan selektearre bouquet."
+
+msgid ""
+"Service invalid!\n"
+"(Timeout reading PMT)"
+msgstr ""
+"Kanaal net jildig!\n"
+"(Tiidsoerskriding lêzen fan PMT)"
+
+msgid ""
+"Service not found!\n"
+"(SID not found in PAT)"
+msgstr ""
+"Service net fûn!\n"
+"(SID net fûn yn PAT)"
+
+msgid "Service scan"
+msgstr "Kanaal sykje"
+
+msgid ""
+"Service unavailable!\n"
+"Check tuner configuration!"
+msgstr "Kanaal net beskikber!<br> Sjoch tuner ynstellingen nei."
+
+msgid "Services"
+msgstr "Kanalen"
+
+msgid "Set interface as default Interface"
+msgstr "Set ynterface as standerd ynterface"
+
+msgid "Settings"
+msgstr "Ynstellingen"
+
+msgid "Setup"
+msgstr "Ynstelle"
+
+msgid "Show infobar on channel change"
+msgstr "Ynfobalke sjen litte by kanaal wiksel"
+
+msgid "Show infobar on event change"
+msgstr "Ynfobalke sjen litte by barren wiksel"
+
+msgid "Show infobar on skip forward/backward"
+msgstr "Ynfobalke sjen by rap foarút / efterút"
+
+msgid "Show positioner movement"
+msgstr "Rotor beweching sjen litte"
+
+msgid "Show the radio player..."
+msgstr "Radio spieler sjen litte..."
+
+msgid "Show the tv player..."
+msgstr "TV Spieler sjen litte..."
+
+msgid "Shows the state of your wireless LAN connection.\n"
+msgstr "Status fan WLAN sjen litte.\n"
+
+msgid "Similar"
+msgstr "Gelykese"
+
+msgid "Similar broadcasts:"
+msgstr "Gelykese utsjoeringen"
+
+msgid "Simple"
+msgstr "Simpel"
+
+msgid "Simple titleset (compatibility for legacy players)"
+msgstr "Simpele titelset (ek geskikt foar standaard spielers)"
+
+msgid "Single"
+msgstr "Inkel"
+
+msgid "Single EPG"
+msgstr "Inkele EPG"
+
+msgid "Single satellite"
+msgstr "Ien satellyt"
+
+msgid "Slot %d"
+msgstr "Slot %d"
+
+msgid "Slow"
+msgstr "Langsaam"
+
+msgid "Some plugins are not available:\n"
+msgstr "Inkele ynstekkers binne net anwêzig:\n"
+
+msgid "Sound"
+msgstr "Lûd"
+
+msgid "South"
+msgstr "Sud"
+
+msgid "Spanish"
+msgstr "Spaans"
+
+msgid "Standby"
+msgstr "Paraatmode"
+
+msgid "Standby / Restart"
+msgstr "Paraatmode / Nijstart"
+
+msgid "Start from the beginning"
+msgstr "Start fanôf it begjin"
+
+msgid "Start test"
+msgstr "Start test"
+
+msgid "Starting on"
+msgstr "Starte op"
+
+msgid "Step east"
+msgstr "Stap nei east"
+
+msgid "Step west"
+msgstr "Stap nei west"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Stop current event and disable coming events"
+msgstr "Stopje hjoeddeiske en ankommend barren"
+
+msgid "Stop current event but not coming events"
+msgstr "Stopje hjoeddeiske mar net ankommend barren"
+
+msgid "Stop playing this movie?"
+msgstr "Stopje ôfspieljen fan dizze film?"
+
+msgid "Stop test"
+msgstr "Stop test"
+
+msgid "Store position"
+msgstr "Posysje opslaan"
+
+msgid "Stored position"
+msgstr "Opsleine posysje"
+
+msgid "Subtitle selection"
+msgstr "Undertitel seleksje"
+
+msgid "Subtitles"
+msgstr "Undertitels"
+
+msgid "Sun"
+msgstr "Sne"
+
+msgid "Sunday"
+msgstr "Snein"
+
+msgid "Swedish"
+msgstr "Zweeds"
+
+msgid "System"
+msgstr "Systeem"
+
+msgid "TRANSLATOR_INFO"
+msgstr "Oersetter ynfo"
+
+msgid "TS file is too large for ISO9660 level 1!"
+msgstr "TS triem is te grut foar ISO 9660 level 1!"
+
+msgid "Tags"
+msgstr "Merkers"
+
+msgid "Terrestrial"
+msgstr "Ether"
+
+msgid "Terrestrial provider"
+msgstr "Ether útstjoerder"
+
+msgid "Test mode"
+msgstr "Test moadus"
+
+msgid "The backup failed. Please choose a different backup location."
+msgstr "Backup is mislearre. Kies in oare backup lokaasje."
+
+msgid ""
+"The following device was found:\n"
+"\n"
+"%s\n"
+"\n"
+"Do you want to write the USB flasher to this stick?"
+msgstr ""
+"It folgende apparaat wie fûn:\n"
+"\n"
+"%s\n"
+"\n"
+"Wolle jo de USB flasher nei dizze stick skriuwe ?"
+
+msgid "The path %s already exists."
+msgstr "It paad %s bestiit al."
+
+msgid "The pin code you entered is wrong."
+msgstr "De ynjûne pinkode is ferkeard."
+
+msgid "The timer file (timers.xml) is corrupt and could not be loaded."
+msgstr "De tiidsbarrenlyst is korrupt en koe net laden wurde."
+
+msgid ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it."
+msgstr ""
+"De WLAN ynstekker is net ynstallearre!\n"
+"Ynstallearje dizze earst."
+
+msgid ""
+"The wizard can backup your current settings. Do you want to do a backup now?"
+msgstr ""
+"De gucheler kin jo ynstellingen efterút sette. Wolle jo no een backup "
+"meitsje ?"
+
+msgid "The wizard is finished now."
+msgstr "De gucheler is klear."
+
+msgid ""
+"There might not be enough space on the selected partition..\n"
+"Do you really want to continue?"
+msgstr ""
+"Blikber is der net genôch rûmte op de koazen partysje.\n"
+"Wolle jo trochgean ?"
+
+msgid ""
+"This DVD RW medium is already formatted - reformatting will erase all "
+"content on the disc."
+msgstr ""
+"Dit DVD RW medium is al formattearre. Wer opnei dwaan sil alle gegevens op "
+"disk wiskje."
+
+msgid "Three"
+msgstr "Trije"
+
+msgid "Threshold"
+msgstr "Drompel"
+
+msgid "Thu"
+msgstr "Tong"
+
+msgid "Thumbnails"
+msgstr "Tumkegrutte"
+
+msgid "Thursday"
+msgstr "Tongersdei"
+
+msgid "Time"
+msgstr "Tiid"
+
+msgid "Timer entry"
+msgstr "Tiidsbarren item"
+
+msgid "Timer log"
+msgstr "Tiidsbarren log"
+
+msgid ""
+"Timer overlap in timers.xml detected!\n"
+"Please recheck it!"
+msgstr ""
+"Tiidstjoerings conflicten fûn yn timers.xml\n"
+"Graach nei sjen en meitsje!"
+
+msgid "Timer sanity error"
+msgstr "Tiidsbarren kontrole flater"
+
+msgid "Timer selection"
+msgstr "Tiidsbarren seleksje"
+
+msgid "Timeshift"
+msgstr "Tiidsskowen"
+
+msgid "Timeshift not possible!"
+msgstr "Tiidsskowen is net mooglik !"
+
+msgid "Timezone"
+msgstr "Tiidszone"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Title properties"
+msgstr "Titel eigenskippen"
+
+msgid "Titleset mode"
+msgstr "Titelset moadus"
+
+msgid "Today"
+msgstr "Hjoed"
+
+msgid "Tone mode"
+msgstr "Toan moadus"
+
+msgid "Toneburst"
+msgstr "Toan piek"
+
+msgid "Toneburst A/B"
+msgstr "Toneburst A/B"
+
+msgid "Track"
+msgstr "Nummer"
+
+msgid "Transmission mode"
+msgstr "Oerstjoeren type"
+
+msgid "Transponder"
+msgstr "Transponder"
+
+msgid "Tries left:"
+msgstr "Oantal kearen besykjen oer:"
+
+msgid "Try to find used transponders in cable network.. please wait..."
+msgstr "Besykje brûkte transponders te finen yn kabel netwurk.. "
+
+msgid "Tue"
+msgstr "Tiis"
+
+msgid "Tuesday"
+msgstr "Tiisdei"
+
+msgid "Tune"
+msgstr "Ofstimme"
+
+msgid "Tune failed!"
+msgstr "Ofstimme mislearre !"
+
+msgid "Tuner"
+msgstr "Tuner"
+
+msgid "Tuner configuration"
+msgstr "Tuner ynstellingen"
+
+msgid "Tuner status"
+msgstr "Tuner status"
+
+msgid "Turkish"
+msgstr "Turks"
+
+msgid "Two"
+msgstr "Twa"
+
+msgid "Type of scan"
+msgstr "Type fan sykjen"
+
+msgid "USALS"
+msgstr "USALS"
+
+msgid "USB stick wizard"
+msgstr "USB stick gûcheler"
+
+msgid "Universal LNB"
+msgstr "Unifersele LNB"
+
+msgid "Update"
+msgstr "Bywurkje"
+
+msgid "Upgrading"
+msgstr "An it bywurkjen"
+
+msgid "Use"
+msgstr "Brûk"
+
+msgid "Use DHCP"
+msgstr "DHCP brûke"
+
+msgid "Use a gateway"
+msgstr "In gateway brûke"
+
+msgid "Use power measurement"
+msgstr "Fermogensmjitting brûke"
+
+msgid ""
+"Use the up/down keys on your remote control to select an option. After that, "
+"press OK."
+msgstr "Knoppen op en del brûke om in opsje te kiezen. Dêrnei druk Ok"
+
+msgid "Used service scan type"
+msgstr "Brukte type kanaal sykjen"
+
+msgid "User defined"
+msgstr "Gebruker ynstelling"
+
+msgid "VCR scart"
+msgstr "VCR scart"
+
+msgid "VMGM (intro trailer)"
+msgstr "VMGM (yntro fan film)"
+
+msgid "Video mode selection."
+msgstr "Fideo moadus seleksje"
+
+msgid "View Rass interactive..."
+msgstr "Rass interaktief sjen litte"
+
+msgid "View teletext..."
+msgstr "tiletekst toane..."
+
+msgid "Voltage mode"
+msgstr "Spanning mode"
+
+msgid "W"
+msgstr "W"
+
+msgid "WEP"
+msgstr "WEP"
+
+msgid "WPA"
+msgstr "WPA"
+
+msgid "WPA or WPA2"
+msgstr "WPA of WPA2"
+
+msgid "WPA2"
+msgstr "WPA2"
+
+msgid "WSS on 4:3"
+msgstr "WSS by 4:3"
+
+msgid "Waiting"
+msgstr "Oan it wachtsjen"
+
+msgid "Wed"
+msgstr "Woa"
+
+msgid "Wednesday"
+msgstr "Woansdei"
+
+msgid "Weekday"
+msgstr "Wiekdei"
+
+msgid "West"
+msgstr "West"
+
+msgid "What do you want to scan?"
+msgstr "Wat wolle jo ôfsykje ?"
+
+msgid "Where do you want to backup your settings?"
+msgstr "Wêr wolle jo de gegevens opslaan?"
+
+msgid "Where to save temporary timeshift recordings?"
+msgstr "Wêr moatte it opnimmen mei tiidsferskowing opslein wurde ?"
+
+msgid "Write error while recording. Disk full?\n"
+msgstr "Skriuw flater by it opnimmen. Skiif fol ?\n"
+
+msgid "Write failed!"
+msgstr "Skriuw flater!"
+
+msgid "YPbPr"
+msgstr "YPbPr"
+
+msgid "Year"
+msgstr "Jier"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "Yes, and delete this movie"
+msgstr "Ja, en ferwiderje dizze film"
+
+msgid "Yes, backup my settings!"
+msgstr "Ja, myn ynstellingen extra bewarje"
+
+msgid "Yes, do a manual scan now"
+msgstr "Ja, no hânmatig sykje"
+
+msgid "Yes, do an automatic scan now"
+msgstr "Ja, no automatysk sykje"
+
+msgid "Yes, do another manual scan now"
+msgstr "Ja, no nochris hânmatig sykje"
+
+msgid "Yes, restore the settings now"
+msgstr "Ja, no de ynstellingen werom sette"
+
+msgid "Yes, returning to movie list"
+msgstr "Ja, werom nei de film lyst"
+
+msgid "Yes, shut down now."
+msgstr "Ja, no útskeakelje"
+
+msgid "You cannot delete this!"
+msgstr "Jo kinne dit net ferwiderje!"
+
+msgid ""
+"You have chosen to create a new .NFI flasher bootable USB stick. This will "
+"repartition the USB stick and therefore all data on it will be erased."
+msgstr ""
+"Jo hawwe koazen in neie .NFI opstart USB stick te meitsjen. Dit sil de USB "
+"opnei partitionearje en sa sil alle data ferlên gean."
+
+msgid "You have to wait %s!"
+msgstr "Jo moatte %s wachtsje!"
+
+msgid "Your %s %s is shutting down. Please wait..."
+msgstr "Jo %s %s wurd no ôfsluten. Eefkes wachtsje..."
+
+msgid ""
+"Your backup succeeded. We will now continue to explain the further upgrade "
+"process."
+msgstr ""
+"It extra bewarjen is slagge. Wy gjinne jo fierder mei utlizzen fan it bywurk "
+"proces."
+
+msgid ""
+"Your frontprocessor firmware must be upgraded.\n"
+"Press OK to start upgrade."
+msgstr ""
+"Jo foarprocessor software moat bywurke wurde\n"
+"Druk Ok om te begjinnen."
+
+msgid "Your network configuration has been activated."
+msgstr "Netwurk ynstellingen binne no aktief."
+
+msgid "Zap back to service before positioner setup?"
+msgstr "Werom zappe nei kanaal foar rotor ynstellingen?"
+
+msgid "[alternative edit]"
+msgstr "[alternatief bewurkje]"
+
+msgid "[bouquet edit]"
+msgstr "[bouquet bewurkje]"
+
+msgid "[favourite edit]"
+msgstr "[favorieten bewurkje]"
+
+msgid "[move mode]"
+msgstr "[Ferpleats moadus]"
+
+msgid "abort alternatives edit"
+msgstr "alternatieven bewurkjen ôfbrekke"
+
+msgid "abort bouquet edit"
+msgstr "boeket bewurkjen ôfbrekke"
+
+msgid "abort favourites edit"
+msgstr "favoriet bewurkje ôfbrekke"
+
+msgid "about to start"
+msgstr "op it punt om te starten"
+
+msgid "add alternatives"
+msgstr "alernatief tafoegje"
+
+msgid "add bookmark"
+msgstr "boekmerk tafoegje"
+
+msgid "add bouquet"
+msgstr "boeket tafoegje"
+
+msgid "add marker"
+msgstr "marker tafoegje"
+
+msgid "add service to bouquet"
+msgstr "kanaal tafoegje oan bouquet"
+
+msgid "add service to favourites"
+msgstr "kanaal tafoegje oan favorieten"
+
+msgid "add to parental protection"
+msgstr "âlderlik tasjoch tafoegje "
+
+msgid "advanced"
+msgstr "afansjearre"
+
+msgid "audio tracks"
+msgstr "audio spoor"
+
+msgid "auto"
+msgstr "auto"
+
+msgid "back"
+msgstr "werom"
+
+msgid "background image"
+msgstr "Eftergrûn ôfbylding"
+
+msgid "better"
+msgstr "better"
+
+msgid "black"
+msgstr "swart"
+
+msgid "blacklist"
+msgstr "swarte lyst"
+
+msgid "blue"
+msgstr "blauw"
+
+msgid "chapters"
+msgstr "Haadstikken"
+
+msgid "circular left"
+msgstr "circular links"
+
+msgid "circular right"
+msgstr "circular rjochts"
+
+msgid "confirmed"
+msgstr "befestigt"
+
+msgid "connected"
+msgstr "oanslúten"
+
+msgid "continue"
+msgstr "gjea fierder"
+
+msgid "copy to bouquets"
+msgstr "kopieer nei boeketten"
+
+msgid "create directory"
+msgstr "map meitsje"
+
+msgid "daily"
+msgstr "eltse dei"
+
+msgid "day"
+msgstr "dei"
+
+msgid "delete cut"
+msgstr "ferwiderje stik"
+
+msgid "disable"
+msgstr "utskeakelje"
+
+msgid "disable move mode"
+msgstr "ferpleats modus útskeakelje"
+
+msgid "disabled"
+msgstr "útskeakele"
+
+msgid "disconnected"
+msgstr "net oanslúten"
+
+msgid "do nothing"
+msgstr "doch neat"
+
+msgid "done!"
+msgstr "Klear!"
+
+msgid "edit alternatives"
+msgstr "bewurkje alternatief"
+
+msgid "empty"
+msgstr "leeg"
+
+msgid "enable"
+msgstr "ynskeakelje"
+
+msgid "enable bouquet edit"
+msgstr "bewurkjen boeket oan"
+
+msgid "enable favourite edit"
+msgstr "bewurkjen favorieten oan"
+
+msgid "enable move mode"
+msgstr "ferpleatsen mode oan"
+
+msgid "enabled"
+msgstr "ynskeakele"
+
+msgid "end alternatives edit"
+msgstr "bewurkjen alternatief út"
+
+msgid "end bouquet edit"
+msgstr "bewurkjen boeket út"
+
+msgid "end cut here"
+msgstr "stop stik hjirre"
+
+msgid "end favourites edit"
+msgstr "bewurkjen favoriet út"
+
+msgid "equal to"
+msgstr "gelyk oan"
+
+msgid "exit DVD player or return to file browser"
+msgstr "DVD spieler ferlitte en werom nei triem browser"
+
+msgid "exit network adapter configuration"
+msgstr "netwurk adapter konfiguraasje ferlitte"
+
+msgid "exit networkadapter setup menu"
+msgstr "netwurkadapter ynstellingen menu ferlitte"
+
+msgid "fileformats (BMP, PNG, JPG, GIF)"
+msgstr "triemformaat (BMP, PNG, JPG, GIF)"
+
+msgid "filename"
+msgstr "triemnamme"
+
+msgid "forward to the next chapter"
+msgstr "foarút nei it folgende haadstik"
+
+msgid "free"
+msgstr "frij"
+
+msgid "free diskspace"
+msgstr "freie skiif rûmte"
+
+msgid "go to deep standby"
+msgstr "gean nei djip paraatstand"
+
+msgid "go to standby"
+msgstr "gean nei paraatstand"
+
+msgid "green"
+msgstr "grien"
+
+msgid "horizontal"
+msgstr "horizontal"
+
+msgid "init module"
+msgstr "CI-Module initialisearje"
+
+msgid "insert mark here"
+msgstr "tuskenfoegje marker"
+
+msgid "jump back to the previous title"
+msgstr "werom nei de foarige titel"
+
+msgid "jump forward to the next title"
+msgstr "foarút nei de folgende titel"
+
+msgid "leave movie player..."
+msgstr "film ôfspieljen ferlitte..."
+
+msgid "left"
+msgstr "links"
+
+msgid "length"
+msgstr "lengte"
+
+msgid "locked"
+msgstr "op slot"
+
+msgid "loopthrough to"
+msgstr "trochskeakele nei"
+
+msgid "manual"
+msgstr "hânmatig"
+
+msgid "menu"
+msgstr "menu"
+
+msgid "mins"
+msgstr "min"
+
+msgid "minutes"
+msgstr "minuten"
+
+msgid "month"
+msgstr "maand"
+
+msgid "move down to last entry"
+msgstr "Nei it lêste menu item gean"
+
+msgid "move down to next entry"
+msgstr "Nei it folgende menu item gean"
+
+msgid "move up to first entry"
+msgstr "Neit it earste menu item gean"
+
+msgid "move up to previous entry"
+msgstr "Nei it foarige menu item "
+
+msgid "multinorm"
+msgstr "multinorm"
+
+msgid "never"
+msgstr "nea"
+
+msgid "no"
+msgstr "nee"
+
+msgid "no module found"
+msgstr "gjin CI-Module fûn"
+
+msgid "none"
+msgstr "gjin"
+
+msgid "not locked"
+msgstr "net op slot"
+
+msgid "nothing connected"
+msgstr "neat anslúten"
+
+msgid "of a DUAL layer medium used."
+msgstr "fan in DUAL layer medium brûkt"
+
+msgid "of a SINGLE layer medium used."
+msgstr "fan in SINGLE layer medium brûkt"
+
+msgid "off"
+msgstr "uit"
+
+msgid "on"
+msgstr "oan"
+
+msgid "on READ ONLY medium."
+msgstr "fan in ALLINNE-LEZE medium"
+
+msgid "once"
+msgstr "ienmalig"
+
+msgid "open nameserver configuration"
+msgstr "Iepenje nammeserver konfiguraasje"
+
+msgid "pass"
+msgstr "trochgean"
+
+msgid "please press OK when ready"
+msgstr "druk Ok wanneer klear"
+
+msgid "please wait, loading picture..."
+msgstr "plaatsje wurd laden..."
+
+msgid "record"
+msgstr "opnimme"
+
+msgid "recording..."
+msgstr "an it opnimmen..."
+
+msgid "red"
+msgstr "read"
+
+msgid "remove after this position"
+msgstr "nei dizze posysje alles ferwiderje"
+
+msgid "remove all alternatives"
+msgstr "ferwiderje alle alternatieven"
+
+msgid "remove all new found flags"
+msgstr "ferwiderje nij fûn flaggen"
+
+msgid "remove before this position"
+msgstr "foar dizze posysje alles ferwiderje"
+
+msgid "remove bookmark"
+msgstr "boekmerk ferwiderje"
+
+msgid "remove directory"
+msgstr "map ferwiderje"
+
+msgid "remove entry"
+msgstr "ferwiderje yngong"
+
+msgid "remove from parental protection"
+msgstr "ferwiderje út alderlik tasjoch"
+
+msgid "remove new found flag"
+msgstr "ferwiderje nij fun flagge"
+
+msgid "remove selected satellite"
+msgstr "selektearre sat ferwiderje"
+
+msgid "remove this mark"
+msgstr "ferwiderje punt"
+
+msgid "repeat playlist"
+msgstr "ôfspyllyst opnei spylje"
+
+msgid "repeated"
+msgstr "herhelle"
+
+msgid "rewind to the previous chapter"
+msgstr "werom spile nei it foarige haadstik"
+
+msgid "right"
+msgstr "rjochts"
+
+msgid "save last directory on exit"
+msgstr "Lêste map opslaan by ôfsluten"
+
+msgid "save playlist on exit"
+msgstr "Ofspiellyst opslaan by ôfsluten"
+
+msgid "scan state"
+msgstr "sykjen status"
+
+msgid "second cable of motorized LNB"
+msgstr "twadde kabel fan LNB-motor"
+
+msgid "seconds"
+msgstr "seconden"
+
+msgid "select"
+msgstr "kies"
+
+msgid "select menu entry"
+msgstr "Kies menu item"
+
+msgid "show DVD main menu"
+msgstr "DVD haadmenu sjen litte"
+
+msgid "show alternatives"
+msgstr "alternatieven sjen litte"
+
+msgid "show event details"
+msgstr "EPG details sjen litte"
+
+msgid "show transponder info"
+msgstr "transponder ynfo sjen litte"
+
+msgid "simple"
+msgstr "simpel"
+
+msgid "skip backward"
+msgstr "efterút oerslaan"
+
+msgid "skip backward (enter time)"
+msgstr "efterút oerslaan (tiid ynjaan)"
+
+msgid "skip forward"
+msgstr "foarút oerslaan"
+
+msgid "skip forward (enter time)"
+msgstr "foarút oerslaan (tiid ynjaan)"
+
+msgid "standard"
+msgstr "standert"
+
+msgid "start cut here"
+msgstr "start stik hjirre"
+
+msgid "start directory"
+msgstr "start map"
+
+msgid "stereo"
+msgstr "stereo"
+
+msgid "switch to bookmarks"
+msgstr "skeakelje nei boekmerkers"
+
+msgid "switch to filelist"
+msgstr "skeakelje nei triemlyst"
+
+msgid "switch to the next audio track"
+msgstr "skeakelje nei it folgende lûd spoor"
+
+msgid "switch to the next subtitle language"
+msgstr "skeakelje nei de folgende undertiteling taal"
+
+msgid "template file"
+msgstr "sjabloon triem"
+
+msgid "this recording"
+msgstr "dit opnimmen"
+
+msgid "this service is protected by a parental control pin"
+msgstr "dit kanaal is net beskikber troch it alderlik tasjoch."
+
+msgid "toggle time, chapter, audio, subtitle info"
+msgstr "tiid, haadstik, lûd en undertiteling ynfo omskeakelje"
+
+msgid "unconfirmed"
+msgstr "net befestigt"
+
+msgid "unknown service"
+msgstr "unbeneame kanaal"
+
+msgid "user defined"
+msgstr "brûkers ynstelling"
+
+msgid "vertical"
+msgstr "ferticaal"
+
+msgid "view extensions..."
+msgstr "lit útbreidingen sjen..."
+
+msgid "wait for ci..."
+msgstr "wachtsje op ci..."
+
+msgid "wait for mmi..."
+msgstr "wachtsje op mmi"
+
+msgid "waiting"
+msgstr "oan it wachtsjen"
+
+msgid "weekly"
+msgstr "wikeliks"
+
+msgid "yellow"
+msgstr "giel"
+
+msgid "yes"
+msgstr "ja"
+
+msgid "yes (keep feeds)"
+msgstr "ja (feeds hâlde)"
+
+msgid "zap"
+msgstr "knip"
+
+msgid "zapped"
+msgstr "knipt"

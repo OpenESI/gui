@@ -1,0 +1,2983 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tuxbox-enigma 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-21 15:33+0200\n"
+"PO-Revision-Date: 2014-01-22 23:31+0100\n"
+"Last-Translator: Andy Blackburn <andyblac@icloud.com>\n"
+"Language-Team: Arabic <moustafagamal@hotmail.com>\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.3\n"
+"X-Poedit-SourceCharset: iso-8859-15\n"
+
+msgid ""
+"\n"
+"Advanced options and settings."
+msgstr ""
+"\n"
+"אפשרויות מתקדמות והגדרות"
+
+msgid ""
+"\n"
+"After pressing OK, please wait!"
+msgstr ""
+"\n"
+"!אחרי לחיצה על אשר,נא המתן"
+
+msgid ""
+"\n"
+"Edit the upgrade source address."
+msgstr ""
+"\n"
+"ערוך את כתובת מקור העדכון"
+
+msgid ""
+"\n"
+"Press OK on your remote control to continue."
+msgstr ""
+"\n"
+"לחץ אשר על השלט בכדי להמשיך"
+
+msgid ""
+"\n"
+"Restore your backups by date."
+msgstr ""
+"\n"
+"שיחזור גיבויים לפי תאריך"
+
+msgid ""
+"\n"
+"Scan for local extensions and install them."
+msgstr ""
+"\n"
+"סרוק לתוספות מקומיות והתקן אותם"
+
+msgid ""
+"\n"
+"Select your backup device.\n"
+"Current device: "
+msgstr ""
+"\n"
+".בחר את התקן הגיבוי\n"
+":ההתקן הנוכחי "
+
+msgid ""
+"\n"
+"View, install and remove available or installed packages."
+msgstr ""
+"\n"
+".הצג, התקן או הסר חבילות זמינות או מותקנות "
+
+msgid "%H:%M"
+msgstr "%H:%M"
+
+msgid "%d min"
+msgstr "דקות %d"
+
+msgid "%d.%B %Y"
+msgstr "%d.%B %Y"
+
+msgid "%s (%s)\n"
+msgstr "%s (%s)\n"
+
+msgid "(empty)"
+msgstr "(ריק)"
+
+msgid "(show optional DVD audio menu)"
+msgstr "(הצג תפריטי קול אפשריים לדי וי די)"
+
+msgid "* Only available if more than one interface is active."
+msgstr "אפשרי רק מעל לממשק אחד פעיל *"
+
+msgid "1.0"
+msgstr "1.0"
+
+msgid "1.1"
+msgstr "1.1"
+
+msgid "1.2"
+msgstr "1.2"
+
+msgid "12V output"
+msgstr "12V output"
+
+msgid "13 V"
+msgstr "13 V"
+
+msgid "16:10"
+msgstr "16:10"
+
+msgid "16:10 Letterbox"
+msgstr "16:10 Letterbox"
+
+msgid "16:10 PanScan"
+msgstr "16:10 PanScan"
+
+msgid "16:9"
+msgstr "16:9"
+
+msgid "16:9 Letterbox"
+msgstr "16:9 Letterbox"
+
+msgid "16:9 always"
+msgstr "16:9 תמיד"
+
+msgid "18 V"
+msgstr "18 V"
+
+msgid "4:3"
+msgstr "4:3"
+
+msgid "4:3 Letterbox"
+msgstr "4:3 Letterbox"
+
+msgid "4:3 PanScan"
+msgstr "4:3 PanScan"
+
+msgid "<Current movielist location>"
+msgstr "<מיקום רשימת סרטים בפועל>"
+
+msgid "<Default movie location>"
+msgstr "<מיקום רשימת סרטים ברירת מחדל>"
+
+msgid "<Last timer location>"
+msgstr "<מיקום אחרון לטיימר>"
+
+msgid "<unknown>"
+msgstr "<לא ידוע>"
+
+msgid "??"
+msgstr "؟؟"
+
+msgid "A"
+msgstr "A"
+
+msgid ""
+"A configuration file (%s) was modified since Installation.\n"
+"Do you want to keep your version?"
+msgstr ""
+"עודכן מאז ההתקנה (%s) קובץ ההגדרות.\n"
+"? האם אתה מעוניין לשמור על הגירסה שלך"
+
+msgid ""
+"A recording is currently running.\n"
+"What do you want to do?"
+msgstr ""
+"הקלטה כרגע פועלת \n"
+"? מה אתה מעוניין לעשות"
+
+msgid ""
+"A recording is currently running. Please stop the recording before trying to "
+"configure the positioner."
+msgstr ".הקלטה פועלת כרגע, בבקשה עצור את ההקלטה לפני הגדרת הפוזישינר"
+
+msgid "A required tool (%s) was not found."
+msgstr " (%s) :הכלי הבא - לא נמצא"
+
+msgid "A search for available updates is currently in progress."
+msgstr "בדיקת עדכונים זמינים בפועל"
+
+msgid ""
+"A second configured interface has been found.\n"
+"\n"
+"Do you want to disable the second network interface?"
+msgstr ""
+".נמצא ממשק רשת משני מוגדר\n"
+"\n"
+"האם ברצונך להשבית את הממשק השני"
+
+msgid ""
+"A timer failed to record!\n"
+"Disable TV and try again?\n"
+msgstr ""
+"הטיימר לא הצליח להקליט\n"
+"?האם להשבית את הטלויזיה ולנסות שוב\n"
+
+msgid "Abort"
+msgstr "חדל"
+
+msgid "About"
+msgstr "אודות"
+
+msgid "About..."
+msgstr "...אודות"
+
+msgid "Accesspoint:"
+msgstr ":נקודת גישה"
+
+msgid "Activate Picture in Picture"
+msgstr "הפעל תמונה בתוך תמונה"
+
+msgid "Activate network settings"
+msgstr "הפעל הגדרות רשת"
+
+msgid "Active"
+msgstr "פעיל"
+
+msgid "Adapter settings"
+msgstr "הגדרת מתאם"
+
+msgid "Add"
+msgstr "הוסף"
+
+msgid "Add a mark"
+msgstr "הוסף סמן"
+
+msgid "Add a new title"
+msgstr "הוסף כותרת חדשה"
+
+msgid "Add timer"
+msgstr "הוסף טיימר"
+
+msgid "Add title"
+msgstr "הוסף כותרת"
+
+msgid "Add to bouquet"
+msgstr "הוסף תיקיית ערוצים"
+
+msgid "Add to favourites"
+msgstr "הוסף למועדפים"
+
+msgid ""
+"Adjust the color settings so that all the color shades are distinguishable, "
+"but appear as saturated as possible. If you are happy with the result, press "
+"OK to close the video fine-tuning, or use the number keys to select other "
+"test screens."
+msgstr ""
+"כוונו את הגדרות הצבעים, כך שכל גווני צבע יראו, אך רווים ככל האפשר. במידה "
+"ואתם שמחים עם התוצאה, לחצו על אישור כדי לסגור את הכוונון העדין, או השתמשו "
+"במקשי המספרים בכדי לבחור מסכי מבחן אחרים."
+
+msgid "Advanced restore"
+msgstr "שחזור מתקדם"
+
+msgid "After event"
+msgstr "לאחר התוכנית"
+
+msgid "Album"
+msgstr "אלבום"
+
+msgid "All"
+msgstr "כולם"
+
+msgid "Alpha"
+msgstr "Alpha"
+
+msgid "Alternative services tuner priority"
+msgstr "Alternative services tuner priority"
+
+msgid "An empty filename is illegal."
+msgstr "קובץ ריק לא חוקי"
+
+msgid "Arabic"
+msgstr "ערבית"
+
+msgid ""
+"Are you sure you want to activate this network configuration?\n"
+"\n"
+msgstr ""
+"? האם אתה מעוניין להפעיל את הגדרות הרשת האלו\n"
+"\n"
+
+msgid "Are you sure you want to exit this wizard?"
+msgstr "? האם אתה מעוניין לצאת מהאשף"
+
+msgid ""
+"Are you sure you want to restart your network interfaces?\n"
+"\n"
+msgstr ""
+"?האם אתה בטוח שאתה רוצה לאתחל את ממשקי הרשת\n"
+"\n"
+
+msgid "Artist"
+msgstr "אומן"
+
+msgid "Ask user"
+msgstr "שאל משתמש"
+
+msgid "Author: "
+msgstr ":מחבר"
+
+msgid "Auto"
+msgstr "אוטומטי"
+
+msgid "Auto scart switching"
+msgstr "Auto scart switching"
+
+msgid "Automatic"
+msgstr "אוטומטי"
+
+msgid "Automatic Scan"
+msgstr "סריקה אוטומטית"
+
+msgid "Available format variables"
+msgstr "Available format variables"
+
+msgid "B"
+msgstr "B"
+
+msgid "Back"
+msgstr "Back"
+
+msgid "Background"
+msgstr "רקע"
+
+msgid "Backup failed."
+msgstr ".הגיבוי נכשל"
+
+msgid "Backup is running..."
+msgstr "...........גיבוי מתבצע"
+
+msgid "Band"
+msgstr "Band"
+
+msgid "Bandwidth"
+msgstr "רוחב פס"
+
+msgid "Begin time"
+msgstr "Begin time"
+
+msgid "Behavior of 0 key in PiP-mode"
+msgstr "פעולת מקש ה - 0 במצב תמונה בתוך תמונה"
+
+msgid "Behavior when a movie is started"
+msgstr "הפעולה כאשר סרט מתחיל"
+
+msgid "Behavior when a movie is stopped"
+msgstr "הפעולה כאשר סרט נעצר "
+
+msgid "Behavior when a movie reaches the end"
+msgstr "הפעולה כאשר סרט מגיע לסוף "
+
+msgid "Block noise reduction"
+msgstr "Block noise reduction"
+
+msgid "Bookmarks"
+msgstr "סימניות"
+
+msgid "Brightness"
+msgstr "בהירות"
+
+msgid "Burn DVD"
+msgstr "צרוב די.וי.די"
+
+msgid "C-Band"
+msgstr "C-Band"
+
+msgid "Cable"
+msgstr "Cable"
+
+msgid "Cancel"
+msgstr "בטל"
+
+msgid "Capacity: "
+msgstr ":נפח"
+
+msgid "Change pin code"
+msgstr "שנה קוד אבטחה"
+
+msgid "Change step size"
+msgstr "Change step size"
+
+msgid "Channel"
+msgstr "ערוץ"
+
+msgid "Channel not in services list"
+msgstr "הערוץ לא ברשימת השירותים"
+
+msgid "Channel:"
+msgstr ":ערוץ"
+
+msgid "Chap."
+msgstr "Chap."
+
+msgid "Chapter"
+msgstr "פרק"
+
+msgid "Chapter:"
+msgstr ":פרק"
+
+msgid "Check"
+msgstr "בדוק"
+
+msgid "Circular left"
+msgstr "Circular left"
+
+msgid "Circular right"
+msgstr "Circular right"
+
+msgid "Cleanup"
+msgstr "נקיון"
+
+msgid "Clear before scan"
+msgstr "Clear before scan"
+
+msgid "Clear log"
+msgstr "נקה לוג"
+
+msgid "Close"
+msgstr "סגור"
+
+msgid "Close title selection"
+msgstr "סגור בחירת כותרת"
+
+msgid "Collection name"
+msgstr "שם האוסף"
+
+msgid "Collection settings"
+msgstr "הגדרות האוסף"
+
+msgid "Command order"
+msgstr "סדר פקודה"
+
+msgid "Common Interface"
+msgstr "ממשק משותף"
+
+msgid "Common Interface Assignment"
+msgstr "הקצאת ממשק משותף"
+
+msgid "Communication"
+msgstr "תקשורת"
+
+msgid "Complete"
+msgstr "שלם"
+
+msgid "Complex (allows mixing audio tracks and aspects)"
+msgstr "Complex (allows mixing audio tracks and aspects)"
+
+msgid "Configure interface"
+msgstr "הגדרת ממשק"
+
+msgid "Configure nameservers"
+msgstr "Configure nameservers"
+
+msgid "Configure your internal LAN"
+msgstr "הגדרת הרשת הפנימית שלך"
+
+msgid "Configure your network again"
+msgstr "הגדרת הרשת שלך שוב"
+
+msgid "Configure your wireless LAN again"
+msgstr "הגדרת הרשת האלחוטית שוב"
+
+msgid "Configuring"
+msgstr "מגדיר"
+
+msgid "Conflicting timer"
+msgstr "טיימר מתנגש"
+
+msgid "Connect"
+msgstr "התחבר"
+
+msgid "Connected to"
+msgstr "מחובר אל"
+
+msgid "Constellation"
+msgstr "Constellation"
+
+msgid "Content does not fit on DVD!"
+msgstr "!תכולה לא מתאימה לדי.וי.די"
+
+msgid "Continue playing"
+msgstr "המשך לנגן"
+
+msgid "Contrast"
+msgstr "ניגודיות"
+
+msgid "Could not open Picture in Picture"
+msgstr "לא יכול לפתוח תמונה בתוך תמונה"
+
+msgid "Create DVD-ISO"
+msgstr "DVD-ISO צור "
+
+msgid "Creating directory %s failed."
+msgstr ".נכשלה %s יצירת תיקייה"
+
+msgid "Croatian"
+msgstr "קרואטית"
+
+msgid "Current settings:"
+msgstr "Current settings:"
+
+msgid "Current value: "
+msgstr "Current value: "
+
+msgid "Current version:"
+msgstr "Current version:"
+
+msgid "Customize"
+msgstr "התאמה אישית"
+
+msgid "Cut"
+msgstr "חתוך"
+
+msgid "Cutlist editor..."
+msgstr "Cutlist עורך..."
+
+msgid "Czech"
+msgstr "צ'כית"
+
+msgid "DHCP"
+msgstr "DHCP"
+
+msgid "DUAL LAYER DVD"
+msgstr "Dual Layer DVD"
+
+msgid "DVB-S"
+msgstr "DVB-S"
+
+msgid "DVB-S2"
+msgstr "DVB-S2"
+
+msgid "Danish"
+msgstr "דנית"
+
+msgid "Date"
+msgstr "תאריך"
+
+msgid "Deep Standby"
+msgstr "המתנה עמוקה"
+
+msgid "Default"
+msgstr "ברירת מחדל"
+
+msgid "Default movie location"
+msgstr "ברירת מחדל למיקום סרטים"
+
+msgid "Delete"
+msgstr "מחק"
+
+msgid "Delete entry"
+msgstr "מחק רשומה"
+
+msgid "Delete failed!"
+msgstr "!מחיקה נכשלה"
+
+msgid "Description"
+msgstr "תאור"
+
+msgid "Deselect"
+msgstr "בטל בחירה"
+
+msgid "Detected NIMs:"
+msgstr "Detected NIMs:"
+
+msgid "DiSEqC"
+msgstr "DiSEqC"
+
+msgid "DiSEqC A/B"
+msgstr "DiSEqC A/B"
+
+msgid "DiSEqC A/B/C/D"
+msgstr "DiSEqC A/B/C/D"
+
+msgid "DiSEqC mode"
+msgstr "DiSEqC mode"
+
+msgid "Digital contour removal"
+msgstr "Digital contour removal"
+
+msgid "Direct playback of linked titles without menu"
+msgstr "Direct playback of linked titles without menu"
+
+msgid "Directory browser"
+msgstr "סייר תיקיות"
+
+msgid "Disable"
+msgstr "השבת"
+
+msgid "Disable Picture in Picture"
+msgstr "השבת תמונה בתוך תמונה"
+
+msgid "Disabled"
+msgstr "הושבת"
+
+msgid "Display 16:9 content as"
+msgstr "Display 16:9 content as"
+
+msgid "Display 4:3 content as"
+msgstr "Display 4:3 content as"
+
+msgid ""
+"Do you really want to check the filesystem?\n"
+"This could take a long time!"
+msgstr ""
+"? האם ברצונך לסמן את קבצי המערכת\n"
+"!זה עלול לקחת הרבה זמן"
+
+msgid "Do you really want to delete %s?"
+msgstr "? %s האם ברצוך למחוק את"
+
+msgid "Do you really want to download the plugin \"%s\"?"
+msgstr "האם ברצונך להוריד את הפלאגין \"%s\"?"
+
+msgid "Do you really want to exit?"
+msgstr "? האם ברצונך לצאת"
+
+msgid "Do you really want to remove directory %s from the disk?"
+msgstr "? מהכונן %s האם ברצונך למחוק את התיקיה"
+
+msgid "Do you really want to remove the plugin \"%s\"?"
+msgstr "האם ברצונך להסיר את הפלאגין \"%s\"?"
+
+msgid "Do you really want to remove your bookmark of %s?"
+msgstr "%s ?האם ברצונך להסיר את הסימניה "
+
+msgid "Do you want to burn this collection to DVD medium?"
+msgstr "האם ברצונך לצרוב את התוכן לדי.וי.די"
+
+msgid "Do you want to do a service scan?"
+msgstr "?האם ברצונך לבצע סריקת שירותים"
+
+msgid "Do you want to do another manual service scan?"
+msgstr "? האם ברצונך לבצע שוב סריקת שירותים ידנית"
+
+msgid "Do you want to install the package:\n"
+msgstr ":האם ברצונך להתקין את החבילה\n"
+
+msgid "Do you want to play DVD in drive?"
+msgstr "? האם ברצונך לנגן את הדי.וי.די שבכונן"
+
+msgid "Do you want to preview this DVD before burning?"
+msgstr "?האם ברצונך להציג את הדי.וי.די לפני הצריבה"
+
+msgid "Do you want to remove the package:\n"
+msgstr "האם ברצונך להסיר את החבילה\n"
+
+msgid "Do you want to restore your settings?"
+msgstr "? האם ברצונך לשחזר את ההגדרות"
+
+msgid "Do you want to resume this playback?"
+msgstr "?האם ברצונך להמשיך ולנגן את זה"
+
+msgid "Do you want to upgrade the package:\n"
+msgstr "?האם ברצונך לשדרג את החבילה\n"
+
+msgid "Don't stop current event but disable coming events"
+msgstr "אל תפסיק אירוע נוכחי אך בטל את כל הבאים בתור"
+
+msgid "Download"
+msgstr "הורד"
+
+msgid "Downloading"
+msgstr "מוריד"
+
+msgid "Downloading plugin information. Please wait..."
+msgstr "...מוריד פרטים על הפלאגין, אנא המתן"
+
+msgid "Dutch"
+msgstr "הולנדית"
+
+msgid "Dynamic contrast"
+msgstr "Dynamic contrast"
+
+msgid "ERROR - failed to scan (%s)!"
+msgstr "(%s) !שגיאה - נכשל בסריקה"
+
+msgid "East"
+msgstr "מזרח"
+
+msgid "Edit"
+msgstr "ערוך"
+
+msgid "Edit DNS"
+msgstr "DNS ערוך"
+
+msgid "Edit chapters of current title"
+msgstr "ערוך פרקים של הכותרת הנוכחית"
+
+msgid "Edit settings"
+msgstr "ערוך הגדרות"
+
+msgid "Edit title"
+msgstr "ערוך כותרת"
+
+msgid "Edit upgrade source url."
+msgstr "Edit upgrade source url."
+
+msgid "Electronic Program Guide"
+msgstr "Electronic Program Guide"
+
+msgid "Enable"
+msgstr "אפשר"
+
+msgid "Enable 5V for active antenna"
+msgstr "Enable 5V for active antenna"
+
+msgid "Enable multiple bouquets"
+msgstr "אפשר תיקיות ערוצים מרובות"
+
+msgid "Enabled"
+msgstr "אפשר"
+
+msgid "Encrypted: "
+msgstr ":קידוד"
+
+msgid "Encryption"
+msgstr "קידוד"
+
+msgid "Encryption:"
+msgstr ":קידוד"
+
+msgid "End time"
+msgstr "שעת סיום"
+
+msgid "English"
+msgstr "אנגלית"
+
+msgid "Enter main menu..."
+msgstr "...כנס לתפריט ראשי"
+
+msgid "Enter pin code"
+msgstr ":הכנס קוד אבטחה"
+
+msgid "Enter the service pin"
+msgstr "הכנס קוד האבטחה של השירות"
+
+msgid "Error"
+msgstr "שגיאה"
+
+msgid "Error executing plugin"
+msgstr "שגיאה בהרצת הפלאגין"
+
+msgid ""
+"Error: %s\n"
+"Retry?"
+msgstr ""
+"שגיאה: %s\n"
+"לנסות שוב?"
+
+msgid "Estonian"
+msgstr "אסטוניה"
+
+msgid "Exceeds dual layer medium!"
+msgstr "Exceeds dual layer medium!"
+
+msgid "Execution finished!!"
+msgstr "!!הרצה הסתיימה"
+
+msgid "Exif"
+msgstr "Exif"
+
+msgid "Exit"
+msgstr "יציאה"
+
+msgid "Exit editor"
+msgstr "יציאה מהעורך"
+
+msgid "Exit network wizard"
+msgstr "צא מאשף הרשת"
+
+msgid "Exit the wizard"
+msgstr "צא מהאשף"
+
+msgid "Expert"
+msgstr "הגדרות מומחים"
+
+msgid "Extended Networksetup Plugin..."
+msgstr "...פלאגין הגדרת רשת נרחב"
+
+msgid "Extended Setup..."
+msgstr "הגדרות נרחבות"
+
+msgid "Extended Software"
+msgstr "Extended Software"
+
+msgid "Extended Software Plugin"
+msgstr "Extended Software פלאגין ל"
+
+msgid "Extensions"
+msgstr "תוספות"
+
+msgid "Extensions management"
+msgstr "ניהול תוספות"
+
+msgid "FEC"
+msgstr "FEC"
+
+msgid "Factory reset"
+msgstr "שיחזור להגדרות יצרן"
+
+msgid "Failed"
+msgstr "נכשל"
+
+msgid "Fan %d"
+msgstr " מאוורר %d"
+
+msgid "Fast"
+msgstr "מהיר"
+
+msgid "Fast DiSEqC"
+msgstr "DiSEqC מהיר"
+
+msgid "Favourites"
+msgstr "מועדפים"
+
+msgid "Finetune"
+msgstr "כיוונון עדין"
+
+msgid "Finished"
+msgstr "הסתיים"
+
+msgid "Finished configuring your network"
+msgstr "הגדרת הרשת הסתיימה"
+
+msgid "Finished restarting your network"
+msgstr "פעולת איתחול הרשת הסתיימה"
+
+msgid "Finnish"
+msgstr "פינית"
+
+msgid "Flash"
+msgstr "Flash"
+
+msgid "Flashing failed"
+msgstr "Flashing failed"
+
+msgid "Following tasks will be done after you press OK!"
+msgstr "OK הפעולה הבאה תתבצע לאחר לחיצה על"
+
+msgid "Format"
+msgstr "פורמט"
+
+msgid "French"
+msgstr "צרפתית"
+
+msgid "Frequency"
+msgstr "תדר"
+
+msgid "Frequency bands"
+msgstr "קבוצת תדרים"
+
+msgid "Frequency steps"
+msgstr "קפיצות תדרים"
+
+msgid "Fri"
+msgstr "Fri"
+
+msgid "Friday"
+msgstr "שישי"
+
+msgid "German"
+msgstr "גרמנית"
+
+msgid "Getting plugin information. Please wait..."
+msgstr "...מקבל מידע אודות הפלאגין. אנא המתן"
+
+msgid "Goto 0"
+msgstr "Goto 0"
+
+msgid "Goto position"
+msgstr "Goto position"
+
+msgid "Greek"
+msgstr "יוונית"
+
+msgid "High bitrate support"
+msgstr "High bitrate support"
+
+msgid "Horizontal"
+msgstr "Horizontal"
+
+msgid "How many minutes do you want to record?"
+msgstr "? כמה דקות אתה מעוניין להקליט"
+
+msgid "Hue"
+msgstr "Hue"
+
+msgid "Hungarian"
+msgstr "הונגרית"
+
+msgid "ISO file is too large for this filesystem!"
+msgstr "ISO file is too large for this filesystem!"
+
+msgid "ISO path"
+msgstr "ISO path"
+
+msgid ""
+"If you see this, something is wrong with\n"
+"your scart connection. Press OK to return."
+msgstr ""
+"If you see this, something is wrong with\n"
+"your scart connection. Press OK to return."
+
+msgid ""
+"If your TV has a brightness or contrast enhancement, disable it. If there is "
+"something called \"dynamic\", set it to standard. Adjust the backlight level "
+"to a value suiting your taste. Turn down contrast on your TV as much as "
+"possible.\n"
+"Then turn the brightness setting as low as possible, but make sure that the "
+"two lowermost shades of gray stay distinguishable.\n"
+"Do not care about the bright shades now. They will be set up in the next "
+"step.\n"
+"If you are happy with the result, press OK."
+msgstr ""
+"If your TV has a brightness or contrast enhancement, disable it. If there is "
+"something called \"dynamic\", set it to standard. Adjust the backlight level "
+"to a value suiting your taste. Turn down contrast on your TV as much as "
+"possible.\n"
+"Then turn the brightness setting as low as possible, but make sure that the "
+"two lowermost shades of gray stay distinguishable.\n"
+"Do not care about the bright shades now. They will be set up in the next "
+"step.\n"
+"If you are happy with the result, press OK."
+
+msgid "Increased voltage"
+msgstr "Increased voltage"
+
+msgid "Info"
+msgstr "פרטים"
+
+msgid "Information"
+msgstr "מידע"
+
+msgid "Initialize"
+msgstr "מאתחל"
+
+msgid "Input"
+msgstr "Input"
+
+msgid "Install"
+msgstr "התקן"
+
+msgid "Install a new image with your web browser"
+msgstr "התקן אימג' חדש עם הדפדפן שלך"
+
+msgid "Install extensions."
+msgstr ".התקן תוספות"
+
+msgid "Install local extension"
+msgstr "התקן תוספת מקומית"
+
+msgid "Install or remove finished."
+msgstr ".התקנה או הסרה הסתיימה"
+
+msgid "Installation finished."
+msgstr ".התקנה הסתיימה"
+
+msgid "Installing"
+msgstr "מתקין"
+
+msgid "Instant record location"
+msgstr "מיקום הקלטה מיידית"
+
+msgid "Interface: "
+msgstr ":ממשק"
+
+msgid "Intermediate"
+msgstr "ביניים"
+
+msgid "Invalid directory selected: %s"
+msgstr "%s :נבחרה תיקיה שגויה"
+
+msgid "Inversion"
+msgstr "Inversion"
+
+msgid "Italian"
+msgstr "איטלקית"
+
+msgid "Keyboard"
+msgstr "מקלדת"
+
+msgid "LAN connection"
+msgstr "חיבור רשת"
+
+msgid "Language"
+msgstr "שפה"
+
+msgid "Language selection"
+msgstr "בחירת שפה"
+
+msgid "Last config"
+msgstr "הגדרה קודמת"
+
+msgid "Last speed"
+msgstr "מהירות קודמת"
+
+msgid "Latitude"
+msgstr "Latitude"
+
+msgid "Left"
+msgstr "שמאל"
+
+msgid "Limit east"
+msgstr "הגבל מזרח"
+
+msgid "Limit west"
+msgstr "הגבל מערב"
+
+msgid "Lithuanian"
+msgstr "ליטא"
+
+msgid "Load"
+msgstr "טען"
+
+msgid "Location"
+msgstr "מיקום"
+
+msgid "Longitude"
+msgstr "Longitude"
+
+msgid "Main menu"
+msgstr "תפריט ראשי"
+
+msgid "Mainmenu"
+msgstr "תפריט ראשי"
+
+msgid "Make this mark an 'out' point"
+msgstr "Make this mark an 'out' point"
+
+msgid "Make this mark just a mark"
+msgstr "Make this mark just a mark"
+
+msgid "Manage extensions"
+msgstr "נהל תוספים"
+
+msgid "Manual Scan"
+msgstr "סריקה ידנית"
+
+msgid "Manual transponder"
+msgstr " ידני transponder"
+
+msgid "Manufacturer"
+msgstr "יצרן"
+
+msgid "Media player"
+msgstr "נגן המוזיקה"
+
+msgid "Medium is not empty!"
+msgstr "!המדיה איננה ריקה"
+
+msgid "Menu"
+msgstr "תפריט"
+
+msgid "Model: "
+msgstr ":דגם"
+
+msgid "Modulation"
+msgstr "Modulation"
+
+msgid "Mon"
+msgstr "שני"
+
+msgid "Mon-Fri"
+msgstr "שני-שישי"
+
+msgid "Monday"
+msgstr "שני"
+
+msgid "Move east"
+msgstr "Move east"
+
+msgid "Move west"
+msgstr "Move west"
+
+msgid "Movie location"
+msgstr "מיקום סרטים"
+
+msgid "Multi EPG"
+msgstr "Multi EPG"
+
+msgid "Multimedia"
+msgstr "מולטימדיה"
+
+msgid "Multiple service support"
+msgstr "Multiple service support"
+
+msgid "Multisat"
+msgstr "Multisat"
+
+msgid "N/A"
+msgstr "N/A"
+
+msgid "NFI image flashing completed. Press Yellow to Reboot!"
+msgstr "! הסתיימה. לחץ על הצהוב בכדי לאתחל NFI צריבת אימג"
+
+msgid "NTSC"
+msgstr "NTSC"
+
+msgid "Name"
+msgstr "שם"
+
+msgid "Nameserver"
+msgstr "Nameserver"
+
+msgid "Nameserver %d"
+msgstr "Nameserver %d"
+
+msgid "Nameserver settings"
+msgstr "Nameserver settings"
+
+msgid "Netmask"
+msgstr "Netmask"
+
+msgid "Network"
+msgstr "רשת"
+
+msgid "Network Setup"
+msgstr "הגדרת רשת"
+
+msgid "Network scan"
+msgstr "Network scan"
+
+msgid "Network setup"
+msgstr "Network setup"
+
+msgid "Network test"
+msgstr "Network test"
+
+msgid "Network test: "
+msgstr "Network test: "
+
+msgid "Network:"
+msgstr ":רשת"
+
+msgid "New"
+msgstr "חדש"
+
+msgid "New version:"
+msgstr ":גרסה חדשה"
+
+msgid "No"
+msgstr "לא"
+
+msgid "No Connection"
+msgstr "אין חיבור"
+
+msgid "No HDD found or HDD not initialized!"
+msgstr "! לא נמצא כונן קשיח או לא אותחל"
+
+msgid "No backup needed"
+msgstr "לא נדרש גיבוי"
+
+msgid "No description available."
+msgstr "אין מידע נוסף"
+
+msgid "No details for this image file"
+msgstr "אין מידע נוסף לאימג' הזה"
+
+msgid "No displayable files on this medium found!"
+msgstr "!לא נמצאו קבצים מתאימים לתצוגה על המדיה הזו"
+
+msgid "No free tuner!"
+msgstr "!הטיונר בשימוש"
+
+msgid "No network connection available."
+msgstr ".אין חיבור רשת זמין"
+
+msgid "No networks found"
+msgstr "לא נמצאו רשתות"
+
+msgid "No to all"
+msgstr "לא להכל"
+
+msgid "No tuner is configured for use with a diseqc positioner!"
+msgstr "!לא נמצא טיונר המוגדר לעבודה עם דייסק פוזישינר"
+
+msgid ""
+"No tuner is enabled!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"!טיונר לא מוגדר\n"
+".הגדר את הטיונר לפני סריקת תדרים"
+
+msgid ""
+"No working local network adapter found.\n"
+"Please verify that you have attached a network cable and your network is "
+"configured correctly."
+msgstr ""
+"No working local network adapter found.\n"
+"Please verify that you have attached a network cable and your network is "
+"configured correctly."
+
+msgid ""
+"No working wireless network adapter found.\n"
+"Please verify that you have attached a compatible WLAN device and your "
+"network is configured correctly."
+msgstr ""
+"No working wireless network adapter found.\n"
+"Please verify that you have attached a compatible WLAN device and your "
+"network is configured correctly."
+
+msgid ""
+"No working wireless network interface found.\n"
+" Please verify that you have attached a compatible WLAN device or enable "
+"your local network interface."
+msgstr ""
+"No working wireless network interface found.\n"
+" Please verify that you have attached a compatible WLAN device or enable "
+"your local network interface."
+
+msgid "No, but restart from begin"
+msgstr "לא, אך התחל מחדש"
+
+msgid "No, do nothing."
+msgstr ".לא, לא לעשות כלום"
+
+msgid "No, just start my %s %s"
+msgstr ".לא, רק הפעל את הדרימבוקס"
+
+msgid "No, scan later manually"
+msgstr ".לא, סריקה ידנית מאוחר יותר"
+
+msgid "None"
+msgstr "אף אחד"
+
+msgid "North"
+msgstr "North"
+
+msgid "Norwegian"
+msgstr "נורווגית"
+
+msgid ""
+"Nothing to scan!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"!אין מה לסרוק\n"
+".הגדר את הטינר לפני סריקת התדרים"
+
+msgid "OK"
+msgstr "אשר"
+
+msgid "OK, guide me through the upgrade process"
+msgstr "בסדר, הדרך אותי במהלך השידרוג"
+
+msgid "Off"
+msgstr "כבוי"
+
+msgid "On"
+msgstr "דלוק"
+
+msgid "One"
+msgstr "אחד"
+
+msgid "Only extensions."
+msgstr ".רק תוספים"
+
+msgid "PAL"
+msgstr "PAL"
+
+msgid "PIDs"
+msgstr "PIDs"
+
+msgid "Package list update"
+msgstr "עדכון רשימת חבילות"
+
+msgid "Packet management"
+msgstr "Packet management"
+
+msgid "Packet manager"
+msgstr "Packet manager"
+
+msgid "Parental control"
+msgstr "בקרת הורים"
+
+msgid "Parental control setup"
+msgstr "הגדרת בקרת הורים"
+
+msgid "Password"
+msgstr "סיסמא"
+
+msgid "Pause movie at end"
+msgstr "עצור סרט בסופו"
+
+msgid "Pillarbox"
+msgstr "Pillarbox"
+
+msgid "Play"
+msgstr "נגן"
+
+msgid "Play Audio-CD..."
+msgstr "Play Audio-CD..."
+
+msgid "Play DVD"
+msgstr "Play DVD"
+
+msgid "Play Music..."
+msgstr "...נגן מוזיקה"
+
+msgid "Play recorded movies..."
+msgstr "...נגן סרטים שהוקלטו"
+
+msgid "Please add titles to the compilation."
+msgstr "Please add titles to the compilation."
+
+msgid "Please change recording endtime"
+msgstr "אנא שנה את זמן סוף ההקלטה"
+
+msgid "Please check your network settings!"
+msgstr "Please check your network settings!"
+
+msgid "Please choose an extension..."
+msgstr "Please choose an extension..."
+
+msgid ""
+"Please configure or verify your Nameservers by filling out the required "
+"values.\n"
+"When you are ready press OK to continue."
+msgstr ""
+"Please configure or verify your Nameservers by filling out the required "
+"values.\n"
+"When you are ready press OK to continue."
+
+msgid ""
+"Please configure your internet connection by filling out the required "
+"values.\n"
+"When you are ready press OK to continue."
+msgstr ""
+"Please configure your internet connection by filling out the required "
+"values.\n"
+"When you are ready press OK to continue."
+
+msgid "Please do not change any values unless you know what you are doing!"
+msgstr "Please do not change any values unless you know what you are doing!"
+
+msgid "Please enter a name for the new bouquet"
+msgstr "בבקשה הכנס שם לתיקית הערוצים החדשה"
+
+msgid "Please enter a name for the new marker"
+msgstr "בבקשה הכנס שם לסמן החדש"
+
+msgid "Please enter a new filename"
+msgstr "בבקשה הכנס שם קובץ חדש"
+
+msgid "Please enter filename (empty = use current date)"
+msgstr "Please enter filename (empty = use current date)"
+
+msgid "Please enter name of the new directory"
+msgstr "בבקשה הכנס שם לתיקיה החדשה"
+
+msgid "Please enter the correct pin code"
+msgstr "בבקשה הכנס את הקוד המתאים"
+
+msgid "Please follow the instructions on the TV"
+msgstr "אנא עקוב אחר ההוראות בטלויזיה"
+
+msgid ""
+"Please note that the previously selected media could not be accessed and "
+"therefore the default directory is being used instead."
+msgstr ""
+"Please note that the previously selected media could not be accessed and "
+"therefore the default directory is being used instead."
+
+msgid "Please press OK to continue."
+msgstr ".אנא לחץ אשר על מנת להמשיך"
+
+msgid "Please select a playlist to delete..."
+msgstr "...אנא בחר רשימת שמע למחיקה"
+
+msgid "Please select a playlist..."
+msgstr "...אנא בחר רשימת שמע "
+
+msgid "Please select a subservice to record..."
+msgstr "Please select a subservice to record..."
+
+msgid "Please select a subservice..."
+msgstr "Please select a subservice..."
+
+msgid "Please select medium to use as backup location"
+msgstr "Please select medium to use as backup location"
+
+msgid "Please select the movie path..."
+msgstr "Please select the movie path..."
+
+msgid ""
+"Please select the network interface that you want to use for your internet "
+"connection.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+"Please select the network interface that you want to use for your internet "
+"connection.\n"
+"\n"
+"Please press OK to continue."
+
+msgid ""
+"Please select the wireless network that you want to connect to.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+"Please select the wireless network that you want to connect to.\n"
+"\n"
+"Please press OK to continue."
+
+msgid "Please set up tuner B"
+msgstr "Please set up tuner B"
+
+msgid "Please set up tuner C"
+msgstr "Please set up tuner C"
+
+msgid "Please set up tuner D"
+msgstr "Please set up tuner D"
+
+msgid ""
+"Please use direction keys to move the PiP window.\n"
+"Press Bouquet +/- to resize the window.\n"
+"Press OK to go back to the TV mode or EXIT to cancel the moving."
+msgstr ""
+"Please use direction keys to move the PiP window.\n"
+"Press Bouquet +/- to resize the window.\n"
+"Press OK to go back to the TV mode or EXIT to cancel the moving."
+
+msgid ""
+"Please use the UP and DOWN keys to select your language. Afterwards press "
+"the OK button."
+msgstr ".אנא בחר את השפה, לאחר מכן לחץ על אשר"
+
+msgid "Please wait for activation of your network configuration..."
+msgstr "...נא המתן בזמן הפעלת הגדרות הרשת"
+
+msgid "Please wait while scanning is in progress..."
+msgstr "...נא המתן , הסריקה בעיצומה"
+
+msgid "Please wait while we configure your network..."
+msgstr "...נא המתן בעת הגדרת הרשת שלך"
+
+msgid "Please wait while we prepare your network interfaces..."
+msgstr "...נא המתן בעת הכנת ממשקי הרשת"
+
+msgid "Please wait while we test your network..."
+msgstr "...נא המתן בעת בדיקת הרשת"
+
+msgid "Please wait while your network is restarting..."
+msgstr "...נא המתן בעת איתחול הרשת"
+
+msgid "Please wait..."
+msgstr "...נא המתן"
+
+msgid "Please wait... Loading list..."
+msgstr "...נא המתן...טוען רשימה"
+
+msgid "Plugin manager activity information"
+msgstr "Plugin manager activity information"
+
+msgid "Plugin manager help"
+msgstr "Plugin manager help"
+
+msgid "Plugins"
+msgstr "פלאגינים"
+
+msgid "Polarization"
+msgstr "Polarization"
+
+msgid "Polish"
+msgstr "פולנית"
+
+msgid "Port A"
+msgstr "Port A"
+
+msgid "Port B"
+msgstr "Port B"
+
+msgid "Port C"
+msgstr "Port C"
+
+msgid "Port D"
+msgstr "Port D"
+
+msgid "Portuguese"
+msgstr "פורטוגזית"
+
+msgid "Positioner"
+msgstr "Positioner"
+
+msgid "Positioner setup"
+msgstr "Positioner setup"
+
+msgid "Preparing... Please wait"
+msgstr "מכין...נא המתן"
+
+msgid "Press OK on your remote control to continue."
+msgstr " על השלט על מנת להמשיך OK לחץ  "
+
+msgid "Press OK to activate the selected skin."
+msgstr "Press OK to activate the selected skin."
+
+msgid "Press OK to activate the settings."
+msgstr "Press OK to activate the settings."
+
+msgid "Press OK to edit the settings."
+msgstr "Press OK to edit the settings."
+
+msgid "Press OK to get further details for %s"
+msgstr "Press OK to get further details for %s"
+
+msgid "Press OK to scan"
+msgstr "לחץ אשר לסריקה"
+
+msgid "Press OK to select/deselect a CAId."
+msgstr "Press OK to select/deselect a CAId."
+
+msgid "Press OK to start the scan"
+msgstr "לחץ אשר לתחילת הסריקה"
+
+msgid "Press OK to toggle the selection."
+msgstr "Press OK to toggle the selection."
+
+msgid "Preview"
+msgstr "תצוגה מקדימה"
+
+msgid "Preview menu"
+msgstr "תצוגה מקדימה לתפריט"
+
+msgid "Primary DNS"
+msgstr "Primary DNS"
+
+msgid "Priority"
+msgstr "עדיפות"
+
+msgid "Process"
+msgstr "Process"
+
+msgid "Properties of current title"
+msgstr "Properties of current title"
+
+msgid "Protect services"
+msgstr "Protect services"
+
+msgid "Provider"
+msgstr "Provider"
+
+msgid "Provider to scan"
+msgstr "Provider to scan"
+
+msgid "Providers"
+msgstr "Providers"
+
+msgid "Quick"
+msgstr "מהיר"
+
+msgid "RF output"
+msgstr "RF output"
+
+msgid "RGB"
+msgstr "RGB"
+
+msgid "Random"
+msgstr "רנדומלי"
+
+msgid "Really close without saving settings?"
+msgstr "?לסגור מבלי לשמור את השינויים"
+
+msgid "Really delete done timers?"
+msgstr "?האם למחוק טיימרים שבוצעו"
+
+msgid "Really reboot now?"
+msgstr "?לבצע איתחול עכשיו"
+
+msgid "Really restart now?"
+msgstr "?לבצע איתחול עכשיו"
+
+msgid "Really shutdown now?"
+msgstr "?לבצע כיבוי עכשיו"
+
+msgid "Reboot"
+msgstr "איתחול"
+
+msgid "Record"
+msgstr "הקלטה"
+
+msgid "Record time limited due to conflicting timer %s"
+msgstr "%s זמן הקלטה הוגבל עקב התנגשות בין טיימרים"
+
+msgid "Recording"
+msgstr "מקליט"
+
+msgid "Recording(s) are in progress or coming up in few seconds!"
+msgstr "Recording(s) are in progress or coming up in few seconds!"
+
+msgid "Recordings"
+msgstr "הקלטות"
+
+msgid "Recordings always have priority"
+msgstr "Recordings always have priority"
+
+msgid "Refresh rate selection."
+msgstr "Refresh rate selection."
+
+msgid "Reload"
+msgstr "טען מחדש"
+
+msgid "Remove"
+msgstr "הסר"
+
+msgid "Remove a mark"
+msgstr "הסר סמן"
+
+msgid "Remove currently selected title"
+msgstr "Remove currently selected title"
+
+msgid "Remove finished."
+msgstr ".הסרה הסתיימה"
+
+msgid "Remove plugins"
+msgstr "הסר פלאגינים"
+
+msgid "Remove timer"
+msgstr "הסר טיימר"
+
+msgid "Remove title"
+msgstr "הסר כותרת"
+
+msgid "Removing"
+msgstr "מסיר"
+
+msgid "Removing directory %s failed. (Maybe not empty.)"
+msgstr "Removing directory %s failed. (Maybe not empty.)"
+
+msgid "Rename"
+msgstr "שנה שם"
+
+msgid "Repeats"
+msgstr "Repeats"
+
+msgid "Required medium type:"
+msgstr "Required medium type:"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Reset video enhancement settings to system defaults?"
+msgstr "Reset video enhancement settings to system defaults?"
+
+msgid "Reset video enhancement settings to your last configuration?"
+msgstr "Reset video enhancement settings to your last configuration?"
+
+msgid "Restart"
+msgstr "איתחול"
+
+msgid "Restart GUI now?"
+msgstr "GUI ?איתחול עכשיו"
+
+msgid "Restart network"
+msgstr "איתחול רשת"
+
+msgid "Restart test"
+msgstr "איתחול בדיקה"
+
+msgid "Restart your network connection and interfaces.\n"
+msgstr ".איתחול חיבורי רשת וממשקים\n"
+
+msgid "Restore"
+msgstr "שחזור"
+
+msgid "Restore backups"
+msgstr "שחזור גיבויים"
+
+msgid "Restore is running..."
+msgstr "...שחזור בפעולה"
+
+msgid "Resume from last position"
+msgstr "Resume from last position"
+
+msgid "Resume position at %s"
+msgstr "Resume position at %s"
+
+msgid "Resuming playback"
+msgstr "Resuming playback"
+
+msgid "Return to movie list"
+msgstr "חזור לרשימת הסרטים"
+
+msgid "Return to previous service"
+msgstr "Return to previous service"
+
+msgid "Rewind speeds"
+msgstr "מהירות הרצה אחורנית"
+
+msgid "Right"
+msgstr "ימין"
+
+msgid "Rotor turning speed"
+msgstr "Rotor turning speed"
+
+msgid "Russian"
+msgstr "רוסית"
+
+msgid "S-Video"
+msgstr "S-Video"
+
+msgid "SINGLE LAYER DVD"
+msgstr "SINGLE LAYER DVD"
+
+msgid "SSID:"
+msgstr "SSID:"
+
+msgid "Sat"
+msgstr "Sat"
+
+msgid "Satellite"
+msgstr "לוויין"
+
+msgid "Satellite equipment"
+msgstr "ציוד לוויין"
+
+msgid "Satellites"
+msgstr "לוויינים"
+
+msgid "Satfinder"
+msgstr "Satfinder"
+
+msgid "Sats"
+msgstr "Sats"
+
+msgid "Saturation"
+msgstr "Saturation"
+
+msgid "Saturday"
+msgstr "שבת"
+
+msgid "Save"
+msgstr "שמור"
+
+msgid "Scan "
+msgstr "סרוק"
+
+msgid "Scan additional SR"
+msgstr "Scan additional SR"
+
+msgid ""
+"Scan your network for wireless access points and connect to them using your "
+"selected wireless device.\n"
+msgstr ""
+"Scan your network for wireless access points and connect to them using your "
+"selected wireless device.\n"
+
+msgid "Search east"
+msgstr "Search east"
+
+msgid "Search west"
+msgstr "Search west"
+
+msgid "Searching for available updates. Please wait..."
+msgstr "Searching for available updates. Please wait..."
+
+msgid "Searching for new installed or removed packages. Please wait..."
+msgstr "Searching for new installed or removed packages. Please wait..."
+
+msgid "Secondary DNS"
+msgstr "Secondary DNS"
+
+msgid "Seek"
+msgstr "Seek"
+
+msgid "Select"
+msgstr "בחר"
+
+msgid "Select audio track"
+msgstr "Select audio track"
+
+msgid "Select channel to record from"
+msgstr "Select channel to record from"
+
+msgid "Select files/folders to backup"
+msgstr "Select files/folders to backup"
+
+msgid "Select interface"
+msgstr "בחר ממשק"
+
+msgid "Select provider to add..."
+msgstr "Select provider to add..."
+
+msgid "Select refresh rate"
+msgstr "Select refresh rate"
+
+msgid "Select service to add..."
+msgstr "Select service to add..."
+
+msgid "Select upgrade source to edit."
+msgstr "Select upgrade source to edit."
+
+msgid "Select video input with up/down buttons"
+msgstr "Select video input with up/down buttons"
+
+msgid "Select video mode"
+msgstr "Select video mode"
+
+msgid "Select wireless network"
+msgstr "בחר רשת אלחוטית"
+
+msgid "Send DiSEqC"
+msgstr "Send DiSEqC"
+
+msgid "Send DiSEqC only on satellite change"
+msgstr "Send DiSEqC only on satellite change"
+
+msgid "Seperate titles with a main menu"
+msgstr "Seperate titles with a main menu"
+
+msgid "Sequence repeat"
+msgstr "Sequence repeat"
+
+msgid "Serbian"
+msgstr "סרבית"
+
+msgid "Service"
+msgstr "שירות"
+
+msgid "Service has been added to the favourites."
+msgstr "Service has been added to the favourites."
+
+msgid "Service has been added to the selected bouquet."
+msgstr "Service has been added to the selected bouquet."
+
+msgid "Service scan"
+msgstr "סריקת שירותים"
+
+msgid ""
+"Service unavailable!\n"
+"Check tuner configuration!"
+msgstr ""
+"!שירותלא זמין\n"
+"בדוק הגדרות טיונר"
+
+msgid "Services"
+msgstr "שירותים"
+
+msgid "Set interface as default Interface"
+msgstr "Set interface as default Interface"
+
+msgid "Set limits"
+msgstr "Set limits"
+
+msgid "Settings"
+msgstr "הגדרות"
+
+msgid "Setup"
+msgstr "הגדרות"
+
+msgid "Sharpness"
+msgstr "חדות"
+
+msgid "Show infobar on channel change"
+msgstr "Show infobar on channel change"
+
+msgid "Show infobar on event change"
+msgstr "Show infobar on event change"
+
+msgid "Show infobar on skip forward/backward"
+msgstr "Show infobar on skip forward/backward"
+
+msgid "Show positioner movement"
+msgstr "Show positioner movement"
+
+msgid "Show the radio player..."
+msgstr "...הצג את נגן הרדיו"
+
+msgid "Show the tv player..."
+msgstr "Show the tv player..."
+
+msgid "Shows the state of your wireless LAN connection.\n"
+msgstr ".הצג סטטוס חיבור של הרשת האלחוטית\n"
+
+msgid "Shutdown"
+msgstr "כיבוי"
+
+msgid "Signal Strength:"
+msgstr "Signal Strength:"
+
+msgid "Signal: "
+msgstr "Signal: "
+
+msgid "Similar"
+msgstr "Similar"
+
+msgid "Similar broadcasts:"
+msgstr "Similar broadcasts:"
+
+msgid "Simple"
+msgstr "Simple"
+
+msgid "Single"
+msgstr "Single"
+
+msgid "Single EPG"
+msgstr " יחיד EPG"
+
+msgid "Single satellite"
+msgstr "יחיד satellite"
+
+msgid "Skins"
+msgstr "Skins"
+
+msgid "Slot %d"
+msgstr "Slot %d"
+
+msgid "Slovenian"
+msgstr "סלובנית"
+
+msgid "Slow"
+msgstr "Slow"
+
+msgid "Software"
+msgstr "תוכנה"
+
+msgid "Software management"
+msgstr "ניהול תוכנה"
+
+msgid "Software restore"
+msgstr "שחזור תוכנה"
+
+msgid "Software update"
+msgstr "עדכון תוכנה"
+
+msgid "Some plugins are not available:\n"
+msgstr "מספר פלאגינים לא זמינים:\n"
+
+msgid "Sound"
+msgstr "קול"
+
+msgid "South"
+msgstr "South"
+
+msgid "Spanish"
+msgstr "ספרדית"
+
+msgid "Split preview mode"
+msgstr "Split preview mode"
+
+msgid "Standby"
+msgstr "המתנה"
+
+msgid "Standby / Restart"
+msgstr " איתחול / המתנה"
+
+msgid "Start from the beginning"
+msgstr "התחל מההתחלה"
+
+msgid "Start test"
+msgstr "התחל בדיקה"
+
+msgid "Starting on"
+msgstr "מתחיל ב"
+
+msgid "Step east"
+msgstr "Step east"
+
+msgid "Step west"
+msgstr "Step west"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Stop current event and disable coming events"
+msgstr "Stop current event and disable coming events"
+
+msgid "Stop current event but not coming events"
+msgstr "Stop current event but not coming events"
+
+msgid "Stop playing this movie?"
+msgstr "?האם לעצור את הסרט"
+
+msgid "Stop test"
+msgstr "עצור בדיקה"
+
+msgid "Stop testing plane after # failed transponders"
+msgstr "Stop testing plane after # failed transponders"
+
+msgid "Stop testing plane after # successful transponders"
+msgstr "Stop testing plane after # successful transponders"
+
+msgid "Store position"
+msgstr "Store position"
+
+msgid "Stored position"
+msgstr "Stored position"
+
+msgid "Subservices"
+msgstr "Subservices"
+
+msgid "Subtitle selection"
+msgstr "בחירת תרגום"
+
+msgid "Subtitles"
+msgstr "תרגום"
+
+msgid "Sun"
+msgstr "ראשון"
+
+msgid "Sunday"
+msgstr "ראשון"
+
+msgid "Swedish"
+msgstr "שוודית"
+
+msgid "System"
+msgstr "מערכת"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Terrestrial provider"
+msgstr "Terrestrial provider"
+
+msgid "Test DiSEqC settings"
+msgstr "Test DiSEqC settings"
+
+msgid "Test mode"
+msgstr "Test mode"
+
+msgid ""
+"Thank you for using the wizard.\n"
+"Please press OK to continue."
+msgstr ""
+"Thank you for using the wizard.\n"
+"Please press OK to continue."
+
+msgid "The backup failed. Please choose a different backup location."
+msgstr "The backup failed. Please choose a different backup location."
+
+msgid ""
+"The directory %s is not writable.\n"
+"Make sure you select a writable directory instead."
+msgstr ""
+"The directory %s is not writable.\n"
+"Make sure you select a writable directory instead."
+
+msgid ""
+"The following device was found:\n"
+"\n"
+"%s\n"
+"\n"
+"Do you want to write the USB flasher to this stick?"
+msgstr ""
+"The following device was found:\n"
+"\n"
+"%s\n"
+"\n"
+"Do you want to write the USB flasher to this stick?"
+
+msgid "The following files were found..."
+msgstr "The following files were found..."
+
+msgid "The path %s already exists."
+msgstr "The path %s already exists."
+
+msgid "The pin code you entered is wrong."
+msgstr ".הקוד שהכנסת שגוי"
+
+msgid "The timer file (timers.xml) is corrupt and could not be loaded."
+msgstr "The timer file (timers.xml) is corrupt and could not be loaded."
+
+msgid ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it and choose what you want to do next."
+msgstr ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it and choose what you want to do next."
+
+msgid ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it."
+msgstr ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it."
+
+msgid ""
+"The wizard can backup your current settings. Do you want to do a backup now?"
+msgstr "?האשף יכול לבצע גיבוי להגדרות. האם אתה מעוניין לעשות זאת עכשיו"
+
+msgid "The wizard is finished now."
+msgstr "The wizard is finished now."
+
+msgid "There are at least "
+msgstr "There are at least "
+
+msgid "There are no updates available."
+msgstr ".אין עדכונים זמינים"
+
+msgid ""
+"There might not be enough space on the selected partition..\n"
+"Do you really want to continue?"
+msgstr ""
+"There might not be enough space on the selected partition..\n"
+"Do you really want to continue?"
+
+msgid "This plugin is installed."
+msgstr ".הפלאגין הזה הותקן"
+
+msgid "This plugin is not installed."
+msgstr ".הפלאגין הזה לא הותקן"
+
+msgid "This plugin will be installed."
+msgstr ".הפלאגין הזה יותקן"
+
+msgid "This plugin will be removed."
+msgstr ".הפלאגין הזה יוסר"
+
+msgid "Three"
+msgstr "שלוש"
+
+msgid "Thursday"
+msgstr "יום חמישי"
+
+msgid "Time"
+msgstr "זמן"
+
+msgid "Timer entry"
+msgstr "רשומת טיימר"
+
+msgid "Timer log"
+msgstr "טיימר לוג"
+
+msgid "Timer record location"
+msgstr "מיקום הקלטה לטיימר"
+
+msgid "Timer sanity error"
+msgstr "Timer sanity error"
+
+msgid "Timer selection"
+msgstr "בחירת טיימר"
+
+msgid "Timeshift"
+msgstr "Timeshift"
+
+msgid "Timeshift location"
+msgstr "Timeshift מיקום ה"
+
+msgid "Timeshift not possible!"
+msgstr "Timeshift not possible!"
+
+msgid "Timezone"
+msgstr "איזור זמן"
+
+msgid "Title"
+msgstr "כותרת"
+
+msgid "Title properties"
+msgstr "מאפייני הכותרת"
+
+msgid "Today"
+msgstr "היום"
+
+msgid "Tone mode"
+msgstr "Tone mode"
+
+msgid "Toneburst"
+msgstr "Toneburst"
+
+msgid "Toneburst A/B"
+msgstr "Toneburst A/B"
+
+msgid "Track"
+msgstr "Track"
+
+msgid "Transmission mode"
+msgstr "Transmission mode"
+
+msgid "Transponder"
+msgstr "Transponder"
+
+msgid "Try to find used transponders in cable network.. please wait..."
+msgstr "Try to find used transponders in cable network.. please wait..."
+
+msgid "Tue"
+msgstr "שלישי"
+
+msgid "Tuesday"
+msgstr "יום שלישי"
+
+msgid "Tune"
+msgstr "Tune"
+
+msgid "Tune failed!"
+msgstr "Tune failed!"
+
+msgid "Tuner"
+msgstr "Tuner"
+
+msgid "Tuner configuration"
+msgstr "Tuner הגדרת"
+
+msgid "Tuner status"
+msgstr "Tuner מצב ה"
+
+msgid "Tuner type"
+msgstr "Tuner סוג ה"
+
+msgid "Turkish"
+msgstr "טורקית"
+
+msgid "Two"
+msgstr "שתיים"
+
+msgid "Type"
+msgstr "סוג"
+
+msgid "Type of scan"
+msgstr "סוג סריקה"
+
+msgid "USALS"
+msgstr "USALS"
+
+msgid "Undo install"
+msgstr "Undo install"
+
+msgid "Undo uninstall"
+msgstr "Undo uninstall"
+
+msgid "Uninstall"
+msgstr "הסר"
+
+msgid "Unsupported"
+msgstr "לא נתמך"
+
+msgid "Update"
+msgstr "עדכן"
+
+msgid "Updatefeed not available."
+msgstr "Updatefeed not available."
+
+msgid "Updating software catalog"
+msgstr "מעדכן קטלוג תוכנה"
+
+msgid "Upgrade finished."
+msgstr ".שדרוג הסתיים"
+
+msgid "Upgrading"
+msgstr "משדרג"
+
+msgid "Use"
+msgstr "Use"
+
+msgid "Use DHCP"
+msgstr "Use DHCP"
+
+msgid "Use power measurement"
+msgstr "Use power measurement"
+
+msgid ""
+"Use the up/down keys on your remote control to select an option. After that, "
+"press OK."
+msgstr ".השתמש במקשי השלט על מנת לבחור באפשרות. בסוף, לחץ אשר"
+
+msgid "Use this video enhancement settings?"
+msgstr "Use this video enhancement settings?"
+
+msgid "Used service scan type"
+msgstr "Used service scan type"
+
+msgid "User defined"
+msgstr "User defined"
+
+msgid "Username"
+msgstr "שם משתמש"
+
+msgid "VCR scart"
+msgstr "VCR scart"
+
+msgid "Vertical"
+msgstr "Vertical"
+
+msgid "Video enhancement preview"
+msgstr "Video enhancement preview"
+
+msgid "Video enhancement setup"
+msgstr "Video enhancement setup"
+
+msgid "Video mode selection."
+msgstr "Video mode selection."
+
+msgid "View Movies..."
+msgstr "...הצג סרטים"
+
+msgid "View Video CD..."
+msgstr "View Video CD..."
+
+msgid "View details"
+msgstr "הצג פרטים"
+
+msgid "View list of available CommonInterface extensions"
+msgstr "View list of available CommonInterface extensions"
+
+msgid "View list of available Satellite equipment extensions."
+msgstr "View list of available Satellite equipment extensions."
+
+msgid "View list of available communication extensions."
+msgstr "View list of available communication extensions."
+
+msgid "View list of available default settings"
+msgstr "View list of available default settings"
+
+msgid "View list of available multimedia extensions."
+msgstr "View list of available multimedia extensions."
+
+msgid "View list of available networking extensions"
+msgstr "View list of available networking extensions"
+
+msgid "View list of available recording extensions"
+msgstr "View list of available recording extensions"
+
+msgid "View list of available skins"
+msgstr "View list of available skins"
+
+msgid "View list of available software extensions"
+msgstr "View list of available software extensions"
+
+msgid "View list of available system extensions"
+msgstr "View list of available system extensions"
+
+msgid "Voltage mode"
+msgstr "Voltage mode"
+
+msgid "WLAN connection"
+msgstr "WLAN connection"
+
+msgid "WPA"
+msgstr "WPA"
+
+msgid "WPA or WPA2"
+msgstr "WPA or WPA2"
+
+msgid "WPA2"
+msgstr "WPA2"
+
+msgid "Waiting"
+msgstr "ממתין"
+
+msgid "Wed"
+msgstr "רביעי"
+
+msgid "Wednesday"
+msgstr "יום רביעי"
+
+msgid "Weekday"
+msgstr "Weekday"
+
+msgid "West"
+msgstr "West"
+
+msgid "What do you want to scan?"
+msgstr "?מה ברצונל לסרוק"
+
+msgid "Where do you want to backup your settings?"
+msgstr "Where do you want to backup your settings?"
+
+msgid "Where to save temporary timeshift recordings?"
+msgstr "Where to save temporary timeshift recordings?"
+
+msgid "Wireless LAN"
+msgstr "Wireless LAN"
+
+msgid "Write error while recording. Disk full?\n"
+msgstr "Write error while recording. Disk full?\n"
+
+msgid "Write failed!"
+msgstr "Write failed!"
+
+msgid "YPbPr"
+msgstr "YPbPr"
+
+msgid "Year"
+msgstr "שנה"
+
+msgid "Yes"
+msgstr "כן"
+
+msgid "Yes to all"
+msgstr "כן לכל"
+
+msgid "Yes, and delete this movie"
+msgstr "כן, ומחק את הסרט הזה"
+
+msgid "Yes, backup my settings!"
+msgstr "!כן, גבה את ההגדרות"
+
+msgid "Yes, do a manual scan now"
+msgstr "Yes, do a manual scan now"
+
+msgid "Yes, do an automatic scan now"
+msgstr "Yes, do an automatic scan now"
+
+msgid "Yes, do another manual scan now"
+msgstr "Yes, do another manual scan now"
+
+msgid "Yes, restore the settings now"
+msgstr "Yes, restore the settings now"
+
+msgid "Yes, returning to movie list"
+msgstr "Yes, returning to movie list"
+
+msgid "Yes, shut down now."
+msgstr "Yes, shut down now."
+
+msgid "You can cancel the installation."
+msgstr "You can cancel the installation."
+
+msgid "You can cancel the removal."
+msgstr "You can cancel the removal."
+
+msgid "You can install this plugin."
+msgstr "You can install this plugin."
+
+msgid "You can remove this plugin."
+msgstr "You can remove this plugin."
+
+msgid "You cannot delete this!"
+msgstr "!אין אפשרות למחוק את הקובץ הזה"
+
+msgid ""
+"You have chosen to backup your settings. Please press OK to start the backup "
+"now."
+msgstr ""
+"You have chosen to backup your settings. Please press OK to start the backup "
+"now."
+
+msgid ""
+"You have chosen to restore your settings. Enigma2 will restart after "
+"restore. Please press OK to start the restore now."
+msgstr ""
+"You have chosen to restore your settings. Enigma2 will restart after "
+"restore. Please press OK to start the restore now."
+
+msgid "You have to wait %s!"
+msgstr "You have to wait %s!"
+
+msgid ""
+"Your %s %s is now ready to use.\n"
+"\n"
+"Your internet connection is working now.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+"Your %s %s is now ready to use.\n"
+"\n"
+"Your internet connection is working now.\n"
+"\n"
+"Please press OK to continue."
+
+msgid "Your %s %s is shutting down. Please wait..."
+msgstr "Your %s %s is shutting down. Please wait..."
+
+msgid ""
+"Your backup succeeded. We will now continue to explain the further upgrade "
+"process."
+msgstr ""
+"Your backup succeeded. We will now continue to explain the further upgrade "
+"process."
+
+msgid ""
+"Your collection exceeds the size of a single layer medium, you will need a "
+"blank dual layer DVD!"
+msgstr ""
+"Your collection exceeds the size of a single layer medium, you will need a "
+"blank dual layer DVD!"
+
+msgid ""
+"Your config file is not well-formed:\n"
+"%s"
+msgstr ""
+"Your config file is not well-formed:\n"
+"%s"
+
+msgid "Your current collection will get lost!"
+msgstr "Your current collection will get lost!"
+
+msgid ""
+"Your internet connection is not working!\n"
+"Please choose what you want to do next."
+msgstr ""
+"Your internet connection is not working!\n"
+"Please choose what you want to do next."
+
+msgid "Your network configuration has been activated."
+msgstr "Your network configuration has been activated."
+
+msgid "Zap back to previously tuned service?"
+msgstr "?לזפזפ אחורנית לערוץ הקודם"
+
+msgid "Zap back to service before positioner setup?"
+msgstr "?לזפזפ אחורנית לערוץ הקודם"
+
+msgid "Zap back to service before tuner setup?"
+msgstr "?לזפזפ אחורנית לערוץ הקודם"
+
+msgid "[alternative edit]"
+msgstr "[alternative edit]"
+
+msgid "[bouquet edit]"
+msgstr "[bouquet edit]"
+
+msgid "[favourite edit]"
+msgstr "[favourite edit]"
+
+msgid "[move mode]"
+msgstr "[move mode]"
+
+msgid "abort alternatives edit"
+msgstr "abort alternatives edit"
+
+msgid "abort bouquet edit"
+msgstr "abort bouquet edit"
+
+msgid "abort favourites edit"
+msgstr "abort favourites edit"
+
+msgid "about to start"
+msgstr "about to start"
+
+msgid "activate network adapter configuration"
+msgstr "activate network adapter configuration"
+
+msgid "add alternatives"
+msgstr "add alternatives"
+
+msgid "add bookmark"
+msgstr "add bookmark"
+
+msgid "add bouquet"
+msgstr "add bouquet"
+
+msgid "add marker"
+msgstr "הוסף סמן"
+
+msgid "add service to bouquet"
+msgstr "הוסף את הערוץ לתיקית הערוצים"
+
+msgid "add service to favourites"
+msgstr "הוסף את הערוץ למועדפים"
+
+msgid "add to parental protection"
+msgstr "הוסף לבקרת הורים"
+
+msgid "advanced"
+msgstr "מתקדם"
+
+msgid "audio tracks"
+msgstr "audio tracks"
+
+msgid "auto"
+msgstr "אוטומטי"
+
+msgid "back"
+msgstr "אחורנית"
+
+msgid "background image"
+msgstr "תמונת רקע"
+
+msgid "better"
+msgstr "better"
+
+msgid "black"
+msgstr "black"
+
+msgid "blacklist"
+msgstr "blacklist"
+
+msgid "blue"
+msgstr "blue"
+
+msgid "chapters"
+msgstr "chapters"
+
+msgid "circular left"
+msgstr "circular left"
+
+msgid "circular right"
+msgstr "circular right"
+
+msgid "confirmed"
+msgstr "אושר"
+
+msgid "connected"
+msgstr "התחבר"
+
+msgid "continue"
+msgstr "המשך"
+
+msgid "copy to bouquets"
+msgstr "העתק לתיקית ערוצים"
+
+msgid "create directory"
+msgstr "צור תיקיה"
+
+msgid "daily"
+msgstr "יומי"
+
+msgid "day"
+msgstr "יום"
+
+msgid "delete"
+msgstr "מחק"
+
+msgid "delete cut"
+msgstr "delete cut"
+
+msgid "disable"
+msgstr "הפסק"
+
+msgid "disable move mode"
+msgstr "disable move mode"
+
+msgid "disabled"
+msgstr "disabled"
+
+msgid "disconnected"
+msgstr "disconnected"
+
+msgid "do nothing"
+msgstr "do nothing"
+
+msgid "done!"
+msgstr "!בוצע"
+
+msgid "edit alternatives"
+msgstr "edit alternatives"
+
+msgid "empty"
+msgstr "ריק"
+
+msgid "enable"
+msgstr "אפשר"
+
+msgid "enable bouquet edit"
+msgstr "enable bouquet edit"
+
+msgid "enable favourite edit"
+msgstr "enable favourite edit"
+
+msgid "enable move mode"
+msgstr "enable move mode"
+
+msgid "enabled"
+msgstr "אופשר"
+
+msgid "end alternatives edit"
+msgstr "end alternatives edit"
+
+msgid "end bouquet edit"
+msgstr "end bouquet edit"
+
+msgid "end cut here"
+msgstr "end cut here"
+
+msgid "end favourites edit"
+msgstr "end favourites edit"
+
+msgid "equal to"
+msgstr "equal to"
+
+msgid "exit DVD player or return to file browser"
+msgstr "exit DVD player or return to file browser"
+
+msgid "exit network adapter configuration"
+msgstr "exit network adapter configuration"
+
+msgid "exit networkadapter setup menu"
+msgstr "exit networkadapter setup menu"
+
+msgid "filename"
+msgstr "filename"
+
+msgid "free diskspace"
+msgstr "מקום פנוי בכונן הקשיח"
+
+msgid "go to deep standby"
+msgstr "go to deep standby"
+
+msgid "go to standby"
+msgstr "go to standby"
+
+msgid "green"
+msgstr "ירוק"
+
+msgid "horizontal"
+msgstr "horizontal"
+
+msgid "init module"
+msgstr "init module"
+
+msgid "insert mark here"
+msgstr "הכנס סמן כאן"
+
+msgid "jump back to the previous title"
+msgstr "jump back to the previous title"
+
+msgid "jump forward to the next title"
+msgstr "jump forward to the next title"
+
+msgid "leave movie player..."
+msgstr "leave movie player..."
+
+msgid "left"
+msgstr "left"
+
+msgid "length"
+msgstr "length"
+
+msgid "locked"
+msgstr "locked"
+
+msgid "manual"
+msgstr "ידני"
+
+msgid "menu"
+msgstr "תפריט"
+
+msgid "mins"
+msgstr "דקות"
+
+msgid "minutes"
+msgstr "דקות"
+
+msgid "month"
+msgstr "חודש"
+
+msgid "move down to last entry"
+msgstr "move down to last entry"
+
+msgid "move down to next entry"
+msgstr "move down to next entry"
+
+msgid "move up to first entry"
+msgstr "move up to first entry"
+
+msgid "move up to previous entry"
+msgstr "move up to previous entry"
+
+msgid "multinorm"
+msgstr "multinorm"
+
+msgid "never"
+msgstr "לעולם"
+
+msgid "no"
+msgstr "לא"
+
+msgid "no module found"
+msgstr "no module found"
+
+msgid "none"
+msgstr "none"
+
+msgid "not configured"
+msgstr "not configured"
+
+msgid "not locked"
+msgstr "not locked"
+
+msgid "not used"
+msgstr "לא בשימוש"
+
+msgid "nothing connected"
+msgstr "nothing connected"
+
+msgid "of a DUAL layer medium used."
+msgstr "of a DUAL layer medium used."
+
+msgid "of a SINGLE layer medium used."
+msgstr "of a SINGLE layer medium used."
+
+msgid "off"
+msgstr "כבוי"
+
+msgid "on"
+msgstr "דלוק"
+
+msgid "on READ ONLY medium."
+msgstr "on READ ONLY medium."
+
+msgid "once"
+msgstr "once"
+
+msgid "open nameserver configuration"
+msgstr "open nameserver configuration"
+
+msgid "pass"
+msgstr "pass"
+
+msgid "please press OK when ready"
+msgstr "please press OK when ready"
+
+msgid "please wait, loading picture..."
+msgstr "...נא המתן, טוען תמונה"
+
+msgid "record"
+msgstr "הקלט"
+
+msgid "recording..."
+msgstr "...מקליט"
+
+msgid "red"
+msgstr "אדום"
+
+msgid "remove after this position"
+msgstr "remove after this position"
+
+msgid "remove all alternatives"
+msgstr "remove all alternatives"
+
+msgid "remove all new found flags"
+msgstr "remove all new found flags"
+
+msgid "remove before this position"
+msgstr "remove before this position"
+
+msgid "remove bookmark"
+msgstr "remove bookmark"
+
+msgid "remove directory"
+msgstr "remove directory"
+
+msgid "remove entry"
+msgstr "remove entry"
+
+msgid "remove from parental protection"
+msgstr "remove from parental protection"
+
+msgid "remove new found flag"
+msgstr "remove new found flag"
+
+msgid "remove selected satellite"
+msgstr "remove selected satellite"
+
+msgid "remove this mark"
+msgstr "remove this mark"
+
+msgid "repeat playlist"
+msgstr "repeat playlist"
+
+msgid "repeated"
+msgstr "repeated"
+
+msgid "rewind to the previous chapter"
+msgstr "rewind to the previous chapter"
+
+msgid "right"
+msgstr "ימין"
+
+msgid "save last directory on exit"
+msgstr "save last directory on exit"
+
+msgid "save playlist on exit"
+msgstr "save playlist on exit"
+
+msgid "scan state"
+msgstr "מצב סריקה"
+
+msgid "seconds"
+msgstr "שניות"
+
+msgid "select"
+msgstr "בחר"
+
+msgid "select menu entry"
+msgstr "בחר רשומה בתפריט"
+
+msgid "show DVD main menu"
+msgstr "show DVD main menu"
+
+msgid "show alternatives"
+msgstr "הראה אלטרנטיבות"
+
+msgid "show event details"
+msgstr "הצג מידע על האירוע"
+
+msgid "show transponder info"
+msgstr "transponder  הראה מידע על ה"
+
+msgid "shut down"
+msgstr "כיבוי"
+
+msgid "simple"
+msgstr "פשוט"
+
+msgid "skip backward"
+msgstr "דלג אחורה"
+
+msgid "skip backward (enter time)"
+msgstr "דלג אחורה - הכנס זמן"
+
+msgid "skip forward"
+msgstr "דלג קדימה"
+
+msgid "skip forward (enter time)"
+msgstr "דלג קדימה - הכנס זמן"
+
+msgid "standard"
+msgstr "סטנדרטי"
+
+msgid "start cut here"
+msgstr "התחל גזירה כאן"
+
+msgid "start directory"
+msgstr "התחל תיקיה"
+
+msgid "stereo"
+msgstr "סטריאו"
+
+msgid "switch to bookmarks"
+msgstr "העבר לסימניות"
+
+msgid "switch to filelist"
+msgstr "העבר לרשימת הקבצים"
+
+msgid "switch to the next angle"
+msgstr "העבר לזווית הבאה"
+
+msgid "switch to the next audio track"
+msgstr "העבר לפס השמע הבא"
+
+msgid "switch to the next subtitle language"
+msgstr "העבר לשפת תרגום הבאה"
+
+msgid "template file"
+msgstr "קובץ תבנית"
+
+msgid "this recording"
+msgstr "ההקלטה הזו"
+
+msgid "this service is protected by a parental control pin"
+msgstr "שירות זה מוגן על ידי בקרת הורים"
+
+msgid "unknown"
+msgstr "לא ידוע"
+
+msgid "unknown service"
+msgstr "שירות לא ידוע"
+
+msgid "until standby/restart"
+msgstr "until standby/restart"
+
+msgid "user defined"
+msgstr "user defined"
+
+msgid "vertical"
+msgstr "vertical"
+
+msgid "view extensions..."
+msgstr "...הצג תוספות"
+
+msgid "wait for ci..."
+msgstr "wait for ci..."
+
+msgid "wait for mmi..."
+msgstr "wait for mmi..."
+
+msgid "waiting"
+msgstr "ממתין"
+
+msgid "weekly"
+msgstr "שבועי"
+
+msgid "working"
+msgstr "עובד"
+
+msgid "yellow"
+msgstr "צהוב"
+
+msgid "yes"
+msgstr "כן"
+
+msgid "yes (keep feeds)"
+msgstr "כן (שמור פידים)"
+
+msgid "zap"
+msgstr "זיפזופ"
+
+msgid "zapped"
+msgstr "זופזפ"

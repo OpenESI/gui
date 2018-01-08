@@ -1,0 +1,1541 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenEsi v2.0 Enigma2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-20 15:33+0200\n"
+"PO-Revision-Date: 2015-10-28 08:56+0000\n"
+"Last-Translator: OpenEsi-Image <openesi@openesi.eu>\n"
+"language/ca/)\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.10\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: item;text;text=\n"
+"X-Poedit-SearchPath-0: /Users/eleonor/Documents/Sorgenti/enigma2\n"
+"X-Poedit-SearchPath-1: /Users/eleonor/Documents/Sorgenti/multiboot-plugin\n"
+"X-Poedit-SearchPath-2: /Users/eleonor/Documents/Sorgenti/PoEditXml\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid "%H:%M"
+msgstr "%H:%M"
+
+msgid "%d min"
+msgstr "%d min"
+
+msgid "%d.%B %Y"
+msgstr "%d.%B %Y"
+
+msgid "%s (%s)\n"
+msgstr "%s (%s)\n"
+
+msgid "(empty)"
+msgstr "(buit)"
+
+msgid "1.0"
+msgstr "1.0"
+
+msgid "1.1"
+msgstr "1.1"
+
+msgid "1.2"
+msgstr "1.2"
+
+msgid "12V output"
+msgstr "sortida 12V"
+
+msgid "13 V"
+msgstr "13 V"
+
+msgid "16:9"
+msgstr "16:9"
+
+msgid "16:9 always"
+msgstr "16:9 sempre"
+
+msgid "18 V"
+msgstr "18 V"
+
+msgid "<unknown>"
+msgstr "<desconegut>"
+
+msgid "??"
+msgstr "?"
+
+msgid "A"
+msgstr "Un"
+
+msgid ""
+"A recording is currently running.\n"
+"What do you want to do?"
+msgstr ""
+"En aquests moments s'està realitzant una gravació.\n"
+"Què vols fer?"
+
+msgid ""
+"A recording is currently running. Please stop the recording before trying to "
+"configure the positioner."
+msgstr ""
+"En aquests moments s'està realitzant una gravació. Sisplau, atura-la abans "
+"de configurar el motor."
+
+msgid ""
+"A timer failed to record!\n"
+"Disable TV and try again?\n"
+msgstr ""
+"Ha fallat la gravació!\n"
+"Vols desactivar la TV i tornar-ho a provar?\n"
+
+msgid "About"
+msgstr "Quant a"
+
+msgid "About..."
+msgstr "Quant a..."
+
+msgid "Activate Picture in Picture"
+msgstr "Activar PiP"
+
+msgid "Activate network settings"
+msgstr "Activar la configuració de la xarxa"
+
+msgid "Add"
+msgstr "Afegir"
+
+msgid "Add a mark"
+msgstr "Afegir una marca"
+
+msgid "Add a new title"
+msgstr "Afegir un nou títol"
+
+msgid "Add timer"
+msgstr "Gravar"
+
+msgid "Add to bouquet"
+msgstr "Afegir a la llista"
+
+msgid "Add to favourites"
+msgstr "Afegir als preferits"
+
+msgid "After event"
+msgstr "Després del programa"
+
+msgid "Album"
+msgstr "Àlbum"
+
+msgid "All"
+msgstr "Tot"
+
+msgid "Alpha"
+msgstr "Alpha"
+
+msgid "Arabic"
+msgstr "Àrab"
+
+msgid "Artist"
+msgstr "Artista"
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "Automatic Scan"
+msgstr "Recerca automàtica"
+
+msgid "B"
+msgstr "B"
+
+msgid "Band"
+msgstr "Banda"
+
+msgid "Bandwidth"
+msgstr "Ample de banda"
+
+msgid "Begin time"
+msgstr "Hora d'inici"
+
+msgid "Brightness"
+msgstr "Brillantor"
+
+msgid "Burn DVD"
+msgstr "Gravar DVD"
+
+msgid "Bus: "
+msgstr "Bus: "
+
+msgid "C-Band"
+msgstr "Banda-C"
+
+msgid "CVBS"
+msgstr "CVBS"
+
+msgid "Cable"
+msgstr "Cable"
+
+msgid "Cancel"
+msgstr "Cancel·lar"
+
+msgid "Capacity: "
+msgstr "Capacitat: "
+
+msgid "Change bouquets in quickzap"
+msgstr "Canviar de llista en el zàpping ràpid"
+
+msgid "Change pin code"
+msgstr "Canviar codi pin"
+
+msgid "Channel"
+msgstr "Canal"
+
+msgid "Channel:"
+msgstr "Canal:"
+
+msgid "Cleanup"
+msgstr "Netejar"
+
+msgid "Clear before scan"
+msgstr "Netejar abans de buscar"
+
+msgid "Clear log"
+msgstr "Esborrar log"
+
+msgid "Coderate HP"
+msgstr "Velocitat de codi HP"
+
+msgid "Coderate LP"
+msgstr "Velocitat de codi LP"
+
+msgid "Command order"
+msgstr "Ordre de comanda"
+
+msgid "Common Interface"
+msgstr "Interfície comuna"
+
+msgid "Complete"
+msgstr "Complet"
+
+msgid "Configuring"
+msgstr "Configurant"
+
+msgid "Conflicting timer"
+msgstr "Gravació en conflicte"
+
+msgid "Constellation"
+msgstr "Constel·lació"
+
+msgid "Contrast"
+msgstr "Contrast"
+
+msgid "Croatian"
+msgstr "Croat"
+
+msgid "Current version:"
+msgstr "Versió actual:"
+
+msgid "Customize"
+msgstr "Personalitzar"
+
+msgid "Cut"
+msgstr "Tallar"
+
+msgid "Cutlist editor..."
+msgstr "Editor..."
+
+msgid "Czech"
+msgstr "Txec"
+
+msgid "DVB-S"
+msgstr "DVB-S"
+
+msgid "DVB-S2"
+msgstr "DVB-S2"
+
+msgid "Danish"
+msgstr "Danès"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Deep Standby"
+msgstr "Apagat complet"
+
+msgid "Delete"
+msgstr "Esborrar"
+
+msgid "Delete entry"
+msgstr "Esborrar entrada"
+
+msgid "Delete failed!"
+msgstr "Ha fallat l'eliminació!"
+
+msgid "Description"
+msgstr "Descripció"
+
+msgid "Detected NIMs:"
+msgstr "NIMs detectats:"
+
+msgid "DiSEqC"
+msgstr "DiSEqC"
+
+msgid "DiSEqC A/B"
+msgstr "DiSEqC A/B"
+
+msgid "DiSEqC A/B/C/D"
+msgstr "DiSEqC A/B/C/D"
+
+msgid "DiSEqC mode"
+msgstr "mode DiSEqC"
+
+msgid "Disable"
+msgstr "Deshabilitar"
+
+msgid "Disable Picture in Picture"
+msgstr "Desactivar PiP"
+
+msgid "Disabled"
+msgstr "Desactivat"
+
+msgid "Do you really want to delete %s?"
+msgstr "Segur que vols esborrar %s?"
+
+msgid "Do you really want to exit?"
+msgstr "Segur que vols sortir?"
+
+msgid "Do you want to do a service scan?"
+msgstr "Vols fer una recerca de canals?"
+
+msgid "Do you want to do another manual service scan?"
+msgstr "Vols fer una altra recerca manual?"
+
+msgid "Do you want to restore your settings?"
+msgstr "Vols restaurar la configuració?"
+
+msgid "Do you want to resume this playback?"
+msgstr "Vols continuar on ho havies deixat?"
+
+msgid "Don't stop current event but disable coming events"
+msgstr "No aturar el programa en curs, però deshabilitar els següents"
+
+msgid "Downloading"
+msgstr "Descarregant"
+
+msgid "Downloading plugin information. Please wait..."
+msgstr "Descarregant informació del plugin. Espera..."
+
+msgid "Dutch"
+msgstr "Holandès"
+
+msgid "E"
+msgstr "E"
+
+msgid "ERROR - failed to scan (%s)!"
+msgstr "ERROR - ha fallat la recerca (%s)!"
+
+msgid "East"
+msgstr "Est"
+
+msgid "Enable"
+msgstr "Activar"
+
+msgid "Enable 5V for active antenna"
+msgstr "Activar 5V per a antena activa"
+
+msgid "Enable multiple bouquets"
+msgstr "Activar llistes múltiples"
+
+msgid "Enabled"
+msgstr "Activat"
+
+msgid "End time"
+msgstr "Hora final"
+
+msgid "English"
+msgstr "Anglès"
+
+msgid "Enter main menu..."
+msgstr "Entrar al menú principal..."
+
+msgid "Enter the service pin"
+msgstr "Entra el pin del canal"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Execution finished!!"
+msgstr "Ha finalitzat l'execució"
+
+msgid "Exit editor"
+msgstr "Sortir de l'editor"
+
+msgid "Exit the wizard"
+msgstr "Sortir de l'assistent"
+
+msgid "Extended Setup..."
+msgstr "Configuració avançada..."
+
+msgid "Extensions"
+msgstr "Extensions"
+
+msgid "FEC"
+msgstr "FEC"
+
+msgid "Fast"
+msgstr "Ràpid"
+
+msgid "Fast DiSEqC"
+msgstr "DiSEqC ràpid"
+
+msgid "Favourites"
+msgstr "Preferits"
+
+msgid "Finetune"
+msgstr "Ajustaments delicats"
+
+msgid "Finnish"
+msgstr "Finlandès"
+
+msgid "French"
+msgstr "Francès"
+
+msgid "Frequency"
+msgstr "Freqüència"
+
+msgid "Frequency bands"
+msgstr "Bandes de freqüència"
+
+msgid "Frequency scan step size(khz)"
+msgstr "Mida de pas de freqüència(khz)"
+
+msgid "Fri"
+msgstr "Div"
+
+msgid "Friday"
+msgstr "Divendres"
+
+msgid "Gateway"
+msgstr "Enrutador"
+
+msgid "Genre"
+msgstr "Gènere"
+
+msgid "German"
+msgstr "Alemany"
+
+msgid "Getting plugin information. Please wait..."
+msgstr "Llegint la informació del plugin. Espera..."
+
+msgid "Goto 0"
+msgstr "Anar a 0"
+
+msgid "Goto position"
+msgstr "Anar a la posició"
+
+msgid "Greek"
+msgstr "Grec"
+
+msgid "How many minutes do you want to record?"
+msgstr "Quants minuts vols gravar?"
+
+msgid "Hungarian"
+msgstr "Hongarès"
+
+msgid ""
+"If you see this, something is wrong with\n"
+"your scart connection. Press OK to return."
+msgstr ""
+"Si pots veure això és que hi ha algun problema\n"
+"amb la connexió SCART. Prem OK per tornar."
+
+msgid "Increased voltage"
+msgstr "Voltatge incrementat"
+
+msgid "Information"
+msgstr "Informació"
+
+msgid "Init"
+msgstr "Iniciar"
+
+msgid "Initialize"
+msgstr "Inicialitzar"
+
+msgid "Input"
+msgstr "Entrada"
+
+msgid "Installing"
+msgstr "Instal·lant"
+
+msgid "Inversion"
+msgstr "Inversió"
+
+msgid "Italian"
+msgstr "Italià"
+
+msgid "LNB"
+msgstr "LNB"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Language selection"
+msgstr "Selecció d'idioma"
+
+msgid "Latitude"
+msgstr "Latitud"
+
+msgid "Left"
+msgstr "Esq."
+
+msgid "Limit east"
+msgstr "Límit est"
+
+msgid "Limit west"
+msgstr "Límit oest"
+
+msgid "Limits off"
+msgstr "Treure límits"
+
+msgid "Limits on"
+msgstr "Posar límits"
+
+msgid "Lithuanian"
+msgstr "Lituà"
+
+msgid "Longitude"
+msgstr "Longitud"
+
+msgid "Main menu"
+msgstr "Menú principal"
+
+msgid "Mainmenu"
+msgstr "Menú principal"
+
+msgid "Make this mark an 'in' point"
+msgstr "Fer que aquesta marca sigui un punt 'in'"
+
+msgid "Make this mark an 'out' point"
+msgstr "Fer que aquesta marca sigui un punt 'out'"
+
+msgid "Make this mark just a mark"
+msgstr "Fer que aquesta marca sigui només una marca"
+
+msgid "Manual Scan"
+msgstr "Recerca manual"
+
+msgid "Manual transponder"
+msgstr "Transponedor manual"
+
+msgid "Media player"
+msgstr "Reproductor"
+
+msgid "Menu"
+msgstr "Menú"
+
+msgid "Model: "
+msgstr "Model: "
+
+msgid "Modulation"
+msgstr "Modulació"
+
+msgid "Modulator"
+msgstr "Modulador"
+
+msgid "Mon"
+msgstr "Dill"
+
+msgid "Mon-Fri"
+msgstr "Dill-Div"
+
+msgid "Monday"
+msgstr "Dilluns"
+
+msgid "Move east"
+msgstr "Moure a l'est"
+
+msgid "Move west"
+msgstr "Moure a l'oest"
+
+msgid "Multi EPG"
+msgstr "Multi EPG"
+
+msgid "Multiple service support"
+msgstr "Suport per a serveis múltiples"
+
+msgid "Multisat"
+msgstr "Multisat"
+
+msgid "N/A"
+msgstr "N/D"
+
+msgid "NTSC"
+msgstr "NTSC"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Nameserver"
+msgstr "Servidor de noms"
+
+msgid "Nameserver %d"
+msgstr "Servidor de noms %d"
+
+msgid "Netmask"
+msgstr "Màscara"
+
+msgid "Network Setup"
+msgstr "Config xarxa"
+
+msgid "Network scan"
+msgstr "Escanejar xarxa"
+
+msgid "Network setup"
+msgstr "Configuració de xarxa"
+
+msgid "New"
+msgstr "Nou"
+
+msgid "New version:"
+msgstr "Nova versió:"
+
+msgid "No"
+msgstr "No"
+
+msgid "No HDD found or HDD not initialized!"
+msgstr "No hi ha disc dur o no està inicialitzat!"
+
+msgid "No backup needed"
+msgstr "No cal backup"
+
+msgid "No event info found, recording indefinitely."
+msgstr "No hi ha info del programa, gravant indefinidament."
+
+msgid "No free tuner!"
+msgstr "No hi ha cap sintonitzador lliure!"
+
+msgid "No positioner capable frontend found."
+msgstr "No s'ha trobat cap motor."
+
+msgid "No tuner is configured for use with a diseqc positioner!"
+msgstr ""
+"No hi ha cap sintonitzador configurat per a utilitzar amb un motor diseqc!"
+
+msgid ""
+"No tuner is enabled!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"No hi ha cap sintonitzador habilitat! \n"
+"Sisplau configura algun sintonitzador abans de fer una recerca de canals."
+
+msgid "No, do nothing."
+msgstr "No, no cal."
+
+msgid "No, scan later manually"
+msgstr "No, buscar manualment més tard"
+
+msgid "None"
+msgstr "Cap"
+
+msgid "North"
+msgstr "Nord"
+
+msgid "Norwegian"
+msgstr "Noruec"
+
+msgid ""
+"Nothing to scan!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"Res per buscar!\n"
+"Sisplau configura el sintonitzador abans de buscar un canal."
+
+msgid "OK"
+msgstr "Bé"
+
+msgid "OK, guide me through the upgrade process"
+msgstr "D'acord, guia'm a través del procés d'actualizació"
+
+msgid "Off"
+msgstr "Desactivat"
+
+msgid "On"
+msgstr "Activat"
+
+msgid "One"
+msgstr "Un"
+
+msgid "PAL"
+msgstr "PAL"
+
+msgid "Package list update"
+msgstr "Actualització de la llista de paquets"
+
+msgid "Packet management"
+msgstr "Gestió de paquets"
+
+msgid "Parental control"
+msgstr "Control parental"
+
+msgid "Parental control setup"
+msgstr "Configuració control parental"
+
+msgid "Play recorded movies..."
+msgstr "Reproduir pel·lícules gravades..."
+
+msgid "Please change recording endtime"
+msgstr "Sisplau canvia l'hora d'aturar la gravació"
+
+msgid "Please choose an extension..."
+msgstr "Sisplau escull una extensió..."
+
+msgid "Please do not change any values unless you know what you are doing!"
+msgstr "Sisplau, no canviïs els valors si no n'estàs segur!"
+
+msgid "Please enter a name for the new bouquet"
+msgstr "Introdueix un nom per a la nova llista"
+
+msgid "Please enter a name for the new marker"
+msgstr "Introdueix un nom per al nou marcador"
+
+msgid "Please enter filename (empty = use current date)"
+msgstr "Sisplau introdueix el nom (buit=data actual)"
+
+msgid "Please enter the correct pin code"
+msgstr "Sisplau introdueix el pin"
+
+msgid "Please select a playlist to delete..."
+msgstr "Sisplau selecciona una llista per eliminar..."
+
+msgid "Please select a playlist..."
+msgstr "Sisplau selecciona una llista..."
+
+msgid "Please select a subservice to record..."
+msgstr "Sisplau selecciona un subservei a gravar..."
+
+msgid "Please select a subservice..."
+msgstr "Sisplau selecciona un subservei..."
+
+msgid "Please set up tuner B"
+msgstr "Configura el sintonitzador B"
+
+msgid "Please set up tuner C"
+msgstr "Configura el sintonitzador C"
+
+msgid "Please set up tuner D"
+msgstr "Configura el sintonitzador D"
+
+msgid ""
+"Please use direction keys to move the PiP window.\n"
+"Press Bouquet +/- to resize the window.\n"
+"Press OK to go back to the TV mode or EXIT to cancel the moving."
+msgstr ""
+"Sisplau ulititza les fletxes per a moure la finestra PiP.\n"
+"Prem Bouquet +/- per canviar la mida de la finestra.\n"
+"Prem OK per a tornar al mode TV o EXIT per a cancel·lar el moviment."
+
+msgid "Please wait... Loading list..."
+msgstr "Carregant la llista... espera..."
+
+msgid "Polarization"
+msgstr "Polarització"
+
+msgid "Port A"
+msgstr "Port A"
+
+msgid "Port B"
+msgstr "Port B"
+
+msgid "Port C"
+msgstr "Port C"
+
+msgid "Port D"
+msgstr "Port D"
+
+msgid "Portuguese"
+msgstr "Portuguès"
+
+msgid "Positioner"
+msgstr "Motor"
+
+msgid "Positioner setup"
+msgstr "Configuració del motor"
+
+msgid "Power threshold in mA"
+msgstr "Llindar de corrent en mA"
+
+msgid "Predefined transponder"
+msgstr "Transponedor predefinit"
+
+msgid "Preparing... Please wait"
+msgstr "Preparant... Sisplau espera"
+
+msgid "Press OK to activate the settings."
+msgstr "Prem OK per a activar la configuració."
+
+msgid "Press OK to scan"
+msgstr "Prem OK per a buscar"
+
+msgid "Press OK to start the scan"
+msgstr "Prem OK per a començar la recerca"
+
+msgid "Protect services"
+msgstr "Protegir canals"
+
+msgid "Provider"
+msgstr "Proveïdor"
+
+msgid "Provider to scan"
+msgstr "Proveïdor a escanejar"
+
+msgid "Providers"
+msgstr "Proveïdors"
+
+msgid "RF output"
+msgstr "Sortida RF"
+
+msgid "RGB"
+msgstr "RGB"
+
+msgid "Really close without saving settings?"
+msgstr "Sortir sense guardar els canvis?"
+
+msgid "Really delete done timers?"
+msgstr "Vols esborrar les programacions ja finalitzades?"
+
+msgid "Really exit the subservices quickzap?"
+msgstr "Sortir del zappeig ràpid dels subserveis?"
+
+msgid "Record"
+msgstr "Gravar"
+
+msgid "Recording"
+msgstr "Gravant"
+
+msgid "Recordings always have priority"
+msgstr "Les gravacions tenen prioritat"
+
+msgid "Remove a mark"
+msgstr "Esborrar una marca"
+
+msgid "Remove currently selected title"
+msgstr "Esborra el títol seleccionat"
+
+msgid "Remove plugins"
+msgstr "Esborrar plugins"
+
+msgid "Remove title"
+msgstr "Esborra títol"
+
+msgid "Repeating event currently recording... What do you want to do?"
+msgstr "S'està gravant un canal programat repetidament... Què vols fer?"
+
+msgid "Reset"
+msgstr "Resetejar"
+
+msgid "Restart"
+msgstr "Reiniciar"
+
+msgid "Restart GUI now?"
+msgstr "Reengegar la IGU ara?"
+
+msgid "Restore"
+msgstr "Restaurar"
+
+msgid "Right"
+msgstr "Dreta"
+
+msgid "Rotor turning speed"
+msgstr "Velocitat de rotació del motor"
+
+msgid "Russian"
+msgstr "Rus"
+
+msgid "S-Video"
+msgstr "S-Vídeo"
+
+msgid "Sat"
+msgstr "Dis"
+
+msgid "Satellite"
+msgstr "Satèl·lit"
+
+msgid "Satellites"
+msgstr "Satèl·lits"
+
+msgid "Satfinder"
+msgstr "Localitzador de satèl·lits"
+
+msgid "Saturday"
+msgstr "Dissabte"
+
+msgid "Scan "
+msgstr "Escaneig"
+
+msgid "Scan additional SR"
+msgstr "Escanejar SR addicional"
+
+msgid "Search east"
+msgstr "Buscar a l'est"
+
+msgid "Search west"
+msgstr "Buscar a l'oest"
+
+msgid "Seek"
+msgstr "Posicionar"
+
+msgid "Select audio track"
+msgstr "Seleccionar pista d'àudio"
+
+msgid "Select channel to record from"
+msgstr "Selecciona el canal a gravar"
+
+msgid "Sequence repeat"
+msgstr "Repetir seqüència"
+
+msgid "Service"
+msgstr "Canal"
+
+msgid "Service has been added to the favourites."
+msgstr "S'ha afegit el canal als preferits."
+
+msgid "Service has been added to the selected bouquet."
+msgstr "S'ha afegit el canal a la llista seleccionada."
+
+msgid "Service scan"
+msgstr "Buscar canals"
+
+msgid "Services"
+msgstr "Canals"
+
+msgid "Settings"
+msgstr "Configuracions"
+
+msgid "Setup"
+msgstr "Configuració"
+
+msgid "Show infobar on channel change"
+msgstr "Mostrar la barra d'info canviant de canal"
+
+msgid "Show infobar on event change"
+msgstr "Mostrar la barra en canviar el programa"
+
+msgid "Show infobar on skip forward/backward"
+msgstr "Mostrar la barra anant endavant/enrere"
+
+msgid "Show positioner movement"
+msgstr "Mostrar el moviment del motor"
+
+msgid "Show the radio player..."
+msgstr "Reproductor de ràdio..."
+
+msgid "Show the tv player..."
+msgstr "Mostrar el reproductor de tv..."
+
+msgid "Similar"
+msgstr "Similar"
+
+msgid "Similar broadcasts:"
+msgstr "Emisions similars:"
+
+msgid "Single"
+msgstr "Senzill"
+
+msgid "Single EPG"
+msgstr "EPG senzill"
+
+msgid "Single satellite"
+msgstr "Satèl·lit únic"
+
+msgid "Slow"
+msgstr "Lent"
+
+msgid "Sound"
+msgstr "So"
+
+msgid "South"
+msgstr "Sud"
+
+msgid "Spanish"
+msgstr "Espanyol"
+
+msgid "Standby"
+msgstr "Repòs"
+
+msgid "Standby / Restart"
+msgstr "Repòs / Reiniciar"
+
+msgid "Starting on"
+msgstr "Començar el"
+
+msgid "Step east"
+msgstr "Pas a l'est"
+
+msgid "Step west"
+msgstr "Pas a l'oest"
+
+msgid "Stop"
+msgstr "Parar"
+
+msgid "Stop current event and disable coming events"
+msgstr "Aturar el programa actual i deshabilitar els següents"
+
+msgid "Stop current event but not coming events"
+msgstr "Aturar el programa actual però no els següents"
+
+msgid "Stop playing this movie?"
+msgstr "Aturar la reproducció de la pel·lícula?"
+
+msgid "Store position"
+msgstr "Guardar la posició"
+
+msgid "Stored position"
+msgstr "Posició guardada"
+
+msgid "Subtitle selection"
+msgstr "Selecció de subtítols"
+
+msgid "Subtitles"
+msgstr "Subtítols"
+
+msgid "Sun"
+msgstr "Diu"
+
+msgid "Sunday"
+msgstr "Diumenge"
+
+msgid "Swedish"
+msgstr "Suec"
+
+msgid "System"
+msgstr "Sistema"
+
+msgid "Terrestrial"
+msgstr "Terrestre"
+
+msgid "Terrestrial provider"
+msgstr "Proveïdor terrestre"
+
+msgid "Test mode"
+msgstr "Mode test"
+
+msgid "The backup failed. Please choose a different backup location."
+msgstr "El backup ha fallat. Escull un altre destí."
+
+msgid "The pin code you entered is wrong."
+msgstr "El pin és incorrecte"
+
+msgid ""
+"The wizard can backup your current settings. Do you want to do a backup now?"
+msgstr ""
+"L'assistent pot fer un backup de la teva configuració actual. Vols fer-lo "
+"ara?"
+
+msgid "The wizard is finished now."
+msgstr "L'assistent ha finalitzat."
+
+msgid "Three"
+msgstr "Tres"
+
+msgid "Threshold"
+msgstr "Llindar"
+
+msgid "Thu"
+msgstr "Dij"
+
+msgid "Thursday"
+msgstr "Dijous"
+
+msgid "Time"
+msgstr "Hora"
+
+msgid "Timer entry"
+msgstr "Gravació"
+
+msgid "Timer log"
+msgstr "Registre de gravació"
+
+msgid "Timer sanity error"
+msgstr "Error de programació"
+
+msgid "Timer selection"
+msgstr "Selecció de gravació"
+
+msgid "Timeshift"
+msgstr "Pausa"
+
+msgid "Timeshift not possible!"
+msgstr "No és possible la pausa!"
+
+msgid "Timezone"
+msgstr "Zona horària"
+
+msgid "Title"
+msgstr "Títol"
+
+msgid "Today"
+msgstr "Avui"
+
+msgid "Tone mode"
+msgstr "Mode del to"
+
+msgid "Transmission mode"
+msgstr "Mode transmissió"
+
+msgid "Transponder"
+msgstr "Transponedor"
+
+msgid "Tries left:"
+msgstr "Intents:"
+
+msgid "Tue"
+msgstr "Dim"
+
+msgid "Tuesday"
+msgstr "Dimarts"
+
+msgid "Tune"
+msgstr "Sintonitzar"
+
+msgid "Tune failed!"
+msgstr "Ha fallat la sintonització!"
+
+msgid "Tuner"
+msgstr "Sintonitzador"
+
+msgid "Tuner configuration"
+msgstr "Configuració del sintonitzador"
+
+msgid "Tuner status"
+msgstr "Estat del sintonitzador"
+
+msgid "Turkish"
+msgstr "Turc"
+
+msgid "Two"
+msgstr "Dos"
+
+msgid "Type of scan"
+msgstr "Tipus de recerca"
+
+msgid "USALS"
+msgstr "USALS"
+
+msgid "Universal LNB"
+msgstr "LNB universal"
+
+msgid "Upgrading"
+msgstr "Actualitzant"
+
+msgid "Use DHCP"
+msgstr "Utilitzar DHCP"
+
+msgid "Use a gateway"
+msgstr "Utilitzar una porta d'enllaç"
+
+msgid "Use power measurement"
+msgstr "Utilitza les mesures de corrent"
+
+msgid ""
+"Use the up/down keys on your remote control to select an option. After that, "
+"press OK."
+msgstr ""
+"Utilitza les fletxes del comandament per a seleccionar una opció. Després, "
+"prem OK."
+
+msgid "Used service scan type"
+msgstr "Tipus d'escaneig de canals usat"
+
+msgid "User defined"
+msgstr "Definit per l'usuari"
+
+msgid "VCR scart"
+msgstr "Euroconnector VCR"
+
+msgid "View teletext..."
+msgstr "Veure teletext..."
+
+msgid "Voltage mode"
+msgstr "Mode voltatge"
+
+msgid "W"
+msgstr "O"
+
+msgid "WSS on 4:3"
+msgstr "WSS en 4:3"
+
+msgid "Wed"
+msgstr "Dime"
+
+msgid "Wednesday"
+msgstr "Dimecres"
+
+msgid "Weekday"
+msgstr "DiaSetmana"
+
+msgid "West"
+msgstr "Oest"
+
+msgid "What do you want to scan?"
+msgstr "Què vols buscar?"
+
+msgid "Where do you want to backup your settings?"
+msgstr "On vols guardar el backup de la configuració?"
+
+msgid "Write error while recording. Disk full?\n"
+msgstr "Error d'escriptura durant la gravació. Disc ple?\n"
+
+msgid "YPbPr"
+msgstr "YPbPr"
+
+msgid "Year"
+msgstr "Any"
+
+msgid "Yes"
+msgstr "Si"
+
+msgid "Yes, backup my settings!"
+msgstr "Sí, fes un backup de la configuració!"
+
+msgid "Yes, do a manual scan now"
+msgstr "Si, fes una recerca manual ara"
+
+msgid "Yes, do an automatic scan now"
+msgstr "Si, fes una recerca automàtica ara"
+
+msgid "Yes, do another manual scan now"
+msgstr "Si, fer una altra recerca manual ara"
+
+msgid "Yes, restore the settings now"
+msgstr "Si, restaura la configuració ara"
+
+msgid "Yes, shut down now."
+msgstr "Si, apaga ara."
+
+msgid "You cannot delete this!"
+msgstr "Això no es pot eliminar!"
+
+msgid ""
+"Your backup succeeded. We will now continue to explain the further upgrade "
+"process."
+msgstr ""
+"El backup ha acabat. Ara continuarem explicant el procés d'actualització."
+
+msgid ""
+"Your frontprocessor firmware must be upgraded.\n"
+"Press OK to start upgrade."
+msgstr ""
+"El firmware del frontprocessor ha de ser actualitzat.\n"
+"Prem OK per a començar l'actualizació."
+
+msgid "Zap back to service before positioner setup?"
+msgstr "Tornar al canal abans de configurar el motor?"
+
+msgid "[alternative edit]"
+msgstr "[edició alternatives]"
+
+msgid "[bouquet edit]"
+msgstr "[editar llista]"
+
+msgid "[favourite edit]"
+msgstr "[editar preferits]"
+
+msgid "[move mode]"
+msgstr "[mode moure]"
+
+msgid "abort alternatives edit"
+msgstr "abortar l'edició d'alternatives"
+
+msgid "abort bouquet edit"
+msgstr "cancel·lar l'edició de llistes"
+
+msgid "abort favourites edit"
+msgstr "cancel·lar l'edició de preferits"
+
+msgid "about to start"
+msgstr "per a començar"
+
+msgid "add alternatives"
+msgstr "afegir alternatives"
+
+msgid "add bouquet"
+msgstr "afegir llista"
+
+msgid "add marker"
+msgstr "afegir marcador"
+
+msgid "add service to bouquet"
+msgstr "afegir el canal a la llista"
+
+msgid "add service to favourites"
+msgstr "afegir el canal als preferits"
+
+msgid "add to parental protection"
+msgstr "afegir a la protecció parental"
+
+msgid "advanced"
+msgstr "avançat"
+
+msgid "back"
+msgstr "enrere"
+
+msgid "better"
+msgstr "millorat"
+
+msgid "blacklist"
+msgstr "llista negra"
+
+msgid "circular left"
+msgstr "circular esq."
+
+msgid "circular right"
+msgstr "circular dreta"
+
+msgid "continue"
+msgstr "continuar"
+
+msgid "copy to bouquets"
+msgstr "copiar a les llistes"
+
+msgid "daily"
+msgstr "diàriament"
+
+msgid "delete cut"
+msgstr "esborrar tall"
+
+msgid "disable"
+msgstr "desactivar"
+
+msgid "disable move mode"
+msgstr "desactivar mode moviment"
+
+msgid "disabled"
+msgstr "desactivat"
+
+msgid "do nothing"
+msgstr "no facis res"
+
+msgid "done!"
+msgstr "fet!"
+
+msgid "edit alternatives"
+msgstr "editar alternatives"
+
+msgid "empty"
+msgstr "buit"
+
+msgid "enable"
+msgstr "habilitar"
+
+msgid "enable bouquet edit"
+msgstr "activar l'edició de la llista"
+
+msgid "enable favourite edit"
+msgstr "activar l'edició dels preferits"
+
+msgid "enable move mode"
+msgstr "activar mode moviment"
+
+msgid "enabled"
+msgstr "activat"
+
+msgid "end alternatives edit"
+msgstr "fi de l'edició d'alternatives"
+
+msgid "end bouquet edit"
+msgstr "fi de l'edició de llistes"
+
+msgid "end cut here"
+msgstr "acabar el tall aquí"
+
+msgid "end favourites edit"
+msgstr "fi de l'edició de preferits"
+
+msgid "free diskspace"
+msgstr "espai lliure al disc"
+
+msgid "go to deep standby"
+msgstr "aturar completament"
+
+msgid "go to standby"
+msgstr "posar en repòs"
+
+msgid "horizontal"
+msgstr "horitzontal"
+
+msgid "init module"
+msgstr "iniciar mòdul"
+
+msgid "insert mark here"
+msgstr "inserir marca aquí"
+
+msgid "leave movie player..."
+msgstr "sortir del reproductor de pel·lícules..."
+
+msgid "left"
+msgstr "esquerra"
+
+msgid "locked"
+msgstr "bloquejat"
+
+msgid "manual"
+msgstr "manual"
+
+msgid "menu"
+msgstr "menú"
+
+msgid "mins"
+msgstr "minuts"
+
+msgid "minutes"
+msgstr "minuts"
+
+msgid "never"
+msgstr "mai"
+
+msgid "no"
+msgstr "no"
+
+msgid "no module found"
+msgstr "no hi ha el mòdul"
+
+msgid "none"
+msgstr "cap"
+
+msgid "not locked"
+msgstr "desbloquejat"
+
+msgid "nothing connected"
+msgstr "res connectat"
+
+msgid "off"
+msgstr "desactivat"
+
+msgid "on"
+msgstr "activat"
+
+msgid "once"
+msgstr "un sol cop"
+
+msgid "pass"
+msgstr "passa"
+
+msgid "please press OK when ready"
+msgstr "prem OK quan estiguis a punt"
+
+msgid "please wait, loading picture..."
+msgstr "sisplau espera, carregant imatge..."
+
+msgid "record"
+msgstr "gravar"
+
+msgid "recording..."
+msgstr "gravant..."
+
+msgid "remove after this position"
+msgstr "esborra després d'aquesta posició"
+
+msgid "remove all alternatives"
+msgstr "esborrar totes les alternatives"
+
+msgid "remove all new found flags"
+msgstr "esborrar totes les marques trobades"
+
+msgid "remove before this position"
+msgstr "esborra abans d'aquesta posició"
+
+msgid "remove entry"
+msgstr "eliminar entrada"
+
+msgid "remove from parental protection"
+msgstr "esborrar de la protecció parental"
+
+msgid "remove new found flag"
+msgstr "esborrar nova marca trobada"
+
+msgid "remove this mark"
+msgstr "esborrar aquesta marca"
+
+msgid "repeated"
+msgstr "repetit"
+
+msgid "right"
+msgstr "dreta"
+
+msgid "scan state"
+msgstr "estat de la recerca"
+
+msgid "second cable of motorized LNB"
+msgstr "segon cable del LNB motoritzat"
+
+msgid "seconds"
+msgstr "segons"
+
+msgid "show alternatives"
+msgstr "mostrar alternatives"
+
+msgid "show event details"
+msgstr "mostrar detalls del programa"
+
+msgid "show transponder info"
+msgstr "mostrar info del transponedor"
+
+msgid "simple"
+msgstr "senzill"
+
+msgid "skip backward"
+msgstr "saltar endarrere"
+
+msgid "skip backward (enter time)"
+msgstr "saltar enrere (introduint el temps)"
+
+msgid "skip forward"
+msgstr "saltar endavant"
+
+msgid "skip forward (enter time)"
+msgstr "saltar endavant (introduint el temps)"
+
+msgid "start cut here"
+msgstr "començar tall aquí"
+
+msgid "stereo"
+msgstr "stèreo"
+
+msgid "switch to filelist"
+msgstr "canviar a la llista de fitxers"
+
+msgid "this recording"
+msgstr "aquesta gravació"
+
+msgid "this service is protected by a parental control pin"
+msgstr "aquest canal està protegit per un pin de control parental"
+
+msgid "unknown service"
+msgstr "canal desconegut"
+
+msgid "user defined"
+msgstr "definit per l'usuari"
+
+msgid "vertical"
+msgstr "vertical"
+
+msgid "view extensions..."
+msgstr "veure extensions..."
+
+msgid "wait for ci..."
+msgstr "espera..."
+
+msgid "waiting"
+msgstr "esperant"
+
+msgid "weekly"
+msgstr "setmanalment"
+
+msgid "yes"
+msgstr "si"
+
+msgid "yes (keep feeds)"
+msgstr "si (mantenir feeds)"
+
+msgid "zap"
+msgstr "zappejar"
+
+msgid "zapped"
+msgstr "zappejat"

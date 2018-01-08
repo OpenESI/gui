@@ -1,0 +1,2730 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tuxbox-enigma 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-21 15:33+0200\n"
+"PO-Revision-Date: 2014-01-22 23:31+0100\n"
+"Last-Translator: Andy Blackburn <andyblac@icloud.com>\n"
+"Language-Team: HDTV ROMANIA(superonic,costel_mbc,neutrin,otheitis,cipy_1982,"
+"neutrin,runcanion)\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"\n"
+"Advanced options and settings."
+msgstr ""
+"\n"
+"Optiuni avansate si setarile"
+
+msgid ""
+"\n"
+"After pressing OK, please wait!"
+msgstr ""
+"\n"
+"Dupa apasarea OK, va rog asteptati!"
+
+msgid ""
+"\n"
+"Edit the upgrade source address."
+msgstr ""
+"\n"
+"Editati pe adresa de upgrade."
+
+msgid ""
+"\n"
+"Press OK on your remote control to continue."
+msgstr ""
+"\n"
+"Apasati Ok pe telecomanda pentru a continua."
+
+msgid ""
+"\n"
+"Restore your backups by date."
+msgstr ""
+"\n"
+"Restaurare backups dupa data."
+
+msgid ""
+"\n"
+"Select your backup device.\n"
+"Current device: "
+msgstr ""
+"\n"
+"Alege pe backup device. \n"
+"Curent device: "
+
+msgid ""
+"\n"
+"View, install and remove available or installed packages."
+msgstr ""
+"\n"
+"Vezi,instalati si sa scoateti pachetele dinsponibile sau instalate"
+
+msgid "(empty)"
+msgstr "(gol)"
+
+msgid "(show optional DVD audio menu)"
+msgstr "(afiseaza optional pe DVD audio menu)"
+
+msgid "* Only available if more than one interface is active."
+msgstr ""
+"* Disponibil doar in cazul in care mai mult de o interfata este activa."
+
+msgid "16:9 always"
+msgstr "16:9 mereu"
+
+msgid "<unknown>"
+msgstr "<necunoscut>"
+
+msgid ""
+"A configuration file (%s) was modified since Installation.\n"
+"Do you want to keep your version?"
+msgstr ""
+"Un file de configuratia (%s) a fost modificat de la instalare.\n"
+"Vrei sa tinem pe versiuna?"
+
+msgid ""
+"A recording is currently running.\n"
+"What do you want to do?"
+msgstr ""
+"O registrare este acuma activa.\n"
+"Ce doresti sa facem?"
+
+msgid ""
+"A recording is currently running. Please stop the recording before trying to "
+"configure the positioner."
+msgstr ""
+"O registrare acuma este activa. Te rog opreste pe registrare inainte sa "
+"incerci Sa configurezi pe pozitioner."
+
+msgid "A required tool (%s) was not found."
+msgstr "Un tool necesar (%s) nu a fost gasit."
+
+msgid ""
+"A timer failed to record!\n"
+"Disable TV and try again?\n"
+msgstr ""
+"Un timer a esuat sa registreze!\n"
+"Dezactiveaza TV si incearca din nou?\n"
+
+msgid "About"
+msgstr "Despre"
+
+msgid "About..."
+msgstr "Despre..."
+
+msgid "Activate Picture in Picture"
+msgstr "Activeaza PIP"
+
+msgid "Activate network settings"
+msgstr "Activeaza setari retea"
+
+msgid "Adapter settings"
+msgstr "Adaptare setari"
+
+msgid "Add"
+msgstr "Adauga"
+
+msgid "Add a mark"
+msgstr "Adauga un mark"
+
+msgid "Add a new title"
+msgstr "Adauga un nou titlu"
+
+msgid "Add timer"
+msgstr "Adauga timer "
+
+msgid "Add title"
+msgstr "adauga un titlu"
+
+msgid "Add to bouquet"
+msgstr "Adauga la buchet"
+
+msgid "Add to favourites"
+msgstr "Adauga la favorite "
+
+msgid ""
+"Adjust the color settings so that all the color shades are distinguishable, "
+"but appear as saturated as possible. If you are happy with the result, press "
+"OK to close the video fine-tuning, or use the number keys to select other "
+"test screens."
+msgstr ""
+"Ajustati setarile de culoare,astfel incat toate nuantele de culoare se "
+"distingDaca sunteti multumit de rezultat apasati Ok pentru a inchide video "
+"fine-tuning, sau foloseste pe tastele numerice pentru a selecta altetestarea "
+"screens."
+
+msgid "Advanced restore"
+msgstr "Restaurare avansata"
+
+msgid "After event"
+msgstr "Dupa eventul"
+
+msgid "Album"
+msgstr "Album"
+
+msgid "All"
+msgstr "Toate"
+
+msgid "Alpha"
+msgstr "Alpha"
+
+msgid "Alternative services tuner priority"
+msgstr "Prioritate tuner servicii alternative"
+
+msgid "An empty filename is illegal."
+msgstr "Este illegal un gol filename."
+
+msgid "Arabic"
+msgstr "Arabic"
+
+msgid ""
+"Are you sure you want to activate this network configuration?\n"
+"\n"
+msgstr ""
+"Esti sigur ca vrei sa activezi asta configuratia de retea?\n"
+"\n"
+
+msgid ""
+"Are you sure you want to restart your network interfaces?\n"
+"\n"
+msgstr ""
+"Esti sigur vrei sa restartezi interfata retelei?\n"
+"\n"
+
+msgid "Artist"
+msgstr "Artist"
+
+msgid "Ask user"
+msgstr "Intreaba pe user"
+
+msgid "Author: "
+msgstr "Autor: "
+
+msgid "Authoring mode"
+msgstr "Mod de authoring"
+
+msgid "Auto"
+msgstr "Auto"
+
+msgid "Auto chapter split every ? minutes (0=never)"
+msgstr "Auto chapter se imparte la fiecare ? minute (0=niciodate)"
+
+msgid "Auto scart switching"
+msgstr "Auto scart switching"
+
+msgid "Automatic"
+msgstr "Automat"
+
+msgid "Automatic Scan"
+msgstr "Scanare automata"
+
+msgid "Available format variables"
+msgstr "Disponibile formate viariaza"
+
+msgid "B"
+msgstr "B"
+
+msgid "Back"
+msgstr "Inapoi"
+
+msgid "Background"
+msgstr "Fond"
+
+msgid "Backup failed."
+msgstr "Backup esuat."
+
+msgid "Band"
+msgstr "Banda"
+
+msgid "Bandwidth"
+msgstr "Latime de banda"
+
+msgid "Begin time"
+msgstr "Momentul inceperii"
+
+msgid "Behavior of 'pause' when paused"
+msgstr "Efectul butonului 'pauza' cand e pe pauza"
+
+msgid "Behavior of 0 key in PiP-mode"
+msgstr "Efectul butonului 0 in modul PiP (imagine in imagine)"
+
+msgid "Behavior when a movie is started"
+msgstr "Cand un film este pornit"
+
+msgid "Behavior when a movie is stopped"
+msgstr "Cand un film este oprit"
+
+msgid "Behavior when a movie reaches the end"
+msgstr "Cand un film ajunge la final"
+
+msgid "Bookmarks"
+msgstr "Semne de carte"
+
+msgid "Brightness"
+msgstr "Luminozitate"
+
+msgid "Burn DVD"
+msgstr "Scrie DVD"
+
+msgid "Bus: "
+msgstr "Magistrala: "
+
+msgid "C-Band"
+msgstr "Banda C"
+
+msgid "CI assignment"
+msgstr "Asignarea CI"
+
+msgid "CVBS"
+msgstr "CVBS"
+
+msgid "Cable"
+msgstr "Cablu"
+
+msgid "Cancel"
+msgstr "Anuleaza"
+
+msgid "Capacity: "
+msgstr "Capacitate: "
+
+msgid "Change bouquets in quickzap"
+msgstr "Permite schimbarea buchetului prin zapping"
+
+msgid "Change pin code"
+msgstr "Schimba codul pin"
+
+msgid "Channel"
+msgstr "Canal"
+
+msgid "Channel not in services list"
+msgstr "Canalul nu se gaseste in lista de servicii"
+
+msgid "Channel:"
+msgstr "Canal:"
+
+msgid "Chap."
+msgstr "Cap."
+
+msgid "Chapter"
+msgstr "Capitol"
+
+msgid "Chapter:"
+msgstr "Capitolul:"
+
+msgid "Check"
+msgstr "Verifica"
+
+msgid "Circular left"
+msgstr "Circular stang"
+
+msgid "Circular right"
+msgstr "Circular drept"
+
+msgid "Cleanup"
+msgstr "Curatenie"
+
+msgid "Clear before scan"
+msgstr "Goleste lista inainte de scanare"
+
+msgid "Clear log"
+msgstr "Sterge logul"
+
+msgid "Close"
+msgstr "Inchide"
+
+msgid "Coderate HP"
+msgstr "Rata de codificare HP"
+
+msgid "Coderate LP"
+msgstr "Rata de codificare LP"
+
+msgid "Collection name"
+msgstr "Nume colectie"
+
+msgid "Collection settings"
+msgstr "Setari colectie"
+
+msgid "Command order"
+msgstr "Ordinea comenzilor"
+
+msgid "Common Interface"
+msgstr "Common Interface"
+
+msgid "Common Interface Assignment"
+msgstr "Atribuirea pentru Common Interface"
+
+msgid "Communication"
+msgstr "Comunicare"
+
+msgid "Complete"
+msgstr "Incheiat"
+
+msgid "Complex (allows mixing audio tracks and aspects)"
+msgstr "Complex (permite orice combinatie de canale audio si aspecte)"
+
+msgid "Configuring"
+msgstr "Se configureaza"
+
+msgid "Conflicting timer"
+msgstr "Programare aflata in conflict"
+
+msgid "Connected to"
+msgstr "Conectat la"
+
+msgid "Constellation"
+msgstr "Constelatie"
+
+msgid "Content does not fit on DVD!"
+msgstr "Continutul este in cantitate prea mare pentru un DVD!"
+
+msgid "Continue playing"
+msgstr "Continua redarea"
+
+msgid "Contrast"
+msgstr "Contrast"
+
+msgid "Create DVD-ISO"
+msgstr "Creeaza DVD-ISO"
+
+msgid "Creating directory %s failed."
+msgstr "Crearea directorului %s a esuat"
+
+msgid "Croatian"
+msgstr "Croata"
+
+msgid "Current settings:"
+msgstr "Setarile curente:"
+
+msgid "Current version:"
+msgstr "Versiunea curenta:"
+
+msgid "Customize"
+msgstr "Personalizare"
+
+msgid "Cut"
+msgstr "Taie"
+
+msgid "Cutlist editor..."
+msgstr "Editor montaj..."
+
+msgid "Czech"
+msgstr "Ceha"
+
+msgid "DHCP"
+msgstr "DHCP"
+
+msgid "DVB-S"
+msgstr "DVB-S"
+
+msgid "DVB-S2"
+msgstr "DVB-S2"
+
+msgid "Danish"
+msgstr "Daneza"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Deep Standby"
+msgstr "Oprire completa"
+
+msgid "Delete"
+msgstr "Sterge"
+
+msgid "Delete entry"
+msgstr "Sterge articol"
+
+msgid "Delete failed!"
+msgstr "Stergere esuata!"
+
+msgid "Description"
+msgstr "Descriere"
+
+msgid "Deselect"
+msgstr "Deselectare"
+
+msgid "Detected NIMs:"
+msgstr "NIMuri detectate:"
+
+msgid "DiSEqC"
+msgstr "DiSEqC"
+
+msgid "DiSEqC A/B"
+msgstr "DiSEqC A/B"
+
+msgid "DiSEqC A/B/C/D"
+msgstr "DiSEqC A/B/C/D"
+
+msgid "DiSEqC mode"
+msgstr "Mod DiSEqC"
+
+msgid "Direct playback of linked titles without menu"
+msgstr "Redare directa a titlurilor fara meniu"
+
+msgid "Disable"
+msgstr "Dezactivare"
+
+msgid "Disable Picture in Picture"
+msgstr "Dezactiveaza PiP (Imagine in Imagine)"
+
+msgid "Disabled"
+msgstr "Dezactivat"
+
+msgid "Display 16:9 content as"
+msgstr "Afiseaza continutul format 16:9 ca"
+
+msgid "Display 4:3 content as"
+msgstr "Afiseaza continutul format 4:3 ca"
+
+msgid "Display >16:9 content as"
+msgstr "Afiseaza continutul format >16:9 ca"
+
+msgid ""
+"Do you really want to check the filesystem?\n"
+"This could take a long time!"
+msgstr ""
+"Confirmati verificarea sistemului de fisiere?\n"
+"Aceasta operatiune ar putea dura foarte mult"
+
+msgid "Do you really want to delete %s?"
+msgstr "Confirmati stergerea %s?"
+
+msgid "Do you really want to remove directory %s from the disk?"
+msgstr "Confirmati stergerea directorului %s de pe disc?"
+
+msgid "Do you really want to remove your bookmark of %s?"
+msgstr "Confirmati stergerea semnului de carte %s?"
+
+msgid "Do you want to burn this collection to DVD medium?"
+msgstr "Doriti scrierea acestei colectii pe discul DVD?"
+
+msgid "Do you want to do a service scan?"
+msgstr "Doriti efectuarea unei scanari a serviciilor?"
+
+msgid "Do you want to do another manual service scan?"
+msgstr "Doriti efectuarea unei alte operatiuni de scanare manuala?"
+
+msgid "Do you want to install the package:\n"
+msgstr "Doriti sa instalati pachetul:\n"
+
+msgid "Do you want to play DVD in drive?"
+msgstr "Doriti redarea DVD-ului introdus?"
+
+msgid "Do you want to preview this DVD before burning?"
+msgstr "Doriti sa previzualizati acest DVD inainte de a fi scris?"
+
+msgid "Do you want to remove the package:\n"
+msgstr "Doriti sa stergeti pachetul:\n"
+
+msgid "Do you want to restore your settings?"
+msgstr "Doriti restaurarea setarilor dvs?"
+
+msgid "Do you want to resume this playback?"
+msgstr "Doriti continuarea redarii acestei inregistrari?"
+
+msgid "Do you want to upgrade the package:\n"
+msgstr "Doriti actualizarea pachetului:\n"
+
+msgid "Don't stop current event but disable coming events"
+msgstr "Nu opri evenimentul curent dar anuleaza evenimentele urmatoare"
+
+msgid "Download"
+msgstr "Descarcare"
+
+msgid "Downloading"
+msgstr "Se descarca"
+
+msgid "Downloading plugin information. Please wait..."
+msgstr "Se descarca informatiile Pluginului. Va rog sa asteptati..."
+
+msgid "Dutch"
+msgstr "Olandeza"
+
+msgid "E"
+msgstr "E"
+
+msgid "ERROR - failed to scan (%s)!"
+msgstr "EROARE - scanare esuata (%s)!"
+
+msgid "East"
+msgstr "Est"
+
+msgid "Edit"
+msgstr "Editare"
+
+msgid "Edit DNS"
+msgstr "Editare DNS"
+
+msgid "Edit chapters of current title"
+msgstr "Editarea capitolelor titlului curent"
+
+msgid "Edit settings"
+msgstr "Editare setari"
+
+msgid "Edit title"
+msgstr "Editare titlu"
+
+msgid "Electronic Program Guide"
+msgstr "Ghid Electronic de Programe (EPG)"
+
+msgid "Enable"
+msgstr "Activeaza"
+
+msgid "Enable 5V for active antenna"
+msgstr "Activeaza 5V pentru antena activa"
+
+msgid "Enable multiple bouquets"
+msgstr "Activeaza buchete multiple"
+
+msgid "Enabled"
+msgstr "Activat"
+
+msgid "Encryption"
+msgstr "Criptare"
+
+msgid "End time"
+msgstr "Momentul incheierii"
+
+msgid "English"
+msgstr "Engleza"
+
+msgid "Enter main menu..."
+msgstr "Intrati in meniul principal..."
+
+msgid "Enter the service pin"
+msgstr "Introduceti pinul serviciului"
+
+msgid "Error"
+msgstr "Eroare"
+
+msgid "Error executing plugin"
+msgstr "Eroare la executia pluginului"
+
+msgid ""
+"Error: %s\n"
+"Retry?"
+msgstr ""
+"Eroare: %s\n"
+"Mai incerc o data?"
+
+msgid "Execution finished!!"
+msgstr "Executie finalizata!!"
+
+msgid "Exif"
+msgstr "Exif"
+
+msgid "Exit"
+msgstr "Iesire"
+
+msgid "Exit editor"
+msgstr "Iesire din editor"
+
+msgid "Exit the wizard"
+msgstr "Iesi din ajutorul de configurare"
+
+msgid "Expert"
+msgstr "Expert"
+
+msgid "Extended Networksetup Plugin..."
+msgstr "Plugin pentru setari de retea extinse..."
+
+msgid "Extended Setup..."
+msgstr "Setari extinse..."
+
+msgid "Extensions"
+msgstr "Extensii"
+
+msgid "FEC"
+msgstr "FEC"
+
+msgid "Factory reset"
+msgstr "Restaurare setari de fabrica"
+
+msgid "Failed"
+msgstr "Esuat"
+
+msgid "Fast"
+msgstr "Rapid"
+
+msgid "Fast DiSEqC"
+msgstr "DiSEqC rapid"
+
+msgid "Fast epoch"
+msgstr "Epoch rapid"
+
+msgid "Favourites"
+msgstr "Favorite"
+
+msgid "Finetune"
+msgstr "Reglaj fin"
+
+msgid "Finished"
+msgstr "Finalizat"
+
+msgid "Finished configuring your network"
+msgstr "S-a finalizat configurarea retelei dvs"
+
+msgid "Finished restarting your network"
+msgstr "Reteaua dvs a fost repornita"
+
+msgid "Finnish"
+msgstr "Finlandeza"
+
+msgid "Flash"
+msgstr "Flash"
+
+msgid "Flashing failed"
+msgstr "Operatia de flash a esuat"
+
+msgid "Format"
+msgstr "Formatare"
+
+msgid "Frame size in full view"
+msgstr "Dimensiunea cadrului la vizualizarea completa"
+
+msgid "French"
+msgstr "Franceza"
+
+msgid "Frequency"
+msgstr "Frecventa"
+
+msgid "Frequency bands"
+msgstr "Benzi de frecventa"
+
+msgid "Frequency scan step size(khz)"
+msgstr "Marimea pasului de frecventa(khz)"
+
+msgid "Frequency steps"
+msgstr "Pasi de frecventa"
+
+msgid "Fri"
+msgstr "Vin"
+
+msgid "Friday"
+msgstr "Vineri"
+
+msgid "Gateway"
+msgstr "Gateway"
+
+msgid "Genre"
+msgstr "Gen"
+
+msgid "German"
+msgstr "Germana"
+
+msgid "Getting plugin information. Please wait..."
+msgstr "Se descarca informatiile despre plugin. Va rog sa asteptati..."
+
+msgid "Goto 0"
+msgstr "Goto 0"
+
+msgid "Goto position"
+msgstr "Goto pozitie"
+
+msgid "Greek"
+msgstr "Greaca"
+
+msgid "High bitrate support"
+msgstr "Sprijin pentru bitrate rapid"
+
+msgid "Horizontal"
+msgstr "Orizontal"
+
+msgid "How many minutes do you want to record?"
+msgstr "Pentru cate minute doriti sa inregistrati?"
+
+msgid "Hungarian"
+msgstr "Maghiara"
+
+msgid "ISO file is too large for this filesystem!"
+msgstr "Fisierul ISO este prea mare pentru acest sistem de fisiere!"
+
+msgid "ISO path"
+msgstr "Calea ISO"
+
+msgid ""
+"If you see this, something is wrong with\n"
+"your scart connection. Press OK to return."
+msgstr ""
+"Daca acest mesaj este vizibil, ceva nu este in regula\n"
+"cu conexiunea dvs scart. Apasati OK pentru revenire."
+
+msgid "Increased voltage"
+msgstr "Voltaj marit"
+
+msgid "Information"
+msgstr "Informatii"
+
+msgid "Init"
+msgstr "Initializare"
+
+msgid "Initialize"
+msgstr "Se initializeaza"
+
+msgid "Input"
+msgstr "Intrare"
+
+msgid "Install"
+msgstr "Instalare"
+
+msgid "Install a new image with a USB stick"
+msgstr "Instalare imagine noua cu un stick USB"
+
+msgid "Install a new image with your web browser"
+msgstr "Instalare imagine noua cu browser-ul web"
+
+msgid "Install or remove finished."
+msgstr "Instaleaza sau elimina fisierele terminate"
+
+msgid "Installation finished."
+msgstr "Instalare terminata"
+
+msgid "Installing"
+msgstr "Instaleaza"
+
+msgid "Intermediate"
+msgstr "Intermediar"
+
+msgid "Invalid directory selected: %s"
+msgstr "Director selectat nevalid: %s"
+
+msgid "Inversion"
+msgstr "Inversare"
+
+msgid "Ipkg"
+msgstr "Ipkg"
+
+msgid "Italian"
+msgstr "Italiana"
+
+msgid "Job View"
+msgstr "Vedere serviciu"
+
+msgid "Keyboard"
+msgstr "Tastatura"
+
+msgid "LNB"
+msgstr "LNB"
+
+msgid "Language selection"
+msgstr "Selectare limba"
+
+msgid "Last speed"
+msgstr "Ultima viteza"
+
+msgid "Latitude"
+msgstr "Latitudine"
+
+msgid "Latvian"
+msgstr "Letona"
+
+msgid "Left"
+msgstr "Stanga"
+
+msgid "Letterbox"
+msgstr "Letterbox"
+
+msgid "Limit east"
+msgstr "Limita estica"
+
+msgid "Limit west"
+msgstr "Limita vestica"
+
+msgid "Limits off"
+msgstr "Limite dezactivate"
+
+msgid "Limits on"
+msgstr "Limite activate"
+
+msgid "Link:"
+msgstr "Link:"
+
+msgid "Linked titles with a DVD menu"
+msgstr "Titluri legate cu un meniu DVD"
+
+msgid "Lithuanian"
+msgstr "Lituaniana"
+
+msgid "Load"
+msgstr "Incarca"
+
+msgid "Location"
+msgstr "Locatie"
+
+msgid "Log results to harddisk"
+msgstr "Inregistrare rezultate pe harddisk"
+
+msgid "Longitude"
+msgstr "Longitudine"
+
+msgid "Main menu"
+msgstr "Meniu principal"
+
+msgid "Mainmenu"
+msgstr "Meniu principal"
+
+msgid "Make this mark an 'in' point"
+msgstr "Fa acest semn un punct de intrare"
+
+msgid "Make this mark an 'out' point"
+msgstr "Fa acest semn un punct de iesire"
+
+msgid "Make this mark just a mark"
+msgstr "Fa acest semn doar un semn"
+
+msgid "Manual Scan"
+msgstr "Scanare manuala"
+
+msgid "Manual transponder"
+msgstr "Transponder manual"
+
+msgid "Manufacturer"
+msgstr "Fabricant"
+
+msgid "Media player"
+msgstr "Media player"
+
+msgid "Medium is not a writeable DVD!"
+msgstr "Mediul nu este un DVD inscriptibil!"
+
+msgid "Medium is not empty!"
+msgstr "Mediul nu este gol!"
+
+msgid "Menu"
+msgstr "Meniu"
+
+msgid "Model: "
+msgstr "Model:"
+
+msgid "Modulation"
+msgstr "Modulatie"
+
+msgid "Modulator"
+msgstr "Modulator"
+
+msgid "Mon"
+msgstr "Lun"
+
+msgid "Mon-Fri"
+msgstr "Lun-Vin"
+
+msgid "Monday"
+msgstr "Luni"
+
+msgid "Move east"
+msgstr "Misca spre est"
+
+msgid "Move west"
+msgstr "Misca spre vest"
+
+msgid "Multi EPG"
+msgstr "Multi EPG"
+
+msgid "Multimedia"
+msgstr "Multimedia"
+
+msgid "Multiple service support"
+msgstr "Suport pentru servicii multiple"
+
+msgid "Multisat"
+msgstr "Multisat"
+
+msgid "N/A"
+msgstr "N/A"
+
+msgid "NFI image flashing completed. Press Yellow to Reboot!"
+msgstr ""
+"Flashing complet pentru imaginea NFI. Apasati butonul galben pentru reboot!"
+
+msgid "NTSC"
+msgstr "NTSC"
+
+msgid "Name"
+msgstr "Nume"
+
+msgid "Nameserver"
+msgstr "Nameserver"
+
+msgid "Nameserver %d"
+msgstr "Numele server-ului %d"
+
+msgid "Nameserver settings"
+msgstr "Setari nume server"
+
+msgid "Netmask"
+msgstr "Netmask"
+
+msgid "Network"
+msgstr "Retea"
+
+msgid "Network Setup"
+msgstr "Configurare retea"
+
+msgid "Network scan"
+msgstr "Scanare retea"
+
+msgid "Network setup"
+msgstr "Configurare retea"
+
+msgid "Network test"
+msgstr "Test retea"
+
+msgid "Network:"
+msgstr "Retea"
+
+msgid "New"
+msgstr "Nou"
+
+msgid "New version:"
+msgstr "Versiune noua:"
+
+msgid "No"
+msgstr "Nu"
+
+msgid "No (supported) DVDROM found!"
+msgstr "Nu s-a gasit niciun DVDROM (suportat)!"
+
+msgid "No HDD found or HDD not initialized!"
+msgstr "Nu s-a gasit niciun HDD sau HDD neinitializat!"
+
+msgid "No backup needed"
+msgstr "Nu este nevoie de backup"
+
+msgid ""
+"No data on transponder!\n"
+"(Timeout reading PAT)"
+msgstr ""
+"Nu exista date pe transponder!\n"
+" (Timeout reading PAT)"
+
+msgid "No description available."
+msgstr "Descrierea nu este disponibila"
+
+msgid "No details for this image file"
+msgstr "Nu exista detalii despre acest fisier imagine"
+
+msgid "No displayable files on this medium found!"
+msgstr "Nu au fost gasite fisiere pe acest mediu de stocare!"
+
+msgid "No event info found, recording indefinitely."
+msgstr "Nu s-au gasit informatii despre eveniment, inregistrare nesfarsita."
+
+msgid "No free tuner!"
+msgstr "Nu exista tuner disponibil!"
+
+msgid "No positioner capable frontend found."
+msgstr "Nu a fost gasit niciun pozitioner"
+
+msgid "No tags are set on these movies."
+msgstr "Nu exista tag-uri stabilite pentru aceste filme."
+
+msgid "No tuner is configured for use with a diseqc positioner!"
+msgstr ""
+"Niciun tuner nu este configurat pentru a fi folosit cu un pozitioner diseqc!"
+
+msgid ""
+"No tuner is enabled!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"Niciun tuner nu este activat!\n"
+"Va rugam configurati setarile tuner-ului inainte de a incepe o scanare noua."
+
+msgid ""
+"No working local network adapter found.\n"
+"Please verify that you have attached a network cable and your network is "
+"configured correctly."
+msgstr ""
+"Nu a fost gasit un adaptor de retea locala functional.\n"
+"Va rugam verificati daca ati conectat un cablu de retea si daca reteaua "
+"esteconfigurata corect."
+
+msgid ""
+"No working wireless network adapter found.\n"
+"Please verify that you have attached a compatible WLAN device and your "
+"network is configured correctly."
+msgstr ""
+"Nu a fost gasit un adaptor de retea wireless functional.\n"
+"Va rugam verificati daca ati conectat un dispozitiv WLAN compatibil si "
+"reteaua este configurata corect"
+
+msgid ""
+"No working wireless network interface found.\n"
+" Please verify that you have attached a compatible WLAN device or enable "
+"your local network interface."
+msgstr ""
+"Nu a fost gasita o interfata de retea wireless functionala.\n"
+"Va rugam verificati daca ati conectat un dispozitiv WLAN compatibilsi "
+"reteaua este configurata corect"
+
+msgid "No, but restart from begin"
+msgstr "Nu, dar reluati de la capat"
+
+msgid "No, do nothing."
+msgstr "Nu, nu face nimic."
+
+msgid "No, just start my %s %s"
+msgstr "Nu, doar porneste %s %s"
+
+msgid "No, scan later manually"
+msgstr "Nu, scaneaza manual mai tarziu"
+
+msgid "None"
+msgstr "Niciunul"
+
+msgid "North"
+msgstr "Nord"
+
+msgid "Norwegian"
+msgstr "Norvegiana"
+
+msgid ""
+"Nothing to scan!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"Nu este nimic de scanat!\n"
+"Va rugam configurati setarile tuner-ului inainte de a incepe o scanare."
+
+msgid "OK"
+msgstr "OK"
+
+msgid "OK, guide me through the upgrade process"
+msgstr "OK, ghideaza-ma prin procesul de actualizare"
+
+msgid "Off"
+msgstr "Oprit"
+
+msgid "On"
+msgstr "Pornit"
+
+msgid "One"
+msgstr "Unu"
+
+msgid "PAL"
+msgstr "PAL"
+
+msgid "PIDs"
+msgstr "PID-uri"
+
+msgid "Package list update"
+msgstr "Actualizare lista pachet"
+
+msgid "Packet management"
+msgstr "Administrare pachet"
+
+msgid "Packet manager"
+msgstr "Manager pachet"
+
+msgid "Parental control"
+msgstr "Control parental"
+
+msgid "Parental control setup"
+msgstr "Configurare control parental"
+
+msgid "Pause movie at end"
+msgstr "Opreste filmul la sfarsit"
+
+msgid "Pillarbox"
+msgstr "Pillarbox"
+
+msgid "Pilot"
+msgstr "Pilot"
+
+msgid "Play"
+msgstr "Redare"
+
+msgid "Play Audio-CD..."
+msgstr "Redare Audio-CD..."
+
+msgid "Play DVD"
+msgstr "Redare DVD"
+
+msgid "Play Music..."
+msgstr "Redare Muzica..."
+
+msgid "Play recorded movies..."
+msgstr "Redare filme inregistrate..."
+
+msgid "Please change recording endtime"
+msgstr "Va rugam schimbati timpul final pentru inregistrare"
+
+msgid "Please check your network settings!"
+msgstr "Va rugam verificati setarile de retea!"
+
+msgid "Please choose an extension..."
+msgstr "Va rugam alegeti o extensie..."
+
+msgid "Please do not change any values unless you know what you are doing!"
+msgstr ""
+"Va rugam nu modificati nicio valoare numai daca sunteti sigur de ceea ce "
+"faceti!"
+
+msgid "Please enter a name for the new bouquet"
+msgstr "Va rugam introduceti un nume pentru noul pachet"
+
+msgid "Please enter a name for the new marker"
+msgstr "Va rugam introduceti un nume pentru marker-ul nou"
+
+msgid "Please enter a new filename"
+msgstr "Va rugam introduceti un nou nume de fisier"
+
+msgid "Please enter filename (empty = use current date)"
+msgstr "Va rugam introduceti numele fisierului (gol = foloseste data curenta)"
+
+msgid "Please enter name of the new directory"
+msgstr "Va rugam introduceti numele noului director"
+
+msgid "Please enter the correct pin code"
+msgstr "Va rugam introduceti codul pin corect"
+
+msgid "Please follow the instructions on the TV"
+msgstr "Va rugam sa urmati instructiunile de pe ecranul TV-ului"
+
+msgid ""
+"Please note that the previously selected media could not be accessed and "
+"therefore the default directory is being used instead."
+msgstr ""
+"Va rugam sa retineti ca sursa media selectata anterior nu a putut fi "
+"accesata sidirectorul implicit este folosit in locul acesteia."
+
+msgid "Please press OK to continue."
+msgstr "Va rugam apasati OK pentru a continua"
+
+msgid "Please select a playlist to delete..."
+msgstr "Va rugam selectati o lista de redare pentru a fi stearsa..."
+
+msgid "Please select a playlist..."
+msgstr "Va rugam selectati o lista de redare..."
+
+msgid "Please select a subservice to record..."
+msgstr "Va rugam selectati un subserviciu pentru a fi inregistrat..."
+
+msgid "Please select a subservice..."
+msgstr "Va rugam selectati un subserviciu..."
+
+msgid "Please select medium to use as backup location"
+msgstr ""
+"Va rugam selectati mediul de stocare care va fi folosit ca locatie de rezerva"
+
+msgid "Please select tag to filter..."
+msgstr "Va rugam selectati tag-ul care va fi filtrat..."
+
+msgid "Please select the movie path..."
+msgstr "Va rugam selectati calea pentru film..."
+
+msgid "Please set up tuner B"
+msgstr "Va rugam configurati tuner-ul B"
+
+msgid "Please set up tuner C"
+msgstr "Va rugam configurati tuner-ul C"
+
+msgid "Please set up tuner D"
+msgstr "Va rugam configurati tuner-ul D"
+
+msgid ""
+"Please use direction keys to move the PiP window.\n"
+"Press Bouquet +/- to resize the window.\n"
+"Press OK to go back to the TV mode or EXIT to cancel the moving."
+msgstr ""
+"Va rugam utilizati tastele de directie pentru a misca fereastra PiP.\n"
+"Apasati Pachet +/- pentru a redimensiona fereastra.\n"
+"Apasati OK pentru a reveni in modul TV sau EXIT pentru a anula miscarea."
+
+msgid ""
+"Please use the UP and DOWN keys to select your language. Afterwards press "
+"the OK button."
+msgstr ""
+"Va rugam folositi tastele SUS si JOS pentru a selecta limba. Dupa aceea "
+"apasatitasta OK."
+
+msgid "Please wait for activation of your network configuration..."
+msgstr "Va rugam asteptati activarea configurarilor de retea..."
+
+msgid "Please wait while scanning is in progress..."
+msgstr "Va rugam asteptati cat are loc scanarea..."
+
+msgid "Please wait while we configure your network..."
+msgstr "Va rugam asteptati pana cand se configureaza reteaua..."
+
+msgid "Please wait while your network is restarting..."
+msgstr "Va rugam asteptati pana cand reteaua se va restarta..."
+
+msgid "Please wait..."
+msgstr "Va rugam asteptati..."
+
+msgid "Please wait... Loading list..."
+msgstr "Va rugam asteptati... Se incarca lista..."
+
+msgid "Plugins"
+msgstr "Plugin-uri"
+
+msgid "Polarization"
+msgstr "Polarizare"
+
+msgid "Polish"
+msgstr "Poloneza"
+
+msgid "Port A"
+msgstr "Portul A"
+
+msgid "Port B"
+msgstr "Portul B"
+
+msgid "Port C"
+msgstr "Portul C"
+
+msgid "Port D"
+msgstr "Portul D"
+
+msgid "Portuguese"
+msgstr "Portugheza"
+
+msgid "Positioner"
+msgstr "Pozitioner"
+
+msgid "Positioner setup"
+msgstr "Configurare Pozitioner"
+
+msgid "Power threshold in mA"
+msgstr "Prag de putere in mA"
+
+msgid "Predefined transponder"
+msgstr "Transponder predefinit"
+
+msgid "Preparing... Please wait"
+msgstr "Se pregateste... Va rugam asteptati"
+
+msgid "Press OK on your remote control to continue."
+msgstr "Va rugam apasati OK de pe telecomanda pentru a continua"
+
+msgid "Press OK to activate the settings."
+msgstr "Apasati OK pentru a activa setarile"
+
+msgid "Press OK to edit the settings."
+msgstr "Apasati OK pentru a edita setarile."
+
+msgid "Press OK to get further details for %s"
+msgstr "Apasati OK pentru a primi detaliile urmatoare pentru %s"
+
+msgid "Press OK to scan"
+msgstr "Apasati OK pentru scanare"
+
+msgid "Press OK to start the scan"
+msgstr "Apasati OK pentru a incepe scanarea"
+
+msgid "Preview menu"
+msgstr "Meniu previzualizare"
+
+msgid "Primary DNS"
+msgstr "DNS Primar"
+
+msgid "Priority"
+msgstr "Prioritate"
+
+msgid "Properties of current title"
+msgstr "Proprietatile titlului curent"
+
+msgid "Protect services"
+msgstr "Servicii de protectie"
+
+msgid "Provider"
+msgstr "Furnizor"
+
+msgid "Provider to scan"
+msgstr "Furnizor ce urmeaza a fi scanat"
+
+msgid "Providers"
+msgstr "Furnizori"
+
+msgid "Python frontend for /tmp/mmi.socket"
+msgstr "Python frontend pentru /tmp/mni.socket"
+
+msgid "Quick"
+msgstr "Rapid"
+
+msgid "RF output"
+msgstr "Iesire RF"
+
+msgid "RGB"
+msgstr "RGB"
+
+msgid "Random"
+msgstr "Aleator"
+
+msgid "Really close without saving settings?"
+msgstr "Inchideti fara sa salvati setarile?"
+
+msgid "Really delete done timers?"
+msgstr "Stergeti timpii de terminare?"
+
+msgid "Really exit the subservices quickzap?"
+msgstr "Iesiti din subserviciul zap rapid?"
+
+msgid "Really reboot now?"
+msgstr "Reporniti sistemul acum?"
+
+msgid "Really restart now?"
+msgstr "Restartati acum?"
+
+msgid "Really shutdown now?"
+msgstr "Inchideti acum?"
+
+msgid "Reboot"
+msgstr "Repornire sistem"
+
+msgid "Record"
+msgstr "Inregistrare"
+
+msgid "Record time limited due to conflicting timer %s"
+msgstr "Timp e inregistrare limitat datorat conflictului de timer %s"
+
+msgid "Recording"
+msgstr "Inregistrare"
+
+msgid "Recording(s) are in progress or coming up in few seconds!"
+msgstr "Inregistrarea este in curs sau incepe in cateva secunde!"
+
+msgid "Recordings"
+msgstr "Inregistrari"
+
+msgid "Recordings always have priority"
+msgstr "Inregistrarile au intotdeauna prioritate"
+
+msgid "Refresh rate selection."
+msgstr "Selectie rata de reimprospatare"
+
+msgid "Reload"
+msgstr "Reincarcare"
+
+msgid "Remove"
+msgstr "Eliminare"
+
+msgid "Remove a mark"
+msgstr "Eliminare semn"
+
+msgid "Remove currently selected title"
+msgstr "Eliminare titlu curent selectat"
+
+msgid "Remove finished."
+msgstr "Eliminare fisiere terminate"
+
+msgid "Remove plugins"
+msgstr "Eliminare plugin-uri"
+
+msgid "Remove timer"
+msgstr "Eliminare timer"
+
+msgid "Remove title"
+msgstr "Stergere titlu"
+
+msgid "Removing"
+msgstr "Stergere"
+
+msgid "Removing directory %s failed. (Maybe not empty.)"
+msgstr "Stergere drector %s esuata. (Probabil nu este gol.)"
+
+msgid "Rename"
+msgstr "Redenumire"
+
+msgid "Repeating event currently recording... What do you want to do?"
+msgstr "Repetare eveniment care se inregistreaza...Ce doriti a faceti?"
+
+msgid "Repeats"
+msgstr "Repeta"
+
+msgid "Reset"
+msgstr "Resetare"
+
+msgid "Reset and renumerate title names"
+msgstr "Resetare si renumarare nume titluri"
+
+msgid "Resolution"
+msgstr "Rezolutie"
+
+msgid "Restart"
+msgstr "Restart"
+
+msgid "Restart GUI now?"
+msgstr "Restart GUI acum?"
+
+msgid "Restart network"
+msgstr "Restart retea"
+
+msgid "Restart test"
+msgstr "Test restart"
+
+msgid "Restart your network connection and interfaces.\n"
+msgstr "Restartati conexiunea la retea si interfata \n"
+
+msgid "Restore"
+msgstr "Revenire"
+
+msgid "Resume from last position"
+msgstr "Reluare de la ultima pozitie"
+
+msgid "Resuming playback"
+msgstr "Reluare redare"
+
+msgid "Return to movie list"
+msgstr "Revenire la lista de filme"
+
+msgid "Return to previous service"
+msgstr "Revenire la serviciul anterior"
+
+msgid "Rewind speeds"
+msgstr "Viteze de derulare"
+
+msgid "Right"
+msgstr "Dreapta"
+
+msgid "Rotor turning speed"
+msgstr "Viteza de intoarcere a rotorului"
+
+msgid "Running"
+msgstr "In functiune"
+
+msgid "Russian"
+msgstr "Rusa"
+
+msgid "S-Video"
+msgstr "S-Video"
+
+msgid "Sat"
+msgstr "Sat"
+
+msgid "Satellite"
+msgstr "Satelit"
+
+msgid "Satellites"
+msgstr "Sateliti"
+
+msgid "Satfinder"
+msgstr "Satfinder"
+
+msgid "Sats"
+msgstr "Sateliti"
+
+msgid "Saturday"
+msgstr "Sambata"
+
+msgid "Save"
+msgstr "Salvare"
+
+msgid "Scan "
+msgstr "Scanare"
+
+msgid "Scan additional SR"
+msgstr "Scanare SR aditional"
+
+msgid ""
+"Scans default lamedbs sorted by satellite with a connected dish positioner"
+msgstr "lamedbs implicicit sortat dupa satelit cu un pozitioner conectat"
+
+msgid "Search east"
+msgstr "Cautati spre est"
+
+msgid "Search west"
+msgstr "Cautati spre vest"
+
+msgid "Searching for new installed or removed packages. Please wait..."
+msgstr "Cautare pachete nou instalate sau sterse. Va rugam asteptati..."
+
+msgid "Secondary DNS"
+msgstr "DNS Secundar"
+
+msgid "Seek"
+msgstr "Cautare"
+
+msgid "Select"
+msgstr "Selectare"
+
+msgid "Select audio track"
+msgstr "Selectare pista audio"
+
+msgid "Select channel to record from"
+msgstr "Selectare canal de inregistrat"
+
+msgid "Select provider to add..."
+msgstr "Alegeti furnizor pentru a fi adaugat..."
+
+msgid "Select refresh rate"
+msgstr "Selectati rata de reimprospatare"
+
+msgid "Select service to add..."
+msgstr "Selectati serviciul care sa fie adaugat..."
+
+msgid "Select video input with up/down buttons"
+msgstr "Selectati intrarea vieo cu tastele sus/jos"
+
+msgid "Select video mode"
+msgstr "Selectati modul vieo"
+
+msgid "Send DiSEqC"
+msgstr "Trimite DiSEqC"
+
+msgid "Send DiSEqC only on satellite change"
+msgstr "Trimite DiSEqC numai la schimbarea satelitului"
+
+msgid "Seperate titles with a main menu"
+msgstr "Titluri separate cu meniu princpial"
+
+msgid "Sequence repeat"
+msgstr "Repetare secventa"
+
+msgid "Service"
+msgstr "Serviciu"
+
+msgid "Service has been added to the favourites."
+msgstr "Serviciul a fost adaugat la favorite"
+
+msgid "Service has been added to the selected bouquet."
+msgstr "Serviciul a fost adaugat in pachetul selectat"
+
+msgid ""
+"Service invalid!\n"
+"(Timeout reading PMT)"
+msgstr ""
+"Serviciu nevalid!\n"
+"(Timeout reading PMT)"
+
+msgid ""
+"Service not found!\n"
+"(SID not found in PAT)"
+msgstr ""
+"Serviciul nu a fost gasit!\n"
+"(SID nu a fost gasit in PAT)"
+
+msgid "Service scan"
+msgstr "Scanare serviciu"
+
+msgid ""
+"Service unavailable!\n"
+"Check tuner configuration!"
+msgstr ""
+"Serviciul nu este valabil!\n"
+"Verificati setarile tunerului!"
+
+msgid "Services"
+msgstr "Servicii"
+
+msgid "Set interface as default Interface"
+msgstr "Setare interfata ca interfata implicita"
+
+msgid "Set limits"
+msgstr "Setare limite"
+
+msgid "Settings"
+msgstr "Setari"
+
+msgid "Setup"
+msgstr "Configurare"
+
+msgid "Show infobar on channel change"
+msgstr "Arata bara de informatii la schimbarea canalelor"
+
+msgid "Show infobar on event change"
+msgstr "Arata bara de informatii la schimbarea evenimentelor"
+
+msgid "Show infobar on skip forward/backward"
+msgstr "Arata bara de informatii la saltul inainte/inapoi"
+
+msgid "Show positioner movement"
+msgstr "Arata miscarea pozitionerului"
+
+msgid "Show the radio player..."
+msgstr "Arata player-ul radio"
+
+msgid "Show the tv player..."
+msgstr "Arata player-ul tv"
+
+msgid "Shows the state of your wireless LAN connection.\n"
+msgstr "Arata statusul conexiunii LAN wireless.\n"
+
+msgid "Similar"
+msgstr "Similar"
+
+msgid "Similar broadcasts:"
+msgstr "Transmisii similare"
+
+msgid "Simple"
+msgstr "Simplu"
+
+msgid "Simple titleset (compatibility for legacy players)"
+msgstr "Titlu simplu (compatibilitate pentru playerele legacy)"
+
+msgid "Single"
+msgstr "Individual"
+
+msgid "Single EPG"
+msgstr "EPG Individual"
+
+msgid "Single satellite"
+msgstr "Satelit individual"
+
+msgid "Skins"
+msgstr "Skinuri"
+
+msgid "Slot %d"
+msgstr "Slot %d"
+
+msgid "Slow"
+msgstr "Incet"
+
+msgid "Software"
+msgstr "Software"
+
+msgid "Software restore"
+msgstr "Revenire la softul anterior"
+
+msgid "Software update"
+msgstr "Actualizare software"
+
+msgid "Some plugins are not available:\n"
+msgstr "Anumite plugin-uri nu sunt disponibile:\n"
+
+msgid "Sound"
+msgstr "Sunet"
+
+msgid "South"
+msgstr "Sud"
+
+msgid "Spanish"
+msgstr "Spaniola"
+
+msgid "Standby"
+msgstr "Asteptare"
+
+msgid "Standby / Restart"
+msgstr "Asteptare / Restart"
+
+msgid "Start from the beginning"
+msgstr "Incepe de la capat"
+
+msgid "Start test"
+msgstr "Incepe test"
+
+msgid "Starting on"
+msgstr "Incepand de la"
+
+msgid "Step east"
+msgstr "Un pas catre est"
+
+msgid "Step west"
+msgstr "Un pas catre vest"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Stop current event and disable coming events"
+msgstr "Oprire eveniment curent si dezactivare evenimente urmatoare"
+
+msgid "Stop current event but not coming events"
+msgstr "Oprire eveniment curent dar nu si evenimentele urmatoare"
+
+msgid "Stop playing this movie?"
+msgstr "Opriti redarea filmului?"
+
+msgid "Stop test"
+msgstr "Oprire test"
+
+msgid "Stop testing plane after # failed transponders"
+msgstr "Oprire testare dupa # transpondere esuate"
+
+msgid "Stop testing plane after # successful transponders"
+msgstr "Oprire testare dupa # transpondere reusite"
+
+msgid "Store position"
+msgstr "Memoreaza pozitia"
+
+msgid "Stored position"
+msgstr "Pozitie memorata"
+
+msgid "Subservices"
+msgstr "Subservicii"
+
+msgid "Subtitle selection"
+msgstr "Selectare subtitrare"
+
+msgid "Subtitles"
+msgstr "Subtitrari"
+
+msgid "Sun"
+msgstr "Dum"
+
+msgid "Sunday"
+msgstr "Duminica"
+
+msgid "Swedish"
+msgstr "Suedeza"
+
+msgid "System"
+msgstr "Sistem"
+
+msgid "TRANSLATOR_INFO"
+msgstr "TRANSLATOR_INFO"
+
+msgid "TS file is too large for ISO9660 level 1!"
+msgstr "Fisierul TS este prea mare pentru standardul ISO9660 nivelul 1!"
+
+msgid "Tags"
+msgstr "Tag-uri"
+
+msgid "Terrestrial"
+msgstr "Terestru"
+
+msgid "Terrestrial provider"
+msgstr "Furnizor terestru"
+
+msgid "Test DiSEqC settings"
+msgstr "Test setari DiSEqC"
+
+msgid "Test mode"
+msgstr "Mod de testare"
+
+msgid "The backup failed. Please choose a different backup location."
+msgstr ""
+"Operatiunea backup nu a reusit. Va rugam alegeti o alta locatie pentru "
+"fisierele backup."
+
+msgid ""
+"The following device was found:\n"
+"\n"
+"%s\n"
+"\n"
+"Do you want to write the USB flasher to this stick?"
+msgstr ""
+"Urmatorul dispozitiv nu a fost gasit: \n"
+"\n"
+"%s\n"
+"\n"
+"Doriti sa scrieti flasher-ul USB pe stick?"
+
+msgid "The following files were found..."
+msgstr "Urmatoarele fisiere nu au fost gasite..."
+
+msgid "The path %s already exists."
+msgstr "Directia %s exista deja."
+
+msgid "The pin code you entered is wrong."
+msgstr "Codul pin introdus este gresit."
+
+msgid "The results have been written to %s."
+msgstr "Rezultatele au fost scrise in %s."
+
+msgid "The timer file (timers.xml) is corrupt and could not be loaded."
+msgstr "Fisierul timer (timer.xml) este corupt si nu a putut fi incarcat."
+
+msgid ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it."
+msgstr ""
+"Plugin-ul LAN wireless nu este instalat!\n"
+"Va rugam sa-l instalati."
+
+msgid ""
+"The wizard can backup your current settings. Do you want to do a backup now?"
+msgstr ""
+"Aplicatia poate crea un backup pentru setarile actuale. Doriti sa faceti un "
+"backup acum?"
+
+msgid "The wizard is finished now."
+msgstr "Aplicatia s-a incheiat."
+
+msgid ""
+"There might not be enough space on the selected partition..\n"
+"Do you really want to continue?"
+msgstr ""
+"S-ar putea sa nu existe spatiu suficient pe partitia selectata.\n"
+"Doriti sa continuati?"
+
+msgid ""
+"This DVD RW medium is already formatted - reformatting will erase all "
+"content on the disc."
+msgstr ""
+"Acest DVD RW este deja formatat - reformatarea presupune stergerea "
+"tuturorfisierelor de pe disc."
+
+msgid "Three"
+msgstr "Trei"
+
+msgid "Threshold"
+msgstr "Prag"
+
+msgid "Thu"
+msgstr "Joi"
+
+msgid "Thumbnails"
+msgstr "Thumbnails"
+
+msgid "Thursday"
+msgstr "Joi"
+
+msgid "Time"
+msgstr "Ora"
+
+msgid "Timer entry"
+msgstr "Intrare timer"
+
+msgid "Timer log"
+msgstr "Inregistrare timer"
+
+msgid ""
+"Timer overlap in timers.xml detected!\n"
+"Please recheck it!"
+msgstr ""
+"Suprapunere timer detectata in timers.xml!\n"
+"Te rog verifica din nou!"
+
+msgid "Timer sanity error"
+msgstr "Eroare timer"
+
+msgid "Timer selection"
+msgstr "Selectare timer"
+
+msgid "Timeshift"
+msgstr "Timeshift"
+
+msgid "Timeshift not possible!"
+msgstr "Timeshift nu este posibil!"
+
+msgid "Timezone"
+msgstr "Zona de fus orar"
+
+msgid "Title"
+msgstr "Titlu"
+
+msgid "Title properties"
+msgstr "Proprietati titlu"
+
+msgid "Titleset mode"
+msgstr "Mod titlu"
+
+msgid "Today"
+msgstr "Astazi"
+
+msgid "Tone mode"
+msgstr "Mod ton"
+
+msgid "Toneburst"
+msgstr "Toneburst"
+
+msgid "Toneburst A/B"
+msgstr "Toneburst A/B"
+
+msgid "Track"
+msgstr "Piesa"
+
+msgid "Transmission mode"
+msgstr "Mod transmisie"
+
+msgid "Transponder"
+msgstr "Transponder"
+
+msgid "Tries left:"
+msgstr "Incercari ramase:"
+
+msgid "Try to find used transponders in cable network.. please wait..."
+msgstr ""
+"Cautare transpondere folosite in reteaua de cablu...va rugam asteptati..."
+
+msgid "Trying to download a new packetlist. Please wait..."
+msgstr "Descarcare a unei noi liste de pachete. Va rugam asteptati..."
+
+msgid "Tue"
+msgstr "Mar"
+
+msgid "Tuesday"
+msgstr "Marti"
+
+msgid "Tune"
+msgstr "Acordare"
+
+msgid "Tune failed!"
+msgstr "Acordare esuata!"
+
+msgid "Tuner"
+msgstr "Tuner"
+
+msgid "Tuner configuration"
+msgstr "Configurare tuner"
+
+msgid "Tuner status"
+msgstr "Stare tuner"
+
+msgid "Turkish"
+msgstr "Turca"
+
+msgid "Two"
+msgstr "Doi"
+
+msgid "Type"
+msgstr "Tip"
+
+msgid "Type of scan"
+msgstr "Tipul scanarii"
+
+msgid "USALS"
+msgstr "USALS"
+
+msgid "USB stick wizard"
+msgstr "Expert USB stick"
+
+msgid "Unicable LNB"
+msgstr "Unicable LNB"
+
+msgid "Universal LNB"
+msgstr "LNBUniversal "
+
+msgid "Update"
+msgstr "Updateza"
+
+msgid "Upgrade finished."
+msgstr "Upgrate terminat."
+
+msgid "Upgrading"
+msgstr "Upgradare"
+
+msgid "Use"
+msgstr "Foloseste"
+
+msgid "Use DHCP"
+msgstr "Foloseste DHCP"
+
+msgid "Use a gateway"
+msgstr "Foloseste un gateway"
+
+msgid "Use power measurement"
+msgstr "Foloseste Masurarea Energiei"
+
+msgid ""
+"Use the up/down keys on your remote control to select an option. After that, "
+"press OK."
+msgstr ""
+"Foloseste tastele sus/jos pentru a selecta optiunile. Dopa asta,  apasa OK."
+
+msgid "Used service scan type"
+msgstr "Tipul serviciului folosit pentru scanare"
+
+msgid "User defined"
+msgstr "Userul ales"
+
+msgid "VCR scart"
+msgstr "VCR scart"
+
+msgid "VMGM (intro trailer)"
+msgstr "VMGM (intro trailer)"
+
+msgid "Vertical"
+msgstr "Vertical"
+
+msgid "Video mode selection."
+msgstr "Selectare MOD VIDEO"
+
+msgid "View"
+msgstr "Vezi"
+
+msgid "View Movies..."
+msgstr "Vezi filmele..."
+
+msgid "View Rass interactive..."
+msgstr "Vezi Rass interactive..."
+
+msgid "View Video CD..."
+msgstr "Vezi video CD..."
+
+msgid "View list of available CommonInterface extensions"
+msgstr "Vezi lista cu estensiile CommonInterface disponibile"
+
+msgid "View list of available EPG extensions."
+msgstr "Vezi lista extensiilor EPG disponible"
+
+msgid "View list of available communication extensions."
+msgstr "Vezi lista comunicatiilor disponibile"
+
+msgid "View list of available default settings"
+msgstr "Vezi lista setarilor predefinite disponibile"
+
+msgid "View list of available multimedia extensions."
+msgstr "Vezi lista extensiilor multimedia disponibile "
+
+msgid "View list of available networking extensions"
+msgstr "Vezi lista estensiilor de retea disponibile"
+
+msgid "View list of available recording extensions"
+msgstr "Vezi lista extensiilor inregistrate disponibile"
+
+msgid "View list of available skins"
+msgstr "Vezi lista cu skin-urile disponibile"
+
+msgid "View list of available software extensions"
+msgstr "Vezi lista estensiilor software disponibile"
+
+msgid "View list of available system extensions"
+msgstr "Vezi lista estensiilor sistemului disponibile"
+
+msgid "View teletext..."
+msgstr "Vezi teletext ..."
+
+msgid "Voltage mode"
+msgstr "Mod Voltaj"
+
+msgid "W"
+msgstr "W"
+
+msgid "WEP"
+msgstr "WEP"
+
+msgid "WPA"
+msgstr "WPA"
+
+msgid "WPA or WPA2"
+msgstr "WPA sau WPA2"
+
+msgid "WPA2"
+msgstr "WPA2"
+
+msgid "WSS on 4:3"
+msgstr "WSS on 4:3"
+
+msgid "Waiting"
+msgstr "Asteaptare"
+
+msgid "Wed"
+msgstr "Wed"
+
+msgid "Wednesday"
+msgstr "Miercuri\t"
+
+msgid "Weekday"
+msgstr "Saptamanal"
+
+msgid "West"
+msgstr "Vest"
+
+msgid "What do you want to scan?"
+msgstr "Ce vrei sa scanezi"
+
+msgid "Where do you want to backup your settings?"
+msgstr "Unde vrei sa salvezi datele"
+
+msgid "Where to save temporary timeshift recordings?"
+msgstr "Unde salvam inregistrarile temporate timeshift?"
+
+msgid "Write error while recording. Disk full?\n"
+msgstr "Inregistrare esusta. Disk plin?\n"
+
+msgid "Write failed!"
+msgstr "Scriere esuata"
+
+msgid "YPbPr"
+msgstr "YPbPr"
+
+msgid "Year"
+msgstr "An"
+
+msgid "Yes"
+msgstr "Da"
+
+msgid "Yes, and delete this movie"
+msgstr "Da si sterge acest film"
+
+msgid "Yes, backup my settings!"
+msgstr "Da, salveaza-mi setarile"
+
+msgid "Yes, do a manual scan now"
+msgstr "Da, scaneaza manual acum"
+
+msgid "Yes, do an automatic scan now"
+msgstr "Da, scaneaza automat acum"
+
+msgid "Yes, do another manual scan now"
+msgstr "Da, scaneaza inca odata manual"
+
+msgid "Yes, restore the settings now"
+msgstr "Da, restaureaza setari acum"
+
+msgid "Yes, returning to movie list"
+msgstr "Da, rintoarcere la lista filme"
+
+msgid "Yes, shut down now."
+msgstr "Da, inchide acum"
+
+msgid "You cannot delete this!"
+msgstr "Nu poti sterge asta!"
+
+msgid ""
+"You have chosen to backup your settings. Please press OK to start the backup "
+"now."
+msgstr ""
+"Ai ales sa faci backup la setari. Apasa OK pentru inceperea backup-uluiacum."
+
+msgid ""
+"You have chosen to create a new .NFI flasher bootable USB stick. This will "
+"repartition the USB stick and therefore all data on it will be erased."
+msgstr ""
+"Ai ales sa creezi un usb stick .NFI flasher bootabil. Acesta va repartitiona "
+"stickul usb asadar datele de pe el vor fi sterse."
+
+msgid ""
+"You have chosen to restore your settings. Enigma2 will restart after "
+"restore. Please press OK to start the restore now."
+msgstr ""
+"Ai ales sa faci restore la setari. Enigma2 se va restarta dupa restore. "
+"Apasa OK pentru a face restore acum."
+
+msgid "You have to wait %s!"
+msgstr "Ai de asteptat %s!"
+
+msgid "Your %s %s is shutting down. Please wait..."
+msgstr "Dreamboxul este in curs de stingere. Asteapta..."
+
+msgid ""
+"Your backup succeeded. We will now continue to explain the further upgrade "
+"process."
+msgstr ""
+"A avut loc un backup. Acum vom continua sa explicam procesul de upgrade."
+
+msgid ""
+"Your collection exceeds the size of a single layer medium, you will need a "
+"blank dual layer DVD!"
+msgstr ""
+"Colectia ta excede marimea unui sigle layer medium, vei avea nevoie de un "
+"blank dual layer DVD!"
+
+msgid ""
+"Your frontprocessor firmware must be upgraded.\n"
+"Press OK to start upgrade."
+msgstr ""
+"Firmware-ul de la procesor trebuie upgradat.\n"
+"Apasa OK pentru a incepe."
+
+msgid "Your network configuration has been activated."
+msgstr "Configurarea retelei a fost activata."
+
+msgid "Zap back to service before positioner setup?"
+msgstr "Treci inapoi la serviciul inainte de setarea pozitionerului?"
+
+msgid "[alternative edit]"
+msgstr "[editare alternativa]"
+
+msgid "[bouquet edit]"
+msgstr "[editare bouquet]"
+
+msgid "[favourite edit]"
+msgstr "[editare favorite]"
+
+msgid "[move mode]"
+msgstr "[mod mutare]"
+
+msgid "a gui to assign services/providers to common interface modules"
+msgstr "un gui sa repartizeze servicii/provideri la modulele common interface"
+
+msgid "a gui to assign services/providers/caids to common interface modules"
+msgstr ""
+"un gui sa repartizeze servicii/provideri/caid-uri la modulele common "
+"interface"
+
+msgid "abort alternatives edit"
+msgstr "renunta la editarea alternativelor"
+
+msgid "abort bouquet edit"
+msgstr "renunta la editarea bouquetelor"
+
+msgid "abort favourites edit"
+msgstr "renunta la editarea favoritelor"
+
+msgid "about to start"
+msgstr "in curs de incepere"
+
+msgid "add alternatives"
+msgstr "adauga alternative"
+
+msgid "add bookmark"
+msgstr "adauga bookmark"
+
+msgid "add bouquet"
+msgstr "adauga bouquet"
+
+msgid "add marker"
+msgstr "adauga marker"
+
+msgid "add service to bouquet"
+msgstr "adauga serviciu la bouquet"
+
+msgid "add service to favourites"
+msgstr "adauga serviciu la favorite"
+
+msgid "add to parental protection"
+msgstr "adauga la protectie parentala"
+
+msgid "advanced"
+msgstr "avansat"
+
+msgid "audio tracks"
+msgstr "track-uri audio"
+
+msgid "auto"
+msgstr "auto"
+
+msgid "back"
+msgstr "inapoi"
+
+msgid "background image"
+msgstr "imagine fundal"
+
+msgid "better"
+msgstr "mai bine"
+
+msgid "black"
+msgstr "negru"
+
+msgid "blacklist"
+msgstr "lista neagra"
+
+msgid "blue"
+msgstr "albastru"
+
+msgid "chapters"
+msgstr "capitole"
+
+msgid "circular left"
+msgstr "circular stanga"
+
+msgid "circular right"
+msgstr "circular dreapta"
+
+msgid "confirmed"
+msgstr "confirmat"
+
+msgid "connected"
+msgstr "conectat"
+
+msgid "continue"
+msgstr "continua"
+
+msgid "copy to bouquets"
+msgstr "copiaza in bouquete"
+
+msgid "create directory"
+msgstr "creaza director"
+
+msgid "daily"
+msgstr "zilnic"
+
+msgid "day"
+msgstr "ziua"
+
+msgid "delete"
+msgstr "sterge"
+
+msgid "delete cut"
+msgstr "sterge decupare"
+
+msgid "disable"
+msgstr "dezactiveaza"
+
+msgid "disable move mode"
+msgstr "dezactiveaza mod mutare"
+
+msgid "disabled"
+msgstr "dezactivat"
+
+msgid "disconnected"
+msgstr "deconectat"
+
+msgid "do nothing"
+msgstr "nu face nimic"
+
+msgid "done!"
+msgstr "gata!"
+
+msgid "edit alternatives"
+msgstr "editeaza alternative"
+
+msgid "empty"
+msgstr "gol"
+
+msgid "enable"
+msgstr "activeaza"
+
+msgid "enable bouquet edit"
+msgstr "activeaza editare bouquet"
+
+msgid "enable favourite edit"
+msgstr "activeaza editare favorite"
+
+msgid "enable move mode"
+msgstr "activeaza mod mutare"
+
+msgid "enabled"
+msgstr "activat"
+
+msgid "end alternatives edit"
+msgstr "sfarsit editare alternative"
+
+msgid "end bouquet edit"
+msgstr "sfarsit editare bouquet"
+
+msgid "end cut here"
+msgstr "sfarsit decupare aici"
+
+msgid "end favourites edit"
+msgstr "sfarsit editare favorite"
+
+msgid "equal to"
+msgstr "egal cu"
+
+msgid "exit DVD player or return to file browser"
+msgstr "iesire DVD player sau inapoi la file browser"
+
+msgid "exit network adapter configuration"
+msgstr "iesire configurare retea"
+
+msgid "exit networkadapter setup menu"
+msgstr "iesire meniu setari adaptor retea"
+
+msgid "failed"
+msgstr "esuat"
+
+msgid "fileformats (BMP, PNG, JPG, GIF)"
+msgstr "file formaturi (BMP, PNG, JPG, GIF)"
+
+msgid "filename"
+msgstr "filename"
+
+msgid "forward to the next chapter"
+msgstr "inainte la capitolul urmator"
+
+msgid "free"
+msgstr "liber"
+
+msgid "free diskspace"
+msgstr "spatiu liber pe disk"
+
+msgid "go to deep standby"
+msgstr "treci la deep standby"
+
+msgid "go to standby"
+msgstr "intra in standby"
+
+msgid "grab this frame as bitmap"
+msgstr "capteaza imaginea ca bitmap"
+
+msgid "green"
+msgstr "verde"
+
+msgid "horizontal"
+msgstr "orizontal"
+
+msgid "init module"
+msgstr "init modul"
+
+msgid "init modules"
+msgstr "init module"
+
+msgid "insert mark here"
+msgstr "introdu semn aici"
+
+msgid "jump back to the previous title"
+msgstr "inapoi la titlul anterior"
+
+msgid "jump forward to the next title"
+msgstr "inainte la urmatorul titlu "
+
+msgid "leave movie player..."
+msgstr "iesi din movie player"
+
+msgid "left"
+msgstr "stanga"
+
+msgid "length"
+msgstr "lungime"
+
+msgid "locked"
+msgstr "inchis"
+
+msgid "loopthrough to"
+msgstr "treci la"
+
+msgid "manual"
+msgstr "manual"
+
+msgid "menu"
+msgstr "meniu"
+
+msgid "mins"
+msgstr "min"
+
+msgid "minutes"
+msgstr "minute"
+
+msgid "month"
+msgstr "luna"
+
+msgid "move down to last entry"
+msgstr "muta jos la ultima intrare"
+
+msgid "move down to next entry"
+msgstr "muta jos la urmatoarea intrare"
+
+msgid "move up to first entry"
+msgstr "muta sus la prima intrare"
+
+msgid "move up to previous entry"
+msgstr "muta sus la anterioara intrare"
+
+msgid "multinorm"
+msgstr "multinorma"
+
+msgid "never"
+msgstr "niciodata"
+
+msgid "no"
+msgstr "nu"
+
+msgid "no CAId selected"
+msgstr "niciun CAID selectat"
+
+msgid "no CI slots found"
+msgstr "niciun slot CI gasit"
+
+msgid "no module found"
+msgstr "niciun modul gasit"
+
+msgid "none"
+msgstr "nimic"
+
+msgid "not locked"
+msgstr "neinchis"
+
+msgid "not used"
+msgstr "nefolosit"
+
+msgid "nothing connected"
+msgstr "nimic conectat"
+
+msgid "of a DUAL layer medium used."
+msgstr "la un DUAL layer folosit mediu"
+
+msgid "of a SINGLE layer medium used."
+msgstr "la un SINGLE layer folosit mediu"
+
+msgid "off"
+msgstr "oprit"
+
+msgid "on"
+msgstr "pornit"
+
+msgid "on READ ONLY medium."
+msgstr "la READ ONLY mediu"
+
+msgid "once"
+msgstr "odata"
+
+msgid "open nameserver configuration"
+msgstr "deschide configurarea nameserverului"
+
+msgid "pass"
+msgstr "pass"
+
+msgid "please press OK when ready"
+msgstr "te rog apasa OK cand esti gata"
+
+msgid "please wait, loading picture..."
+msgstr "te rog asteapta, se incarca imagine"
+
+msgid "record"
+msgstr "inregistrare"
+
+msgid "recording..."
+msgstr "se inregistreaza"
+
+msgid "red"
+msgstr "rosu"
+
+msgid "remove after this position"
+msgstr "elimina dupa aceasta pozitie"
+
+msgid "remove all alternatives"
+msgstr "elimina toate alternativele"
+
+msgid "remove all new found flags"
+msgstr "elimina toate steagurile nou gasite"
+
+msgid "remove before this position"
+msgstr "elimina inainte de aceasta pozitie"
+
+msgid "remove bookmark"
+msgstr "elimina bookmark-ul"
+
+msgid "remove directory"
+msgstr "elimina directorul"
+
+msgid "remove entry"
+msgstr "elimina intrarea"
+
+msgid "remove from parental protection"
+msgstr "elimina din protectie parentala"
+
+msgid "remove new found flag"
+msgstr "elimina insemnul nou"
+
+msgid "remove selected satellite"
+msgstr "elimina satelitul selectat"
+
+msgid "remove this mark"
+msgstr "elimina aceasta marcare"
+
+msgid "repeat playlist"
+msgstr "repeta playlist"
+
+msgid "repeated"
+msgstr "repetat"
+
+msgid "rewind to the previous chapter"
+msgstr "deruleaza la capitolul anterior"
+
+msgid "right"
+msgstr "dreapta"
+
+msgid "save last directory on exit"
+msgstr "salveaza ultimul director la iesire"
+
+msgid "save playlist on exit"
+msgstr "salveaza playlist la iesire"
+
+msgid "scan state"
+msgstr "starea scanarii"
+
+msgid "second cable of motorized LNB"
+msgstr "cablul secund de la LNB motorizat"
+
+msgid "seconds"
+msgstr "secunde"
+
+msgid "select"
+msgstr "selectat"
+
+msgid "select CAId's"
+msgstr "selecteaza CAId-uri"
+
+msgid "select menu entry"
+msgstr "selecteaza intrarea meniu"
+
+msgid "show DVD main menu"
+msgstr "arata meniul principal DVD"
+
+msgid "show alternatives"
+msgstr "arata alternative"
+
+msgid "show event details"
+msgstr "arata detaliile evenimentului"
+
+msgid "show transponder info"
+msgstr "arata info despre transponder"
+
+msgid "simple"
+msgstr "simplu"
+
+msgid "skip backward"
+msgstr "skin inapoi"
+
+msgid "skip backward (enter time)"
+msgstr "skin inapoi (seteaza ceas)"
+
+msgid "skip forward"
+msgstr "skin inainte"
+
+msgid "skip forward (enter time)"
+msgstr "skin inainte (seteaza ceas)"
+
+msgid "standard"
+msgstr "standard"
+
+msgid "start cut here"
+msgstr "incepe decupare aici"
+
+msgid "start directory"
+msgstr "start director"
+
+msgid "stereo"
+msgstr "stereo"
+
+msgid "switch to bookmarks"
+msgstr "mergi la bookmarks"
+
+msgid "switch to filelist"
+msgstr "mergi la filelist"
+
+msgid "switch to the next angle"
+msgstr "mergi la urmatorul unghi"
+
+msgid "switch to the next audio track"
+msgstr "mergi la urmatorul track audio"
+
+msgid "switch to the next subtitle language"
+msgstr "mergi la urmatoarea limba pentru subtitrari"
+
+msgid "template file"
+msgstr "fisier template"
+
+msgid "this recording"
+msgstr "aceasta inregistrare"
+
+msgid "this service is protected by a parental control pin"
+msgstr "acest serviciu este protejat de pin pentru control parental"
+
+msgid "toggle time, chapter, audio, subtitle info"
+msgstr "schimba ceas, capitol, audio, info sutitrari"
+
+msgid "unconfirmed"
+msgstr "neconfirmat"
+
+msgid "unknown"
+msgstr "necunoscut"
+
+msgid "unknown service"
+msgstr "serviciu necunoscut"
+
+msgid "user defined"
+msgstr "user definit"
+
+msgid "vertical"
+msgstr "vertical"
+
+msgid "view extensions..."
+msgstr "arata extensii..."
+
+msgid "wait for ci..."
+msgstr "asteapta ci..."
+
+msgid "wait for mmi..."
+msgstr "asteapta mmi..."
+
+msgid "waiting"
+msgstr "in asteptare"
+
+msgid "weekly"
+msgstr "saptamanal"
+
+msgid "working"
+msgstr "lucreaza"
+
+msgid "yellow"
+msgstr "galben"
+
+msgid "yes"
+msgstr "da"
+
+msgid "yes (keep feeds)"
+msgstr "da (pastreaza feed-uri)"
+
+msgid "zap"
+msgstr "zap"
+
+msgid "zapped"
+msgstr "zapped"

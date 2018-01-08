@@ -1,0 +1,4044 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenEsi v2.0 Enigma2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-20 15:33+0200\n"
+"PO-Revision-Date: 2015-10-28 08:56+0000\n"
+"Last-Translator: OpenEsi-Image <openesi@openesi.eu>\n"
+"Language-Team: \n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 2.0.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"\n"
+"Advanced options and settings."
+msgstr ""
+"\n"
+"Προχωρημένες επιλογές και ρυθμίσεις"
+
+msgid ""
+"\n"
+"After pressing OK, please wait!"
+msgstr ""
+"\n"
+"Αφού πιέσετε ΟΚ, παρακαλώ περιμένετε!"
+
+msgid ""
+"\n"
+"Edit the upgrade source address."
+msgstr ""
+"\n"
+"Επεξεργασία της πηγής αναβαθμίσεων"
+
+msgid ""
+"\n"
+"Press OK on your remote control to continue."
+msgstr ""
+"\n"
+"Πιέστε ΟΚ στο τηλεχειριστήριο για συνέχεια."
+
+msgid ""
+"\n"
+"Restore your backups by date."
+msgstr ""
+"\n"
+"Αποκατάσταση των αντιγράφων ασφαλείας κατά ημερομηνία."
+
+msgid ""
+"\n"
+"Scan for local extensions and install them."
+msgstr ""
+"\n"
+"Αναζήτηση και εγκατάσταση επεκτάσεων τοπικά."
+
+msgid ""
+"\n"
+"Select your backup device.\n"
+"Current device: "
+msgstr ""
+"\n"
+"Επιλογή συσκευής backup.\n"
+"Τρέχουσα συσκευή:"
+
+msgid ""
+"\n"
+"View, install and remove available or installed packages."
+msgstr ""
+"\n"
+"Εμφάνιση, εγκατάσταση και διαγραφή διαθέσιμων ή εγκατεστημένων προσθέτων"
+
+msgid "%H:%M"
+msgstr "%H:%M"
+
+msgid "%d min"
+msgstr "%d λεπτά"
+
+msgid "%d.%B %Y"
+msgstr "%d.%B %Y"
+
+msgid "%s (%s)\n"
+msgstr "%s (%s)\n"
+
+msgid "(empty)"
+msgstr "(κενό)"
+
+msgid "(show optional DVD audio menu)"
+msgstr "(εμφάνιση προαιρετικού μενού ήχου DVD)"
+
+msgid "* Only available if more than one interface is active."
+msgstr "* Διαθέσιμο μόνο εάν είναι ενεργές περισσότερες από μία διεπαφές."
+
+msgid "1.0"
+msgstr "1.0"
+
+msgid "1.1"
+msgstr "1.1"
+
+msgid "1.2"
+msgstr "1.2"
+
+msgid "12V output"
+msgstr "έξοδος 12V"
+
+msgid "13 V"
+msgstr "13 V"
+
+msgid "16:10"
+msgstr "16:10"
+
+msgid "16:10 Letterbox"
+msgstr "16:10 Letterbox"
+
+msgid "16:10 PanScan"
+msgstr "16:10 PanScan"
+
+msgid "16:9"
+msgstr "16:9"
+
+msgid "16:9 Letterbox"
+msgstr "16:10 Letterbox"
+
+msgid "16:9 always"
+msgstr "πάντα 16:9"
+
+msgid "18 V"
+msgstr "18 V"
+
+msgid "3d mode"
+msgstr "τύπος 3d"
+
+msgid "4:3"
+msgstr "4:3"
+
+msgid "4:3 Letterbox"
+msgstr "4:3 Letterbox"
+
+msgid "4:3 PanScan"
+msgstr "4:3 PanScan"
+
+msgid "<Current movielist location>"
+msgstr "<Τρέχουσα τοποθεσία καταλόγου ταινιών>"
+
+msgid "<Default movie location>"
+msgstr "<Αρχική>"
+
+msgid "<Last timer location>"
+msgstr "<Τελευταία τοποθεσία χρονοδιακόπτη>"
+
+msgid "<unknown>"
+msgstr "<άγνωστο>"
+
+msgid "??"
+msgstr "??"
+
+msgid "A"
+msgstr "A"
+
+msgid ""
+"A configuration file (%s) was modified since Installation.\n"
+"Do you want to keep your version?"
+msgstr ""
+"Ένα αρχείο ρυθμίσεων (%s) έχει αλλάξει.\n"
+"Θέλετε να διατηρήσετε τη δική σας έκδοση;"
+
+msgid ""
+"A recording is currently running.\n"
+"What do you want to do?"
+msgstr ""
+"Μια εγγραφή είναι σε εξέλιξη.\n"
+"Τι θέλετε να γίνει;"
+
+msgid ""
+"A recording is currently running. Please stop the recording before trying to "
+"configure the positioner."
+msgstr ""
+"Μια εγγραφή είναι σε εξέλιξη. Για να παραμετροποιήσετε τον positioner πρέπει "
+"να σταματήσετε την εγγραφή."
+
+msgid ""
+"A recording is currently running. Please stop the recording before trying to "
+"scan."
+msgstr ""
+"Μια εγγραφή είναι σε εξέλιξη. Πρέπει να σταματήσετε την εγγραφή πριν από "
+"σάρωση."
+
+msgid "A required tool (%s) was not found."
+msgstr "Ένα απαιτούμενο εργαλείο (%s) δεν βρέθηκε."
+
+msgid "A search for available updates is currently in progress."
+msgstr "Μία αναζήτηση για διαθέσιμες ενημερώσεις είναι σε εξέλιξη."
+
+msgid ""
+"A second configured interface has been found.\n"
+"\n"
+"Do you want to disable the second network interface?"
+msgstr ""
+"Βρέθηκε δεύτερο ρυθμισμένο δίκτυο.\n"
+"\n"
+"Θέλετε να απενεργοποιήσετε το δεύτερο προσαρμογέα δικτύου;"
+
+msgid "A small overview of the available icon states and actions."
+msgstr "Μια επισκόπηση των διαθέσιμων εικονιδίων κατάστασης και ενεργειών."
+
+msgid ""
+"A timer failed to record!\n"
+"Disable TV and try again?\n"
+msgstr ""
+"Ένας χρονοδιακόπτης απέτυχε να ξεκινήσει.\n"
+"Να απενεργοποιηθεί η TV και να ξαναπροσπαθήσει;\n"
+
+msgid "Abort"
+msgstr "Ακύρωσε"
+
+msgid "About"
+msgstr "Περί"
+
+msgid "About..."
+msgstr "Περί..."
+
+msgid "Accesspoint:"
+msgstr "Σημείο πρόσβασης:"
+
+msgid "Activate Picture in Picture"
+msgstr "Να ενεργοποιηθεί το PiP"
+
+msgid "Activate network settings"
+msgstr "Ενεργοποίηση ρυθμίσεων δικτύου"
+
+msgid "Active"
+msgstr "Ενεργό"
+
+msgid "Adapter settings"
+msgstr "Ρυθμίσεις κάρτας δικτύου"
+
+msgid "Add"
+msgstr "Προσθήκη"
+
+msgid "Add a mark"
+msgstr "Προσθήκη σημειωτή"
+
+msgid "Add a new title"
+msgstr "Προσθήκη νέου τίτλου"
+
+msgid "Add timer"
+msgstr "Προσθήκη χρονοδιακόπτη"
+
+msgid "Add title"
+msgstr "Προσθήκη τίτλου"
+
+msgid "Add to bouquet"
+msgstr "Προσθήκη σε μπουκέτο"
+
+msgid "Add to favourites"
+msgstr "Προσθήκη στα αγαπημένα"
+
+msgid "Adjust 3D settings"
+msgstr "Μεταβολή ρυθμίσεων 3D"
+
+msgid ""
+"Adjust the color settings so that all the color shades are distinguishable, "
+"but appear as saturated as possible. If you are happy with the result, press "
+"OK to close the video fine-tuning, or use the number keys to select other "
+"test screens."
+msgstr ""
+"Ρυθμίστε την ένταση των χρωμάτων έτσι που να διαφέρουν οι χρωματισμοί με τη "
+"μέγιστη φωτεινότητα. Όταν τελειώσετε, πιέστε ΟΚ για να κλείσει τη "
+"μικρορύθμιση ή πατήστε ένα νούμερο για να δείτε και άλλες οθόνες δοκιμών."
+
+msgid "Advanced restore"
+msgstr "Προχωρημένη αποκατάσταση"
+
+msgid "After event"
+msgstr "Μετά το πρόγραμμα"
+
+msgid "Album"
+msgstr "Album"
+
+msgid "All"
+msgstr "Όλα"
+
+msgid "Alpha"
+msgstr "Alpha"
+
+msgid "Alternative services tuner priority"
+msgstr "Εναλλακτική προτεραιότητα tuner "
+
+msgid "Always ask"
+msgstr "Πάντα ερώτηση"
+
+msgid "An empty filename is illegal."
+msgstr "Κενή ονομασία είναι άκυρη."
+
+msgid "Any activity"
+msgstr "Οποιαδήποτε δραστηριότητα"
+
+msgid "Arabic"
+msgstr "Αραβικά"
+
+msgid ""
+"Are you sure you want to activate this network configuration?\n"
+"\n"
+msgstr "Σίγουρα θέλετε να ενεργοποιήσετε αυτό το δίκτυο;\n"
+
+msgid "Are you sure you want to exit this wizard?"
+msgstr "Σίγουρα να γίνει έξοδος από αυτό τον οδηγό;"
+
+msgid ""
+"Are you sure you want to restart your network interfaces?\n"
+"\n"
+msgstr ""
+"Είστε σίγουρος ότι θέλετε να επανεκκινήσετε τις διεπαφές δικτύου;\n"
+"\n"
+
+msgid "Artist"
+msgstr "Καλλιτέχνης"
+
+msgid "Ask user"
+msgstr "Ερώτηση χρήστη"
+
+msgid "Audio PID"
+msgstr "PID ήχου"
+
+msgid "Audio language selection 1"
+msgstr "Επιλογή γλώσσας ήχου 1"
+
+msgid "Audio language selection 2"
+msgstr "Επιλογή γλώσσας ήχου 2"
+
+msgid "Audio language selection 3"
+msgstr "Επιλογή γλώσσας ήχου 3"
+
+msgid "Audio language selection 4"
+msgstr "Επιλογή γλώσσας ήχου 4"
+
+msgid "Author: "
+msgstr "Δημιουργός: "
+
+msgid "Authoring mode"
+msgstr "Λειτουργία δημιουργίας ταινίας"
+
+msgid "Auto"
+msgstr "Αυτόματα"
+
+msgid "Auto chapter split every ? minutes (0=never)"
+msgstr "Αυτόματη δημιουργία κεφαλαίου κάθε ? λεπτα (0=ποτέ)"
+
+msgid "Auto flesh"
+msgstr "Auto flesh"
+
+msgid "Auto scart switching"
+msgstr "Αυτόματη αλλαγή scart"
+
+msgid "Automatic"
+msgstr "Αυτόματο"
+
+msgid "Automatic Scan"
+msgstr "Αυτόματη σάρωση"
+
+msgid "Available format variables"
+msgstr "Διαθέσιμες επιλογές format"
+
+msgid "B"
+msgstr "B"
+
+msgid "Back"
+msgstr "Πίσω"
+
+msgid "Background"
+msgstr "Παρασκήνιο"
+
+msgid "Background delete option"
+msgstr "Επιλογή διαγραφής στο παρασκήνιο"
+
+msgid "Background delete speed"
+msgstr "Ταχύτητα διαγραφής στο παρασκήνιο"
+
+msgid "Backup failed."
+msgstr "Αντίγραφο ασφαλείας απέτυχε."
+
+msgid "Backup is running..."
+msgstr "Εκτελείται αντίγραφο ασφαλείας..."
+
+msgid "Band"
+msgstr "Μπάντα"
+
+msgid "Bandwidth"
+msgstr "Εύρος"
+
+msgid "Basque"
+msgstr "Βασκικά"
+
+msgid "Begin time"
+msgstr "Ώρα έναρξης"
+
+msgid "Behavior of 'pause' when paused"
+msgstr "Συμπεριφορά του 'pause' στην παύση"
+
+msgid "Behavior of 0 key in PiP-mode"
+msgstr "Συμπεριφορά του πλήκτρου 0 στο PiP-mode"
+
+msgid "Behavior when a movie is started"
+msgstr "Συμπεριφορά όταν μια ταινία παίζει"
+
+msgid "Behavior when a movie is stopped"
+msgstr "Συμπεριφορά όταν μια ταινία σταμάτησε"
+
+msgid "Behavior when a movie reaches the end"
+msgstr "Συμπεριφορά όταν μια ταινία έχει φτάσει στο τέλος"
+
+msgid "Bitrate:"
+msgstr "Bitrate:"
+
+msgid "Black screen"
+msgstr "Μαύρη οθόνη"
+
+msgid "Black screen till locked"
+msgstr "Black screen till locked"
+
+msgid "Block noise reduction"
+msgstr "Φραγή μείωσης θορύβου"
+
+msgid "Bookmarks"
+msgstr "Σελιδοδείκτες"
+
+msgid "Brightness"
+msgstr "Φωτεινότητα"
+
+msgid "Bulgarian"
+msgstr "Βουλγαρικά"
+
+msgid "Burn DVD"
+msgstr "Εγγραφή DVD"
+
+msgid "Bus: "
+msgstr "Bus:"
+
+msgid "C-Band"
+msgstr "C-Band"
+
+msgid "CI assignment"
+msgstr "Ορισμός CI"
+
+msgid "CVBS"
+msgstr "CVBS"
+
+msgid "Cable"
+msgstr "Καλωδιακή"
+
+msgid "Cable Scan"
+msgstr "Cable Scan"
+
+msgid "Cancel"
+msgstr "Άκυρο "
+
+msgid "Cannot move to trash can"
+msgstr "Αδύνατη μεταφορά στον κάδο ανακύκλωσης"
+
+msgid "Capacity: "
+msgstr "Χωρητικότητα:"
+
+msgid "Change bouquets in quickzap"
+msgstr "Αλλαγή μπουκέτου στο γρήγορο zapping"
+
+msgid "Change pin code"
+msgstr "Αλλαγή pin:"
+
+msgid "Change step size"
+msgstr "Αλλαγή μεγέθους βήματος"
+
+msgid "Changelog"
+msgstr "Καταγραφή αλλαγών"
+
+msgid "Channel"
+msgstr "Κανάλι"
+
+msgid "Channel not in services list"
+msgstr "Το κανάλι δεν υπάρχει στη λίστα υπηρεσιών"
+
+msgid "Channel:"
+msgstr "Κανάλι:"
+
+msgid "Chap."
+msgstr "Κεφ."
+
+msgid "Chapter"
+msgstr "Κεφάλαιο"
+
+msgid "Chapter:"
+msgstr "Κεφάλαιο:"
+
+msgid "Check"
+msgstr "Έλεγχος"
+
+msgid "Circular left"
+msgstr "Αριστερόστροφη"
+
+msgid "Circular right"
+msgstr "Δεξιόστροφη"
+
+msgid "Cleanup"
+msgstr "Εκκαθάριση"
+
+msgid "Clear before scan"
+msgstr "Εκκαθάριση πριν τη σάρωση"
+
+msgid "Clear fixed"
+msgstr "Clear fixed"
+
+msgid "Clear log"
+msgstr "Εκκαθάριση καταγραφής"
+
+msgid "Close"
+msgstr "Κλείσιμο"
+
+msgid "Close title selection"
+msgstr "Κλείσιμο επιλογής τίτλου"
+
+msgid "Code rate HP"
+msgstr "Code rate HP"
+
+msgid "Code rate LP"
+msgstr "Code rate LP"
+
+msgid "Coderate HP"
+msgstr "Coderate HP"
+
+msgid "Coderate LP"
+msgstr "Coderate LP"
+
+msgid "Collection name"
+msgstr "Όνομα συλλογής"
+
+msgid "Collection settings"
+msgstr "Επιλογές συλλογής"
+
+msgid "Command order"
+msgstr "Σειρά εντολών "
+
+msgid "Common Interface"
+msgstr "Κοινή Διεπαφή"
+
+msgid "Common Interface Assignment"
+msgstr "Ορισμός Κοινής Διεπαφής"
+
+msgid "Communication"
+msgstr "Επικοινωνία"
+
+msgid "Complete"
+msgstr "Ολοκληρώθηκε"
+
+msgid "Complex (allows mixing audio tracks and aspects)"
+msgstr "Σύνθετη (επιτρέπει τη μίξη καναλιών ήχου και λόγου πλευρών)"
+
+msgid "Composition of the recording filenames"
+msgstr "Σύνθεση ονομάτων εγγραφών"
+
+msgid "Configure interface"
+msgstr "Παραμετροποίηση διεπαφής"
+
+msgid "Configure nameservers"
+msgstr "Παραμετροποίηση nameservers"
+
+msgid "Configure your internal LAN"
+msgstr "Παραμετροποίηση δικτύου"
+
+msgid "Configure your network again"
+msgstr "Παραμετροποίηση του δικτύου εκ νέου"
+
+msgid "Configure your network settings, and press OK to start the scan"
+msgstr "Ρυθμίστε το δίκτυο και πιέστε ΟΚ για εκκίνηση σάρωσης"
+
+msgid "Configure your wireless LAN again"
+msgstr "Παραμετροποίηση ασύρματου δικτύου εκ νέου"
+
+msgid "Configuring"
+msgstr "Παραμετροποίηση"
+
+msgid "Conflicting timer"
+msgstr "Διένεξη χρονοδιακόπτη"
+
+msgid "Connect"
+msgstr "Σύνδεση"
+
+msgid "Connected to"
+msgstr "Συνδέθηκε με"
+
+msgid "Constellation"
+msgstr "Διάταξη"
+
+msgid "Content does not fit on DVD!"
+msgstr "Το περιεχόμενο δε χωράει σε DVD!"
+
+msgid "Continue"
+msgstr "Συνέχισε"
+
+msgid "Continue playing"
+msgstr "Συνέχεια αναπαραγωγής..."
+
+msgid "Contrast"
+msgstr "Αντίθεση"
+
+msgid "Convert ext3 to ext4"
+msgstr "Μετατροπή ext3 σε ext4"
+
+msgid "Convert filesystem ext3 to ext4"
+msgstr "Μετατροπή συστήματος αρχείων ext3 σε ext4"
+
+msgid "Copy"
+msgstr "Αντιγραφή"
+
+msgid "Could not open Picture in Picture"
+msgstr "Αδυναμία εκκίνησης PiP"
+
+msgid "Create DVD-ISO"
+msgstr "Δημιουργία DVD-ISO"
+
+msgid "Creating directory %s failed."
+msgstr "Η δημιουργία του φακέλου %s απέτυχε."
+
+msgid "Croatian"
+msgstr "Κροάτικα"
+
+msgid "Current CEC address"
+msgstr "Τρέχουσα διεύθυνση CEC"
+
+msgid "Current device: "
+msgstr "Τρέχουσα συσκευή:"
+
+msgid "Current settings:"
+msgstr "Τρέχουσες ρυθμίσεις:"
+
+msgid "Current value: "
+msgstr "Τρέχουσα τιμή: "
+
+msgid "Current version:"
+msgstr "Τρέχουσα έκδοση:"
+
+msgid "Currently installed image"
+msgstr "Τρέχων εγκατεστημένο λογισμικό"
+
+msgid "Customize"
+msgstr "Παραμετροποίηση"
+
+msgid "Cut"
+msgstr "Αποκοπή"
+
+msgid "Cutlist editor..."
+msgstr "Επεξεργασία σημείων αποκοπής..."
+
+msgid "Czech"
+msgstr "Τσέχικα"
+
+msgid "DHCP"
+msgstr "DHCP"
+
+msgid "DUAL LAYER DVD"
+msgstr "DUAL LAYER DVD"
+
+msgid "DVB subtitle black transparency"
+msgstr "Διαφάνεια υποτίτλων DVB"
+
+msgid "DVB-S"
+msgstr "DVB-S"
+
+msgid "DVB-S2"
+msgstr "DVB-S2"
+
+msgid "Danish"
+msgstr "Δανικά"
+
+msgid "Date"
+msgstr "Ημερομηνία"
+
+msgid "Deep Standby"
+msgstr "Τερματισμός"
+
+msgid "Default"
+msgstr "Προεπιλεγμένες"
+
+msgid "Default movie location"
+msgstr "Αρχική"
+
+msgid "Delete"
+msgstr "Διαγραφή"
+
+msgid "Delete entry"
+msgstr "Διαγραφή εγγραφής"
+
+msgid "Delete failed!"
+msgstr "Διαγραφή απέτυχε!"
+
+msgid "Deleted"
+msgstr "Διεγραμμένα"
+
+msgid "Deleted items"
+msgstr "Διεγραμμένα αντικείμενα"
+
+msgid "Depth"
+msgstr "Βάθος"
+
+msgid "Description"
+msgstr "Περιγραφή"
+
+msgid "Deselect"
+msgstr "Αποεπιλογή"
+
+msgid "Details for plugin: "
+msgstr "Λεπτομέρειες για το πρόσθετο: "
+
+msgid "Detected NIMs:"
+msgstr "Εντοπίστηκαν NIMs:"
+
+msgid "DiSEqC"
+msgstr "DiSEqC"
+
+msgid "DiSEqC A/B"
+msgstr "DiSEqC A/B"
+
+msgid "DiSEqC A/B/C/D"
+msgstr "DiSEqC A/B/C/D"
+
+msgid "DiSEqC mode"
+msgstr "DiSEqC mode"
+
+msgid "Digital contour removal"
+msgstr "Digital contour removal"
+
+msgid "Direct playback of linked titles without menu"
+msgstr "Άμεση αναπαραγωγή των συνδεδεμένων τίτλων χωρίς μενού"
+
+msgid "Directory"
+msgstr "Φάκελος"
+
+msgid "Directory browser"
+msgstr "Διαφυλλιστής φακέλων"
+
+msgid "Disable"
+msgstr "Απενεργοποίηση"
+
+msgid "Disable Picture in Picture"
+msgstr "Απενεργοποίηση Picture in Picture"
+
+msgid "Disable background scanning"
+msgstr "Απενεργοποίηση αναζήτησης στο παρασκήνιο"
+
+msgid "Disabled"
+msgstr "Απενεργοποιήθηκε "
+
+msgid "Disk space to reserve for recordings (in GB)"
+msgstr "Χώρος δίσκου που διατίθεται για εγγραφές (σε GB)"
+
+msgid "Display 16:9 content as"
+msgstr "Εμφάνιση περιεχομένου 16:9 ως"
+
+msgid "Display 4:3 content as"
+msgstr "Εμφάνιση περιεχομένου 4:3 ως"
+
+msgid "Display >16:9 content as"
+msgstr "Εμφάνιση περιεχομένου >16:9 ως"
+
+msgid ""
+"Do you really want to check the filesystem?\n"
+"This could take a long time!"
+msgstr ""
+"Είστε σίγουρος οτι θέλετε να ελέγξετε το σύστημα αρχείων;\n"
+"Ενδέχεται να διαρκέσει αρκετά!"
+
+msgid ""
+"Do you really want to convert the filesystem?\n"
+"You cannot go back!"
+msgstr ""
+"Θέλετε σίγουρα να μετατρέψετε το σύστημα αρχείων;\n"
+"Δεν μπορεί να αναιρεθεί!"
+
+msgid "Do you really want to delete %s?"
+msgstr "Θέλετε πραγματικά να διαγράψετε το %s;"
+
+msgid "Do you really want to exit?"
+msgstr "Είστε σίγουρος οτι θέλετε να βγείτε;"
+
+msgid ""
+"Do you really want to initialize the device?\n"
+"All data on the disk will be lost!"
+msgstr ""
+"Θέλετε να αρχικοποιήσετε το σκληρό δίσκο;\n"
+"Όλα τα δεδομένα θα χαθούν!"
+
+msgid "Do you really want to remove directory %s from the disk?"
+msgstr "Θέλετε πραγματικά να αφαιρέσετε το φάκελο %s από το δίσκο;"
+
+msgid "Do you really want to remove your bookmark of %s?"
+msgstr "Θέλετε να αφαιρέσετε το σελιδοδείκτη του %s;"
+
+msgid "Do you want to burn this collection to DVD medium?"
+msgstr "Θέλετε να γίνει εγγραφή αυτής της συλλογής σε DVD;"
+
+msgid "Do you want to do a service scan?"
+msgstr "Θέλετε να κάνετε σάρωση για υπηρεσίες;"
+
+msgid "Do you want to do another manual service scan?"
+msgstr "Θέλετε να πραγματοποιηθεί μία ακόμα χειροκίνητη σάρωση;"
+
+msgid "Do you want to install the package:\n"
+msgstr "Θέλετε να εγκαταστήσετε το πακέτο:\n"
+
+msgid "Do you want to play DVD in drive?"
+msgstr "Θέλετε να παίξει το DVD στη συσκευή;"
+
+msgid "Do you want to preview this DVD before burning?"
+msgstr "Θέλετε να γίνει προεπισκόπιση αυτού του DVD πριν την εγγραφή;"
+
+msgid "Do you want to remove the package:\n"
+msgstr "Θέλετε να αφαιρέσετε το πακέτο:\n"
+
+msgid "Do you want to restore your settings?"
+msgstr "Θέλετε να επαναφέρετε τις ρυθμίσεις σας;"
+
+msgid "Do you want to resume this playback?"
+msgstr "Θέλετε να συνεχίσετε την αναπαραγωγή;"
+
+msgid "Do you want to upgrade the package:\n"
+msgstr "Θέλετε να αναβαθμίσετε το πακέτο:\n"
+
+msgid "Don't stop current event but disable coming events"
+msgstr "Χωρίς παύση τρέχοντος προγράμματος, αλλά με απενεργοποίση επερχόμενων"
+
+msgid "Download"
+msgstr "Λήψη"
+
+msgid "Downloading"
+msgstr "Λήψη"
+
+msgid "Downloading plugin information. Please wait..."
+msgstr "Λήψη πληροφοριών προσθέτων. Παρακαλώ περιμένετε ..."
+
+msgid "Dutch"
+msgstr "Ολλανδικά"
+
+msgid "Dynamic contrast"
+msgstr "Δυναμική αντίθεση"
+
+msgid "E"
+msgstr "E"
+
+msgid "EPG language selection 1"
+msgstr "Επιλογή γλώσσας EPG 1"
+
+msgid "EPG language selection 2"
+msgstr "Επιλογή γλώσσας EPG 2"
+
+msgid "ERROR - failed to scan (%s)!"
+msgstr "ΣΦΑΛΜΑ - Αποτυχία στη σάρωση  (%s)!"
+
+msgid "East"
+msgstr "Ανατολή"
+
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+msgid "Edit DNS"
+msgstr "Επεξεργασία DNS"
+
+msgid "Edit chapters of current title"
+msgstr "Επεξεργασία κεφαλαίων του τρέχοντα τίτλου"
+
+msgid "Edit settings"
+msgstr "Επεξεργασία ρυθμίσεων"
+
+msgid "Edit title"
+msgstr "Επεξεργασία τίτλου"
+
+msgid "Edit upgrade source url."
+msgstr "Επιλέξτε πηγή αναβάθμισης για επεξεργασία"
+
+msgid "Electronic Program Guide"
+msgstr "Ηλεκτρονικός Οδηγός Προγράμματος"
+
+msgid "Enable"
+msgstr "Ενεργοποίηση"
+
+msgid "Enable 5V for active antenna"
+msgstr "Ενεργοποίηση των 5 V για την ενεργή κεραία"
+
+msgid "Enable EIT EPG"
+msgstr "Ενεργοποίηση EIT EPG"
+
+msgid "Enable MHW EPG"
+msgstr "Ενεργοποίηση MHW EPG"
+
+msgid "Enable Netmed EPG"
+msgstr "Ενεργοποίηση Netmed EPG"
+
+msgid "Enable ViaSat EPG"
+msgstr "Ενεργοποίηση ViaSat EPG"
+
+msgid "Enable multiple bouquets"
+msgstr "Ενεργοποίηση πολλαπλών μπουκέτων"
+
+msgid "Enable teletext caching"
+msgstr "Ενεργοποίηση teletext caching"
+
+msgid "Enabled"
+msgstr "Ενεργοποιήθηκε"
+
+msgid "Encrypted: "
+msgstr "Κωδικοποιημένο:"
+
+msgid "Encryption"
+msgstr "Κωδικοποίηση"
+
+msgid "Encryption:"
+msgstr "Κωδικοποίηση:"
+
+msgid "End time"
+msgstr "Ώρα τερματισμού"
+
+msgid "English"
+msgstr "Αγγλικά"
+
+msgid "Enter main menu..."
+msgstr "Είσοδος στο κεντρικό μενού..."
+
+msgid "Enter pin code"
+msgstr "Εισαγωγή κωδικού pin"
+
+msgid "Enter the service pin"
+msgstr "Βάλτε το pin υπηρεσίας"
+
+msgid "Error"
+msgstr "Σφάλμα"
+
+msgid "Error code"
+msgstr "Κωδικός σφάλματος"
+
+msgid "Error executing plugin"
+msgstr "Σφάλμα κατά την εκτέλεση προσθέτου"
+
+msgid ""
+"Error: %s\n"
+"Retry?"
+msgstr ""
+"Σφάλμα: %s\n"
+"Προσπάθεια ξανά;"
+
+msgid "Estonian"
+msgstr "Εσθονικά"
+
+msgid "Ethernet network interface"
+msgstr "Διεπαφή ενσύρματου δικτύου"
+
+msgid "Everywhere"
+msgstr "Παντού"
+
+msgid "Exceeds dual layer medium!"
+msgstr "Υπερκαλύπτει το μέγεθος του dual layer!"
+
+msgid "Execution finished!!"
+msgstr "Εκτέλεση τελείωσε!!"
+
+msgid "Exif"
+msgstr "Exif"
+
+msgid "Exit"
+msgstr "Έξοδος"
+
+msgid "Exit editor"
+msgstr "Έξοδος απο τον editor"
+
+msgid "Exit input device selection."
+msgstr "Έξοδος από επιλογή συσκευής εισαγωγής."
+
+msgid "Exit network wizard"
+msgstr "Έξοδος από τον Οδηγό δικτύου"
+
+msgid "Exit the wizard"
+msgstr "Έξοδος από το οδηγό"
+
+msgid "Expert"
+msgstr "Εξειδικευμένο"
+
+msgid "Extended Networksetup Plugin..."
+msgstr "Πρόσθετο Εξελιγμένης ρύθμισης δικτύου..."
+
+msgid "Extended Setup..."
+msgstr "Εξελιγμένη ρύθμιση..."
+
+msgid "Extended Software"
+msgstr "Εξελιγμένο λογισμικό"
+
+msgid "Extended Software Plugin"
+msgstr "Πρόσθετο εξελιγμένου λογισμικού"
+
+msgid "Extensions"
+msgstr "Επεκτάσεις"
+
+msgid "Extensions management"
+msgstr "Διαχείριση επεκτάσεων"
+
+msgid "FEC"
+msgstr "FEC"
+
+msgid "Factory reset"
+msgstr "Επαναφορά εργοστασιακών ρυθμίσεων"
+
+msgid "Failed"
+msgstr "Απέτυχε"
+
+msgid "Fan %d"
+msgstr "Fan %d"
+
+msgid "Fast"
+msgstr "Γρήγορο"
+
+msgid "Fast DiSEqC"
+msgstr "Γρήγορο DiSEqC"
+
+msgid "Fast Scan"
+msgstr "Γρήγορη σάρωση"
+
+msgid "Fast epoch"
+msgstr "Fast epoch"
+
+msgid "Favourites"
+msgstr "Αγαπημένα"
+
+msgid "File appears to be busy.\n"
+msgstr "Το αρχείο χρησιμοποιείται.\n"
+
+msgid "Filesystem Check"
+msgstr "Έλεγχος συστήματος αρχείων"
+
+msgid "Finetune"
+msgstr "Μικρορύθμιση"
+
+msgid "Finished"
+msgstr "Τελείωσε"
+
+msgid "Finished configuring your network"
+msgstr "Πέρας ρύθμισης του δικτύου"
+
+msgid "Finished restarting your network"
+msgstr "Πέρας επανεκκίνησης δικτύου"
+
+msgid "Finnish"
+msgstr "Φιλλανδικά"
+
+msgid "Flash"
+msgstr "Flash"
+
+msgid "Flashing failed"
+msgstr "Η εγκατάσταση απέτυχε"
+
+msgid "Following tasks will be done after you press OK!"
+msgstr "Οι ακόλουθες ενέργειες θα εκτελεστούν αφού πιέσετε ΟΚ!"
+
+msgid "Format"
+msgstr "Format"
+
+msgid "Forward volume keys"
+msgstr "Forward volume keys"
+
+msgid "Frame size in full view"
+msgstr "Μέγεθος καρέ σε πλήρη οθόνη"
+
+msgid "French"
+msgstr "Γαλλικά"
+
+msgid "Frequency"
+msgstr "Συχνότητα"
+
+msgid "Frequency bands"
+msgstr "Μπάντες συχνότητας"
+
+msgid "Frequency scan step size(khz)"
+msgstr "Απόσταση κλίμακας συχνότητας στην ανεύρεση(khz)"
+
+msgid "Frequency steps"
+msgstr "Βήμα συχνότητας"
+
+msgid "Fri"
+msgstr "Παρ"
+
+msgid "Friday"
+msgstr "Παρασκευή"
+
+msgid "Gateway"
+msgstr "Gateway"
+
+msgid "Genre"
+msgstr "Είδος"
+
+msgid "German"
+msgstr "Γερμανικά"
+
+msgid "Get latest experimental image"
+msgstr "Λήψη τελευταίου λογισμικού experimental"
+
+msgid "Get latest release image"
+msgstr "Λήψη τελευταίου σταθερού λογισμικού"
+
+msgid "Getting plugin information. Please wait..."
+msgstr "Λήψη πληροφοριών προσθέτου. Παρακαλώ περιμένετε..."
+
+msgid "Goto 0"
+msgstr "Πήγαινε στην θέση 0"
+
+msgid "Goto position"
+msgstr "Πήγαινε στην θέση"
+
+msgid "Greek"
+msgstr "Ελληνικά"
+
+msgid "Guard interval"
+msgstr "Guard interval"
+
+msgid "HD list"
+msgstr "λίστα HD"
+
+msgid "Handle standby from TV"
+msgstr "Χειρισμός αναμονής από TV"
+
+msgid "Handle wakeup from TV"
+msgstr "Χειρισμός εκκίνησης από TV"
+
+msgid "Hebrew"
+msgstr "Εβραϊκά"
+
+msgid "Hidden network"
+msgstr "Κρυφό δίκτυο"
+
+msgid "Hide CI messages"
+msgstr "Απόκρυψη μηνυμάτων CI"
+
+msgid "Hide zap errors"
+msgstr "Απόκρυψη σφαλμάτων εναλλαγής καναλιών"
+
+msgid "Hierarchy info"
+msgstr "Πληροφορίες ιεραρχίας"
+
+msgid "High bitrate support"
+msgstr "Υποστήριξη υψηλού bitrate"
+
+msgid "Hold screen"
+msgstr "Hold screen"
+
+msgid "Hold till locked"
+msgstr "Hold till locked"
+
+msgid "Home"
+msgstr "Αρχική"
+
+msgid "Horizontal"
+msgstr "Οριζόντια"
+
+msgid "How many minutes do you want to record?"
+msgstr "Ποσά λεπτά θέλετε να εγγραφούν;"
+
+msgid "Hue"
+msgstr "Hue"
+
+msgid "Hungarian"
+msgstr "Ουγγρικά"
+
+msgid "ISO file is too large for this filesystem!"
+msgstr "Το αρχείο ISO είναι πολύ μεγάλο για αυτό το σύστημα αρχείων!"
+
+msgid "ISO path"
+msgstr "Διαδρομή ISO"
+
+msgid "Icons"
+msgstr "Εικονίδια"
+
+msgid ""
+"If you see this, something is wrong with\n"
+"your scart connection. Press OK to return."
+msgstr ""
+"Αν διαβάζετε αυτό το μήνυμα τότε υπάρχει\n"
+"κάποιο πρόβλημα με το scart. Πιέστε ΟΚ για επιστροφή."
+
+msgid ""
+"If your TV has a brightness or contrast enhancement, disable it. If there is "
+"something called \"dynamic\", set it to standard. Adjust the backlight level "
+"to a value suiting your taste. Turn down contrast on your TV as much as "
+"possible.\n"
+"Then turn the brightness setting as low as possible, but make sure that the "
+"two lowermost shades of gray stay distinguishable.\n"
+"Do not care about the bright shades now. They will be set up in the next "
+"step.\n"
+"If you are happy with the result, press OK."
+msgstr ""
+"Εάν η TV σας έχει επιλογή βελτίωσης για φωτεινότητα ή αντίθεση, "
+"απενεργοποιήστε την. Εάν υπάρχει επιλογή με όνομα \"dynamic\", βάλτε τη σε "
+"θέση \"standard\". Ρυθμίστε τον φωτισμό με τα δικά σας δεδομένα. Κατεβάστε "
+"την αντίθεση όσο γίνετε. \n"
+"Κατεβάστε την φωτεινότητα τόσο ώστε μόλις να διακρίνονται οι δύο κατώτερες "
+"γκρί σκιές.\n"
+"Μην λαμβάνετε υπόψιν τις φωτεινές σκιές τώρα. Θα ρυθμιστούν στο επόμενο "
+"βήμα.\n"
+"Εάν σας ικανοποιεί το αποτέλεσμα, πιέστε ΟΚ."
+
+msgid "Include AIT in http streams"
+msgstr "Να περιέχεται AIT στα http streams"
+
+msgid "Include ECM in http streams"
+msgstr "Να περιέχεται ECM στα http streams"
+
+msgid "Include EIT in http streams"
+msgstr "Να περιέχεται EIT στα http streams"
+
+msgid "Increased voltage"
+msgstr "Αυξημένη τάση"
+
+msgid "Info"
+msgstr "Πληροφορίες"
+
+msgid "Information"
+msgstr "Πληροφορίες"
+
+msgid "Init"
+msgstr "Init"
+
+msgid "Initialization"
+msgstr "Αρχικοποίηση"
+
+msgid "Initialize"
+msgstr "Αρχικοποίηση "
+
+msgid "Initializing storage device..."
+msgstr "Αρχικοποίηση συσκευής αποθήκευσης..."
+
+msgid "Input"
+msgstr "Είσοδος"
+
+msgid "Input device setup"
+msgstr "Ρύθμιση συσκευής εισαγωγής χαρακτήρων"
+
+msgid "Install"
+msgstr "Εγκατάσταση"
+
+msgid "Install a new image with a USB stick"
+msgstr "Εγκατάσταση νέου λογισμικού με usb stick"
+
+msgid "Install a new image with your web browser"
+msgstr "Εγκατάσταση νέου λογισμικού με web browser"
+
+msgid "Install extensions."
+msgstr "Εγκατάσταση επεκτάσεων."
+
+msgid "Install local extension"
+msgstr "Εγκατάσταση επεκτάσεων τοπικά"
+
+msgid "Install or remove finished."
+msgstr "Η εγκατάσταση ή διαγραφή τελείωσε."
+
+msgid "Install picons on"
+msgstr "Εγκατάσταση picons σε"
+
+msgid "Installation finished."
+msgstr "Η εγκατάσταση τελείωσε."
+
+msgid "Installing"
+msgstr "Εγκατάσταση"
+
+msgid "Instant record location"
+msgstr "Άμεσες εγγραφές"
+
+msgid "Interface: "
+msgstr "Διεπαφή:"
+
+msgid "Intermediate"
+msgstr "Μέσο"
+
+msgid "Internal hdd only"
+msgstr "Εσωτερικός δίσκος μόνο"
+
+msgid "Invalid directory selected: %s"
+msgstr "Επιλέχθηκε άκυρος φάκελος: %s"
+
+msgid "Inversion"
+msgstr "Αναστροφή"
+
+msgid "Invert"
+msgstr "Αντιστροφή"
+
+msgid "Ipkg"
+msgstr "Ipkg"
+
+msgid "Italian"
+msgstr "Ιταλικά"
+
+msgid "Job View"
+msgstr "Εμφάνιση εργασιών"
+
+msgid "Keyboard"
+msgstr "Πληκτρολόγιο"
+
+msgid "LAN connection"
+msgstr "   Σύνδεση δικτύου"
+
+msgid "LNB"
+msgstr "LNB"
+
+msgid "Language"
+msgstr "Γλώσσα "
+
+msgid "Language selection"
+msgstr "Επιλογή γλώσσας"
+
+msgid "Last config"
+msgstr "Τελυταία ρύθμιση"
+
+msgid "Last speed"
+msgstr "Τελευταία ταχύτητα"
+
+msgid "Latitude"
+msgstr "Γεωγρ. πλάτος"
+
+msgid "Left"
+msgstr "Αριστερά"
+
+msgid "Letterbox"
+msgstr "Letterbox"
+
+msgid "Limit east"
+msgstr "Ανατολικό όριο"
+
+msgid "Limit west"
+msgstr "Δυτικό όριο"
+
+msgid "Limits off"
+msgstr "Όρια απενεργοποιήμενα"
+
+msgid "Limits on"
+msgstr "Όρια ενεργοποιήμενα"
+
+msgid "Link Quality:"
+msgstr "Ποιότητα σύνδεσης:"
+
+msgid "Link:"
+msgstr "Σύνδεση:"
+
+msgid "Linked titles with a DVD menu"
+msgstr "Τίτλοι συνδεδεμένοι με μενού DVD"
+
+msgid "List available networks"
+msgstr "Λίστα διαθέσιμων δικτύων"
+
+msgid "Lithuanian"
+msgstr "Λιθουανικά"
+
+msgid "Load"
+msgstr "Φόρτωση"
+
+msgid "Location"
+msgstr "Τοποθεσία"
+
+msgid "Log results to harddisk"
+msgstr "Καταγραφή αποτελεσμάτων στο δίσκο"
+
+msgid "Long filenames"
+msgstr "Μεγάλα ονόματα αρχείων"
+
+msgid "Longitude"
+msgstr "Γεωγρ. μήκος"
+
+msgid "Main menu"
+msgstr "Κεντρικό μενού"
+
+msgid "Mainmenu"
+msgstr "Κεντρικό μενού"
+
+msgid "Make this mark an 'in' point"
+msgstr "Μάρκαρε αυτό το σημείο σαν σημείο εσόδου"
+
+msgid "Make this mark an 'out' point"
+msgstr "Μάρκαρε αυτό το σημείο σαν σημείο εξόδου"
+
+msgid "Make this mark just a mark"
+msgstr "Μάρκαρε αυτό το σημείο απλός σαν σημείο"
+
+msgid "Manage extensions"
+msgstr "Διαχείριση επεκτάσεων"
+
+msgid "Manual Scan"
+msgstr "Χειροκίνητη σάρωση"
+
+msgid "Manual configuration"
+msgstr "Χειροκίνητη ρύθμιση"
+
+msgid "Manual transponder"
+msgstr "Χειροκίνητος αναμεταδότης"
+
+msgid "Manufacturer"
+msgstr "Κατασκευαστής"
+
+msgid "Media player"
+msgstr "Αναπαραγωγή πολυμέσων"
+
+msgid "Medium is not a writeable DVD!"
+msgstr "Δεν είναι εγγράψιμο DVD!"
+
+msgid "Medium is not empty!"
+msgstr "Το μέσο δεν είναι κενό!"
+
+msgid "Memory"
+msgstr "Μνήμη"
+
+msgid "Menu"
+msgstr "Μενού"
+
+msgid "Missing "
+msgstr "Λείπει"
+
+msgid "Model: "
+msgstr "Μοντέλο:"
+
+msgid "Modulation"
+msgstr "Διαμόρφωση"
+
+msgid "Modulator"
+msgstr "Διαμορφωτής"
+
+msgid "Mon"
+msgstr "Δευ"
+
+msgid "Mon-Fri"
+msgstr "Δευ-Παρ"
+
+msgid "Monday"
+msgstr "Δευτέρα"
+
+msgid "Mosquito noise reduction"
+msgstr "Mosquito noise reduction"
+
+msgid "Mount"
+msgstr "Προσάρτηση:"
+
+msgid "Move"
+msgstr "Μετακίνηση"
+
+msgid "Move east"
+msgstr "Μετακίνηση ανατολικά"
+
+msgid "Move west"
+msgstr "Μετακίνηση δυτικά"
+
+msgid "Movie location"
+msgstr "Τοποθεσία ταινιών"
+
+msgid "Multi EPG"
+msgstr "Πολλαπλό EPG"
+
+msgid "Multimedia"
+msgstr "Πολυμέσα"
+
+msgid "Multiple service support"
+msgstr "Υποστήριξη πολλαπλών υπηρεσιών"
+
+msgid "Multiplex"
+msgstr "Multiplex"
+
+msgid "Multisat"
+msgstr "Multisat"
+
+msgid "N/A"
+msgstr "N/A"
+
+msgid "NFI image flashing completed. Press Yellow to Reboot!"
+msgstr ""
+"Η εγκατάσταση λογισμικού NFI τελείωσε. Πατήστε Κίτρινο για επανεκκίνηση!"
+
+msgid "NIM"
+msgstr "NIM"
+
+msgid "NTSC"
+msgstr "NTSC"
+
+msgid "Name"
+msgstr "Όνομα"
+
+msgid "Nameserver"
+msgstr "Nameserver"
+
+msgid "Nameserver %d"
+msgstr "Nameserver %d"
+
+msgid "Nameserver settings"
+msgstr "Παραμετροποίηση Nameserver "
+
+msgid "Namespace"
+msgstr "Namespace"
+
+msgid "Netmask"
+msgstr "Netmask"
+
+msgid "Network"
+msgstr "Δίκτυο"
+
+msgid "Network ID"
+msgstr "ID δικτύου"
+
+msgid "Network Setup"
+msgstr "Ρύθμιση δικτύου"
+
+msgid "Network scan"
+msgstr "Ανεύρεση Δικτύου"
+
+msgid "Network setup"
+msgstr "Ρύθμιση δικτύου"
+
+msgid "Network test"
+msgstr "Έλεγχος δικτύου"
+
+msgid "Network test: "
+msgstr "Έλεγχος δικτύου: "
+
+msgid "Network:"
+msgstr "Δίκτυο:"
+
+msgid "New"
+msgstr "Νέο"
+
+msgid "New PIN"
+msgstr "Νέο PIN"
+
+msgid "New version:"
+msgstr "Νέα έκδοση:"
+
+msgid "No"
+msgstr "Όχι"
+
+msgid "No (supported) DVDROM found!"
+msgstr "Δεν βρέθηκε (υποστηριζόμενο) DVDROM!"
+
+msgid "No Connection"
+msgstr "Δεν υπάρχει σύνδεση"
+
+msgid "No HDD found or HDD not initialized!"
+msgstr ""
+"Δεν βρέθηκε σκληρός δίσκος \n"
+"ή δεν έχει γίνει αρχικοποίηση!"
+
+msgid "No backup needed"
+msgstr "Δεν χρειάζεται αντίγραφο ασφαλείας"
+
+msgid "No cable tuner found!"
+msgstr "Δεν βρέθηκε καλωδιακό tuner!"
+
+msgid ""
+"No data on transponder!\n"
+"(Timeout reading PAT)"
+msgstr ""
+"Δεν υπάρχουν δεδομένα στον αναμεταδότη!\n"
+"(Timeout reading PAT)"
+
+msgid "No description available."
+msgstr "Δεν υπάρχει περιγραφή."
+
+msgid "No details for this image file"
+msgstr "Δεν υπάρχουν λεπτομέρειες για αυτό το αρχείο"
+
+msgid "No displayable files on this medium found!"
+msgstr "Δεν υπάρχουν αρχεία προς εμφάνιση σε αυτό το μέσο!"
+
+msgid "No event info found, recording indefinitely."
+msgstr ""
+"Δεν βρέθηκαν πληροφορίες προγράμματος,\n"
+"η εγγραφή δεν θα σταματήσει."
+
+msgid ""
+"No fast winding possible yet.. but you can use the number buttons to skip "
+"forward/backward!"
+msgstr ""
+"Δεν είναι δυνατή η γρήγορη μετάβαση... Χρησιμοποιήστε τα αριθμητικά πλήκτρα "
+"για μετακίνηση εμπρός/πίσω!"
+
+msgid "No free tuner!"
+msgstr "Δεν υπάρχει ελεύθερο tuner!"
+
+msgid "No network connection available."
+msgstr "Δεν υπάρχει διαθέσιμη σύνδεση δικτύου."
+
+msgid "No networks found"
+msgstr "Δεν βρέθηκαν δίκτυα"
+
+msgid "No positioner capable frontend found."
+msgstr "Δεν βρέθηκε διεπαφή χρήστη για το positioner."
+
+msgid "No tags are set on these movies."
+msgstr "Δεν έχουν τεθεί σημεία σε αυτές τις ταινίες."
+
+msgid "No to all"
+msgstr "Όχι σε όλα"
+
+msgid "No tuner is configured for use with a diseqc positioner!"
+msgstr "Δεν υπάρχει ενεργοποιημένο tuner για χρήση με diseqc positioner!"
+
+msgid ""
+"No tuner is enabled!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"Δεν ενεργοποιήθηκε tuner!\n"
+"Παραμετροποιήστε το tuner προτού κάνετε ανεύρεση υπηρεσιών."
+
+msgid "No wireless networks found! Searching..."
+msgstr "Δεν βρέθηκαν ασύρματα δίκτυα! Αναζήτηση..."
+
+msgid ""
+"No working local network adapter found.\n"
+"Please verify that you have attached a network cable and your network is "
+"configured correctly."
+msgstr ""
+"Δεν βρέθηκε ενεργή κάρτα δικτύου.\n"
+"Παρακαλώ επιβεβαιώστε ότι έχει συνδεθεί καλώδιο δικτύου και έχει ρυθμιστεί "
+"σωστά το δίκτυο."
+
+msgid ""
+"No working wireless network adapter found.\n"
+"Please verify that you have attached a compatible WLAN device and your "
+"network is configured correctly."
+msgstr ""
+"Δεν βρέθηκε ενεργή συσκευή ασύρματου δικτύου.\n"
+"Παρακαλώ επιβεβαιώστε ότι έχει συνδεθεί συμβατή συσκευή WLAN και και έχει "
+"ρυθμιστεί σωστά το δίκτυο."
+
+msgid ""
+"No working wireless network interface found.\n"
+" Please verify that you have attached a compatible WLAN device or enable "
+"your local network interface."
+msgstr ""
+"Δεν βρέθηκε ενεργή διεπαφή ασύρματου δικτύου.\n"
+"Παρακαλώ επιβεβαιώστε ότι έχει συνδεθεί συμβατή συσκευή WLAN ή ενεργοποιήστε "
+"τη διεπαφή δικτύου."
+
+msgid "No, but restart from begin"
+msgstr "Όχι. Επανεκκίνηση απο την αρχή."
+
+msgid "No, do nothing."
+msgstr "Όχι. Μην κάνεις τίποτα."
+
+msgid "No, just start my %s %s"
+msgstr "Όχι, απλώς εκκίνηση του δέκτη"
+
+msgid "No, never"
+msgstr "Όχι, ποτέ"
+
+msgid "No, scan later manually"
+msgstr "Όχι, θα γίνει σάρωση αργότερα"
+
+msgid "None"
+msgstr "Κανένα"
+
+msgid "North"
+msgstr "Βορράς"
+
+msgid "Norwegian"
+msgstr "Νορβηγικά"
+
+msgid "Not-Associated"
+msgstr "Ασύνδετα"
+
+msgid ""
+"Nothing to scan!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"Τίποτα για σάρωση!\n"
+"Παρακαλώ παραμετροποιήστε το tuner πρώτα."
+
+msgid "Nothing to upgrade"
+msgstr "Τίποτα για αναβάθμιση"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "OK, guide me through the upgrade process"
+msgstr "ΟΚ, οδήγησε με στην διαδικασία αναβάθμισης"
+
+msgid "ONID"
+msgstr "ONID"
+
+msgid "OSD name request"
+msgstr "OSD name request"
+
+msgid "Off"
+msgstr "Εκτός"
+
+msgid "On"
+msgstr "Εντός"
+
+msgid "One"
+msgstr "Ένα"
+
+msgid "Only extensions."
+msgstr "Μόνο επεκτάσεις."
+
+msgid "Orbital position"
+msgstr "Τροχιακή θέση"
+
+msgid "Other"
+msgstr "Άλλο"
+
+msgid "Overwrite configuration files during software upgrade?"
+msgstr "Να αντικατασταθούν τα αρχεία ρυθμίσεων κατά την αναβάθμιση λογισμικού;"
+
+msgid "PAL"
+msgstr "PAL"
+
+msgid "PCR PID"
+msgstr "PCR PID"
+
+msgid "PIDs"
+msgstr "PIDs"
+
+msgid "PMT PID"
+msgstr "PMT PID"
+
+msgid "Package list update"
+msgstr "Ενημέρωση λίστας πακέτων"
+
+msgid "Packages"
+msgstr "Πακέτα"
+
+msgid "Packet management"
+msgstr "Διαχείριση πακέτων"
+
+msgid "Packet manager"
+msgstr "Διαχείριση πακέτων"
+
+msgid "Parental control"
+msgstr "Γονικός έλεγχος"
+
+msgid "Parental control setup"
+msgstr "Παραμετροποίηση γονικού ελέγχου"
+
+msgid "Password"
+msgstr "Κωδικός "
+
+msgid "Pause movie at end"
+msgstr "Πάυση στο τέλος της ταινίας"
+
+msgid "Permanently delete all recordings in the trash can?"
+msgstr "Οριστική διαγραφή όλων των εγγραφών από τον κάδο;"
+
+msgid "Permanently remove all deleted items"
+msgstr "Οριστική διαγραφή όλων των διεγραμμένων αντικειμένων"
+
+msgid "Persian"
+msgstr "Περσικά"
+
+msgid "Pillarbox"
+msgstr "Pillarbox"
+
+msgid "Pilot"
+msgstr "Pilot"
+
+msgid "Play"
+msgstr "Αναπαραγωγή"
+
+msgid "Play Audio-CD..."
+msgstr "Αναπαραγωγή Audio-CD..."
+
+msgid "Play DVD"
+msgstr "Αναπαραγωγή DVD"
+
+msgid "Play Music..."
+msgstr "Αναπαραγωγή μουσικής..."
+
+msgid "Play audio in background"
+msgstr "Αναπαραγωγή ήχου στο παρασκήνιο"
+
+msgid "Play recorded movies..."
+msgstr "Αναπαραγωγή εγγραφών..."
+
+msgid "Please add titles to the compilation."
+msgstr "Παρακαλώ προσθέστε τίτλους στη συλλογή."
+
+msgid "Please change recording endtime"
+msgstr "Παρακαλώ αλλάξτε την ώρα τερματισμού"
+
+msgid "Please check your network settings!"
+msgstr "Παρακαλώ ελέγξτε τις ρυθμίσεις δικτύου!"
+
+msgid "Please choose an extension..."
+msgstr "Παρακαλώ επιλέξτε μία επέκταση..."
+
+msgid ""
+"Please configure or verify your Nameservers by filling out the required "
+"values.\n"
+"When you are ready press OK to continue."
+msgstr ""
+"Παρακαλώ ρυθμίστε ή επιβεβαιώστε τους Nameservers συμπλρώνοντας τα "
+"απαιτούμενα πεδία.\n"
+"Όταν είστε έτοιμος, πιέστε ΟΚ για συνέχεια."
+
+msgid ""
+"Please configure your internet connection by filling out the required "
+"values.\n"
+"When you are ready press OK to continue."
+msgstr ""
+"Παρακαλώ ρυθμίστε τη σύνδεση διαδικτύου συμπληρώνοντας τα απαιτούμενα "
+"πεδία.\n"
+"Όταν είστε έτοιμος, πιέστε ΟΚ για συνέχεια."
+
+msgid "Please do not change any values unless you know what you are doing!"
+msgstr "Παρακαλώ μην αλλάζετε τιμές εάν δεν γνωρίζετε τι κάνετε!"
+
+msgid "Please enter a name for the new bouquet"
+msgstr "Επέλεξε ένα όνομα για το νέο μπουκέτο"
+
+msgid "Please enter a name for the new marker"
+msgstr "Επιλέξτε ένα όνομα για το νέο σημειωτή"
+
+msgid "Please enter a new filename"
+msgstr "Παρακαλώ εισάγετε νέο όνομα αρχείου"
+
+msgid "Please enter filename (empty = use current date)"
+msgstr "Παρακαλώ εισάγετε όνομα αρχείου (κενό = χρήση τρέχουσας ημερομηνίας)"
+
+msgid "Please enter name of the new directory"
+msgstr "Παρακαλώ εισάγετε όνομα νέου φάκελου"
+
+msgid "Please enter the correct pin code"
+msgstr "Βάλε το σωστό PIN"
+
+msgid "Please enter the old PIN code"
+msgstr "Βάλε το παλιό PIN"
+
+msgid "Please follow the instructions on the TV"
+msgstr "Παρακαλώ ακολουθήστε τις οδηγίες στην οθόνη"
+
+msgid ""
+"Please note that the previously selected media could not be accessed and "
+"therefore the default directory is being used instead."
+msgstr ""
+"Δεν υπάρχει πρόσβαση στο μέσο που επιλέχθηκε προηγουμένως. Θα χρησιμοποιηθεί "
+"ο αρχικός φάκελος."
+
+msgid "Please press OK to continue."
+msgstr "Παρακαλώ πιέστε ΟΚ για συνέχεια."
+
+msgid "Please select a playlist to delete..."
+msgstr "Παρακαλώ επιλέξτε λίστα αναπαραγωγής για διαγραφή..."
+
+msgid "Please select a playlist..."
+msgstr "Παρακαλώ επιλέξτε λίστα αναπαραγωγής..."
+
+msgid "Please select a subservice to record..."
+msgstr "Επέλεξε μια υπό-υπηρεσία για εγγραφή..."
+
+msgid "Please select a subservice..."
+msgstr "Επιλέξτε μια υπό-υπηρεσία"
+
+msgid "Please select an NFI file and press green key to flash!"
+msgstr ""
+"Παρακαλώ επιλέξτε αρχείο NFI και πιέστε το πράσινο κουμπί για εγκατάσταση!"
+
+msgid "Please select medium to use as backup location"
+msgstr ""
+"Παρακαλώ επιλέξτε μέσο που θα χρησιμοποιηθεί ως προορισμός των αντιγράφων "
+"ασφαλείας"
+
+msgid "Please select tag to filter..."
+msgstr "Please select tag to filter..."
+
+msgid "Please select the movie path..."
+msgstr "Παρακαλώ επιλέξτε φάκελο ταινιών..."
+
+msgid ""
+"Please select the network interface that you want to use for your internet "
+"connection.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+"Παρακαλώ επιλέξτε τη διεπαφή δικτύου που θέλετε να χρησιμοποιήσετε για το "
+"διαδίκτυο.\n"
+"\n"
+"Πιέστε ΟΚ για συνέχεια."
+
+msgid ""
+"Please select the wireless network that you want to connect to.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+"Παρακαλώ επιλέξτε το ασύρματο δίκτυο στο οποίο θα συνδεθείτε.\n"
+"\n"
+"Πιέστε ΟΚ για συνέχεια."
+
+msgid "Please set up tuner B"
+msgstr "Παρακαλώ παραμετροποιήσετε το tuner B"
+
+msgid "Please set up tuner C"
+msgstr "Παρακαλώ παραμετροποιήσετε το tuner C"
+
+msgid "Please set up tuner D"
+msgstr "Παρακαλώ παραμετροποιήσετε το tuner D"
+
+msgid ""
+"Please use direction keys to move the PiP window.\n"
+"Press Bouquet +/- to resize the window.\n"
+"Press OK to go back to the TV mode or EXIT to cancel the moving."
+msgstr ""
+"Χρησιμοποίηστε τα βελάκια για μετακίνηση του PiP παραθύρου.\n"
+"Για αλλαγή μεγέθους πιέστε τα πλήκτρα Bouquet +/-.\n"
+"Πιέστε ΟΚ για επιστροφή σε κατάσταση TV ή EXIT για ακύρωση της μετακίνησης."
+
+msgid ""
+"Please use the UP and DOWN keys to select your language. Afterwards press "
+"the OK button."
+msgstr ""
+"Χρησιμοποιήστε τα πλήκτρα ΠΑΝΩ και ΚΑΤΩ για επιλογή γλώσσας. Μετά πιέστε το "
+"ΟΚ."
+
+msgid "Please wait for activation of your network configuration..."
+msgstr "Παρακαλώ περιμένετε. Ενεργοποίηση ρύθμισης δικτύου..."
+
+msgid "Please wait while scanning is in progress..."
+msgstr "Παρακαλώ περιμένετε. Σάρωση σε εξέλιξη..."
+
+msgid "Please wait while we configure your network..."
+msgstr "Παρακαλώ περιμένετε. Ρύθμιση δικτύου..."
+
+msgid "Please wait while we prepare your network interfaces..."
+msgstr "Παρακαλώ περιμένετε. Προετοιμασία διεπαφών δικτύου..."
+
+msgid "Please wait while we test your network..."
+msgstr "Παρακαλώ περιμένετε. Έλεγχος δικτύου..."
+
+msgid "Please wait while your network is restarting..."
+msgstr "Παρακαλώ περιμένετε. Επανεκκίνηση δικτύου..."
+
+msgid "Please wait..."
+msgstr "Παρακαλώ περιμένετε..."
+
+msgid "Please wait... Loading list..."
+msgstr "Παρακαλώ περιμένετε … Φορτώνεται η λίστα..."
+
+msgid "Plugin manager activity information"
+msgstr "Πληροφορίες ενεργειών διαχειριστή προσθέτων"
+
+msgid "Plugin manager help"
+msgstr "Βοήθεια διαχειριστή προσθέτων"
+
+msgid "Plugins"
+msgstr "Πρόσθετα"
+
+msgid "Polarization"
+msgstr "Πόλωση"
+
+msgid "Polish"
+msgstr "Πολωνικά"
+
+msgid "Port A"
+msgstr "Είσοδος A"
+
+msgid "Port B"
+msgstr "Είσοδος B"
+
+msgid "Port C"
+msgstr "Είσοδος C"
+
+msgid "Port D"
+msgstr "Είσοδος D"
+
+msgid "Portuguese"
+msgstr "Πορτογαλλικά"
+
+msgid "Positioner"
+msgstr "Positioner"
+
+msgid "Positioner setup"
+msgstr "Ρύθμιση positioner"
+
+msgid "Power threshold in mA"
+msgstr "Όριο ρέυματος σε mA"
+
+msgid "Predefined transponder"
+msgstr "Προεπιλεγμένος αναμεταδότης"
+
+msgid "Preferred tuner"
+msgstr "Προτιμώμενο tuner"
+
+msgid "Prepare another USB stick for image flashing"
+msgstr "Προετοιμάστε άλλο usb stick για εγκατάσταση λογισμικού."
+
+msgid "Preparing... Please wait"
+msgstr "Παρακαλώ περιμένετε, προετοιμασία…"
+
+msgid "Press INFO on your remote control for additional information."
+msgstr "Πιέστε INFO στο τηλεχειριστήριο για πρόσθετες πληροφορίες."
+
+msgid "Press MENU on your remote control for additional options."
+msgstr "Πιέστε MENU στο τηλεχειριστήριο για πρόσθετες επιλογές."
+
+msgid "Press OK on your remote control to continue."
+msgstr "Πιέστε ΟΚ για συνέχεια."
+
+msgid "Press OK to activate the selected skin."
+msgstr "Πιέστε το ΟΚ για ενεργοποίηση του επιλεγμένου θέματος."
+
+msgid "Press OK to activate the settings."
+msgstr "Πιέστε ΟΚ για να ενεργοποιηθούν οι ρυθμίσεις."
+
+msgid "Press OK to edit the settings."
+msgstr "Πιέστε ΟΚ για επεξεργασία των ρυθμίσεων."
+
+msgid "Press OK to get further details for %s"
+msgstr "Πιέστε ΟΚ για λεπτομέρειες σχετικά με το %s"
+
+msgid "Press OK to scan"
+msgstr "Πιέστε OK για σάρωση"
+
+msgid "Press OK to select/deselect a CAId."
+msgstr "Πιέστε ΟΚ για επιλογή/αποεπιλογή CAId."
+
+msgid "Press OK to start the scan"
+msgstr "Πιέστε OK για να αρχίσει η σάρωση"
+
+msgid "Press OK to toggle the selection."
+msgstr "Πιέστε ΟΚ για εναλλαγή της επιλογής."
+
+msgid "Preview"
+msgstr "Προεπισκόπηση"
+
+msgid "Preview menu"
+msgstr "Μενού προεπισκόπησης"
+
+msgid "Primary DNS"
+msgstr "Πρωτεύον DNS"
+
+msgid "Priority"
+msgstr "Προτεραιότητα"
+
+msgid "Process"
+msgstr "Επεξεργασία"
+
+msgid "Progress"
+msgstr "Πρόοδος"
+
+msgid "Properties of current title"
+msgstr "Ιδιότητες τρέχοντα τίτλου"
+
+msgid "Protect services"
+msgstr "Προστασία υπηρεσιών"
+
+msgid "Provider"
+msgstr "Πάροχος"
+
+msgid "Provider to scan"
+msgstr "Provider για σάρωση"
+
+msgid "Providers"
+msgstr "Πάροχοι"
+
+msgid "Put TV in standby"
+msgstr "Θέστε την TV σε αναμονή"
+
+msgid "Python frontend for /tmp/mmi.socket"
+msgstr "Διεπαφή Python για το /tmp/mmi.socket"
+
+msgid "Quick"
+msgstr "Γρήγορο"
+
+msgid "RF output"
+msgstr "Έξοδος RF"
+
+msgid "RGB"
+msgstr "RGB"
+
+msgid "Random"
+msgstr "Τυχαίο"
+
+msgid "Really close without saving settings?"
+msgstr "Κλείσιμο χωρίς αποθήκευση ρυθμίσεων;"
+
+msgid "Really delete done timers?"
+msgstr "Διαγραφή όλων των ολοκληρωμένων χρονοδιακοπτών;"
+
+msgid "Really exit the subservices quickzap?"
+msgstr "Έξοδος απο γρήγορο zapping στης υπό-υπηρεσίες?"
+
+msgid "Really reboot now?"
+msgstr "Επανεκκίνηση τώρα;"
+
+msgid "Really restart now?"
+msgstr "Επανεκκίνηση τώρα;"
+
+msgid "Really shutdown now?"
+msgstr "Τερματισμός τώρα;"
+
+msgid "Reboot"
+msgstr "Επανεκκίνηση"
+
+msgid "Record"
+msgstr "Εγγραφή"
+
+msgid "Record time limited due to conflicting timer %s"
+msgstr "Περιορισμένος χρόνος εγγραφής λόγω διένεξης χρονοδιακόπτη %s"
+
+msgid "Recording"
+msgstr "Εγγραφή..."
+
+msgid "Recording in progress"
+msgstr "Εγγραφή σε εξέλιξη"
+
+msgid "Recording(s) are in progress or coming up in few seconds!"
+msgstr "Εκτελούνται εγγραφές ή θα ξεκινήσουν σε λίγο!"
+
+msgid "Recordings"
+msgstr "Εγγραφές"
+
+msgid "Recordings always have priority"
+msgstr "Οι εγγραφές έχουν πάντα προτεραιότητα"
+
+msgid "Red button..."
+msgstr "Κόκκινο κουμπί..."
+
+msgid "Refresh rate selection."
+msgstr "Επιλογή συχνότητας ανανέωσης."
+
+msgid "Regard deep standby as standby"
+msgstr "Να θεωρείται ο Τερματισμός ως Αναμονή"
+
+msgid "Reload"
+msgstr "Ανανέωση"
+
+msgid "Reloading bouquets and services..."
+msgstr "Επαναφόρτωση μπουκέτων και υπηρεσιών..."
+
+msgid "Remember service PIN"
+msgstr "Αποθήκευση PIN υπηρεσίας"
+
+msgid "Remove"
+msgstr "Διαγραφή"
+
+msgid "Remove a mark"
+msgstr "Διαγραφή σημειωτή"
+
+msgid "Remove currently selected title"
+msgstr "Διαγραφή επιλεγμένου τίτλου"
+
+msgid "Remove finished."
+msgstr "Η διαγραφή τελείωσε."
+
+msgid "Remove plugins"
+msgstr "Απεγκατάσταση προσθέτων"
+
+msgid "Remove timer"
+msgstr "Διαγραφή χρονοδιακόπτη"
+
+msgid "Remove title"
+msgstr "Διαγραφή τίτλου"
+
+msgid "Removing"
+msgstr "Διαγραφή"
+
+msgid "Removing directory %s failed. (Maybe not empty.)"
+msgstr "Η διαγραφή του φακέλου %s απέτυχε. (Ίσως δεν είναι κενός)."
+
+msgid "Rename"
+msgstr "Μετονομασία"
+
+msgid "Repeating event currently recording... What do you want to do?"
+msgstr "Επανάληψη προγράμματος που εγγράφεται... Τι να συμβεί;"
+
+msgid "Repeats"
+msgstr "Επαναλήψεις"
+
+msgid "Required medium type:"
+msgstr "Απαιτείται τύπος μέσου:"
+
+msgid "Reset"
+msgstr "Επαναφορά"
+
+msgid "Reset and renumerate title names"
+msgstr "Reset and renumerate title names"
+
+msgid "Reset playback position"
+msgstr "Επαναφορά σημείου αναπαραγωγής"
+
+msgid "Reset video enhancement settings to system defaults?"
+msgstr "Επαναφορά ρυθμίσεων αναβάθμισης εικόνας σε προρυθμισμένες τιμές;"
+
+msgid "Reset video enhancement settings to your last configuration?"
+msgstr "Επαναφορά ρυθμίσεων αναβάθμισης εικόνας στις τελευταίες ρυθμίσεις σας;"
+
+msgid "Resolution"
+msgstr "Ανάλυση"
+
+msgid "Restart"
+msgstr "Επανεκκίνηση"
+
+msgid "Restart GUI now?"
+msgstr "Επανεκκίνηση του GUI τώρα;"
+
+msgid "Restart enigma"
+msgstr "Επανεκκίνηση enigma"
+
+msgid "Restart network"
+msgstr "Eπανεκκίνηση δικτύου"
+
+msgid "Restart test"
+msgstr "Eπανεκκίνηση ελέγχου"
+
+msgid "Restart your network connection and interfaces.\n"
+msgstr "Επανεκκίνηση σύνδεσης δικτύου και διεπαφών.\n"
+
+msgid "Restore"
+msgstr "Αποκατάσταση"
+
+msgid "Restore backups"
+msgstr "Αποκατάσταση αντιγράφων ασφαλείας"
+
+msgid "Restore is running..."
+msgstr "Αποκατάσταση εκτελείται..."
+
+msgid "Resume from last position"
+msgstr "Συνέχεια απο τελευταίο σημείο"
+
+msgid "Resume position at %s"
+msgstr "Συνέχεια από το %s"
+
+msgid "Resuming playback"
+msgstr "Συνέχεια αναπαραγωγής"
+
+msgid "Return to movie list"
+msgstr "Επιστροφή στη λίστα ταινίων"
+
+msgid "Return to previous service"
+msgstr "Επιστροφή στην προηγούμενη υπηρεσία"
+
+msgid "Rewind speeds"
+msgstr "Ταχύτητα κίνησης πίσω "
+
+msgid "Right"
+msgstr "Δεξιά"
+
+msgid "Roll-off"
+msgstr "Roll-off"
+
+msgid "Romanian"
+msgstr "Ρουμανικά"
+
+msgid "Root directory"
+msgstr "Αρχικός φάκελος"
+
+msgid "Rotor turning speed"
+msgstr "Ταχύτητα του ρότορα"
+
+msgid "Russian"
+msgstr "Ρωσικά"
+
+msgid "S-Video"
+msgstr "S-Video"
+
+msgid "SID"
+msgstr "SID"
+
+msgid "SINGLE LAYER DVD"
+msgstr "SINGLE LAYER DVD"
+
+msgid "SSID:"
+msgstr "SSID:"
+
+msgid "Sat"
+msgstr "Σαβ"
+
+msgid "Satellite"
+msgstr "Δορυφόρος"
+
+msgid "Satellite equipment"
+msgstr "Δορυφορικός εξοπλισμός"
+
+msgid "Satellites"
+msgstr "Δορυφόροι"
+
+msgid "Satfinder"
+msgstr "Satfinder"
+
+msgid "Sats"
+msgstr "Sats"
+
+msgid "Saturation"
+msgstr "Saturation"
+
+msgid "Saturday"
+msgstr "Σάββατο"
+
+msgid "Save"
+msgstr "Αποθήκευση"
+
+msgid "Scaler sharpness"
+msgstr "Ακρίβεια scaler"
+
+msgid "Scan "
+msgstr "Σάρωση "
+
+msgid "Scan additional SR"
+msgstr "Σάρωση πρόσθετης SR"
+
+msgid ""
+"Scan your network for wireless access points and connect to them using your "
+"selected wireless device.\n"
+msgstr ""
+"Σάρωση του δικτύου για ασύρματα σημεία σύνδεσης και σύνδεση σε αυτά με την "
+"επιλεγμένη ασύρματη συσκευή.\n"
+
+msgid "Scanning %s..."
+msgstr "Σάρωση %s"
+
+msgid "Scanning failed!"
+msgstr "Η σάρωση απέτυχε!"
+
+msgid "Scanning..."
+msgstr "Σάρωση..."
+
+msgid ""
+"Scans default lamedbs sorted by satellite with a connected dish positioner"
+msgstr ""
+"Εκτελεί σάρωση αρχικής lamedb ταξινομημένης κατά δορυφόρο με συνδεδεμένο "
+"positioner"
+
+msgid "Search east"
+msgstr "Αναζήτηση ανατολικά"
+
+msgid "Search west"
+msgstr "Αναζήτηση δυτικά"
+
+msgid "Searching for available updates. Please wait..."
+msgstr "Αναζήτηση για διαθέσιμες ενμερώσεις. Παρακαλώ περιμένετε..."
+
+msgid "Searching for new installed or removed packages. Please wait..."
+msgstr ""
+"Αναζήτηση για νέα εγκατεστημένα ή διεγραμμένα πακέτα. Παρακαλώ περιμένετε..."
+
+msgid "Secondary DNS"
+msgstr "Δευτερεύον DNS"
+
+msgid "Seek"
+msgstr "Αναζήτηση"
+
+msgid "Select"
+msgstr "Επιλογή"
+
+msgid "Select audio track"
+msgstr "Επιλέξτε track ήχου"
+
+msgid "Select channel to record from"
+msgstr "Επιλέξτε κανάλι για εγγραφή"
+
+msgid "Select copy destination for:"
+msgstr "Επιλέξτε προορισμό αντιγραφής για:"
+
+msgid "Select desired image from feed list"
+msgstr "Επιλέξτε επιθυμητό λογισμικό από τη λίστα"
+
+msgid "Select destination for:"
+msgstr "Επιλέξτε προορισμό για:"
+
+msgid "Select files for backup."
+msgstr "Επιλέξτε αρχεία για αντίγραφο ασφαλείας."
+
+msgid "Select files/folders to backup"
+msgstr "Επιλέξτε αρχεία/φακέλους για αντίγραφο ασφαλείας"
+
+msgid "Select input device"
+msgstr "Επιλέξτε συσκευή εισαγωγής χαρακτήρων"
+
+msgid "Select input device."
+msgstr "Επιλέξτε συσκευή εισαγωγής χαρακτήρων."
+
+msgid "Select interface"
+msgstr "Επιλέξτε διεπαφή"
+
+msgid "Select provider to add..."
+msgstr "Επιλέξτε πάροχο για προσθήκη..."
+
+msgid "Select refresh rate"
+msgstr "Επιλέξτε ρυθμό ανανέωσης"
+
+msgid "Select service to add..."
+msgstr "Επιλέξτε υπηρεσία για προσθήκη..."
+
+msgid "Select upgrade source to edit."
+msgstr "Επιλέξτε πηγή αναβάθμισης για επεξεργασία."
+
+msgid "Select video input with up/down buttons"
+msgstr "Επιλέξτε είσοδο εικόνας με τα πλήκτρα πάνω/κάτω"
+
+msgid "Select video mode"
+msgstr "Επιλέξτε video mode"
+
+msgid "Select wireless network"
+msgstr "Επιλέξτε ασύρματο δίκτυο"
+
+msgid "Select your provider, and press OK to start the scan"
+msgstr "Επιλέξτε παροχέα, και πιέστε ΟΚ για εκκίνηση σάρωσης"
+
+msgid "Send DiSEqC"
+msgstr "Αποστολή DiSEqC"
+
+msgid "Send DiSEqC only on satellite change"
+msgstr "Αποστολή DiSEqC μόνο σε αλλαγή δορυφόρου"
+
+msgid "Seperate titles with a main menu"
+msgstr "Διαχωρισμός τίτλων με κεντρικό μενού"
+
+msgid "Sequence repeat"
+msgstr "Επανάληψη διαδοχής"
+
+msgid "Serbian"
+msgstr "Σερβικά"
+
+msgid "Service"
+msgstr "Υπηρεσία"
+
+msgid "Service has been added to the favourites."
+msgstr "Η υπηρεσία προστέθηκε στα αγαπημένα."
+
+msgid "Service has been added to the selected bouquet."
+msgstr "Η υπηρεσία προστέθηκε στo επιλεγμένο μπουκέτο"
+
+msgid ""
+"Service invalid!\n"
+"(Timeout reading PMT)"
+msgstr ""
+"Άκυρη υπηρεσία\n"
+"(Timeout reading PMT)"
+
+msgid ""
+"Service not found!\n"
+"(SID not found in PAT)"
+msgstr ""
+"Η υπηρεσία δεν βρέθηκε\n"
+"(SID not found in PAT)"
+
+msgid "Service reference"
+msgstr "Αναφορά υπηρεσιών"
+
+msgid "Service scan"
+msgstr "Ανεύρεση υπηρεσίων"
+
+msgid ""
+"Service unavailable!\n"
+"Check tuner configuration!"
+msgstr ""
+"Υπηρεσία μη διαθέσιμη!\n"
+"Ελένξτε της παραμετροποιήσης του tuner!"
+
+msgid "Services"
+msgstr "Υπηρεσίες"
+
+msgid "Set fixed"
+msgstr "Ορισμός σταθερού"
+
+msgid "Set interface as default Interface"
+msgstr "Ορισμός διεπαφής ως προεπιλεγμένης"
+
+msgid "Set limits"
+msgstr "Ορισμός ορίων"
+
+msgid "Settings"
+msgstr "Ρυθμίσεις"
+
+msgid "Setup"
+msgstr "Παραμετροποίηση"
+
+msgid ""
+"Shall the USB stick wizard proceed and program the image file %s into flash "
+"memory?"
+msgstr ""
+"Να προχωρήσει ο Οδηγός Usb Stick και να εγκαταστήσει το λογισμικό %s στη "
+"μνήμη flash;"
+
+msgid "Sharpness"
+msgstr "Sharpness"
+
+msgid "Short filenames"
+msgstr "Σύντομα ονόματα"
+
+msgid "Show EIT now/next in infobar"
+msgstr "Εμφάνιση ΕΙΤ τρέχων/απόμενο στη μπάρα πληροφοριών"
+
+msgid "Show animation while busy"
+msgstr "Εμφάνιση animation κατά την καθυστέρηση"
+
+msgid "Show channel numbers in channel selection"
+msgstr "Εμφάνιση αριθμού καναλιού στην επιλογή καναλιού"
+
+msgid "Show crypto info in infobar"
+msgstr "Εμφάνιση πληροφοριών crypto στη μπάρα πληροφοριών"
+
+msgid "Show event-progress in channel selection"
+msgstr "Εμφάνιση χρονικού σημείου στην επιλογή καναλιού"
+
+msgid "Show icon for new/unseen items"
+msgstr "Εμφάνιση εικονιδίου για νέα αντικείμενα"
+
+msgid "Show infobar on channel change"
+msgstr "Εμφάνιση μπάρας πληροφοριών σε αλλαγή καναλιού"
+
+msgid "Show infobar on event change"
+msgstr "Εμφάνιση μπάρας πληροφοριών σε αλλαγή προγράμματος"
+
+msgid "Show infobar on skip forward/backward"
+msgstr "Εμφάνιση της μπάρας πληροφοριών κατά το εμπρός/πίσω"
+
+msgid "Show positioner movement"
+msgstr "Εμφάνιση κινήσεων του positioner"
+
+msgid "Show the radio player..."
+msgstr "Εμφάνιση ραδιοφώνου..."
+
+msgid "Show the tv player..."
+msgstr "Εμφάνιση TV"
+
+msgid "Shows the state of your wireless LAN connection.\n"
+msgstr "Εμφανίζει την κατάσταση του ασύρματου δικτύου.\n"
+
+msgid "Shutdown"
+msgstr "Τερματισμός"
+
+msgid "Side by Side"
+msgstr "Σε παράθεση"
+
+msgid "Signal Strength:"
+msgstr "Ένταση σήματος:"
+
+msgid "Signal: "
+msgstr "Σήμα: "
+
+msgid "Similar"
+msgstr "Παρόμοιο"
+
+msgid "Similar broadcasts:"
+msgstr "Παρόμοιες μεταδόσεις:"
+
+msgid "Simple"
+msgstr "Απλό"
+
+msgid "Simple titleset (compatibility for legacy players)"
+msgstr "Simple titleset (compatibility for legacy players)"
+
+msgid "Single"
+msgstr "Μονό"
+
+msgid "Single EPG"
+msgstr "Μονό EPG"
+
+msgid "Single satellite"
+msgstr "Ένας δορυφόρος"
+
+msgid "Skins"
+msgstr "Θέματα"
+
+msgid "Slot %d"
+msgstr "Θέση %d"
+
+msgid "Slovenian"
+msgstr "Σλοβανικά"
+
+msgid "Slow"
+msgstr "Αργά"
+
+msgid "Software"
+msgstr "Λογισμικό"
+
+msgid "Software management"
+msgstr "Διαχείριση λογισμικού"
+
+msgid "Software manager setup"
+msgstr "Ρυθμίσεις διαχειριστή λογισμικού"
+
+msgid "Software restore"
+msgstr "Αποκατάσταση λογισμικού"
+
+msgid "Software update"
+msgstr "Ενημέρωση λογισμικού"
+
+msgid "Softwaremanager information"
+msgstr "Πληροφορίες διαχειριστή λογισμικού"
+
+msgid "Some plugins are not available:\n"
+msgstr "Μερικά πρόσθετα δεν είναι διαθέσιμα:\n"
+
+msgid "Sort"
+msgstr "Ταξινόμηση"
+
+msgid "Sound"
+msgstr "Ήχος"
+
+msgid "Source request"
+msgstr "Επιλογή πηγής αναβάθμισης"
+
+msgid "South"
+msgstr "Νότος"
+
+msgid "Spanish"
+msgstr "Ισπανικά"
+
+msgid "Split preview mode"
+msgstr "Διαχωρισμός κατάστασης επισκόπησης"
+
+msgid "Standby"
+msgstr "Αναμονή"
+
+msgid "Standby / Restart"
+msgstr "Αναμονή / Επανεκκίνηση"
+
+msgid "Start from the beginning"
+msgstr "Έναρξη  απο την αρχή"
+
+msgid "Start test"
+msgstr "Έναρξη ελέγχου"
+
+msgid "Starting on"
+msgstr "Έναρξη απο"
+
+msgid "Step east"
+msgstr "Βήμα ανατολικά"
+
+msgid "Step west"
+msgstr "Βήμα δυτικά"
+
+msgid "Stop"
+msgstr "Τερματισμός"
+
+msgid "Stop current event and disable coming events"
+msgstr "Τερματισμός τρέχοντος προγράμματος και ακύρωση επερχόμενων"
+
+msgid "Stop current event but not coming events"
+msgstr "Τερματισμός τρέχοντος προγράμματος αλλά όχι των επερχόμενων"
+
+msgid "Stop playing this movie?"
+msgstr "Τερματισμός αναπαραγωγής;"
+
+msgid "Stop recording"
+msgstr "Τερματισμός εγγραφής"
+
+msgid "Stop recording and delete"
+msgstr "Τερματισμός εγγραφής και διαγραφή"
+
+msgid "Stop test"
+msgstr "Τερματισμός ελέγχου"
+
+msgid "Stop testing plane after # failed transponders"
+msgstr "Stop testing plane after # failed transponders"
+
+msgid "Stop testing plane after # successful transponders"
+msgstr "Stop testing plane after # successful transponders"
+
+msgid "Store position"
+msgstr "Αποθήκευση θέσης"
+
+msgid "Stored position"
+msgstr "Αποθηκευμένη θέση"
+
+msgid "Stream request"
+msgstr "Stream request"
+
+msgid "Subservices"
+msgstr "Υπό-υπηρεσίες"
+
+msgid "Subtitle delay when timing lacks"
+msgstr "Καθυστέρηση κειμένου όταν δεν υπάρχει χρονισμός"
+
+msgid "Subtitle language selection 1"
+msgstr "Επιλογή γλώσσας υποτίτλων 1"
+
+msgid "Subtitle language selection 2"
+msgstr "Επιλογή γλώσσας υποτίτλων 2"
+
+msgid "Subtitle language selection 3"
+msgstr "Επιλογή γλώσσας υποτίτλων 3"
+
+msgid "Subtitle language selection 4"
+msgstr "Επιλογή γλώσσας υποτίτλων 4"
+
+msgid "Subtitle selection"
+msgstr "Επιλογή υποτίτλων"
+
+msgid "Subtitle selection..."
+msgstr "Επιλογή υποτίτλων..."
+
+msgid "Subtitles"
+msgstr "Υπότιτλοι"
+
+msgid "Sun"
+msgstr "Κυρ"
+
+msgid "Sunday"
+msgstr "Κυριακή"
+
+msgid "Swedish"
+msgstr "Σουηδικά"
+
+msgid "Switch TV to correct input"
+msgstr "Αλλαγή της TV στη σωστή είσοδο"
+
+msgid "Switchable tuner types:"
+msgstr "Εναλλακτοί τύποι tuner:"
+
+msgid "Symbol rate"
+msgstr "Symbol rate"
+
+msgid "System"
+msgstr "Σύστημα"
+
+msgid "TRANSLATOR_INFO"
+msgstr "ΠΛΗΡ_ΜΕΤΑΦΡΑΣΤΗ"
+
+msgid "TS file is too large for ISO9660 level 1!"
+msgstr "Το αρχείο TS είναι πολύ μεγάλο για το ISO9660 level 1!"
+
+msgid "TSID"
+msgstr "TSID"
+
+msgid "TXT PID"
+msgstr "TXT PID"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Teletext subtitle color"
+msgstr "Χρώμα υποτίτλων teletext"
+
+msgid "Terrestrial"
+msgstr "Επίγειος "
+
+msgid "Terrestrial provider"
+msgstr "Επίγειος πάροχος"
+
+msgid "Test DiSEqC settings"
+msgstr "Έλεγχος ρυθμίσεων DiSEqC"
+
+msgid "Test mode"
+msgstr "Κατάσταση ελέγχου"
+
+msgid ""
+"Thank you for using the wizard.\n"
+"Please press OK to continue."
+msgstr ""
+"Σας ευχαριστούμε που χρησιμοποιήσατε τον Οδηγό.\n"
+"Παρακαλώ πιέστε ΟΚ για συνέχεια."
+
+msgid "The PIN code has been changed successfully."
+msgstr "Το PIN έχει αλλαχθεί επιτυχώς."
+
+msgid "The PIN codes you entered are different."
+msgstr "Τα PIN που εισάγατε είναι διαφορετικά."
+
+msgid ""
+"The USB stick was prepared to be bootable.\n"
+"Now you can download an NFI image file!"
+msgstr ""
+"Το usb stick προετοιμάσθηκε ως εκκινήσιμο.\n"
+"Τώρα μπορεί να γίνει λήψη του αρχείου NFI!"
+
+msgid "The backup failed. Please choose a different backup location."
+msgstr "Το backup απέτυχε. Διάλεξτε άλλη τοποθεσία για το backup."
+
+msgid ""
+"The directory %s is not writable.\n"
+"Make sure you select a writable directory instead."
+msgstr ""
+"Ο φάκελος %s δεν είναι εγγράψιμος.\n"
+"Επιλέξτε εναλλακτικά έναν εγγράψιμο φάκελο."
+
+msgid ""
+"The following device was found:\n"
+"\n"
+"%s\n"
+"\n"
+"Do you want to write the USB flasher to this stick?"
+msgstr ""
+"Βρέθηκε η παρακάτω συσκευή:\n"
+"\n"
+"%s\n"
+"\n"
+"Θέλετε να γράψετε το USB flasher σε αυτό το stick;"
+
+msgid "The following files were found..."
+msgstr "Βρέθηκαν τα παρακάτω αρχεία..."
+
+msgid "The md5sum validation failed, the file may be corrupted!"
+msgstr ""
+"Η επιβεβαίωση md5sum απέτυχε, το αρχείο ενδέχεται να είναι κατεστραμμένο!"
+
+msgid "The path %s already exists."
+msgstr "Η διαδρομή %s υπάρχει ήδη."
+
+msgid "The pin code you entered is wrong."
+msgstr "Το Pin είναι λάθος."
+
+msgid "The results have been written to %s."
+msgstr "Τα αποτελέσματα γράφτηκαν στο %s."
+
+msgid "The timer file (timers.xml) is corrupt and could not be loaded."
+msgstr "Το timer file (timers.xml) ειναι άκυρο και δεν φωρτοθείκε."
+
+msgid ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it and choose what you want to do next."
+msgstr ""
+"Το πρόσθετο wireless LAN δεν είναι εγκατεστημένο!\n"
+"Παρακαλώ εγκαταστήστε το και επιλέξτε τι θέλετε να συμβεί στη συνέχεια."
+
+msgid ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it."
+msgstr ""
+"Το πρόσθετο wireless LAN δεν είναι εγκατεστημένο!\n"
+"Παρακαλώ εγκαταστήστε το."
+
+msgid ""
+"The wizard can backup your current settings. Do you want to do a backup now?"
+msgstr ""
+"Ο Οδηγός μπορεί να κρατήσει αντίγραφο των ρυθμίσεων. Να κρατήσει αντίγραφο "
+"τώρα;"
+
+msgid ""
+"The wizard found a configuration backup. Do you want to restore your old "
+"settings from %s?"
+msgstr ""
+"Ο Οδηγός βρήκε αντίγραφο ασφαλείας των ρυθμίσεων. Θέλετε να αποκαταστήσετε "
+"τις παλιές ρυθμίσεις σας από το %s;"
+
+msgid "The wizard is finished now."
+msgstr "Ο Οδηγός ολοκληρώθηκε."
+
+msgid "There are at least "
+msgstr "Υπάρχουν τουλάχιστον"
+
+msgid "There are currently no outstanding actions."
+msgstr "There are currently no outstanding actions."
+
+msgid "There are no updates available."
+msgstr "Δεν υπάρχουν διαθέσιμες ενημερώσεις."
+
+msgid ""
+"There might not be enough space on the selected partition..\n"
+"Do you really want to continue?"
+msgstr ""
+"Ενδεχομένως να μην υπάρχει αρκετός χώρος στην επιλεγμένη κατάτμηση.\n"
+"Θέλετε να συνεχίσετε;"
+
+msgid ""
+"This DVD RW medium is already formatted - reformatting will erase all "
+"content on the disc."
+msgstr ""
+"This DVD RW medium is already formatted - reformatting will erase all "
+"content on the disc."
+
+msgid "This plugin is installed."
+msgstr "Το πρόσθετο είναι εγκατεστημένο."
+
+msgid "This plugin is not installed."
+msgstr "Το πρόσθετο δεν είναι εγκατεστημένο."
+
+msgid "This plugin will be installed."
+msgstr "Το πρόσθετο θα εγκατασταθεί."
+
+msgid "This plugin will be removed."
+msgstr "Το πρόσθετο θα διαγραφεί."
+
+msgid "Three"
+msgstr "Τρία"
+
+msgid "Threshold"
+msgstr "Όριο"
+
+msgid "Thu"
+msgstr "Πεμ"
+
+msgid "Thumbnails"
+msgstr "Thumbnails"
+
+msgid "Thursday"
+msgstr "Πέμπτη"
+
+msgid "Time"
+msgstr "Χρόνος"
+
+msgid "Timer entry"
+msgstr "Εγγραφή χρονοδιακόπτη"
+
+msgid "Timer log"
+msgstr "Καταγραφή χρονοδιακόπτη"
+
+msgid ""
+"Timer overlap in timers.xml detected!\n"
+"Please recheck it!"
+msgstr ""
+"Timer overlap in timers.xml detected!\n"
+"Please recheck it!"
+
+msgid "Timer record location"
+msgstr "Τοποθεσία εγγραφής χρονοδιακόπτη"
+
+msgid "Timer sanity error"
+msgstr "Timer sanity error"
+
+msgid "Timer selection"
+msgstr "Επιλογή χρονοδιακόπτη"
+
+msgid "Timeshift"
+msgstr "Timeshift"
+
+msgid "Timeshift location"
+msgstr "Τοποθεσία Timeshift"
+
+msgid "Timeshift not possible!"
+msgstr "Το timeshift δεν είναι δυνατό!"
+
+msgid "Timezone"
+msgstr "Χρονική ζώνη"
+
+msgid "Title"
+msgstr "Τίτλος"
+
+msgid "Title properties"
+msgstr "Ιδιότητες τίτλου"
+
+msgid "Titleset mode"
+msgstr "Titleset mode"
+
+msgid "Today"
+msgstr "Σήμερα"
+
+msgid "Tone mode"
+msgstr "Τύπος τόνου"
+
+msgid "Toneburst"
+msgstr "Toneburst"
+
+msgid "Toneburst A/B"
+msgstr "Toneburst A/B"
+
+msgid "Top and Bottom"
+msgstr "Πάνω και Κάτω"
+
+msgid "Track"
+msgstr "Track"
+
+msgid "Transmission mode"
+msgstr "Mode μετάδοσης"
+
+msgid "Transponder"
+msgstr "Αναμεταδότης"
+
+msgid "Trashcan"
+msgstr "Καλάθι αχρήστων"
+
+msgid "Tries left:"
+msgstr "Προσπάθειες που απομένουν:"
+
+msgid "Try to find used transponders in cable network.. please wait..."
+msgstr ""
+"Αναζήτηση χρησιμοποιούμενων αναμεταδοτών στο καλωδιακό δίκτυο... Παρακαλώ "
+"περιμένετε..."
+
+msgid "Trying to download a new packetlist. Please wait..."
+msgstr "Προσπάθεια για λήψη νέας λίστας πακέτων. Παρακαλώ περιμένετε ..."
+
+msgid "Tue"
+msgstr "Τρι"
+
+msgid "Tuesday"
+msgstr "Τρίτη "
+
+msgid "Tune"
+msgstr "Συντονισμός"
+
+msgid "Tune failed!"
+msgstr "Ο συντονισμός απέτυχε!"
+
+msgid "Tuner"
+msgstr "Tuner"
+
+msgid "Tuner configuration"
+msgstr "Εγκατάσταση tuner"
+
+msgid "Tuner status"
+msgstr "Κατάσταση tuner"
+
+msgid "Tuner type"
+msgstr "Τύπος tuner"
+
+msgid "Turkish"
+msgstr "Τούρκικα"
+
+msgid "Two"
+msgstr "Δύο"
+
+msgid "Type"
+msgstr "Τύπος"
+
+msgid "Type of scan"
+msgstr "Τύπος σάρωσης"
+
+msgid "USALS"
+msgstr "USALS"
+
+msgid "USB stick wizard"
+msgstr "Οδηγός USB stick"
+
+msgid "Unattended upgrade without GUI and reboot system"
+msgstr "Αναβάθμιση χωρίς γραφικό περιβάλλον και επανεκκίνηση"
+
+msgid "Undo install"
+msgstr "Αναίρεση εγκατάστασης"
+
+msgid "Undo uninstall"
+msgstr "Αναίρεση απεγκατάστασης"
+
+msgid "Unencrypted"
+msgstr "Χωρίς κωδικοποίηση"
+
+msgid "Unicable LNB"
+msgstr "Unicable LNB"
+
+msgid "Uninstall"
+msgstr "Απεγκατάσταση"
+
+msgid "Universal LNB"
+msgstr "Universal LNB"
+
+msgid "Unknown"
+msgstr "Άγνωστο"
+
+msgid "Unmount"
+msgstr "Αποπροσάρτηση"
+
+msgid "Unsupported"
+msgstr "Δεν υποστηρίζεται"
+
+msgid "Update"
+msgstr "Ενημέρωση"
+
+msgid "Updatefeed not available."
+msgstr "Το feed ναβάθμισης δεν είναι διαθέσιμο"
+
+msgid "Updating software catalog"
+msgstr "Ενημέρωση καταλόγου λογισμικού"
+
+msgid "Upgrade finished."
+msgstr "Η αναβάθμιση τελείωσε."
+
+msgid "Upgrading"
+msgstr "Εκτελείται αναβάθμιση"
+
+msgid "Use"
+msgstr "Χρήση"
+
+msgid "Use DHCP"
+msgstr "Χρήση DHCP"
+
+msgid "Use TV remote control"
+msgstr "Χρήση τηλεχειριστηρίου TV"
+
+msgid "Use a gateway"
+msgstr "Χρήση gateway"
+
+msgid "Use fastscan channel names"
+msgstr "Use fastscan channel names"
+
+msgid "Use fastscan channel numbering"
+msgstr "Use fastscan channel numbering"
+
+msgid "Use official channel numbering"
+msgstr "Use official channel numbering"
+
+msgid "Use original teletext position"
+msgstr "Χρήση αρχικής θέσης teletext"
+
+msgid "Use power measurement"
+msgstr "Χρήση power measurement"
+
+msgid ""
+"Use the up/down keys on your remote control to select an option. After that, "
+"press OK."
+msgstr ""
+"Πιέστε τα πλήκτρα Πάνω/Κάτω του τηλεχειριστηρίου για επιλογή. Μετά, πιέστε "
+"ΟΚ."
+
+msgid "Use this video enhancement settings?"
+msgstr "Χρήση αυτών των ρυθμίσεων αναβάθμισης εικόνας;"
+
+msgid "Used service scan type"
+msgstr "Used service scan type"
+
+msgid "User defined"
+msgstr "Ορισμός από το χρήστη"
+
+msgid "Username"
+msgstr "Όνομα χρήστη"
+
+msgid "Using fixed address"
+msgstr "Χρήση σταθερής διεύθυνσης"
+
+msgid "VCR scart"
+msgstr "VCR scart"
+
+msgid "VMGM (intro trailer)"
+msgstr "VMGM (intro trailer)"
+
+msgid "Vertical"
+msgstr "Κάθετη"
+
+msgid "Video PID"
+msgstr "PID εικόνας"
+
+msgid "Video enhancement preview"
+msgstr "Προεπισκόπηση αναβάθμισης εικόνας"
+
+msgid "Video enhancement setup"
+msgstr "Εγκατάσταση αναβάθμισης εικόνας"
+
+msgid "Video mode selection."
+msgstr "Επιλογή Video mode"
+
+msgid "Videocodec"
+msgstr "Videocodec"
+
+msgid "Videoformat"
+msgstr "Videoformat"
+
+msgid "Videosize"
+msgstr "Μέγεθος video"
+
+msgid "View Movies..."
+msgstr "Εμφάνιση ταινιών..."
+
+msgid "View Rass interactive..."
+msgstr "Εμφάνιση διαδραστικού Rass..."
+
+msgid "View Video CD..."
+msgstr "Εμφάνιση Video CD..."
+
+msgid "View details"
+msgstr "Εμφάνιση λεπτομερειών"
+
+msgid "View list of available "
+msgstr "Εμφάνιση λίστας διαθέσιμων"
+
+msgid "View list of available CommonInterface extensions"
+msgstr "Εμφάνιση λίστας διαθέσιμων επεκτάσεων Κοινών Διεπαφών"
+
+msgid "View list of available EPG extensions."
+msgstr "Εμφάνιση λίστας διαθέσιμων επεκτάσεων EPG"
+
+msgid "View list of available Satellite equipment extensions."
+msgstr "Εμφάνιση λίστας διαθέσιμων επεκτάσεων δορυφορικού εξοπλισμού"
+
+msgid "View list of available communication extensions."
+msgstr "Εμφάνιση λίστας διαθέσιμων επεκτάσεων επικοινωνίας"
+
+msgid "View list of available default settings"
+msgstr "Εμφάνιση λίστας διαθέσιμων επεκτάσεων αρχικών ρυθμίσεων."
+
+msgid "View list of available multimedia extensions."
+msgstr "Εμφάνιση λίστας διαθέσιμων επεκτάσεων πολυμέσων"
+
+msgid "View list of available networking extensions"
+msgstr "Εμφάνιση λίστας διαθέσιμων επεκτάσεων δικτύωσης"
+
+msgid "View list of available recording extensions"
+msgstr "Εμφάνιση λίστας διαθέσιμων επεκτάσεων εγγραφών"
+
+msgid "View list of available skins"
+msgstr "Εμφάνιση λίστας διαθέσιμων θεμάτων"
+
+msgid "View list of available software extensions"
+msgstr "Εμφάνιση λίστας διαθέσιμων επεκτάσεων λογισμικού"
+
+msgid "View list of available system extensions"
+msgstr "Εμφάνιση λίστας διαθέσιμων επεκτάσεων συστήματος"
+
+msgid "View teletext..."
+msgstr "Εμφάνιση teletext..."
+
+msgid "Voltage mode"
+msgstr "Voltage mode"
+
+msgid "W"
+msgstr "W"
+
+msgid "WEP"
+msgstr "WEP"
+
+msgid "WLAN connection"
+msgstr "Σύνδεση WLAN"
+
+msgid "WPA"
+msgstr "WPA"
+
+msgid "WPA or WPA2"
+msgstr "WPA or WPA2"
+
+msgid "WPA2"
+msgstr "WPA2"
+
+msgid "WSS on 4:3"
+msgstr "WSS on 4:3"
+
+msgid "Waiting"
+msgstr "Αναμονή"
+
+msgid "Wakeup"
+msgstr "Εκκίνηση"
+
+msgid "Wakeup TV from standby"
+msgstr "Εκκίνηση TV από αναμονή"
+
+msgid "Wakeup signal from TV"
+msgstr "Σήμα εκκίνησης από TV"
+
+msgid "Wed"
+msgstr "Τετ"
+
+msgid "Wednesday"
+msgstr "Τετάρτη"
+
+msgid "Weekday"
+msgstr "Ημέρα εβδομάδος"
+
+msgid ""
+"Welcome.\n"
+"\n"
+"If you want to connect your %s %s to the Internet, this wizard will guide "
+"you through the basic network setup of your %s %s.\n"
+"\n"
+"Press OK to start configuring your network"
+msgstr ""
+"Καλώς ορίσατε.\n"
+"\n"
+"Εάν θέλετε να συνδέσετε το δέκτη στο διαδίκτυο, αυτό ο Οδηγός θα σας "
+"καθοδηγήσει στα βήματα της διαδικασίας ρύθμισης δικτύου του δέκτη.\n"
+"\n"
+"Πιέστε ΟΚ για εκκίνηση ρύθμισης του δικτύου."
+
+msgid "West"
+msgstr "Δυτικά"
+
+msgid "What do you want to scan?"
+msgstr "Τι θέλετε να σαρώσετε;"
+
+msgid "Where do you want to backup your settings?"
+msgstr "Που θέλετε να γίνει η αντιγραφή των ρυθμίσεων;"
+
+msgid "Where to save temporary timeshift recordings?"
+msgstr "Που θέλετε να αποθηκεύονται προσωρινά οι εγγραφές timeshift;"
+
+msgid "Wireless LAN"
+msgstr "Ασύρματο δίκτυο"
+
+msgid "Wireless network connection setup"
+msgstr "Ρύθμιση σύνδεσης ασύρματου δικτύου"
+
+msgid "Wireless network connection setup."
+msgstr "Ρύθμιση σύνδεσης ασύρματου δικτύου."
+
+msgid "Wireless network state"
+msgstr "Κατάσταση ασύρματου δικτύου"
+
+msgid "Write error while recording. Disk full?\n"
+msgstr "Σφάλμα κατά την εγγραφή. Δίσκος γεμάτος;\n"
+
+msgid "Write failed!"
+msgstr "Η εγγραφή απέτυχε!"
+
+msgid "YPbPr"
+msgstr "YPbPr"
+
+msgid "Year"
+msgstr "Έτος"
+
+msgid "Yellow DVB subtitles"
+msgstr "Κίτρινοι υπότιτλοι"
+
+msgid "Yes"
+msgstr "Ναι"
+
+msgid "Yes to all"
+msgstr "Ναι σε όλα"
+
+msgid "Yes, always"
+msgstr "Ναι, πάντα"
+
+msgid "Yes, and delete this movie"
+msgstr "Ναι,και διαγραφή αυτής της ταινίας"
+
+msgid "Yes, backup my settings!"
+msgstr "Ναι, κράτα αντίγραφο των ρυθμίσεων!"
+
+msgid "Yes, do a manual scan now"
+msgstr "Ναι, κάνε χειροκίνητη σάρωση τώρα"
+
+msgid "Yes, do an automatic scan now"
+msgstr "Ναι, κάνε αυτόματη σάρωση τώρα"
+
+msgid "Yes, do another manual scan now"
+msgstr "Ναι, κάνε μια ακόμη χειροκίνητη σάρωση τώρα"
+
+msgid "Yes, restore the settings now"
+msgstr "Ναι, αποκατάσταση ρυθμίσεων τώρα"
+
+msgid "Yes, returning to movie list"
+msgstr "Ναι, επιστροφή στη λίστα ταινιών"
+
+msgid "Yes, shut down now."
+msgstr "Ναι, τερματισμός τώρα."
+
+msgid "Yesterday"
+msgstr "Χθες"
+
+msgid ""
+"You already have a channel list installed,\n"
+"would you like to remove\n"
+"\"%s\"?"
+msgstr ""
+"Έχετε ήδη εγκατεστημένη μία λίστα καναλιών,\n"
+"θέλετε να διαγράψετε\n"
+"\"%s\";"
+
+msgid "You can cancel the installation."
+msgstr "Μπορείτε να ακυρώσετε την εγκατάσταση."
+
+msgid "You can cancel the removal."
+msgstr "Μπορείτε να ακυρώσετε τη διαγραφή."
+
+msgid "You can continue watching TV etc. while this is running."
+msgstr "Μπορείτε να συνεχίσετε να βλέπετε TV κλπ όσο αυτό εκτελείται."
+
+msgid "You can install this plugin."
+msgstr "Μπορείτε να εγκαταστήσετε το πρόσθετο."
+
+msgid "You can remove this plugin."
+msgstr "Μπορείτε να διαγράψετε το πρόσθετο."
+
+msgid "You cannot delete this!"
+msgstr "Δεν μπορετε να διαγράψτε αυτό!"
+
+msgid "You didn't select a channel to record from."
+msgstr "Δεν επιλέξατε κανάλι για εγγραφή."
+
+msgid ""
+"You have chosen to backup your settings. Please press OK to start the backup "
+"now."
+msgstr ""
+"Επιλέξατε να κρατηθεί αντίγραφο ασφαλείας των ρυθμίσεων. Πιέστε ΟΚ για να "
+"ξεκινήσει η διαδικασία τώρα."
+
+msgid ""
+"You have chosen to create a new .NFI flasher bootable USB stick. This will "
+"repartition the USB stick and therefore all data on it will be erased."
+msgstr ""
+"Επιλέξατε να δημιουργήσετε νέο εκκινήσιμο Usb stick για εγκατάσταση NFI. Θα "
+"γίνει εκ νέου κατάτμηση του usb stick και όλα τα δεδομένα σε αυτό θα χαθούν."
+
+msgid ""
+"You have chosen to restore your settings. Enigma2 will restart after "
+"restore. Please press OK to start the restore now."
+msgstr ""
+"Επιλέξατε αποκατάσταση των ρυθμίσεων. Το Enigma2 θα επανεκκινήσει μετά την "
+"αποκατάσταση. Πιέστε ΟΚ για να ξεκνήσει η διαδικασία τώρα."
+
+msgid "You have to wait %s!"
+msgstr "Περιμένετε για %s!"
+
+msgid "You system does not support ext4"
+msgstr "Το σύστημά σας δεν υποστηρίζει ext4"
+
+msgid ""
+"Your %s %s is now ready to use.\n"
+"\n"
+"Your internet connection is working now.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+"Ο δέκτης σας είναι τώρα έτοιμος για χρήση.\n"
+"\n"
+"Η σύνδεση με το διαδίκτυο είναι έτοιμη.\n"
+"\n"
+"Πιέστε ΟΚ για συνέχεια."
+
+msgid "Your %s %s is shutting down. Please wait..."
+msgstr "Ο δέκτης τερματίζεται. Παρακαλώ περιμένετε..."
+
+msgid ""
+"Your backup succeeded. We will now continue to explain the further upgrade "
+"process."
+msgstr ""
+"Το αντίγραφο ασφαλείας ολοκληρώθηκε. Ση συνέχεια θα επεξηγηθεί η υπόλοιπη "
+"διαδικασία."
+
+msgid ""
+"Your collection exceeds the size of a single layer medium, you will need a "
+"blank dual layer DVD!"
+msgstr ""
+"Η συλλογή σας υπερβαίνει το μέγεθος ενός single layer DVD. Θα χρειαστείτε "
+"ένα κενό dual layer DVD!"
+
+msgid "Your current collection will get lost!"
+msgstr "Η τρέχουσα συλλογή σας θα χαθεί!"
+
+msgid ""
+"Your frontprocessor firmware must be upgraded.\n"
+"Press OK to start upgrade."
+msgstr ""
+"Το “frontprocessor firmware” πρέπει να αναβαθμιστεί\n"
+"Πιέστε ΟΚ για την αναβάθμιση."
+
+msgid ""
+"Your internet connection is not working!\n"
+"Please choose what you want to do next."
+msgstr ""
+"Η σύνδεση προς το διαδίκτυο δεν δουλεύει!Επιλέξτε τι θέλετε να ακολουθήσει."
+
+msgid "Your network configuration has been activated."
+msgstr "Η ρύθμιση δικτύου ενεργοποιήθηκε."
+
+msgid ""
+"Your wireless LAN internet connection could not be started!\n"
+"Have you attached your USB WLAN Stick?\n"
+"\n"
+"Please choose what you want to do next."
+msgstr ""
+"Η ασύρματη σύνδεση δικτύου δεν μπορεί να εκκινήσει!\n"
+"Έχετε συνδέσει το Usb Stick;\n"
+"\n"
+"Επιλέξτε τι θέλετε να ακολουθήσει."
+
+msgid "Zap back to previously tuned service?"
+msgstr "Μετάβαση στην προηγούμενη υπηρεσία;"
+
+msgid "Zap back to service before positioner setup?"
+msgstr "Μετάβαση στην υπηρεσία πριν τη ρύθμιση του positioner;"
+
+msgid "Zap back to service before tuner setup?"
+msgstr "Μετάβαση στην υπηρεσία πριν τη ρύθμιση του tuner;"
+
+msgid "Zap focus to Picture in Picture"
+msgstr "Zap focus to Picture in Picture"
+
+msgid "Zap focus to main screen"
+msgstr "Zap focus to main screen"
+
+msgid "Zap mode"
+msgstr "Κατάσταση zap"
+
+msgid "[alternative edit]"
+msgstr "[εναλλακτική επεξεργασία]"
+
+msgid "[bouquet edit]"
+msgstr "[επεξεργασία μπουκέτου]"
+
+msgid "[favourite edit]"
+msgstr "[επεξεργασία αγαπημένου]"
+
+msgid "[move mode]"
+msgstr "[κατάσταση μεταφοράς]"
+
+msgid "a gui to assign services/providers to common interface modules"
+msgstr "γραφικό περιβάλλον για ανάθεση υπηρεσιών/παρόχων σε κοινή διεπαφή"
+
+msgid "a gui to assign services/providers/caids to common interface modules"
+msgstr ""
+"γραφικό περιβάλλον για ανάθεση υπηρεσιών/παρόχων/caids σε κοινή διεπαφή"
+
+msgid "abort alternatives edit"
+msgstr "ακύρωση εναλλακτικής επεξεργασίας"
+
+msgid "abort bouquet edit"
+msgstr "ακύρωση επεξεργασίας μπουκέτου"
+
+msgid "abort favourites edit"
+msgstr "ακύρωση επεξεργασίας αγαπημένων"
+
+msgid "about to start"
+msgstr "έτοιμο για εκκίνηση"
+
+msgid "activate network adapter configuration"
+msgstr "ενεργοποίηση παραμετροποίησης κάρτας δικτύου"
+
+msgid "add alternatives"
+msgstr "προσθήκη εναλλακτικών"
+
+msgid "add bookmark"
+msgstr "προσθήκη σελιδοδείκτη"
+
+msgid "add bouquet"
+msgstr "προσθήκη μπουκέτου"
+
+msgid "add marker"
+msgstr "προσθήκη σημειωτή"
+
+msgid "add service to bouquet"
+msgstr "προσθήκη υπηρεσίας σε μπουκέτο"
+
+msgid "add service to favourites"
+msgstr "προσθήκη υπηρεσίας στα αγαπημένα"
+
+msgid "add to parental protection"
+msgstr "προσθήκη στο γονικό έλεγχο"
+
+msgid "advanced"
+msgstr "προχωρημένο"
+
+msgid "alphabetic reverse"
+msgstr "αλφαβητική αντιστροφή"
+
+msgid "at beginning"
+msgstr "στην αρχή"
+
+msgid "at end"
+msgstr "στο τέλος"
+
+msgid "audio tracks"
+msgstr "audio tracks"
+
+msgid "auto"
+msgstr "αυτόματο"
+
+msgid "back"
+msgstr "πίσω"
+
+msgid "background image"
+msgstr "εικόνα φόντου"
+
+msgid "better"
+msgstr "καλύτερα"
+
+msgid "black"
+msgstr "μαύρο"
+
+msgid "blacklist"
+msgstr "μη επιτρεπόμενα"
+
+msgid "blue"
+msgstr "μπλε"
+
+msgid "chapters"
+msgstr "κεφάλαια"
+
+msgid "circular left"
+msgstr "αριστερόστροφη"
+
+msgid "circular right"
+msgstr "δεξιόστροφη"
+
+msgid "confirmed"
+msgstr "επιβεβαιωμένο"
+
+msgid "connected"
+msgstr "συνδεδεμένο"
+
+msgid "continue"
+msgstr "συνέχεια"
+
+msgid "copy to bouquets"
+msgstr "αντιγραφή στα μπουκέτα"
+
+msgid "create directory"
+msgstr "δημιουργία φακέλου"
+
+msgid "currently installed image: %s"
+msgstr "εγκατεστημένο λογισμικό: %s"
+
+msgid "daily"
+msgstr "καθημερινά"
+
+msgid "day"
+msgstr "ημέρα"
+
+msgid "delete cut"
+msgstr "διαγραφή \"cut\""
+
+msgid "disable"
+msgstr "απενεργοποίηση"
+
+msgid "disable move mode"
+msgstr "απενεργοποίηση κατάστασης μεταφοράς"
+
+msgid "disabled"
+msgstr "απεργοποιημένο"
+
+msgid "disconnected"
+msgstr "αποσυνδεμένο"
+
+msgid "do nothing"
+msgstr "μην κάνεις τίποτα"
+
+msgid "done!"
+msgstr "Ολοκληρώθηκε!"
+
+msgid "edit alternatives"
+msgstr "επεξεργασία εναλλακτικών"
+
+msgid "empty"
+msgstr "κενό"
+
+msgid "enable"
+msgstr "ενεργοποίησε"
+
+msgid "enable bouquet edit"
+msgstr "ενεργοποίησε την επεξεργασία μπουκέτου"
+
+msgid "enable favourite edit"
+msgstr "ενεργοποίησε την επεξεργασία αγαπημένων"
+
+msgid "enable move mode"
+msgstr "ενεργοποίηση κατάστασης μεταφοράς"
+
+msgid "enabled"
+msgstr "ενεργοποιημένο"
+
+msgid "end alternatives edit"
+msgstr "τέλος επεξεργασίας εναλλακτικών"
+
+msgid "end bouquet edit"
+msgstr "τέλος επεξεργασίας μπουκέτου"
+
+msgid "end cut here"
+msgstr "σημείωσε το τέλος αποκοπής"
+
+msgid "end favourites edit"
+msgstr "τέλος επεξεργασίας αγαπημένων "
+
+msgid "equal to"
+msgstr "ίσο με"
+
+msgid "exit DVD player or return to file browser"
+msgstr "έξοδος απο το DVD player ή επιστροφή στο διαφυλλιστή αρχείων"
+
+msgid "exit network adapter configuration"
+msgstr "έξοδος από ρύθμιση κάρτας δικτύου"
+
+msgid "exit networkadapter setup menu"
+msgstr "έξοδος από μενού ρυθμίσεων κάρτας δικτύου"
+
+msgid "fileformats (BMP, PNG, JPG, GIF)"
+msgstr "fileformats (BMP, PNG, JPG, GIF)"
+
+msgid "filename"
+msgstr "όνομα αρχείου"
+
+msgid "forward to the next chapter"
+msgstr "προώθηση στο επόμενο κεφάλαιο"
+
+msgid "free"
+msgstr "ελεύθερα"
+
+msgid "free diskspace"
+msgstr "ελεύθερος χώρος δίσκου"
+
+msgid "go to deep standby"
+msgstr "πήγαινε σε Τερματισμό"
+
+msgid "go to standby"
+msgstr "πήγαινε σε αναμονή"
+
+msgid "grab this frame as bitmap"
+msgstr "grab this frame as bitmap"
+
+msgid "green"
+msgstr "πράσινο"
+
+msgid "height"
+msgstr "ύψος"
+
+msgid "horizontal"
+msgstr "οριζόντια"
+
+msgid "init module"
+msgstr "init module"
+
+msgid "init modules"
+msgstr "init modules"
+
+msgid "insert mark here"
+msgstr "εισαγωγή σημειωτή"
+
+msgid "jump back to the previous title"
+msgstr "μετάβαση στον πρηγούμενο τίτλο"
+
+msgid "jump forward to the next title"
+msgstr "μετάβαση στον επόμενο τίτλο"
+
+msgid "leave movie player..."
+msgstr "έξοδος απο το movie player..."
+
+msgid "left"
+msgstr "αριστερά"
+
+msgid "length"
+msgstr "μήκος"
+
+msgid "locked"
+msgstr "κλειδωμένο "
+
+msgid "loopthrough to"
+msgstr "loopthrough to"
+
+msgid "manual"
+msgstr "χειροκίνητα"
+
+msgid "menu"
+msgstr "μενού"
+
+msgid "mins"
+msgstr "λεπτά"
+
+msgid "minutes"
+msgstr "λεπτά"
+
+msgid "month"
+msgstr "μήνας"
+
+msgid "move down to last entry"
+msgstr "μετάβαση στην τελευταία εγγραφή"
+
+msgid "move down to next entry"
+msgstr "μετάβαση στην επόμενη εγγραφή"
+
+msgid "move up to first entry"
+msgstr "μετάβαση στην πρώτη εγγραφή"
+
+msgid "move up to previous entry"
+msgstr "μετάβαση στην προηγούμενη εγγραφή"
+
+msgid "multinorm"
+msgstr "multinorm"
+
+msgid "never"
+msgstr "ποτέ"
+
+msgid "no"
+msgstr "όχι"
+
+msgid "no CAId selected"
+msgstr " δεν έχει επιλεγεί CAId"
+
+msgid "no CI slots found"
+msgstr "δεν βρέθηκαν κοινές διεπαφές (CI)"
+
+msgid "no module found"
+msgstr "δεν βρέθηκε άρθρωμα"
+
+msgid "no storage devices found"
+msgstr "δεν βρέθηκαν συσκευές αποθήκευσης"
+
+msgid "none"
+msgstr "κανένα"
+
+msgid "not configured"
+msgstr "δεν ρυθμίστηκε"
+
+msgid "not locked"
+msgstr "δεν είναι κλειδωμένο"
+
+msgid "not supported"
+msgstr "δεν υποστηρίζεται"
+
+msgid "not used"
+msgstr "δεν χρησιμοποιείται"
+
+msgid "nothing connected"
+msgstr "δεν έχει συνδεθεί τίποτα"
+
+msgid "of a DUAL layer medium used."
+msgstr "of a DUAL layer medium used."
+
+msgid "of a SINGLE layer medium used."
+msgstr "of a SINGLE layer medium used."
+
+msgid "off"
+msgstr "εκτός"
+
+msgid "on"
+msgstr "εντός"
+
+msgid "on READ ONLY medium."
+msgstr "on READ ONLY medium."
+
+msgid "once"
+msgstr "μια φορά"
+
+msgid "open nameserver configuration"
+msgstr "άνοιγμα ρύθμισης nameserver"
+
+msgid "original"
+msgstr "αρχικό"
+
+msgid "pass"
+msgstr "pass"
+
+msgid "play as picture in picture"
+msgstr "αναπαραγωγή ως PiP"
+
+msgid "play in mainwindow"
+msgstr "αναπαραγωγή στο κεντρικό παράθυρο"
+
+msgid "please press OK when ready"
+msgstr "πιέστε OK όταν είστε έτοιμος"
+
+msgid "please wait, loading picture..."
+msgstr "περίμενετε, φορτώνεται η εικόνα..."
+
+msgid "record"
+msgstr "εγγραφή"
+
+msgid "recording..."
+msgstr "εγγραφή..."
+
+msgid "red"
+msgstr "κόκκινο"
+
+msgid "remove after this position"
+msgstr "διαγραφή μετά από αυτό το σημείο "
+
+msgid "remove all alternatives"
+msgstr "διαγραφή όλων των εναλλακτικών"
+
+msgid "remove all new found flags"
+msgstr "διαγραφή όλων των νέων flags"
+
+msgid "remove before this position"
+msgstr "διαγραφή πριν από αυτό το σημείο"
+
+msgid "remove bookmark"
+msgstr "διαγραφή σελιδοδείκτη"
+
+msgid "remove directory"
+msgstr "διαγραφή φακέλου"
+
+msgid "remove entry"
+msgstr "διαγραφή εγγραφής"
+
+msgid "remove from parental protection"
+msgstr "διαγραφή από γονικό έλεγχο"
+
+msgid "remove new found flag"
+msgstr "διαγραφή νέου flag"
+
+msgid "remove selected satellite"
+msgstr "διαγραφή επιλεγμένου δορυφόρου"
+
+msgid "remove this mark"
+msgstr "διαγραφή αυτού του σημειωτή"
+
+msgid "repeat playlist"
+msgstr "επανάληψη λίστας αναπαραγωγής"
+
+msgid "repeated"
+msgstr "επαναλαμβανόμενο"
+
+msgid "reverse by date"
+msgstr "αντιστροφή κατά ημερομηνία"
+
+msgid "rewind to the previous chapter"
+msgstr "μετάβαση στο προηγούμενο κεφάλαιο"
+
+msgid "right"
+msgstr "δεξιά"
+
+msgid "save last directory on exit"
+msgstr "αποθήκευση τελευταίου φακέλου κατά την έξοδο"
+
+msgid "save playlist on exit"
+msgstr "αποθήκευση λίστας αναπαραγωγής κατά την έξοδο"
+
+msgid "scan state"
+msgstr "κατάσταση σάρωσης"
+
+msgid "second cable of motorized LNB"
+msgstr "δεύτερο καλώδιο σε κινούμενο LNB"
+
+msgid "seconds"
+msgstr "δευτερόλεπτα"
+
+msgid "select"
+msgstr "επέλεξε"
+
+msgid "select CAId's"
+msgstr "επέλεξε CAId's"
+
+msgid "select menu entry"
+msgstr "επέλεξε σημείο μενού"
+
+msgid "service PIN"
+msgstr "PIN υπηρεσίας"
+
+msgid "set as startup service"
+msgstr "ορισμός ως αρχική υπηρεσία"
+
+msgid "show DVD main menu"
+msgstr "εμφάνιση κύριου μενού DVD "
+
+msgid "show all tags"
+msgstr "εμφάνιση όλων των tags"
+
+msgid "show alternatives"
+msgstr "εμφάνιση εναλλακτικών"
+
+msgid "show event details"
+msgstr "εμφάνιση λεπτομερειών προγράμματος"
+
+msgid "show transponder info"
+msgstr "εμφάνιση πληροφοριών αναμεταδότη"
+
+msgid "shuffle"
+msgstr "τυχαία ανακατανομή"
+
+msgid "shut down"
+msgstr "τερματισμός"
+
+msgid "simple"
+msgstr "απλό"
+
+msgid "skip backward"
+msgstr "μεταπήδηση πίσω"
+
+msgid "skip backward (enter time)"
+msgstr "μεταπήδηση πίσω (σε χρόνο)"
+
+msgid "skip forward"
+msgstr "μεταπήδηση εμπρός"
+
+msgid "skip forward (enter time)"
+msgstr "μεταπήδηση εμπρός (σε χρόνο)"
+
+msgid "sorting of playlists"
+msgstr "ταξινόμηση λιστών αναπαραγωγής"
+
+msgid "standard"
+msgstr "πρότυπο"
+
+msgid "start cut here"
+msgstr "εκκίνηση αποκοπής εδώ"
+
+msgid "start directory"
+msgstr "εκκίνηση φακέλου"
+
+msgid "stepsize"
+msgstr "μέγεθος βήματος"
+
+msgid "stereo"
+msgstr "stereo"
+
+msgid "stop using as startup service"
+msgstr "τέλος χρήσης ως υπηρεσία εκκίνησης"
+
+msgid "switch to bookmarks"
+msgstr "μετάβαση σε σελιδοδείκτες"
+
+msgid "switch to filelist"
+msgstr "μετάβαση στη λίστα αρχείων"
+
+msgid "switch to the next angle"
+msgstr "μετάβαση σε επόμενη γωνία"
+
+msgid "switch to the next audio track"
+msgstr "μετάβαση σε επόμενο audio track"
+
+msgid "switch to the next subtitle language"
+msgstr "μετάβαση σε επόμενη γλώσσα υποτίτλων"
+
+msgid "template file"
+msgstr "πρότυπο αρχείο"
+
+msgid "this recording"
+msgstr "αυτή η εγγραφή"
+
+msgid "this service is protected by a parental control pin"
+msgstr "η εγγραφή είναι προστατευμένη από τον γονικό έλεγχο"
+
+msgid "toggle time, chapter, audio, subtitle info"
+msgstr "εναλλαγή πληροφοριών χρόνου, κεφαλαίου, ήχου, υποτίτλων"
+
+msgid "top"
+msgstr "κορυφή"
+
+msgid "unconfirmed"
+msgstr "ανεπιβεβαιωμένο"
+
+msgid "unknown"
+msgstr "άγνωστο"
+
+msgid "unknown service"
+msgstr "άγνωστη υπηρεσία"
+
+msgid "until standby/restart"
+msgstr "μέχρι την αναμονή/επανεκκίνηση"
+
+msgid "user defined"
+msgstr "ορισμένο από το χρήστη"
+
+msgid "vertical"
+msgstr "κάθετη"
+
+msgid "view extensions..."
+msgstr "εμφάνιση επεκτάσεων..."
+
+msgid "wait for ci..."
+msgstr "αναμονή γα κοινή διεπαφή (CI)..."
+
+msgid "wait for mmi..."
+msgstr "αναμονή για mmi..."
+
+msgid "waiting"
+msgstr "αναμονή "
+
+msgid "weekly"
+msgstr "εβδομαδιαία"
+
+msgid "white"
+msgstr "άσπρο"
+
+msgid "width"
+msgstr "πλάτος"
+
+msgid "wireless network interface"
+msgstr "διεπαφή ασύρματου δικτύου"
+
+msgid "working"
+msgstr "λειτουργεί"
+
+msgid "yellow"
+msgstr "κίτρινο"
+
+msgid "yes"
+msgstr "ναι"
+
+msgid "yes (keep feeds)"
+msgstr "ναι (σώσε feeds)"
+
+msgid "zap"
+msgstr "zap"
+
+msgid "zapped"
+msgstr "zapped"

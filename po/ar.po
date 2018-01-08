@@ -1,0 +1,2990 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenEsi v2.0 Enigma2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-08-20 15:33+0200\n"
+"PO-Revision-Date: 2015-10-28 08:56+0000\n"
+"Last-Translator: OpenEsi-Image <openesi@openesi.eu>\n"
+"ar/)\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Poedit 1.6.10\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-KeywordsList: item;text;text=\n"
+"X-Poedit-SearchPath-0: /Users/eleonor/Documents/Sorgenti/enigma2\n"
+"X-Poedit-SearchPath-1: /Users/eleonor/Documents/Sorgenti/multiboot-plugin\n"
+"X-Poedit-SearchPath-2: /Users/eleonor/Documents/Sorgenti/PoEditXml\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+msgid ""
+"\n"
+"Advanced options and settings."
+msgstr ""
+"\n"
+"إعدادات و إختيارات متقدمه"
+
+msgid ""
+"\n"
+"After pressing OK, please wait!"
+msgstr ""
+"\n"
+"بعد الضغط على موافق ، رجاء الانتظار"
+
+msgid ""
+"\n"
+"Edit the upgrade source address."
+msgstr ""
+"\n"
+"تحرير عنوان مصدر الترقيه"
+
+msgid ""
+"\n"
+"Press OK on your remote control to continue."
+msgstr ""
+"\n"
+"أضغط موافق من الريموت للاستمرار"
+
+msgid ""
+"\n"
+"Restore your backups by date."
+msgstr ""
+"\n"
+"إستعاده النسخه الاحتياطيه بالتاريخ"
+
+msgid ""
+"\n"
+"Scan for local extensions and install them."
+msgstr ""
+"\n"
+"البحث عن إضافات موضعيه وتركيبها"
+
+msgid ""
+"\n"
+"Select your backup device.\n"
+"Current device: "
+msgstr ""
+"\n"
+"أختار جهاز النسخه الاحتياطيه.\n"
+"الجهاز الحالى: "
+
+msgid ""
+"\n"
+"View, install and remove available or installed packages."
+msgstr ""
+"\n"
+"مشاهده،تنصيب أو إزالة الباقات."
+
+msgid "%H:%M"
+msgstr "%H:%M"
+
+msgid "%d min"
+msgstr "%d دقيقه"
+
+msgid "%d.%B %Y"
+msgstr "%d.%B %Y"
+
+msgid "%s (%s)\n"
+msgstr "%s (%s) \n"
+
+msgid "(empty)"
+msgstr "(خالى)"
+
+msgid "(show optional DVD audio menu)"
+msgstr "(شاهد قائمه صوت دى فى دى إختياريه)"
+
+msgid "* Only available if more than one interface is active."
+msgstr "*متاحه فقط عند وجود أكثر من واحهه نشطه"
+
+msgid "1.0"
+msgstr "1.0"
+
+msgid "1.1"
+msgstr "1.1"
+
+msgid "1.2"
+msgstr "1.2"
+
+msgid "12V output"
+msgstr "مخرج 12 ف"
+
+msgid "13 V"
+msgstr "13 ف"
+
+msgid "16:10"
+msgstr "16:10"
+
+msgid "16:9"
+msgstr "16:9"
+
+msgid "16:9 always"
+msgstr "16:9 دائما"
+
+msgid "18 V"
+msgstr "18 ف"
+
+msgid "4:3"
+msgstr "4:3"
+
+msgid "<Current movielist location>"
+msgstr "<موقع قائمه الافلام الحاليه>"
+
+msgid "<Default movie location>"
+msgstr "<مكان الافلام الافتراضى>"
+
+msgid "<Last timer location>"
+msgstr "<مكان المؤقت الاخير>"
+
+msgid "<unknown>"
+msgstr "<غير معروف>"
+
+msgid "??"
+msgstr "؟؟"
+
+msgid "A"
+msgstr "أ"
+
+msgid ""
+"A configuration file (%s) was modified since Installation.\n"
+"Do you want to keep your version?"
+msgstr ""
+"تم تعديل ملف التكوين (%s) منذ التثبيت\n"
+"هل تريد الاحتفاظ بإصدارك ؟"
+
+msgid ""
+"A recording is currently running.\n"
+"What do you want to do?"
+msgstr ""
+"هناك تسجيل جارى الان \n"
+"ماذا تريد أن تفعل ؟"
+
+msgid ""
+"A recording is currently running. Please stop the recording before trying to "
+"configure the positioner."
+msgstr "هناك تسجيل جارى حاليا . من فضلك أوقف التسجيل قبل محاولة ضبط الموتور."
+
+msgid "A required tool (%s) was not found."
+msgstr "لم يتم العثور على الاداه المطلوبه (%s)"
+
+msgid "A search for available updates is currently in progress."
+msgstr "يتم حاليا البحث عن التحديثات المتاحه"
+
+msgid ""
+"A second configured interface has been found.\n"
+"\n"
+"Do you want to disable the second network interface?"
+msgstr ""
+"تم العثور على واجهه ثانيه جاهزة الاعدادات\n"
+"\n"
+"هل تريد تعطيل واجهه الشبكه الثانيه ؟"
+
+msgid ""
+"A timer failed to record!\n"
+"Disable TV and try again?\n"
+msgstr ""
+"فشل عمليه التسجيل بالمؤقت\n"
+"قم بتعطيل التليفزيون وحاول مره ثانيه؟\n"
+
+msgid "Abort"
+msgstr "الغاء"
+
+msgid "About"
+msgstr "عن"
+
+msgid "About..."
+msgstr "عـن..."
+
+msgid "Accesspoint:"
+msgstr "نقطة وصول"
+
+msgid "Activate Picture in Picture"
+msgstr "صوره داخل صوره نشط"
+
+msgid "Activate network settings"
+msgstr "تفعيل إعدادات الشبكه"
+
+msgid "Active"
+msgstr "نشط"
+
+msgid "Adapter settings"
+msgstr "إعدادات المحول"
+
+msgid "Add"
+msgstr "أضف"
+
+msgid "Add a mark"
+msgstr "أضف علامه"
+
+msgid "Add a new title"
+msgstr "إضافة عنوان جديد"
+
+msgid "Add timer"
+msgstr "أضف مؤقت"
+
+msgid "Add title"
+msgstr "إضافة عنوان"
+
+msgid "Add to bouquet"
+msgstr "إضافه الى الباقه"
+
+msgid "Add to favourites"
+msgstr "إضافه الى المفضله"
+
+msgid ""
+"Adjust the color settings so that all the color shades are distinguishable, "
+"but appear as saturated as possible. If you are happy with the result, press "
+"OK to close the video fine-tuning, or use the number keys to select other "
+"test screens."
+msgstr ""
+"أضبط إعدادات الالوان بحيث يمكن تمييز أطياف اللون، لكن تبدو مشبعه قدر "
+"الامكان. إذا كانت النتيجه مرضيه أضغط موافقلاغلاق النافذه ، أو استخدم مفاتيح "
+"الارقام لاختيار شاشات اختبار أخرى"
+
+msgid "Advanced restore"
+msgstr "إستعاده متقدمه"
+
+msgid "After event"
+msgstr "بعد الحدث"
+
+msgid "Album"
+msgstr "البوم"
+
+msgid "All"
+msgstr "الكل"
+
+msgid "Alpha"
+msgstr "الفا"
+
+msgid "Alternative services tuner priority"
+msgstr "أولوية الموالف للقنوات البديله"
+
+msgid "An empty filename is illegal."
+msgstr "غير مسموح بملف بدون اسم"
+
+msgid "Arabic"
+msgstr "عـربى"
+
+msgid ""
+"Are you sure you want to activate this network configuration?\n"
+"\n"
+msgstr ""
+"هل أنت متاكد أنك تريد تنشيط تكوينات الشبكه؟\n"
+"\n"
+
+msgid "Are you sure you want to exit this wizard?"
+msgstr "هل أنت متأكد أنك تريد الخروج من هذه النافذه ؟"
+
+msgid ""
+"Are you sure you want to restart your network interfaces?\n"
+"\n"
+msgstr ""
+"هل أنت كتأكد أنك تريد إعادة تشغيل واجهة الشبكه ؟\n"
+"\n"
+
+msgid "Artist"
+msgstr "الفنان"
+
+msgid "Ask user"
+msgstr "أسال المستخدم"
+
+msgid "Author: "
+msgstr "المؤلف:"
+
+msgid "Auto"
+msgstr "آلـى"
+
+msgid "Auto scart switching"
+msgstr "التحول الآلى الى السكارت"
+
+msgid "Automatic"
+msgstr "آلى"
+
+msgid "Automatic Scan"
+msgstr "بحث آلـى"
+
+msgid "Available format variables"
+msgstr "متغيرات النسق المتاحه"
+
+msgid "B"
+msgstr "ب"
+
+msgid "Back"
+msgstr "خلف"
+
+msgid "Background"
+msgstr "خلفيه"
+
+msgid "Backup failed."
+msgstr "فشل عمل نسخه إحتياطيه "
+
+msgid "Backup is running..."
+msgstr "جارى عمل نسخه إحتياطيه ........"
+
+msgid "Band"
+msgstr "نطاق"
+
+msgid "Bandwidth"
+msgstr "عرض النطاق"
+
+msgid "Begin time"
+msgstr "وقت البدأ"
+
+msgid "Behavior of 0 key in PiP-mode"
+msgstr "سلوك الذر 0 فى وضعية صوره داخل صوره"
+
+msgid "Behavior when a movie is started"
+msgstr "التصرف عندما يبدأ الفيلم"
+
+msgid "Behavior when a movie is stopped"
+msgstr "التصرف عند إيقاف الفيلم"
+
+msgid "Behavior when a movie reaches the end"
+msgstr "التصرف عندما يصل الفيلم للنهايه"
+
+msgid "Block noise reduction"
+msgstr "منع الحد من الضوضاء"
+
+msgid "Bookmarks"
+msgstr "الاشارات المرجعيه"
+
+msgid "Brightness"
+msgstr "الإضاءه"
+
+msgid "Burn DVD"
+msgstr "حرق دى فى دى"
+
+msgid "Bus: "
+msgstr "الناقل"
+
+msgid "C-Band"
+msgstr "سي باند"
+
+msgid "Cable"
+msgstr "كابل"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Capacity: "
+msgstr "السعه:"
+
+msgid "Change pin code"
+msgstr "تغيير الرقم السرى"
+
+msgid "Change step size"
+msgstr "تغيير مقاس الخطوه"
+
+msgid "Channel"
+msgstr "قناه"
+
+msgid "Channel not in services list"
+msgstr "قناه غير موجوده فى قائمة الخدمات"
+
+msgid "Channel:"
+msgstr "قناه:"
+
+msgid "Chap."
+msgstr "فصل"
+
+msgid "Chapter"
+msgstr "فصل"
+
+msgid "Chapter:"
+msgstr "فصل:"
+
+msgid "Check"
+msgstr "فحص"
+
+msgid "Circular left"
+msgstr "يسار دائرى"
+
+msgid "Circular right"
+msgstr "يمين دائرى"
+
+msgid "Cleanup"
+msgstr "تنظيف"
+
+msgid "Clear before scan"
+msgstr "مسح قبل البحث"
+
+msgid "Clear log"
+msgstr "مسح السجل"
+
+msgid "Close"
+msgstr "أغلاق"
+
+msgid "Close title selection"
+msgstr "إغلاق إختيار العنوان"
+
+msgid "Collection name"
+msgstr "اسم المجموعه"
+
+msgid "Collection settings"
+msgstr "إعدادات المجموعه"
+
+msgid "Command order"
+msgstr "ترتيب الأوامر"
+
+msgid "Common Interface"
+msgstr "وحده النفاذ المشروط"
+
+msgid "Common Interface Assignment"
+msgstr "تحديد وحدة النفاذ المشروط"
+
+msgid "Communication"
+msgstr "اتصال"
+
+msgid "Complete"
+msgstr "مكتمل"
+
+msgid "Complex (allows mixing audio tracks and aspects)"
+msgstr "مركب (يسمح بمزج مسارات صوت ومظاهر)"
+
+msgid "Configure interface"
+msgstr "تكوين الواجهه"
+
+msgid "Configure nameservers"
+msgstr "تكوين اسم الخادم"
+
+msgid "Configure your internal LAN"
+msgstr "تكوين شبكتك الداخليه"
+
+msgid "Configure your network again"
+msgstr "تكوين الشبكه مره ثانيه"
+
+msgid "Configure your wireless LAN again"
+msgstr "تكوين شبكتك اللاسلكيه"
+
+msgid "Configuring"
+msgstr "تكوين"
+
+msgid "Conflicting timer"
+msgstr "مؤقت متعارض"
+
+msgid "Connect"
+msgstr "يتصل"
+
+msgid "Connected to"
+msgstr "متصل بـ"
+
+msgid "Constellation"
+msgstr "كوكبه"
+
+msgid "Content does not fit on DVD!"
+msgstr "المحتوى لا يناسب دى فى دى !"
+
+msgid "Continue playing"
+msgstr "استمرار العرض"
+
+msgid "Contrast"
+msgstr "تباين"
+
+msgid "Could not open Picture in Picture"
+msgstr "لا يمكن فتح صوره داخل صوره"
+
+msgid "Create DVD-ISO"
+msgstr "تكوين دى فى دى إيزو"
+
+msgid "Creating directory %s failed."
+msgstr "فشل إنشاء دليل %s"
+
+msgid "Croatian"
+msgstr "كرواتى"
+
+msgid "Current settings:"
+msgstr "الاعدادات الحاليه:"
+
+msgid "Current value: "
+msgstr "القيمه الحاليه:"
+
+msgid "Current version:"
+msgstr "الاصدار الحالى:"
+
+msgid "Customize"
+msgstr "تخصيص"
+
+msgid "Cut"
+msgstr "قطع"
+
+msgid "Cutlist editor..."
+msgstr "محرر قائمة القطع..."
+
+msgid "Czech"
+msgstr "التشيك"
+
+msgid "DHCP"
+msgstr "DHCP"
+
+msgid "DUAL LAYER DVD"
+msgstr "دى فى بى ثنائى الطبقه"
+
+msgid "DVB-S"
+msgstr "DVB-S"
+
+msgid "DVB-S2"
+msgstr "DVB-S2"
+
+msgid "Danish"
+msgstr "دنماركى"
+
+msgid "Date"
+msgstr "تاريخ"
+
+msgid "Deep Standby"
+msgstr "وضع الاستعداد العميق"
+
+msgid "Default"
+msgstr "الافتراضى"
+
+msgid "Default movie location"
+msgstr "المكان الافتراضى للفيلم"
+
+msgid "Delete"
+msgstr "أمسح"
+
+msgid "Delete entry"
+msgstr "مسح البند"
+
+msgid "Delete failed!"
+msgstr "فشل المسح"
+
+msgid "Description"
+msgstr "الوصـف"
+
+msgid "Deselect"
+msgstr "إلغاء الاختيار"
+
+msgid "Detected NIMs:"
+msgstr "موجود موالف:"
+
+msgid "DiSEqC"
+msgstr "دايزك"
+
+msgid "DiSEqC A/B"
+msgstr "دايزك أ/ب"
+
+msgid "DiSEqC A/B/C/D"
+msgstr "دايزك أ/ب/ج/د"
+
+msgid "DiSEqC mode"
+msgstr "وضعيـه الدايزك"
+
+msgid "Digital contour removal"
+msgstr "حذف الكفاف الرقمى"
+
+msgid "Direct playback of linked titles without menu"
+msgstr "عرض مباشر لعناوين مربوطه بدون قائمه"
+
+msgid "Directory browser"
+msgstr "متصفح الدليل"
+
+msgid "Disable"
+msgstr "تعطيل"
+
+msgid "Disable Picture in Picture"
+msgstr "تعطيل صوره داخل صوره"
+
+msgid "Disabled"
+msgstr "تم التعطيل"
+
+msgid "Display 16:9 content as"
+msgstr "عرض محتويات 16:9 كـ"
+
+msgid "Display 4:3 content as"
+msgstr "عرض محتويات 4:3 كـ"
+
+msgid ""
+"Do you really want to check the filesystem?\n"
+"This could take a long time!"
+msgstr ""
+"هل تريد فعلا فحص ملفات النظام؟\n"
+"قد يستغرق ذلك بعض الوقت !"
+
+msgid "Do you really want to delete %s?"
+msgstr "هل تريد فعلا مسح %s ؟"
+
+msgid "Do you really want to download the plugin \"%s\"?"
+msgstr "هل تريد فعلا تحميل البلج إن \"%s\" ؟"
+
+msgid "Do you really want to exit?"
+msgstr "هل تريد فعلا الخروج ؟"
+
+msgid "Do you really want to remove directory %s from the disk?"
+msgstr "هل تريد فعلا حذف الدليل %s من القرص؟"
+
+msgid "Do you really want to remove the plugin \"%s\"?"
+msgstr "هل تريد فعلا مسح البلج إن \"%s\" ؟"
+
+msgid "Do you really want to remove your bookmark of %s?"
+msgstr "هل تريد فعلا حذف مرجعية %s ؟"
+
+msgid "Do you want to burn this collection to DVD medium?"
+msgstr "هل تريد حرق هذه المجموعه فى وسيط دى فى دى ؟"
+
+msgid "Do you want to do a service scan?"
+msgstr "هل تريد عمل بحث"
+
+msgid "Do you want to do another manual service scan?"
+msgstr "هل تريد عمل بحث يدوى جديد ؟"
+
+msgid "Do you want to install the package:\n"
+msgstr "هل تريد فعلا تثبيت الرزمه:\n"
+
+msgid "Do you want to play DVD in drive?"
+msgstr "هل تريد تشغيل الدى فى دى الموجود فى السواقه"
+
+msgid "Do you want to preview this DVD before burning?"
+msgstr "هل تريد معاينة هذا الدى فى دى قبل الحرق؟"
+
+msgid "Do you want to remove the package:\n"
+msgstr "هل تريد فعلا حذف الرزمه:\n"
+
+msgid "Do you want to restore your settings?"
+msgstr "هل تريد إستعادة الاعدادات ؟"
+
+msgid "Do you want to resume this playback?"
+msgstr "هل تريد إستئناف هذا العرض؟"
+
+msgid "Do you want to upgrade the package:\n"
+msgstr "هل تريد ترقية الحزمه \n"
+
+msgid "Don't stop current event but disable coming events"
+msgstr "لا توقف الحدث الحالى لكن قم بتعطيل الاحداث القادمه"
+
+msgid "Download"
+msgstr "تحميل"
+
+msgid "Downloading"
+msgstr "جارى التحميل"
+
+msgid "Downloading plugin information. Please wait..."
+msgstr "جارى تحميل معلومات عن البلج إن. رجاء الانتظار.."
+
+msgid "Dutch"
+msgstr "هولندى"
+
+msgid "Dynamic contrast"
+msgstr "تباين ديناميكى"
+
+msgid "ERROR - failed to scan (%s)!"
+msgstr "خطأ - فشل البحث (%s)!"
+
+msgid "East"
+msgstr "شرق"
+
+msgid "Edit"
+msgstr "تحرير"
+
+msgid "Edit chapters of current title"
+msgstr "تحرير الفصول والعنوان الحالى"
+
+msgid "Edit settings"
+msgstr "تحرير الاعدادات"
+
+msgid "Edit title"
+msgstr "تحرير العنوان"
+
+msgid "Edit upgrade source url."
+msgstr "تحرير عنوان مصدر الترقيه"
+
+msgid "Electronic Program Guide"
+msgstr "دليل البرنامج الالكترونى"
+
+msgid "Enable"
+msgstr "تفعيل"
+
+msgid "Enable 5V for active antenna"
+msgstr "تفعيل 5ف للهوائى النشط"
+
+msgid "Enable multiple bouquets"
+msgstr "تفعيل باقات متعدده"
+
+msgid "Enabled"
+msgstr "تم التفعيل"
+
+msgid "Encrypted: "
+msgstr "مشفر"
+
+msgid "Encryption"
+msgstr "التشفير"
+
+msgid "Encryption:"
+msgstr "التشفير:"
+
+msgid "End time"
+msgstr "وقت النهايه"
+
+msgid "English"
+msgstr "إنجليزى"
+
+msgid "Enter main menu..."
+msgstr "دخول القائمه الرئيسيه"
+
+msgid "Enter pin code"
+msgstr "أدخل الرقم السرى:"
+
+msgid "Enter the service pin"
+msgstr "أدخل الرقم السرى للخدمه"
+
+msgid "Error"
+msgstr "خطأ"
+
+msgid "Error executing plugin"
+msgstr "خطأ فى تنفيذ البلج إن"
+
+msgid ""
+"Error: %s\n"
+"Retry?"
+msgstr ""
+"خطأ: %s\n"
+"إعادة المحاوله ؟"
+
+msgid "Estonian"
+msgstr "أستونى"
+
+msgid "Exceeds dual layer medium!"
+msgstr "تتعدى وسيط طبقه مزدوجه !"
+
+msgid "Execution finished!!"
+msgstr "إنهاء التنفيذ !!"
+
+msgid "Exif"
+msgstr "كسيف"
+
+msgid "Exit"
+msgstr "خروج"
+
+msgid "Exit editor"
+msgstr "خروج من المحرر"
+
+msgid "Exit network wizard"
+msgstr "خروج من نافذة إعدادات الشبكه"
+
+msgid "Exit the wizard"
+msgstr "خروج من نافذة الاعدادات"
+
+msgid "Expert"
+msgstr "خبير"
+
+msgid "Extended Networksetup Plugin..."
+msgstr "بلج إن إعدادات الشبكه المتقدمه"
+
+msgid "Extended Setup..."
+msgstr "إعدادات متقدمه"
+
+msgid "Extended Software"
+msgstr "برنامج تشغيلى متقدم"
+
+msgid "Extended Software Plugin"
+msgstr "بلج إن البرنامج التشغيلى الممتد"
+
+msgid "Extensions"
+msgstr "إضافات"
+
+msgid "Extensions management"
+msgstr "التحكم فى الاضافات"
+
+msgid "FEC"
+msgstr "FEC"
+
+msgid "Factory reset"
+msgstr "العوده الى إعدادات المصنع"
+
+msgid "Failed"
+msgstr "فشل"
+
+msgid "Fan %d"
+msgstr "مروحه %d"
+
+msgid "Fast"
+msgstr "سريع"
+
+msgid "Fast DiSEqC"
+msgstr "دايزك سريع"
+
+msgid "Favourites"
+msgstr "المفضله"
+
+msgid "Filesystem Check"
+msgstr "فحص نظام الملفات"
+
+msgid "Finetune"
+msgstr "الضبط الدقيق"
+
+msgid "Finished"
+msgstr "تم الانتهاء"
+
+msgid "Finished configuring your network"
+msgstr "تم الانتهاء من تكوين شبكتك"
+
+msgid "Finished restarting your network"
+msgstr "تم النتهاء من إعادة تشغيل الشبكه"
+
+msgid "Finnish"
+msgstr "إنتهاء"
+
+msgid "Flash"
+msgstr "شحن"
+
+msgid "Flashing failed"
+msgstr "فشل الشحن"
+
+msgid "Following tasks will be done after you press OK!"
+msgstr "سيتم تنفيذ الاعمال الاتيه بعد أن تضغط على موافق !"
+
+msgid "Format"
+msgstr "نسق"
+
+msgid "French"
+msgstr "فرنسى"
+
+msgid "Frequency"
+msgstr "التردد"
+
+msgid "Frequency bands"
+msgstr "نطاقات التردد"
+
+msgid "Frequency steps"
+msgstr "خطوات التردد"
+
+msgid "Fri"
+msgstr "الجمعه"
+
+msgid "Friday"
+msgstr "الجمعه"
+
+msgid "German"
+msgstr "المانـى"
+
+msgid "Getting plugin information. Please wait..."
+msgstr "جارى الحصول على معلومات عن البلج إن. رجاء الانتظار..."
+
+msgid "Goto 0"
+msgstr "الذهاب الى 0"
+
+msgid "Goto position"
+msgstr "الذهل للموضع"
+
+msgid "Greek"
+msgstr "اليونان"
+
+msgid "High bitrate support"
+msgstr "دعم معدل البث العالى"
+
+msgid "Horizontal"
+msgstr "أفقـى"
+
+msgid "How many minutes do you want to record?"
+msgstr "كم دقيقه تريد أن تسجل ؟"
+
+msgid "Hue"
+msgstr "درجة لون"
+
+msgid "Hungarian"
+msgstr "مجرى"
+
+msgid "ISO file is too large for this filesystem!"
+msgstr "ملف الايزو كبير جدا على ملفات النظام !"
+
+msgid "ISO path"
+msgstr "مسار أيزو"
+
+msgid ""
+"If you see this, something is wrong with\n"
+"your scart connection. Press OK to return."
+msgstr ""
+"إذا كنت تشاهد هذا، فهناك شيئ خطا فى \n"
+"وصلة السكارت . أضغط موافق للعوده"
+
+msgid ""
+"If your TV has a brightness or contrast enhancement, disable it. If there is "
+"something called \"dynamic\", set it to standard. Adjust the backlight level "
+"to a value suiting your taste. Turn down contrast on your TV as much as "
+"possible.\n"
+"Then turn the brightness setting as low as possible, but make sure that the "
+"two lowermost shades of gray stay distinguishable.\n"
+"Do not care about the bright shades now. They will be set up in the next "
+"step.\n"
+"If you are happy with the result, press OK."
+msgstr ""
+"إذا كان التليفزيون به خاصية الاضاءه أو تعزيز التباين ، قم بتعطيلها . إذا كان "
+"هناك شيئ أسمه \"ديناميكى\" قم بضبطه الى الوضع القياسى . أضبط الاضاءه الخلفيه "
+"الى قيمه تناسب ذوقك . أخفض التباين فى التليفزيون الى أقل مستوى ممكن \n"
+"بعد ذلك أخفض مستوى الاضاء الى أقل مستوى ممكن ، لكن ـاكد من وجود ظللين "
+"رماديين يمكن بقائهما فى حالة تمييز \n"
+"لا تهتم بظلال الاضاءه الان . سيتم عمل الاعادادت لها فى الخطوه القادمه \n"
+"إذا كنت تتقبل النتيجه ، أضغط موافق"
+
+msgid "Increased voltage"
+msgstr "فولت زائد"
+
+msgid "Info"
+msgstr "معلومات"
+
+msgid "Information"
+msgstr "معلومات"
+
+msgid "Initialization"
+msgstr "تهيئه"
+
+msgid "Initialize"
+msgstr "تفعيل البدأ"
+
+msgid "Input"
+msgstr "مدخل"
+
+msgid "Install"
+msgstr "تثبيت"
+
+msgid "Install a new image with your web browser"
+msgstr "تثبيت صوره جديد بواسطه متصفح الشبكه"
+
+msgid "Install extensions."
+msgstr "تثبيت إضافات"
+
+msgid "Install local extension"
+msgstr "تثبيت إضافات محليه"
+
+msgid "Install or remove finished."
+msgstr "إنتهاء التثبيت أو الحذف"
+
+msgid "Installation finished."
+msgstr "إنتهاء التثبيت."
+
+msgid "Installing"
+msgstr "جارى التثبيت"
+
+msgid "Instant record location"
+msgstr "مكان التسجيل السريع"
+
+msgid "Interface: "
+msgstr "واجهه"
+
+msgid "Intermediate"
+msgstr "متوسط"
+
+msgid "Invalid directory selected: %s"
+msgstr "تم إختياردليل غير صالح %s"
+
+msgid "Inversion"
+msgstr "عكـس"
+
+msgid "Invert"
+msgstr "مقلوب"
+
+msgid "Italian"
+msgstr "إيطالى"
+
+msgid "Keyboard"
+msgstr "لوحة مفاتيح"
+
+msgid "LAN connection"
+msgstr "أتصال شبكه محليه"
+
+msgid "Language"
+msgstr "اللغـه "
+
+msgid "Language selection"
+msgstr "إختيار اللغـه"
+
+msgid "Last config"
+msgstr "التهيئه السابقه"
+
+msgid "Last speed"
+msgstr "السرعه السابقه"
+
+msgid "Latitude"
+msgstr "خط العرض"
+
+msgid "Left"
+msgstr "يسار"
+
+msgid "Limit east"
+msgstr "الحد الشرقى"
+
+msgid "Limit west"
+msgstr "الحد الغربى"
+
+msgid "Lithuanian"
+msgstr "ليتوانى"
+
+msgid "Load"
+msgstr "تحميل"
+
+msgid "Location"
+msgstr "مكان"
+
+msgid "Longitude"
+msgstr "خط الطول"
+
+msgid "Main menu"
+msgstr "القائـمه الرئيسيـه"
+
+msgid "Mainmenu"
+msgstr "القائمه الاساسيه"
+
+msgid "Make this mark an 'out' point"
+msgstr "أجعل هذه العلامه نقطة خروج"
+
+msgid "Make this mark just a mark"
+msgstr "أجعل هذه العلامه مجرد علامه"
+
+msgid "Manage extensions"
+msgstr "التحكم فى الاضافات"
+
+msgid "Manual Scan"
+msgstr "بحـث يدوى"
+
+msgid "Manual transponder"
+msgstr "تردد يدوى"
+
+msgid "Manufacturer"
+msgstr "الصانع"
+
+msgid "Media player"
+msgstr "مشغل الوسائط"
+
+msgid "Medium is not empty!"
+msgstr "الوسيط غير فارغ"
+
+msgid "Menu"
+msgstr "قائمه"
+
+msgid "Model: "
+msgstr "موديل :"
+
+msgid "Modulation"
+msgstr "تعديل"
+
+msgid "Mon"
+msgstr "الاثنين"
+
+msgid "Mon-Fri"
+msgstr "الاثنين - الجمعه"
+
+msgid "Monday"
+msgstr "الاثنين"
+
+msgid "Move east"
+msgstr "تحرك شرقا"
+
+msgid "Move west"
+msgstr "تحرك للغرب"
+
+msgid "Movie location"
+msgstr "مكان الفيلم"
+
+msgid "Multi EPG"
+msgstr "دليل برامج متعدد"
+
+msgid "Multimedia"
+msgstr "وسائط متعدده"
+
+msgid "Multiple service support"
+msgstr "دعم خدمات متعدده"
+
+msgid "Multisat"
+msgstr "عدة أقمار"
+
+msgid "N/A"
+msgstr "غير موجود"
+
+msgid "NFI image flashing completed. Press Yellow to Reboot!"
+msgstr ""
+"تم النتهاء من شحن صوره NFI، رجاء الضغط على الذر الاصفر لاعادة التشغيل !"
+
+msgid "NTSC"
+msgstr "NTSC"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "Nameserver"
+msgstr "اسم الخادم"
+
+msgid "Nameserver %d"
+msgstr "اسم الخادم %d"
+
+msgid "Nameserver settings"
+msgstr "إعدادات اسم الخادم"
+
+msgid "Netmask"
+msgstr "قناع الشبكه"
+
+msgid "Network"
+msgstr "الشبكه"
+
+msgid "Network Setup"
+msgstr "ضبط الشبـكة"
+
+msgid "Network scan"
+msgstr "بحث عن الشبكه"
+
+msgid "Network setup"
+msgstr "ضبط الشبكه"
+
+msgid "Network test"
+msgstr "أختبار الشبكه"
+
+msgid "Network test: "
+msgstr "إختبار الشبكه:"
+
+msgid "Network:"
+msgstr "الشبكه:"
+
+msgid "New"
+msgstr "جديد"
+
+msgid "New version:"
+msgstr "إصدار جديد:"
+
+msgid "No"
+msgstr "لا"
+
+msgid "No Connection"
+msgstr "لا يوجد إتصال"
+
+msgid "No HDD found or HDD not initialized!"
+msgstr ""
+"لا يوجد قرص صلب\n"
+"أو ان القرص الصلب لم يبدأ"
+
+msgid "No backup needed"
+msgstr "لا حاجه الى نسخه إحتياطيه "
+
+msgid "No description available."
+msgstr "لا يوجد وصف"
+
+msgid "No details for this image file"
+msgstr "لا يوجد تفاصيل لملف الصوره هذا"
+
+msgid "No displayable files on this medium found!"
+msgstr "لا يوجد ملفات للعرض على هذا الوسيط !"
+
+msgid "No free tuner!"
+msgstr "لا يوجد موالف حر !"
+
+msgid "No network connection available."
+msgstr "لا يوجد اتصال متاح بشبكه"
+
+msgid "No networks found"
+msgstr "لم يتم العثور على شبكه"
+
+msgid "No to all"
+msgstr "لا للجميع"
+
+msgid "No tuner is configured for use with a diseqc positioner!"
+msgstr "لم يتم العثور على موالف مهيأ للعمل مع موتور دايزك !"
+
+msgid ""
+"No tuner is enabled!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"لا يوجد موالف مفعل \n"
+"من فضلك أضبط إعدادات الموالف قبل البحث عن القنوات ."
+
+msgid ""
+"No working local network adapter found.\n"
+"Please verify that you have attached a network cable and your network is "
+"configured correctly."
+msgstr ""
+"لا يوجد محول شبكه \n"
+"من فضلك تأكد من توصيل كابل الشبكه وأن إعدادات الشبكه تمت بشكل صحيح"
+
+msgid ""
+"No working wireless network adapter found.\n"
+"Please verify that you have attached a compatible WLAN device and your "
+"network is configured correctly."
+msgstr ""
+"لم يتم العثور على محول شبكه لاسلكى. \n"
+"رجاء التأكد من توصيل محول شبكه مناسب وأن ضبط الشبكه قد تم بشكل صحي"
+
+msgid ""
+"No working wireless network interface found.\n"
+" Please verify that you have attached a compatible WLAN device or enable "
+"your local network interface."
+msgstr ""
+"لم يتم العثور على واحهة شبكه عامله.\n"
+"رجاء التأكد من توصيل محول شبكه مناسب أو قم بتشغيل واحهة الشبكه المحليه."
+
+msgid "No, but restart from begin"
+msgstr "لا، لكن أعد التشغيل من البدايه"
+
+msgid "No, do nothing."
+msgstr "لا ، لا تفعل شيئ"
+
+msgid "No, just start my %s %s"
+msgstr "لا ، فقط قم بتشغيل الدريم بوكس"
+
+msgid "No, scan later manually"
+msgstr "لا، بحث يدوى بعد ذلك"
+
+msgid "None"
+msgstr "لاشيئ"
+
+msgid "North"
+msgstr "شمال"
+
+msgid "Norwegian"
+msgstr "نرويجى"
+
+msgid ""
+"Nothing to scan!\n"
+"Please setup your tuner settings before you start a service scan."
+msgstr ""
+"لا يوجد شيئ للبحث ! \n"
+"من فضلك قم بضبط الموالف قبل بدأ البحث"
+
+msgid ""
+"Now, use the contrast setting to turn up the brightness of the background as "
+"much as possible, but make sure that you can still see the difference "
+"between the two brightest levels of shades.If you have done that, press OK."
+msgstr ""
+"الان، استخدم إعدادات التباين لزيادة درجه إضاءه الخلفيه الى أعلى قيمه ممكنه ، "
+"لكن كن متأكدا انك لازلت تستطيع ان ترى الفرق بين مستويين من الاضاءه فى الظل . "
+"إذا انتهيت من ذلك ، أضغط موافق."
+
+msgid "OK"
+msgstr "موافق"
+
+msgid "OK, guide me through the upgrade process"
+msgstr "موافق، أرشدنى أثناء عملية الترقيه"
+
+msgid "Off"
+msgstr "لا يعمل"
+
+msgid "On"
+msgstr "يعمل"
+
+msgid "One"
+msgstr "واحد"
+
+msgid "Only extensions."
+msgstr "إضافات فقط"
+
+msgid "PAL"
+msgstr "بال"
+
+msgid "PIDs"
+msgstr "PIDs"
+
+msgid "Package list update"
+msgstr "تحديث قائمة الباقات"
+
+msgid "Packet management"
+msgstr "التحكم فى الحزم"
+
+msgid "Packet manager"
+msgstr "المتحكم فى الحزم"
+
+msgid "Parental control"
+msgstr "التحكم الابوى"
+
+msgid "Parental control setup"
+msgstr "اعداد التحكم الابوى"
+
+msgid "Password"
+msgstr "كلمة المرور"
+
+msgid "Pause movie at end"
+msgstr "إيقاف الفيلم عند النهايه"
+
+msgid "Pillarbox"
+msgstr "عمود مربع"
+
+msgid "Play"
+msgstr "تشغيل"
+
+msgid "Play Audio-CD..."
+msgstr "تشغيل سى دى صوت"
+
+msgid "Play DVD"
+msgstr "تشغيل دى فى دى"
+
+msgid "Play Music..."
+msgstr "تشغيل موسيقى"
+
+msgid "Play recorded movies..."
+msgstr "عرض الافلام المسجله"
+
+msgid "Please add titles to the compilation."
+msgstr "من فضلك أدخل عناوين للتأليف"
+
+msgid "Please change recording endtime"
+msgstr "من فضلك قم بتغيير وقت إنتهاء التسجيل"
+
+msgid "Please check your network settings!"
+msgstr "من فضلك أفحص إعدادات الشبكه!"
+
+msgid "Please choose an extension..."
+msgstr "من فضلك أختار إضافه..."
+
+msgid ""
+"Please configure or verify your Nameservers by filling out the required "
+"values.\n"
+"When you are ready press OK to continue."
+msgstr ""
+"من فضلك فم بتكوين أو تأكد من اسم الخادم بوضع القيم المطلوبه.\n"
+"عندما تكون مستعد أضغط موافق للاستمرار."
+
+msgid ""
+"Please configure your internet connection by filling out the required "
+"values.\n"
+"When you are ready press OK to continue."
+msgstr ""
+"من فضلك قم بتكوين التصال بالنترنت بملأ القيم المطلوبه \n"
+"عندما تكون مستعد أضغط موافق للاستمرار"
+
+msgid "Please do not change any values unless you know what you are doing!"
+msgstr "من فضلك لا تغير أى قيمه ألا إذا كنت متأكد مما تفعل !"
+
+msgid "Please enter a name for the new bouquet"
+msgstr "من فضلك أدخل أسم الباقه الجديده"
+
+msgid "Please enter a name for the new marker"
+msgstr "من فضلك أدخل أسم للعلامه الجديده"
+
+msgid "Please enter a new filename"
+msgstr "من فضلك أدخل اسم جديد للملف"
+
+msgid "Please enter filename (empty = use current date)"
+msgstr "من فضلك أدخل اسم ملف (فارغ= استخدم التارخ الحالى)"
+
+msgid "Please enter name of the new directory"
+msgstr "من فضلك أدخل أسم الدليل الجديد"
+
+msgid "Please enter the correct pin code"
+msgstr "من فضلك أدخل الرقم السرى الصحيح"
+
+msgid "Please follow the instructions on the TV"
+msgstr "من فضلك اتبع التعليمات على التليفزيون"
+
+msgid ""
+"Please note that the previously selected media could not be accessed and "
+"therefore the default directory is being used instead."
+msgstr ""
+"من فضلك أعلم ان الوسيط المختار لا يمكن الدخول اليه ، ولهذا سيتم استخدام "
+"الدليل الافتراضى بدلا منه ."
+
+msgid "Please press OK to continue."
+msgstr "من فضلك أضغط موافق للاستمرار"
+
+msgid "Please select a playlist to delete..."
+msgstr "أختار قائمة العرض المراد مسحها..."
+
+msgid "Please select a playlist..."
+msgstr "من فضلك أختار قائمة العرض..."
+
+msgid "Please select a subservice to record..."
+msgstr "من فضلك أختار الخدمه الفرعيه المطلوب تسجيلها..."
+
+msgid "Please select a subservice..."
+msgstr "من فضلك أختار الخدمه الفرعيه"
+
+msgid "Please select medium to use as backup location"
+msgstr "من فضلك أختار الوسيط الذى سييستخدم كمكان للنسخه الإحتياطيه "
+
+msgid "Please select the movie path..."
+msgstr "من فضلك أختار مسار الفيلم..."
+
+msgid ""
+"Please select the network interface that you want to use for your internet "
+"connection.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+"من فضلك أختار واجهة الشبكه التى تريد استخدامها فى الاتصال بالانترنت.\n"
+"\n"
+"أضغط موافق للاستمرار."
+
+msgid ""
+"Please select the wireless network that you want to connect to.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+"من فضلك أختار الشبكه اللاسلكيه التى تريد الاتصال بها \n"
+"\n"
+"أضغط موافق للاستمرار"
+
+msgid "Please set up tuner B"
+msgstr "من فضلك أضبط الموالف B"
+
+msgid "Please set up tuner C"
+msgstr "من فضلك أضبط الموالف C"
+
+msgid "Please set up tuner D"
+msgstr "من فضلك أضبط الموالف D"
+
+msgid ""
+"Please use direction keys to move the PiP window.\n"
+"Press Bouquet +/- to resize the window.\n"
+"Press OK to go back to the TV mode or EXIT to cancel the moving."
+msgstr ""
+"من فضلك استخدم أذرار الاسهم لتحريك نافذه صوره داخل صوره \n"
+"أضغط ذر الباقات +/- لتغير مقاس النافذه \n"
+"أضغط موافق للعوده لوضع التليفزيون أو خروج لألغاء التحريك"
+
+msgid ""
+"Please use the UP and DOWN keys to select your language. Afterwards press "
+"the OK button."
+msgstr ""
+"من فضلك أستخدم ذر السهم العلوى أو السفلى لإختيار اللغه. ثم أضغط موافق ."
+
+msgid "Please wait for activation of your network configuration..."
+msgstr "رجاء الانتظار حتى يتم تنشيط تكوينات الشبكه"
+
+msgid "Please wait while scanning is in progress..."
+msgstr "رجاء الانتظار حيث جارى البحث..."
+
+msgid "Please wait while we configure your network..."
+msgstr "رجاء الانتظار..... جارى تهيئة الشبكه"
+
+msgid "Please wait while we prepare your network interfaces..."
+msgstr "رجاء الانتظار.... جارى تحضير واجهات الشبكه"
+
+msgid "Please wait while we test your network..."
+msgstr "رجاء الانتظار.... جارى إختبار الشبكه"
+
+msgid "Please wait while your network is restarting..."
+msgstr "رجاء الانتظار.... جارى إعادة تشغيل الشبكه"
+
+msgid "Please wait..."
+msgstr "رجاء الانتظار...."
+
+msgid "Please wait... Loading list..."
+msgstr "انتظر من فضلك ...يتم تحميل القائمه..."
+
+msgid "Plugin manager activity information"
+msgstr "معلومات نشاط متحكم البلج إن"
+
+msgid "Plugin manager help"
+msgstr "مساعده متحكم البلج إن"
+
+msgid "Plugins"
+msgstr "بلج إنز"
+
+msgid "Polarization"
+msgstr "الاستقطاب"
+
+msgid "Polish"
+msgstr "بولندى"
+
+msgid "Port A"
+msgstr "مدخل أ"
+
+msgid "Port B"
+msgstr "مدخل ب"
+
+msgid "Port C"
+msgstr "مدخل ج"
+
+msgid "Port D"
+msgstr "مدخل د"
+
+msgid "Portuguese"
+msgstr "برتغالى"
+
+msgid "Positioner"
+msgstr "الموتور"
+
+msgid "Positioner setup"
+msgstr "ضبط الموتور"
+
+msgid "Preparing... Please wait"
+msgstr "جارى التجهيز ... رجاء الانتظار"
+
+msgid "Press OK on your remote control to continue."
+msgstr "أضغط موافق من الريموت للمتابعه"
+
+msgid "Press OK to activate the selected skin."
+msgstr "أضغط موافق لتفعيل الجلد المختار."
+
+msgid "Press OK to activate the settings."
+msgstr "اضغط موافق لتفعيل الاعدادات"
+
+msgid "Press OK to edit the settings."
+msgstr "أضغط موافق لتحرير الاعدادات"
+
+msgid "Press OK to get further details for %s"
+msgstr "أضغط موالق للحصول على تفاصيل أكثر عن %s"
+
+msgid "Press OK to scan"
+msgstr "اضغط موافق للبحث"
+
+msgid "Press OK to select/deselect a CAId."
+msgstr "إضغط موافق لاختيار/الغاء اختيار CAId"
+
+msgid "Press OK to start the scan"
+msgstr "اضغط موافق لبدأ البحث"
+
+msgid "Press OK to toggle the selection."
+msgstr "أضغط موافق لتبدل الأختيار"
+
+msgid "Preview"
+msgstr "معاينه"
+
+msgid "Preview menu"
+msgstr "معاينة القائمه"
+
+msgid "Primary DNS"
+msgstr "دى إن اس أبتدائى"
+
+msgid "Priority"
+msgstr "أولويه"
+
+msgid "Process"
+msgstr "عمليه"
+
+msgid "Properties of current title"
+msgstr "خصائص العنوان الحالى"
+
+msgid "Protect services"
+msgstr "إحمى القنوات"
+
+msgid "Provider"
+msgstr "مزود"
+
+msgid "Provider to scan"
+msgstr "المزود الذى سيتم البحث فيه"
+
+msgid "Providers"
+msgstr "مقدمو الخدمه"
+
+msgid "Quick"
+msgstr "سريع"
+
+msgid "RF output"
+msgstr "مخرج RF"
+
+msgid "RGB"
+msgstr "RGB"
+
+msgid "Random"
+msgstr "عشوائى"
+
+msgid "Really close without saving settings?"
+msgstr "هل تريد فعلا الغلق بدون حفظ الاعدادات ؟"
+
+msgid "Really delete done timers?"
+msgstr "هل تريد فعلا مسح المؤقتات المعموله ؟"
+
+msgid "Really reboot now?"
+msgstr "هل تريد فعلا إعادة التشغيل الان ؟"
+
+msgid "Really restart now?"
+msgstr "هل تريد فعلا إعـادة التشغـيل الان ؟"
+
+msgid "Really shutdown now?"
+msgstr "هل تريد فعلا الاغلاق الان ؟"
+
+msgid "Reboot"
+msgstr "إعادة التشغيل"
+
+msgid "Record"
+msgstr "تسجيل"
+
+msgid "Record time limited due to conflicting timer %s"
+msgstr "وقت تسجيل محدود لوجود مؤقت متعارض %s"
+
+msgid "Recording"
+msgstr "تسجيل"
+
+msgid "Recording(s) are in progress or coming up in few seconds!"
+msgstr "التسجيل قيد التنفيذ أو سيبدأ فى ثوان قليله"
+
+msgid "Recordings"
+msgstr "تسجيلات"
+
+msgid "Recordings always have priority"
+msgstr "التسجيلات لها الأوليه دائما"
+
+msgid "Refresh rate selection."
+msgstr "إختيار معدل الأنعاش"
+
+msgid "Reload"
+msgstr "إعادة تحميل"
+
+msgid "Remove"
+msgstr "حذف"
+
+msgid "Remove a mark"
+msgstr "حذف علامه"
+
+msgid "Remove currently selected title"
+msgstr "حذف العنوان الحالى المختار"
+
+msgid "Remove finished."
+msgstr "إنتهاء الحذف"
+
+msgid "Remove plugins"
+msgstr "حذف البلج إنز"
+
+msgid "Remove timer"
+msgstr "حذف المؤقت"
+
+msgid "Remove title"
+msgstr "حذف عنوان"
+
+msgid "Removing"
+msgstr "جارى الحذف"
+
+msgid "Removing directory %s failed. (Maybe not empty.)"
+msgstr "فشل حذف الدليل%s .قد يكون فارغ ."
+
+msgid "Rename"
+msgstr "إعادة التسميه"
+
+msgid "Repeats"
+msgstr "إعادات"
+
+msgid "Required medium type:"
+msgstr "نوع الوسيط المطلوب"
+
+msgid "Reset"
+msgstr "إعاده الضبط"
+
+msgid "Reset video enhancement settings to system defaults?"
+msgstr "إعادة إعدادات تعزيز الفيديو الى إفتراضيات النظام ؟"
+
+msgid "Reset video enhancement settings to your last configuration?"
+msgstr "إعادة إعدادات تعزيز الفيديو الى التكوينات الاخيره الخاصه بك ؟"
+
+msgid "Restart"
+msgstr "إعاده التشغيل"
+
+msgid "Restart GUI now?"
+msgstr "هل تريد إعادة تشغيل الاينجما2 الان ؟"
+
+msgid "Restart network"
+msgstr "إعادة تشغيل الشبكه"
+
+msgid "Restart test"
+msgstr "إعادة الاختبار"
+
+msgid "Restart your network connection and interfaces.\n"
+msgstr "إعادة تشغيل إتصال الشبكه والواجهه.\n"
+
+msgid "Restore"
+msgstr "إستعاده"
+
+msgid "Restore backups"
+msgstr "إستعادة النسخه الإحتياطيه "
+
+msgid "Restore is running..."
+msgstr "الاستعاده قيد التنفيذ"
+
+msgid "Resume from last position"
+msgstr "إستعاده من الوضع السابق"
+
+msgid "Resume position at %s"
+msgstr "إستعادة الوضع الى%s"
+
+msgid "Resuming playback"
+msgstr "إستئناف العرض"
+
+msgid "Return to movie list"
+msgstr "العوده الى قائمة الأفلام"
+
+msgid "Return to previous service"
+msgstr "العوده الى الخدمه القناه السابقه"
+
+msgid "Rewind speeds"
+msgstr "سرعة العوده للخلف"
+
+msgid "Right"
+msgstr "يمين"
+
+msgid "Rotor turning speed"
+msgstr "سرعة توليف الموتور"
+
+msgid "Russian"
+msgstr "روسى"
+
+msgid "S-Video"
+msgstr "S-Video"
+
+msgid "SINGLE LAYER DVD"
+msgstr "دى فى دى أحادى الطبقه"
+
+msgid "SSID:"
+msgstr "SSID:"
+
+msgid "Sat"
+msgstr "قمر"
+
+msgid "Satellite"
+msgstr "قمر صناعى"
+
+msgid "Satellite equipment"
+msgstr "معدات القمر"
+
+msgid "Satellites"
+msgstr "اقمار صناعيه"
+
+msgid "Satfinder"
+msgstr "الباحث عن الأقمار"
+
+msgid "Sats"
+msgstr "أقمار"
+
+msgid "Saturation"
+msgstr "تشبع"
+
+msgid "Saturday"
+msgstr "السبت"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Scan "
+msgstr "بحـث"
+
+msgid "Scan additional SR"
+msgstr "البحث عن SR إضافى"
+
+msgid ""
+"Scan your network for wireless access points and connect to them using your "
+"selected wireless device.\n"
+msgstr ""
+"أبحث فى الشبكه عن نقاط دخول لاسلكيه وأتصل بهم باستخدامجهزك اللاسلكى "
+"المختار.\n"
+
+msgid "Search east"
+msgstr "البحث شرقا"
+
+msgid "Search west"
+msgstr "بحث غربا"
+
+msgid "Searching for available updates. Please wait..."
+msgstr "بحث عن التحديثات المتاحه. رجاء الانتظار...."
+
+msgid "Searching for new installed or removed packages. Please wait..."
+msgstr "جارى البحث عن حزم جديده تم تثبيتها أو حذفها. رجاء الانتظار..."
+
+msgid "Secondary DNS"
+msgstr "DNS ثانوى"
+
+msgid "Seek"
+msgstr "بحـث"
+
+msgid "Select"
+msgstr "أختار"
+
+msgid "Select audio track"
+msgstr "أختار مسار الصوت"
+
+msgid "Select channel to record from"
+msgstr "اختار القناه التى تريد ان تسجل منها"
+
+msgid "Select files/folders to backup"
+msgstr "أختار ملفات/مجلدات النسخه الاحتياطيه"
+
+msgid "Select interface"
+msgstr "أختار واجهه"
+
+msgid "Select provider to add..."
+msgstr "أختار مزود ليتم إضافته..."
+
+msgid "Select refresh rate"
+msgstr "أختار معدل الأنعاش"
+
+msgid "Select service to add..."
+msgstr "اختار قناه ليتم إضافتها"
+
+msgid "Select upgrade source to edit."
+msgstr "أختار مصدر الترقيه المراد تحريره"
+
+msgid "Select video input with up/down buttons"
+msgstr "أختار مدخل الفيديو بأزرار أعلى/أسفا"
+
+msgid "Select video mode"
+msgstr "أختار اسلوب الفيديو"
+
+msgid "Select wireless network"
+msgstr "اختار الشبكه اللاسلكيه"
+
+msgid "Send DiSEqC"
+msgstr "أرسل دايزك"
+
+msgid "Send DiSEqC only on satellite change"
+msgstr "ارسل دايزك عند تغيير القمر فقط"
+
+msgid "Seperate titles with a main menu"
+msgstr "عناوين منفصله مع قائمة رئيسيه"
+
+msgid "Sequence repeat"
+msgstr "تكرار التسلسل"
+
+msgid "Serbian"
+msgstr "صريى"
+
+msgid "Service"
+msgstr "قناه/خدمه"
+
+msgid "Service has been added to the favourites."
+msgstr "تم إضافة القناه الى المفضله"
+
+msgid "Service has been added to the selected bouquet."
+msgstr "تم إضافة القناه الى الباقه المختاره."
+
+msgid "Service scan"
+msgstr "بحث عـن القنـوات"
+
+msgid ""
+"Service unavailable!\n"
+"Check tuner configuration!"
+msgstr ""
+"الخدمه غير متاحه !\n"
+"تأكد من تهيئة الموالف !"
+
+msgid "Services"
+msgstr "القنوات/الخدمات"
+
+msgid "Set interface as default Interface"
+msgstr "أبط واجهه لتكون واجهه إفتراضيه"
+
+msgid "Set limits"
+msgstr "ضبط الحدود"
+
+msgid "Settings"
+msgstr "إعدادات"
+
+msgid "Setup"
+msgstr "الضبـط"
+
+msgid "Sharpness"
+msgstr "الحده"
+
+msgid "Show infobar on channel change"
+msgstr "شاهد شريط المعلومات عند تغيير القناه"
+
+msgid "Show infobar on event change"
+msgstr "شاهد شريط المعلومات عند تغيير الحدث"
+
+msgid "Show infobar on skip forward/backward"
+msgstr "شاهد شريط المعلومات عند الانتقال للأمام/الخلف"
+
+msgid "Show positioner movement"
+msgstr "شاهد حركة الموتور"
+
+msgid "Show the radio player..."
+msgstr "إظهار مشغل الراديو..."
+
+msgid "Show the tv player..."
+msgstr "إظهار مشغل التليفزيون"
+
+msgid "Shows the state of your wireless LAN connection.\n"
+msgstr "تشاهد حالة إتصال الشبكه المحليه اللاسلكيه \n"
+
+msgid "Shutdown"
+msgstr "إغلاق"
+
+msgid "Signal Strength:"
+msgstr "قوة الاشاره"
+
+msgid "Signal: "
+msgstr "الاشاره"
+
+msgid "Similar"
+msgstr "شبيهه"
+
+msgid "Similar broadcasts:"
+msgstr "إذاعات مماثله :"
+
+msgid "Simple"
+msgstr "بسيطه"
+
+msgid "Single"
+msgstr "مفرد"
+
+msgid "Single EPG"
+msgstr "دليل برامج واحد"
+
+msgid "Single satellite"
+msgstr "قمر واحد"
+
+msgid "Skins"
+msgstr "الجلود"
+
+msgid "Slot %d"
+msgstr "فتحة %d"
+
+msgid "Slovenian"
+msgstr "سلوفانى"
+
+msgid "Slow"
+msgstr "بطيئ"
+
+msgid "Software"
+msgstr "برنامج تشغيلى"
+
+msgid "Software management"
+msgstr "التحكم فى البرنامج التشغيلى"
+
+msgid "Software restore"
+msgstr "إستعادة البرنامج التشغيلى"
+
+msgid "Software update"
+msgstr "ترقية البرنامج التشغيلى"
+
+msgid "Some plugins are not available:\n"
+msgstr "بعض البلج إنز غير متوفر : \n"
+
+msgid "Sound"
+msgstr "صـوت"
+
+msgid "South"
+msgstr "جنوب"
+
+msgid "Spanish"
+msgstr "أسبانى"
+
+msgid "Split preview mode"
+msgstr "تقسيم وضعية المعاينه"
+
+msgid "Standby"
+msgstr "وضع الاستعداد"
+
+msgid "Standby / Restart"
+msgstr "وضع الاستعداد/إعاده التشغيل"
+
+msgid "Start"
+msgstr "أبـدأ"
+
+msgid "Start from the beginning"
+msgstr "أبدأ من البدايه"
+
+msgid "Start test"
+msgstr "أختبار البدأ"
+
+msgid "Starting on"
+msgstr "يبدأ فى"
+
+msgid "Step east"
+msgstr "خطوه ناحية الشرق"
+
+msgid "Step west"
+msgstr "خطوه ناحية الغري"
+
+msgid "Stop"
+msgstr "إيقاف"
+
+msgid "Stop current event and disable coming events"
+msgstr "إيقاف الحدث الحالى وتعطيل الاحداث القادمه"
+
+msgid "Stop current event but not coming events"
+msgstr "إقاف الحدث الحالى فقط وليس الاحداث القادمه"
+
+msgid "Stop playing this movie?"
+msgstr "إيقاف عرض هذا الفيلم؟"
+
+msgid "Stop test"
+msgstr "إيقاف الاختبار"
+
+msgid "Stop testing plane after # failed transponders"
+msgstr "إيقاف خطة الاختبار بعد # إرسال فاشل"
+
+msgid "Stop testing plane after # successful transponders"
+msgstr "إيقاف خطة الاختبار بعد # إرسال ناجح"
+
+msgid "Store position"
+msgstr "تخزين الموقع"
+
+msgid "Stored position"
+msgstr "الوضع المخزن"
+
+msgid "Subtitle selection"
+msgstr "إختيار العناوين الفرعيه"
+
+msgid "Subtitles"
+msgstr "العناوين الفرعيه"
+
+msgid "Sun"
+msgstr "الاحد"
+
+msgid "Sunday"
+msgstr "الاحد"
+
+msgid "Swedish"
+msgstr "سويدى"
+
+msgid "System"
+msgstr "النـظام"
+
+msgid "Tags"
+msgstr "شعارات"
+
+msgid "Terrestrial provider"
+msgstr "مزود أرضى"
+
+msgid "Test DiSEqC settings"
+msgstr "إختبار إعدادات الدايزك"
+
+msgid "Test mode"
+msgstr "وضع الاختبار"
+
+msgid ""
+"Thank you for using the wizard.\n"
+"Please press OK to continue."
+msgstr ""
+"شكرا لإستخدامك نافذة الاعدادات . \n"
+"من فضلك أضغط موافق للاستمرار ."
+
+msgid "The backup failed. Please choose a different backup location."
+msgstr "فشل عمل نسخه إحتياطيه  ، من فضلك أختار مان آخر للنسخه الإحتياطيه  ."
+
+msgid ""
+"The directory %s is not writable.\n"
+"Make sure you select a writable directory instead."
+msgstr ""
+"الدليل %s لا يمكن الكتابه فيه.\n"
+" تأكد من إختيار دليل بديل يمكن الكتابه فيه"
+
+msgid ""
+"The following device was found:\n"
+"\n"
+"%s\n"
+"\n"
+"Do you want to write the USB flasher to this stick?"
+msgstr ""
+"تم العثور على هذه الاجهزه:\n"
+"\n"
+"%s \n"
+"\n"
+"هل تريد كتابه شاحن الـusb على هذه العصا؟"
+
+msgid "The following files were found..."
+msgstr "تم العثور على هذه الملفات"
+
+msgid "The path %s already exists."
+msgstr "المسار %s موجود سلفا"
+
+msgid "The pin code you entered is wrong."
+msgstr "الرقم السرى الذى ادخلته خطأ"
+
+msgid "The timer file (timers.xml) is corrupt and could not be loaded."
+msgstr "ملف المؤقت (timers.xml) فاسد ولا يمكن تحميله"
+
+msgid ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it and choose what you want to do next."
+msgstr ""
+"بلج إن الشبكه المحليه اللاسلكيه غير مثبت ! \n"
+"من فضلك ثبته أولا ثم أختار ماذا تريد أن تفعل بعد ذك ."
+
+msgid ""
+"The wireless LAN plugin is not installed!\n"
+"Please install it."
+msgstr ""
+"بلج إن الشبكه المحليه اللاسلكيه غير مثبت ! \n"
+"من فضلك ثبته"
+
+msgid ""
+"The wizard can backup your current settings. Do you want to do a backup now?"
+msgstr ""
+"من خلال هذه النافذه يمكنك عمل نسخه إحتياطيه  للإعدادات الحاليه . هل تريد عمل "
+"نسخه إحتياطيه  الان ؟"
+
+msgid "The wizard is finished now."
+msgstr "إنتهاء نافذة الاعدادات الان ."
+
+msgid "There are at least "
+msgstr "يوجد على الأقل"
+
+msgid "There are no updates available."
+msgstr "لا يوجد تحديثات متاحه ."
+
+msgid ""
+"There might not be enough space on the selected partition..\n"
+"Do you really want to continue?"
+msgstr ""
+"قد لا يكون هناك مساحه كافيه على القسم المختار . \n"
+"هل تريد فعلا الاستمرار ؟"
+
+msgid "This plugin is installed."
+msgstr "هذا البلج إن مثبت ."
+
+msgid "This plugin is not installed."
+msgstr "هذا البلج إن غير مثبت ."
+
+msgid "This plugin will be installed."
+msgstr "سيتم تثبيت هذا البلج إن ."
+
+msgid "This plugin will be removed."
+msgstr "سيتم حذف هذا البلج إن ."
+
+msgid "Three"
+msgstr "ثلاثه"
+
+msgid "Thursday"
+msgstr "الخميس"
+
+msgid "Time"
+msgstr "وقت"
+
+msgid "Timer entry"
+msgstr "إدخال المؤقت"
+
+msgid "Timer log"
+msgstr "سجل المؤقت"
+
+msgid "Timer record location"
+msgstr "موضع تسجيل المؤقت"
+
+msgid "Timer sanity error"
+msgstr "خطأ إستقامة المؤقت"
+
+msgid "Timer selection"
+msgstr "إختيار المؤقت"
+
+msgid "Timeshift"
+msgstr "تحول الوقت"
+
+msgid "Timeshift location"
+msgstr "موقع تحول الوقت"
+
+msgid "Timeshift not possible!"
+msgstr "تحول الوقت غير ممكن"
+
+msgid "Timezone"
+msgstr "منطقه الوقت"
+
+msgid "Title"
+msgstr "عنوان"
+
+msgid "Title properties"
+msgstr "خصائص العنوان"
+
+msgid "Today"
+msgstr "اليوم"
+
+msgid "Tone mode"
+msgstr "وضعية النغمه"
+
+msgid "Toneburst"
+msgstr "نغمة إنفجار"
+
+msgid "Toneburst A/B"
+msgstr "Toneburst A/B"
+
+msgid "Track"
+msgstr "مسار"
+
+msgid "Transmission mode"
+msgstr "وضع النقل"
+
+msgid "Transponder"
+msgstr "التردد"
+
+msgid "Try to find used transponders in cable network.. please wait..."
+msgstr "محاولة إيجاد ترددات عامله فى كابل الشبكه. رجاء الانتظار..."
+
+msgid "Tue"
+msgstr "الثلاثاء"
+
+msgid "Tuesday"
+msgstr "الثلاثاء"
+
+msgid "Tune"
+msgstr "توليف"
+
+msgid "Tune failed!"
+msgstr "فشل التوليف"
+
+msgid "Tuner"
+msgstr "الموالف"
+
+msgid "Tuner configuration"
+msgstr "تهيئة الموالف"
+
+msgid "Tuner status"
+msgstr "حالة الموالف"
+
+msgid "Tuner type"
+msgstr "نوع الموالف"
+
+msgid "Turkish"
+msgstr "تركى"
+
+msgid "Two"
+msgstr "اثنين"
+
+msgid "Type"
+msgstr "نوع"
+
+msgid "Type of scan"
+msgstr "نوع البحث"
+
+msgid "USALS"
+msgstr "USALS"
+
+msgid "Undo install"
+msgstr "تراجع عن التثبيت"
+
+msgid "Undo uninstall"
+msgstr "تراجع عن الغاء التثبيت"
+
+msgid "Uninstall"
+msgstr "تراجع عن التثبيت"
+
+msgid "Unsupported"
+msgstr "غير مدعم"
+
+msgid "Update"
+msgstr "تحديث"
+
+msgid "Updatefeed not available."
+msgstr "تغذية التحديث غير متاحه"
+
+msgid "Updating software catalog"
+msgstr "جارى تحديث فهرس البرنامج التشغيلى"
+
+msgid "Upgrade finished."
+msgstr "إنتهاء الترقيه ."
+
+msgid "Upgrading"
+msgstr "جارى الترقيه"
+
+msgid "Use"
+msgstr "استخدم"
+
+msgid "Use DHCP"
+msgstr "استخدمDHCP"
+
+msgid "Use power measurement"
+msgstr "استخدم قـياس الطاقه"
+
+msgid ""
+"Use the up/down keys on your remote control to select an option. After that, "
+"press OK."
+msgstr "اضغط المفتاح العلوى أو السفلى من الريموت وحدد إختيارك ثم أضغط موافق"
+
+msgid "Use this video enhancement settings?"
+msgstr "استخدام إعدادات تعزيز الفيديو هذه ؟"
+
+msgid "Used service scan type"
+msgstr "نوع البحث عن القنوات المستخدم"
+
+msgid "User defined"
+msgstr "يحددها المستخدم"
+
+msgid "Username"
+msgstr "اسم المستخدم"
+
+msgid "VCR scart"
+msgstr "وصله فيديو كاسيت"
+
+msgid "Vertical"
+msgstr "رأسى"
+
+msgid "Video enhancement preview"
+msgstr "معاينة تعزيز الفيديو"
+
+msgid "Video enhancement setup"
+msgstr "ضبط تعزيز الفيديو"
+
+msgid "Video mode selection."
+msgstr "إختيار وضعية الفيديو."
+
+msgid "View Movies..."
+msgstr "مشاهدة أفلام..."
+
+msgid "View Video CD..."
+msgstr "مشاهدة فيديو سى دى"
+
+msgid "View details"
+msgstr "مشاهدة تفاصيل"
+
+msgid "View list of available CommonInterface extensions"
+msgstr "مشاهدة قائمه بإضافات وحدة التحكم المشترك"
+
+msgid "View list of available Satellite equipment extensions."
+msgstr "شاهد قائمه بالاضافات المتاحه لمعدات القمر."
+
+msgid "View list of available communication extensions."
+msgstr "شاهد قائمه بإلاضافات المتاحه للاتصال."
+
+msgid "View list of available default settings"
+msgstr "شاهد قائمه بالاعدادات الافتراضيه المتاحه"
+
+msgid "View list of available multimedia extensions."
+msgstr "شاهد قائمه بإضافات الوسائط المتعدده المتاحه"
+
+msgid "View list of available networking extensions"
+msgstr "شاهد قائمه بإضافات الشبكه المتاحه"
+
+msgid "View list of available recording extensions"
+msgstr "شاهد قائمه بإضافات التسجيل المتاحه"
+
+msgid "View list of available skins"
+msgstr "شاهد قائمه بالجلد المتاح"
+
+msgid "View list of available software extensions"
+msgstr "شاهد قائمه بإضافات البرنامج التشغيلى المتاحه"
+
+msgid "View list of available system extensions"
+msgstr "شاهد قائمه بإضافات النظام المتاحه"
+
+msgid "Voltage mode"
+msgstr "وضعيه الفولت"
+
+msgid "WLAN connection"
+msgstr "إتصال شبكه واسعه"
+
+msgid "WPA"
+msgstr "WPA"
+
+msgid "WPA or WPA2"
+msgstr "WPA أو WPA2"
+
+msgid "WPA2"
+msgstr "WPA2"
+
+msgid "Waiting"
+msgstr "جارى الانتظار"
+
+msgid "Wed"
+msgstr "الاربعاء"
+
+msgid "Wednesday"
+msgstr "الاربعاء"
+
+msgid "Weekday"
+msgstr "يوم الاسبوع"
+
+msgid "West"
+msgstr "غرب"
+
+msgid "What do you want to scan?"
+msgstr "ماذا تريد ان تبحث ؟"
+
+msgid "Where do you want to backup your settings?"
+msgstr "هل تريد فعلا عمل نسخه إحتياطيه  للاعدادات ؟"
+
+msgid "Where to save temporary timeshift recordings?"
+msgstr "أين تحفظ تسجيلات التايم شفت المؤقته؟"
+
+msgid "Wireless LAN"
+msgstr "شبكه محليه لا سلكيه"
+
+msgid "Write error while recording. Disk full?\n"
+msgstr "خطأ اثناء التسجيل. القرص ممتلئ ؟ \n"
+
+msgid "Write failed!"
+msgstr "فشل الكتابه !"
+
+msgid "YPbPr"
+msgstr "YPbPr"
+
+msgid "Year"
+msgstr "عام"
+
+msgid "Yes"
+msgstr "نعم"
+
+msgid "Yes to all"
+msgstr "نعم للجميع"
+
+msgid "Yes, and delete this movie"
+msgstr "نعم، وامسح هذا الفيلم"
+
+msgid "Yes, backup my settings!"
+msgstr "نعم ، أعمل نسخه إحتياطيه  للاعدادات"
+
+msgid "Yes, do a manual scan now"
+msgstr "نعم، أعمل بحث يدوى الان"
+
+msgid "Yes, do an automatic scan now"
+msgstr "نعم، أعمل بحث آالى الان"
+
+msgid "Yes, do another manual scan now"
+msgstr "نعم، أعمل بحث يدوى آخر الان"
+
+msgid "Yes, restore the settings now"
+msgstr "نعم، أستعد الاعدادات الان"
+
+msgid "Yes, returning to movie list"
+msgstr "نعم، العوده الى قائمة الافلام"
+
+msgid "Yes, shut down now."
+msgstr "نعم أغلق الان."
+
+msgid "You can cancel the installation."
+msgstr "تستطيع إلغاء التثبيت"
+
+msgid "You can cancel the removal."
+msgstr "تستطيع إلغاء الحذف"
+
+msgid "You can install this plugin."
+msgstr "تستطيع تثبيت هذا البلج إن"
+
+msgid "You can remove this plugin."
+msgstr "تستطيع حذف هذا البلج إن."
+
+msgid "You cannot delete this!"
+msgstr "لايمكنك مسح هذه !"
+
+msgid ""
+"You have chosen to backup your settings. Please press OK to start the backup "
+"now."
+msgstr ""
+"إذا أخترت عمل نسخه إحتياطيه  للاعدادات ، من فضلك أضغط موافق اتبدأ النسخه "
+"الإحتياطيه الان"
+
+msgid ""
+"You have chosen to restore your settings. Enigma2 will restart after "
+"restore. Please press OK to start the restore now."
+msgstr ""
+"لقد أخترت أن تستعيد الاعدادات . سيتم إعادة تشغيل الاينجما2 بعد الاستعاده ."
+"أضغط موافق لتبدأ الاستعاده الان ."
+
+msgid "You have to wait %s!"
+msgstr "يجب أن تنتظر %s !"
+
+msgid ""
+"Your %s %s is now ready to use.\n"
+"\n"
+"Your internet connection is working now.\n"
+"\n"
+"Please press OK to continue."
+msgstr ""
+"الدريم بوكس جاهز للاستخدام الان.\n"
+"\n"
+"الاتصال بالانترنت يعمل الان.\n"
+"\n"
+"أضغط موافق للاستمرار."
+
+msgid "Your %s %s is shutting down. Please wait..."
+msgstr "يتم الان إغلاق الدريم بوكس. من فضلك كن مستعدا..."
+
+msgid ""
+"Your backup succeeded. We will now continue to explain the further upgrade "
+"process."
+msgstr "نجاح عمل نسخه إحتياطيه . سوف نشرح لك طريقة الترقيه الان."
+
+msgid ""
+"Your collection exceeds the size of a single layer medium, you will need a "
+"blank dual layer DVD!"
+msgstr ""
+"هذه المجموعه تزيد عن حجم وسيط ذو طبقه واحده. أنت تحتاج الى دى فى دى ثنائى "
+"الطبقه خالى!"
+
+msgid ""
+"Your config file is not well-formed:\n"
+"%s"
+msgstr ""
+"ملف التكوين غير جيد :\n"
+"%s"
+
+msgid "Your current collection will get lost!"
+msgstr "سوف تفقد المجموعه الحاليه !"
+
+msgid ""
+"Your internet connection is not working!\n"
+"Please choose what you want to do next."
+msgstr ""
+"الاتصال بالانترنت لا يعمل ! \n"
+"من فضلك أختار ماذا تريد أن تفعل بعد ذلك."
+
+msgid "Your network configuration has been activated."
+msgstr "تم تنشيط تكوين الشبكه"
+
+msgid "Zap back to previously tuned service?"
+msgstr "هل تريد التنقل الى أخر قناه مولفه ؟"
+
+msgid "Zap back to service before positioner setup?"
+msgstr "هل تريد التنقل الى القناه الاخيره قبل ضبط الموتور ؟"
+
+msgid "Zap back to service before tuner setup?"
+msgstr "هل تريد التنقل الىالقناه الخيره قبل ضبط الموالف ؟"
+
+msgid "[alternative edit]"
+msgstr "[تحرير البديل]"
+
+msgid "[bouquet edit]"
+msgstr "[تحرير الباقه]"
+
+msgid "[favourite edit]"
+msgstr "[تحرير المفضله]"
+
+msgid "[move mode]"
+msgstr "وضع التحريك"
+
+msgid "abort alternatives edit"
+msgstr "إلغاء تحرير البدائل"
+
+msgid "abort bouquet edit"
+msgstr "الغاء تحرير الباقه"
+
+msgid "abort favourites edit"
+msgstr "الغاء تحرير المفضله"
+
+msgid "about to start"
+msgstr "على وشك البدأ"
+
+msgid "activate network adapter configuration"
+msgstr "تنشيط تكوين محول الشبكه"
+
+msgid "add alternatives"
+msgstr "إضافة بدائل"
+
+msgid "add bookmark"
+msgstr "إضافة مرجعيه"
+
+msgid "add bouquet"
+msgstr "إضافة باقه"
+
+msgid "add marker"
+msgstr "إضافة علامه"
+
+msgid "add service to bouquet"
+msgstr "إضافه القناه الى الباقه"
+
+msgid "add service to favourites"
+msgstr "إضافه القناه الى المفضله"
+
+msgid "add to parental protection"
+msgstr "أضف حمايه أبويه"
+
+msgid "advanced"
+msgstr "متقدم"
+
+msgid "audio tracks"
+msgstr "مسارات الصوت"
+
+msgid "auto"
+msgstr "تلقائى"
+
+msgid "back"
+msgstr "للخلف"
+
+msgid "background image"
+msgstr "صورة الخلفيه"
+
+msgid "better"
+msgstr "أفضل"
+
+msgid "black"
+msgstr "أسود"
+
+msgid "blacklist"
+msgstr "القائمه السوداء"
+
+msgid "blue"
+msgstr "أزرق"
+
+msgid "chapters"
+msgstr "فصول"
+
+msgid "circular left"
+msgstr "دائرى يسار"
+
+msgid "circular right"
+msgstr "دائرى يمين"
+
+msgid "confirmed"
+msgstr "تم التأكيد"
+
+msgid "connected"
+msgstr "تم الاتصال"
+
+msgid "continue"
+msgstr "استمرار"
+
+msgid "copy to bouquets"
+msgstr "نسخ الى الباقات"
+
+msgid "create directory"
+msgstr "إنشاء دليل"
+
+msgid "daily"
+msgstr "يومى"
+
+msgid "day"
+msgstr "يوم"
+
+msgid "delete"
+msgstr "مسح"
+
+msgid "delete cut"
+msgstr "مسح القطع"
+
+msgid "disable"
+msgstr "تعطيل"
+
+msgid "disable move mode"
+msgstr "تعطيل وضع التحريك"
+
+msgid "disabled"
+msgstr "تم التعطيل"
+
+msgid "disconnected"
+msgstr "تم الفصل"
+
+msgid "do nothing"
+msgstr ""
+"                                                                                                       لا "
+"تفعل شيئ"
+
+msgid "done!"
+msgstr "تم !"
+
+msgid "edit alternatives"
+msgstr "تحرير البدائل"
+
+msgid "empty"
+msgstr "فارغ"
+
+msgid "enable"
+msgstr "تفعيل"
+
+msgid "enable bouquet edit"
+msgstr "تفعيل تحرير الباقه"
+
+msgid "enable favourite edit"
+msgstr "تفعيل تحرير المفضله"
+
+msgid "enable move mode"
+msgstr "تفعيل وضع التحريك"
+
+msgid "enabled"
+msgstr "تم النفعيل"
+
+msgid "end alternatives edit"
+msgstr "إنهاء تحرير البدائل"
+
+msgid "end bouquet edit"
+msgstr "إنتهاء تحرير الباقه"
+
+msgid "end cut here"
+msgstr "إنتهاء القطع هنا"
+
+msgid "end favourites edit"
+msgstr "إنتهاء تحرير المفضله"
+
+msgid "equal to"
+msgstr "مساوى لـــ"
+
+msgid "exit DVD player or return to file browser"
+msgstr "الخروج من مشغل الدى فى دى أو العوده الى متصفح الملفات"
+
+msgid "exit network adapter configuration"
+msgstr "الخروج من تهيئة محول الشبكه"
+
+msgid "exit networkadapter setup menu"
+msgstr "الخروج من قائمه إعداد الشبكه"
+
+msgid "failed"
+msgstr "فشل"
+
+msgid "filename"
+msgstr "اسم الملف"
+
+msgid "free diskspace"
+msgstr "المساحه المتبقيه فى القرص"
+
+msgid "go to deep standby"
+msgstr "الذهاب الى وضع الاستعداد العميق"
+
+msgid "go to standby"
+msgstr "الذهاب لوضع الاستعداد"
+
+msgid "green"
+msgstr "أخضر"
+
+msgid "horizontal"
+msgstr "أفقى"
+
+msgid "init module"
+msgstr "تفعيل الكـام"
+
+msgid "insert mark here"
+msgstr "ضع علامه هنا"
+
+msgid "jump back to the previous title"
+msgstr "الانتقال خلفا للعنوان السابق"
+
+msgid "jump forward to the next title"
+msgstr "الانتقال أماما للعنوان التالى"
+
+msgid "leave movie player..."
+msgstr "اترك عارض الافلام .."
+
+msgid "left"
+msgstr "يسار"
+
+msgid "length"
+msgstr "طول"
+
+msgid "locked"
+msgstr "مغلق"
+
+msgid "manual"
+msgstr "يدوى"
+
+msgid "menu"
+msgstr "قائمه"
+
+msgid "mins"
+msgstr "دقائق"
+
+msgid "minutes"
+msgstr "دقائق"
+
+msgid "month"
+msgstr "شهر"
+
+msgid "move down to last entry"
+msgstr "الانتقال لأسفل الى البند الاخير"
+
+msgid "move down to next entry"
+msgstr "الانتقال لاسفل الى البند التالى"
+
+msgid "move up to first entry"
+msgstr "الانتقال لاعلى الى البند الاول"
+
+msgid "move up to previous entry"
+msgstr "الانتقال لاعلى الى البند السابق"
+
+msgid "multinorm"
+msgstr "متعدد المعايير"
+
+msgid "never"
+msgstr "مطلقا"
+
+msgid "no"
+msgstr "لا."
+
+msgid "no module found"
+msgstr "لم يتم العثور على كامه"
+
+msgid "none"
+msgstr "لا احد"
+
+msgid "not configured"
+msgstr "غير مكونه"
+
+msgid "not locked"
+msgstr "غير مغلقه"
+
+msgid "not used"
+msgstr "غير مستخدمه"
+
+msgid "nothing connected"
+msgstr "لا شيئ متصل"
+
+msgid "of a DUAL layer medium used."
+msgstr "من وسيط ثنائى الطبقه مستخدم"
+
+msgid "of a SINGLE layer medium used."
+msgstr "من وسيط أحادى الطبقه مستخدم"
+
+msgid "off"
+msgstr "لا يعمـل!"
+
+msgid "on"
+msgstr "يعمل!"
+
+msgid "on READ ONLY medium."
+msgstr "على وسيط قراءه فقط"
+
+msgid "once"
+msgstr "مره واحده"
+
+msgid "open nameserver configuration"
+msgstr "فتح تكوين أسم الخادم"
+
+msgid "pass"
+msgstr "مرور"
+
+msgid "please press OK when ready"
+msgstr "من فضلك أضغط موافق عندما تكون مستعد"
+
+msgid "please wait, loading picture..."
+msgstr "رجاء الانتظار... جارى تحميل الصوره"
+
+msgid "record"
+msgstr "تسجيل"
+
+msgid "recording..."
+msgstr "جارى التسجيل....."
+
+msgid "red"
+msgstr "أحمر"
+
+msgid "remove after this position"
+msgstr "حذف بعد هذا المكان"
+
+msgid "remove all alternatives"
+msgstr "حذف كل البدائل"
+
+msgid "remove all new found flags"
+msgstr "أحذف كل علامات وجد حديثا"
+
+msgid "remove before this position"
+msgstr "حذف قبل هذا المكان"
+
+msgid "remove bookmark"
+msgstr "حذف المرجعيه"
+
+msgid "remove directory"
+msgstr "حذف الدليل"
+
+msgid "remove entry"
+msgstr "حذف"
+
+msgid "remove from parental protection"
+msgstr "حذف من الحمايه الابويه"
+
+msgid "remove new found flag"
+msgstr "حذف الاعلام التى وجدت حديثا"
+
+msgid "remove selected satellite"
+msgstr "حذف القمر المختار"
+
+msgid "remove this mark"
+msgstr "حذف هذه العلامه"
+
+msgid "repeat playlist"
+msgstr "إعادة قائمة الاغانى"
+
+msgid "repeated"
+msgstr "متكرر"
+
+msgid "rewind to the previous chapter"
+msgstr "عوده للفصل السابق"
+
+msgid "right"
+msgstr "يمين"
+
+msgid "save last directory on exit"
+msgstr "حفظ الدليل عند الخروج"
+
+msgid "save playlist on exit"
+msgstr "حفظ قائمة العرض عند الخروج"
+
+msgid "scan state"
+msgstr "حاله البحث"
+
+msgid "seconds"
+msgstr "ثوانى"
+
+msgid "select"
+msgstr "أختار"
+
+msgid "select menu entry"
+msgstr "أختار مدخل قائمه"
+
+msgid "show DVD main menu"
+msgstr "أعرض قائمة دى فى دى الرئيسيه"
+
+msgid "show alternatives"
+msgstr "إظهار البدائل"
+
+msgid "show event details"
+msgstr "إظهار تفاصيل الحدث"
+
+msgid "show transponder info"
+msgstr "إظهار بيانات التردد"
+
+msgid "shut down"
+msgstr "إغــلاق"
+
+msgid "simple"
+msgstr "بسيط"
+
+msgid "skip backward"
+msgstr "تخطى للخلف"
+
+msgid "skip backward (enter time)"
+msgstr "تخطى للخلف (أدخل الوقت)"
+
+msgid "skip forward"
+msgstr "تخطى للأمام"
+
+msgid "skip forward (enter time)"
+msgstr "تخطى للأمام (أدخل الوقت)"
+
+msgid "standard"
+msgstr "قياسى"
+
+msgid "start cut here"
+msgstr "أبدأ القطع هنا"
+
+msgid "start directory"
+msgstr "دليل البدايه"
+
+msgid "stereo"
+msgstr "ستيريو"
+
+msgid "switch to bookmarks"
+msgstr "الانتقال الى المرجعيات"
+
+msgid "switch to filelist"
+msgstr "الانتقال الى قائمة الملفات"
+
+msgid "switch to the next angle"
+msgstr "الانتقال الى الزاويه التاليه"
+
+msgid "switch to the next audio track"
+msgstr "الانتقال الى مسار الصوت التالى"
+
+msgid "switch to the next subtitle language"
+msgstr "الانتقال الى لغة العناوين الفرعيه التاليه"
+
+msgid "template file"
+msgstr "ملف قالب"
+
+msgid "this recording"
+msgstr "هذا التسجيل"
+
+msgid "this service is protected by a parental control pin"
+msgstr "هذه القناه محميه برقم سرى بواسطه التحكم الابوى"
+
+msgid "unknown"
+msgstr "غير معروف"
+
+msgid "unknown service"
+msgstr "قناه غير معروفه"
+
+msgid "until standby/restart"
+msgstr "حتى وضع الانتظار/إعادة التشغيل"
+
+msgid "user defined"
+msgstr "محدده من قبل المستخدم"
+
+msgid "vertical"
+msgstr "رأسى"
+
+msgid "view extensions..."
+msgstr "مشاهدة الاضافات..."
+
+msgid "wait for ci..."
+msgstr "ci فى إنتظار"
+
+msgid "wait for mmi..."
+msgstr "mmi إنتظار"
+
+msgid "waiting"
+msgstr "فى الانتظار"
+
+msgid "weekly"
+msgstr "اسبوعى"
+
+msgid "working"
+msgstr "يعمل"
+
+msgid "yellow"
+msgstr "أصفر"
+
+msgid "yes"
+msgstr "نعـم"
+
+msgid "zap"
+msgstr "الانتقال"
+
+msgid "zapped"
+msgstr "تم الانتقال"
