@@ -30,6 +30,8 @@ def getButtonSetupKeys():
 		(_("Epg/Guide long"), "epg_long", "Infobar/showEventGuidePlugins/1"),
 		(_("Left"), "cross_left", ""),
 		(_("Right"), "cross_right", ""),
+		(_("Left long"), "cross_left_long", ""),
+		(_("Right long"), "cross_right_long", "Infobar/seekFwdVod"),
 		(_("Up"), "cross_up", ""),
 		(_("Down"), "cross_down", ""),
 		(_("PageUp"), "pageup", ""),
@@ -68,11 +70,18 @@ def getButtonSetupKeys():
 		(_("Directory long"), "directory_long", ""),
 		(_("Back/Recall"), "back", ""),
 		(_("Back/Recall") + " " + _("long"), "back_long", ""),
+		(_("History"), "archive", ""),
+		(_("History long"), "archive_long", ""),
+		(_("Aspect"), "mode", ""),
+		(_("Aspect long"), "mode_long", ""),
 		(_("Home"), "home", ""),
+		(_("Home long"), "home_long", ""),
 		(_("End"), "end", ""),
+		(_("End long"), "end_long", ""),
 		(_("Next"), "next", ""),
 		(_("Previous"), "previous", ""),
 		(_("Audio"), "audio", ""),
+		(_("Audio long"), "audio_long", ""),
 		(_("Play"), "play", ""),
 		(_("Playpause"), "playpause", ""),
 		(_("Stop"), "stop", ""),
@@ -84,6 +93,10 @@ def getButtonSetupKeys():
 		(_("activatePiP"), "activatePiP", ""),
 		(_("Playlist"), "playlist", ""),
 		(_("Playlist long"), "playlist_long", ""),
+		(_("Nextsong"), "nextsong", ""),
+		(_("Nextsong long"), "nextsong_long", ""),
+		(_("Prevsong"), "prevsong", ""),
+		(_("Prevsong long"), "prevsong_long", ""),
 		(_("Program"), "prog", ""),
 		(_("Program long"), "prog_long", ""),
 		(_("Timeshift"), "timeshift", ""),
@@ -105,14 +118,22 @@ def getButtonSetupKeys():
 		(_("SAT long"), "sat_long", ""),
 		(_("Prov"), "prov", ""),
 		(_("Prov long"), "prov_long", ""),
-		(_("F1/LAN"), "f1", ""),
-		(_("F1/LAN long"), "f1_long", ""),
+		(_("LAN"), "lan", ""),
+		(_("LAN long"), "lan_long", ""),
+		(_("PC"), "pc", ""),
+		(_("PC long"), "pc_long", ""),
+		(_("F1"), "f1", ""),
+		(_("F1 long"), "f1_long", ""),
 		(_("F2"), "f2", ""),
 		(_("F2 long"), "f2_long", ""),
 		(_("F3"), "f3", ""),
 		(_("F3 long"), "f3_long", ""),
 		(_("F4"), "f4", ""),
-		(_("F4 long"), "f4_long", ""),]
+		(_("F4 long"), "f4_long", ""),
+		(_("PIP"), "f6", ""),
+		(_("PIP long"), "f6_long", ""),
+		(_("ZOOM"), "zoom", ""),
+		(_("ZOOM long"), "zoom_long", "")]
 
 config.misc.ButtonSetup = ConfigSubsection()
 config.misc.ButtonSetup.additional_keys = ConfigYesNo(default=True)
@@ -179,6 +200,7 @@ def getButtonSetupFunctions():
 	ButtonSetupFunctions.append((_("Show subtitle selection"), "Infobar/subtitleSelection", "InfoBar"))
 	ButtonSetupFunctions.append((_("Show subtitle quick menu"), "Infobar/subtitleQuickMenu", "InfoBar"))
 	ButtonSetupFunctions.append((_("Letterbox zoom"), "Infobar/vmodeSelection", "InfoBar"))
+	ButtonSetupFunctions.append((_("Seekbar"), "Infobar/seekFwdVod", "InfoBar"))
 	if SystemInfo["PIPAvailable"]:
 		ButtonSetupFunctions.append((_("Show PIP"), "Infobar/showPiP", "InfoBar"))
 		ButtonSetupFunctions.append((_("Swap PIP"), "Infobar/swapPiP", "InfoBar"))
@@ -190,11 +212,14 @@ def getButtonSetupFunctions():
 		ButtonSetupFunctions.append((_("Toggle HDMI-In PiP"), "Infobar/HDMIInPiP", "InfoBar"))
 	if SystemInfo["LcdLiveTV"]:
 		ButtonSetupFunctions.append((_("Toggle LCD LiveTV"), "Infobar/ToggleLCDLiveTV", "InfoBar"))
-	if SystemInfo["HaveMultiBoot"]:
+	if SystemInfo["HaveMultiBootHD"]:
 		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartup/MultiBootStartup", "InfoBar"))
+	if SystemInfo["HaveMultiBootGB"]:
+		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupGB/MultiBootStartup", "InfoBar"))
 	ButtonSetupFunctions.append((_("Hotkey Setup"), "Module/Screens.ButtonSetup/ButtonSetup", "Setup"))
 	ButtonSetupFunctions.append((_("Software update"), "Module/Screens.SoftwareUpdate/UpdatePlugin", "Setup"))
 	ButtonSetupFunctions.append((_("CI (Common Interface) Setup"), "Module/Screens.Ci/CiSelection", "Setup"))
+	ButtonSetupFunctions.append((_("Videosetup"), "Module/Screens.VideoMode/VideoSetup", "Setup"))
 	ButtonSetupFunctions.append((_("Tuner Configuration"), "Module/Screens.Satconfig/NimSelection", "Scanning"))
 	ButtonSetupFunctions.append((_("Manual Scan"), "Module/Screens.ScanSetup/ScanSetup", "Scanning"))
 	ButtonSetupFunctions.append((_("Automatic Scan"), "Module/Screens.ScanSetup/ScanSimple", "Scanning"))
@@ -342,8 +367,8 @@ class ButtonSetupSelect(Screen):
 			"right": self.keyRight,
 			"pageUp": self.toggleMode,
 			"pageDown": self.toggleMode,
-			"shiftUp": self.moveUp,
-			"shiftDown": self.moveDown,
+			"moveUp": self.moveUp,
+			"moveDown": self.moveDown,
 		}, -1)
 		self.onShown.append(self.enableKeyMap)
 		self.onClose.append(self.disableKeyMap)
