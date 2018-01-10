@@ -44,8 +44,12 @@
 		<item level="2" text="Disable background scanning" description="When tuned to a service the system will normally scan the transponder for any changes and save them. Only set to 'yes' if you're absolutely sure what you're doing.">config.misc.disable_background_scan</item>
 		<item level="2" text="Include ECM in http streams" description="ECM data will be included in the stream. This enables a client receiver to decode it.">config.streaming.stream_ecm</item>
 		<item level="2" text="Descramble http streams" description="Enables a feature so that the receiver can decrypt streams (if the ECM data is included in the stream and a valid card is available).">config.streaming.descramble</item>
+		<item level="2" text="Descramble receiving http streams" description="When enabled, always descramble receiving http streams. This takes up more resources (descrambling demuxers), only enable if necessary. Individual streams are always descrambled if 0x100 is added to the service type, regardless of this setting.">config.streaming.descramble_client</item>
 		<item level="2" text="Require authentication for http streams" description="When enabled, authentication is required to watch http streams.">config.streaming.authentication</item>
 		<item level="2" text="Load unlinked userbouquets" description="When enabled enigma2 will load unlinked userbouquets. This means that userbouquets that are available, but not included in the bouquets.tv or bouquets.radio files, will still be loaded. This allows you for example to keep your own user bouquet while installed settings are upgraded">config.misc.load_unlinked_userbouquets</item>
+		<item level="2" text="Ignore DVB-S namespace sub network" description="On valid ONIDs, ignore frequency sub network part">config.usage.subnetwork</item>
+		<item level="2" text="Ignore DVB-C namespace sub network" description="On valid ONIDs, ignore frequency sub network part">config.usage.subnetwork_cable</item>
+		<item level="2" text="Ignore DVB-T namespace sub network" description="On valid ONIDs, ignore frequency sub network part">config.usage.subnetwork_terrestrial</item>
 		<item level="1" text="Delivery system workaround" description="Workaround for old tuner driver" requires="need_dsw">config.usage.enable_delivery_system_workaround</item>
 		<!--item level="2" text="Enable Startup Bootvideo" description="You can Enable or Disable the Startup Bootvideo.">config.misc.bootvideo</item-->
 		<item level="1" text="After PowerLost" description="Select what should be done when the %s %s was shutdown incorrectly, or after the Power was lost.">config.usage.shutdownNOK_action</item>
@@ -53,6 +57,10 @@
 		<item level="1" text="Use workaround for wakeup from deep-standby?" description="If enabled, will checks for the time after the start of the receiver is within the time window and optionally switched to standby. If disabled, must additional be available a signal for the successful wakeup detection. (some receiver send a false or none signal)">config.workaround.deeprecord</item>
 		<item level="2" text="Wakeup time before a timer begins [mins]" description="The default settings are 5 minutes earlier to wakeup from deep standby. It possibly may be necessary to change this. (e.g.: the actual wake-up time is inaccurate or to late, waiting to a network-drive, etc.)">config.workaround.wakeuptime</item>
 		<item level="2" text="Time window for detection of the wakeup by a timer [mins]" description="The default settings are wakeup time - 5 minutes and timer begin time + 5 minutes. This setting changed the time window before the wakeup time. So can be detected a wakeup by a timer even at very early starting receivers.">config.workaround.wakeupwindow</item>
+		<item level="2" text="Remote control model shown" description="Which remote control gets shown. Only influences graphical representation.">config.usage.rc_model</item>
+		<item level="2" text="Enable cut file support for non *.ts files" description="Enable cut file support for non *.ts files. (e.g. mp4)">config.usage.useVideoCuesheet</item>
+		<item level="2" text="Enable cut file support for audio files" description="Enable cut file support for audio files. (e.g. mp3)">config.usage.useAudioCuesheet</item>
+		<item level="2" text="Enable chapter support for video files" description="Show chapter positions for supported video files. (gstreamer version must be greather than 1)">config.usage.useChapterInfo</item>
 	</setup>
 	<setup key="userinterface" title="OSD settings">
 		<item level="0" text="1st Infobar timeout" description="Set the time to hide the infobar.">config.usage.infobar_timeout</item>
@@ -104,6 +112,7 @@
 		<item level="1" text="Channel list service mode*" description="This option allows you to choose from the two channel lists that are available.">config.usage.servicelist_mode</item>
 		<item level="1" text="Channel list on mode change" description="If set to 'yes' the channel list will be shown after switching between radio and TV modes.">config.usage.show_servicelist</item>
 		<item level="1" text="Channel list cursor behavior" description="Configure the cursor behaviour in the channel selection list. When opening the channel selection list you can remain on the current service or already select up/down and you are able to revert the B+/B- buttons.">config.usage.servicelist_cursor_behavior</item>
+		<item level="1" text="Channel list show MiniTV" description="Channel list show MiniTV when Skin use.">config.usage.use_pig</item>
 		<item level="1" text="Enable multiple bouquets" description="Services may be grouped in bouquets. When enabled, you can use more than one bouquet.">config.usage.multibouquet</item>
 		<item level="2" text="Enable unlinked bouquets" description="When enabled, Enigma2 will load unlinked bouquets. This means that bouquets that are available, but not included in the bouquets.tv or bouquets.radio files, will still be loaded. This allows you for example to keep your own user bouquet while installed settings are upgraded">config.misc.load_unlinked_userbouquets</item>
 		<item level="1" text="Enable panic button" description="When enabled, pressing '0' will zap you to the first channel in your first bouquet and delete your zap-history.">config.usage.panicbutton</item>
@@ -159,7 +168,6 @@
 		<item level="2" text="Subtitle delay when timing lacks" description="Configure the subtitle delay when timing information is not available.">config.subtitles.subtitle_noPTSrecordingdelay</item>
 		<item level="2" text="Yellow DVB subtitles" description="When enabled, graphical DVB subtitles will be displayed in yellow, instead of the original color.">config.subtitles.dvb_subtitles_yellow</item>
 		<item level="2" text="Use original DVB subtitle position" description="When enabled, graphical DVB subtitles will be displayed at their original position.">config.subtitles.dvb_subtitles_original_position</item>
-		<item level="2" text="Center DVB subtitles" description="When enabled, graphical DVB subtitles will be centered horizontally.">config.subtitles.dvb_subtitles_centered</item>
 		<item level="2" text="Subtitle delay when timing is bad" description="Configure an additional delay to improve subtitle synchronisation.">config.subtitles.subtitle_bad_timing_delay</item>
 		<item level="2" text="DVB subtitle black transparency" description="Configure the transparency of the black background of graphical DVB subtitles.">config.subtitles.dvb_subtitles_backtrans</item>
 		<item level="2" text="External subtitle color" description="Configure the color of the external subtitles, alternative (normal in white, italic in yellow, bold in cyan, underscore in green), white or yellow.">config.subtitles.pango_subtitle_colors</item>
@@ -230,17 +238,19 @@
 		<item level="2" text="Remove completed timers after (days)" description="Configure the number of days old timers are kept before they are automatically removed from the timer list.">config.recording.keep_timers</item>
 		<item level="1" text="Use trash can in movielist" description="When enabled, deleted recordings are moved to the trash can, instead of being deleted immediately.">config.usage.movielist_trashcan</item>
 		<item level="1" text="Remove items from trash can after (days)" description="Configure the number of days after which items are automaticaly removed from the trash can.">config.usage.movielist_trashcan_days</item>
-		<item level="1" text="Clean network trash can's" description="When enabled, network trash can's are probed for cleaning.">config.usage.movielist_trashcan_network_clean</item>
+		<item level="1" text="Clean network trash cans" description="When enabled, network trash can's are probed for cleaning.">config.usage.movielist_trashcan_network_clean</item>
 		<item level="1" text="Disk space to reserve for recordings (in GB)" description="Configure the minimum amount of disk space to be available for recordings. When the amount of space drops below this value, deleted items will be removed from the trash can.">config.usage.movielist_trashcan_reserve</item>
 		<item level="2" text="Background delete option" description="Configure on which devices the background delete option should be used.">config.misc.erase_flags</item>
 		<item level="2" text="Background delete speed" description="Configure the speed of the background deletion process. Lower speed will consume less hard disk drive performance.">config.misc.erase_speed</item>
+		<item level="2" text="Always include ECM in recordings" description="Always include ECM messages in recordings. This overrides the individual timer settings globally. It allows recordings to be always decrypted afterwards (sometimes called offline decoding), if supported by your receiver. Default: off.">config.recording.always_ecm</item>
+		<item level="2" text="Never decrypt while recording" description="Never decrypt the content while recording. This overrides the individual timer settings globally. If enabled, recordings are stored in crypted presentation and must be decrypted afterwards (sometimes called offline decoding). Default: off.">config.recording.never_decrypt</item>
 		<item level="2" text="Offline decode delay (ms)" description="Configure the offline decoding delay in milliseconds. The configured delay is observed at each control word parity change.">config.recording.offline_decode_delay</item>
 		<item level="2" text="Default recording type" description="Descramble &amp; record ECM' gives the option to descramble afterwards if descrambling on recording failed. 'Don't descramble, record ECM' save a scramble recording that can be descrambled on playback. 'Normal' means descramble the recording and don't record ECM.">config.recording.ecm_data</item>
 		<item level="2" text="Default 'Timer type' *" description="Configure default setting for new timers. Need a restart after changing.">config.recording.default_timertype</item>  
 		<item level="2" text="Default 'After event'" description="Configure default setting for new timers. Need a restart after changing.">config.recording.default_afterevent</item>  
 		<item level="2" text="Include AIT in recordings" description="If enabled, AIT data is included in recordings.">config.recording.include_ait</item>
-		<item level="2" text="Show recording symbol depending on recording type" description="Configure whether the 'recording' symbol (in the display skin and LCD skin) is visible for real recordings only or also for streaming and pseuso recordings (e.g. EPGrefresh).">config.recording.show_rec_symbol_for_rec_types</item>
-		<item level="2" text="Show warning before box restart based on recording type" description="Configure for which types of recordings a warning about active recordings is shown when attempting to restart the box or the GUI.">config.recording.warn_box_restart_rec_types</item>
+		<item level="2" text="Show recording symbol" description="Configure whether the 'recording' symbol (in the display skin and LCD skin) is visible for real recordings only or also for streaming and pseuso recordings (e.g. EPGrefresh).">config.recording.show_rec_symbol_for_rec_types</item>
+		<item level="2" text="Show warning before restart" description="Configure for which types of recordings a warning about active recordings is shown when attempting to restart the box or the GUI.">config.recording.warn_box_restart_rec_types</item>
 	</setup>
 	<setup key="harddisk" title="Hard disk setup" >
 		<item level="0" text="Hard disk standby after" description="Configure the hard disk drive to go to standby after the specified idle time.">config.usage.hdd_standby</item>
@@ -381,7 +391,6 @@
 		<item level="2" text="Channel preview mode" description="If set to 'yes' you can preview channels in the EPG list.">config.epgselection.multi_preview_mode</item>
 		<item level="2" text="Show bouquet on launch" description="If set to 'yes' the bouquets will be shown each time you open the EPG.">config.epgselection.multi_showbouquet</item>
 		<item level="2" text="Skip empty services" description="If set to 'yes' channels without EPG will not be shown.">config.epgselection.overjump</item>
-		<item level="2" text="Sort list by" description="You can have the list sorted by time or alphanumerical.">config.epgselection.sort</item>
 		<item level="2" text="OK button (short)" description="Set to what you want the button to do.">config.epgselection.multi_ok</item>
 		<item level="2" text="OK button (long)" description="Set to what you want the button to do.">config.epgselection.multi_oklong</item>
 		<item level="2" text="Number of rows" description="Configure the number of rows shown.">config.epgselection.multi_itemsperpage</item>
