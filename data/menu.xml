@@ -86,6 +86,9 @@
 				<id val="osd_menu" />
                                 <item weight="0" level="0" entryID="display_setup"><setup id="display" /></item>
                                 <item weight="50" level="2" text="OSD 3D Setup" entryID="osd3dsetup" requires="CanChange3DOsd"><screen module="UserInterfacePositioner" screen="OSD3DSetupScreen"/></item>
+<item level="0" entryID="displaysetup"><setup id="display" /></item>
+						<!--item requires="OledDisplay" level="0" text="VFD Skin Selector" entryID="vfd_skin"><screen module="VfdSkinSelector" screen="VFDSkinSelector"/></item-->
+<item requires="LCDSKINSetup" level="0" text="VFD Skin Selector" entryID="vfd_skin"><screen module="VfdSkinSelector" screen="VFDSkinSelector"/></item>
 				<item weight="5" level="0" text="Skin setup" entryID="lcd_skin_setup" requires="LCDSKINSetup"><screen module="SkinSelector" screen="LcdSkinSelector"/></item>
                                 <item weight="0" level="0" entryID="user_interface"><setup id="userinterface" /></item>
                                	                      				
