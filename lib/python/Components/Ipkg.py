@@ -181,7 +181,7 @@ class IpkgComponent:
 			elif item[0].find('-bootlogo') > -1 and not config.plugins.softwaremanager.overwriteBootlogoFiles.value:
 				self.excludeList.append(item)
 				return
-			elif item[0].find('openesi-spinner') > -1 and not config.plugins.softwaremanager.overwriteSpinnerFiles.value:
+			elif item[0].find('openatv-spinner') > -1 and not config.plugins.softwaremanager.overwriteSpinnerFiles.value:
 				self.excludeList.append(item)
 				return
 			else:

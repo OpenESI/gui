@@ -236,12 +236,6 @@
 		<eLabel position="0,116" size="471,1" backgroundColor="white" />
 		<widget source="parent.summary_description" render="Label" position="0,117" size="471,203" zPosition="1" font="FdLcD;35" halign="center" valign="center" />
 	</screen>
-<!-- Esipanel -->
-	<screen name="Esipanel_summary" position="5,0" size="471,320">
-		<widget source="parent.Title" render="Label" position="0,0" size="471,113" font="FdLcD;38" foregroundColor="#87CEFA" halign="center" valign="center" />
-		<eLabel position="0,116" size="471,1" backgroundColor="white" />
-		<widget source="parent.summary_description" render="Label" position="0,117" size="471,203" zPosition="1" font="FdLcD;35" halign="center" valign="center" />
-	</screen>
 <!-- setup-->
 	<screen name="SetupSummary" position="fill">
 		<widget source="SetupTitle" render="Label" position="top" size="*,85" font="FdLcD;38" foregroundColor="#87CEFA" halign="center"  valign="center" />
