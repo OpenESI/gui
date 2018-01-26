@@ -112,14 +112,14 @@ class OverscanWizard(Screen, ConfigListScreen):
 			setConfiguredPosition()
 		elif self.step == 4:
 			self["introduction"].setText(_("The overscan wizard has been completed.\n\n"
-				"Note: you can always start the Overscan wizard later,  via\n\nmenu->Configuration->Video-Audio-Osd-Display->Display and OSD"))
+				"Note: you can always start the Overscan wizard later,  via\n\nenu->Configuration->Video-Audio-Osd-Display->Display and OSD->Overscan'))
 			self.yes_no.value = False
 			self.list.append(getConfigListEntry(_("Do you want to select a different skin?"), self.yes_no))
 		elif self.step == 5:
 			self.Timer.stop()
 			self["title"].setText(_("Overscan wizard"))
 			self["introduction"].setText(_("The overscan wizard has been completed.\n\n"
-				"Note: you can always start the Overscan wizard later,  via\n\nmenu->Configuration->Video-Audio-Osd-Display->Display and OSD"))
+				"Note: you can always start the Overscan wizard later,  via\n\nenu->Configuration->Video-Audio-Osd-Display->Display and OSD->Overscan'))
 			self.yes_no.value = True
 			self.list.append(getConfigListEntry(_("Do you want to quit the overscan wizard?"), self.yes_no))
 		elif self.step == 6:
