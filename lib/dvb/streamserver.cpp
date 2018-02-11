@@ -1,6 +1,7 @@
 #include <sys/select.h>
 #include <unistd.h>
 #include <string.h>
+#include <openssl/evp.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <shadow.h>
@@ -93,7 +94,24 @@ void eStreamClient::notifier(int what)
 				std::string hash = request.substr(pos + 21);
 				pos = hash.find('\r');
 				hash = hash.substr(0, pos);
-				authentication = base64decode(hash);
+				hash += "\n";
+				{
+					char *in, *out;
+					in = strdup(hash.c_str());
+					out = (char*)calloc(1, hash.size());
+					if (in && out)
+					{
+						BIO *b64, *bmem;
+						b64 = BIO_new(BIO_f_base64());
+						bmem = BIO_new_mem_buf(in, hash.size());
+						bmem = BIO_push(b64, bmem);
+						BIO_read(bmem, out, hash.size());
+						BIO_free_all(bmem);
+						authentication.append(out, hash.size());
+					}
+					free(in);
+					free(out);
+				}
 				pos = authentication.find(':');
 				if (pos != std::string::npos)
 				{
@@ -213,7 +231,6 @@ void eStreamClient::notifier(int what)
 						int framerate = 25000;
 						int interlaced = 0;
 						int aspectratio = 0;
-						std::string vcodec, acodec;
 						sscanf(request.substr(pos).c_str(), "?bitrate=%d", &bitrate);
 						pos = request.find("?width=");
 						if (pos != std::string::npos)
@@ -230,29 +247,9 @@ void eStreamClient::notifier(int what)
 						pos = request.find("?aspectratio=");
 						if (pos != std::string::npos)
 							sscanf(request.substr(pos).c_str(), "?aspectratio=%d", &aspectratio);
-						pos = request.find("?vcodec=");
-						if (pos != std::string::npos)
-						{
-							vcodec = request.substr(pos + 8);
-							pos = vcodec.find('?');
-							if (pos != std::string::npos)
-							{
-								vcodec = vcodec.substr(0, pos);
-							}
-						}
-						pos = request.find("?acodec=");
-						if (pos != std::string::npos)
-						{
-							acodec = request.substr(pos + 8);
-							pos = acodec.find('?');
-							if (pos != std::string::npos)
-							{
-								acodec = acodec.substr(0, pos);
-							}
-						}
 						encoderFd = -1;
 						if (eEncoder::getInstance())
-							encoderFd = eEncoder::getInstance()->allocateEncoder(serviceref, bitrate, width, height, framerate, !!interlaced, aspectratio, vcodec, acodec);
+							encoderFd = eEncoder::getInstance()->allocateEncoder(serviceref, bitrate, width, height, framerate, !!interlaced, aspectratio);
 						if (encoderFd >= 0)
 						{
 							running = true;

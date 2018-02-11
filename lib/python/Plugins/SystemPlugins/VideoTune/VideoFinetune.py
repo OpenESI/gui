@@ -10,20 +10,12 @@ def RGB(r,g,b):
 	return (r<<16)|(g<<8)|b
 
 class OverscanTestScreen(Screen):
-	skin = """
-		<screen position="fill">
-			<ePixmap pixmap="skin_default/overscan.png" position="0,0" size="1920,1080" zPosition="1" alphatest="on" />
-		</screen>"""
-
-	def __init__(self, session, xres=1280, yres=720):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 
-		self.xres, self.yres = getDesktop(0).size().width(), getDesktop(0).size().height()
-
-		if (self.xres, self.yres) != (xres, yres):
-			gMainDC.getInstance().setResolution(xres, yres)
-			getDesktop(0).resize(eSize(xres, yres))
-			self.onClose.append(self.__close)
+		self.skin = """<screen position="fill">
+				<ePixmap pixmap="skin_default/%s" position="0,0" size="%s,%s" zPosition="2" alphatest="on"/>
+			</screen>""" % (getDesktop(0).size().height() == 1080 and ("overscan1920x1080.png", 1920, 1080) or ("overscan1280x720.png", 1280, 720))
 
 		self["actions"] = NumberActionMap(["InputActions", "OkCancelActions"],
 		{
@@ -37,10 +29,6 @@ class OverscanTestScreen(Screen):
 			"cancel": self.cancel
 		})
 
-	def __close(self):
-		gMainDC.getInstance().setResolution(self.xres, self.yres)
-		getDesktop(0).resize(eSize(self.xres, self.yres))
-
 	def ok(self):
 		self.close(True)
 
@@ -53,11 +41,18 @@ class OverscanTestScreen(Screen):
 class FullHDTestScreen(OverscanTestScreen):
 	skin = """
 		<screen position="fill">
-			<ePixmap pixmap="skin_default/testscreen.png" position="0,0" size="1920,1080" zPosition="1" alphatest="on" />
+			<ePixmap pixmap="skin_default/testscreen.png" position="0,0" size="1920,1080" zPosition="2" alphatest="on"/>
 		</screen>"""
 
 	def __init__(self, session):
-		OverscanTestScreen.__init__(self, session, 1920, 1080)
+		Screen.__init__(self, session)
+
+		self.xres, self.yres = getDesktop(0).size().width(), getDesktop(0).size().height()
+
+		if (self.xres, self.yres) != (1920, 1080):
+			gMainDC.getInstance().setResolution(1920, 1080)
+			getDesktop(0).resize(eSize(1920, 1080))
+			self.onClose.append(self.__close)
 
 		self["actions"] = NumberActionMap(["InputActions", "OkCancelActions"],
 		{
@@ -71,10 +66,15 @@ class FullHDTestScreen(OverscanTestScreen):
 			"cancel": self.cancel
 		})
 
+	def __close(self):
+		gMainDC.getInstance().setResolution(self.xres, self.yres)
+		getDesktop(0).resize(eSize(self.xres, self.yres))
+
 class VideoFinetune(Screen):
+	skinAttributes = None
 	skin = """
 		<screen position="fill">
-			<widget source="Canvas" render="Canvas" position="fill" />
+			<widget source="Canvas" render="Canvas" position="fill" zPosition="2"/>
 		</screen>"""
 
 	def __init__(self, session):
@@ -83,10 +83,7 @@ class VideoFinetune(Screen):
 		self["Canvas"] = CanvasSource()
 
 		self.basic_colors = [RGB(255, 255, 255), RGB(255, 255, 0), RGB(0, 255, 255), RGB(0, 255, 0), RGB(255, 0, 255), RGB(255, 0, 0), RGB(0, 0, 255), RGB(0, 0, 0)]
-		self.MyFontSize = 20
-
-		if getDesktop(0).size().width() > 1280:
-			self.MyFontSize = 28
+		self.fontsize = getDesktop(0).size().height() == 1080 and 30 or 20
 
 		if fileExists("/proc/stb/fb/dst_left"):
 			self.left = open("/proc/stb/fb/dst_left", "r").read()
@@ -141,7 +138,7 @@ class VideoFinetune(Screen):
 		c = self["Canvas"]
 
 		xres, yres = getDesktop(0).size().width(), getDesktop(0).size().height()
-		
+
 		bbw, bbh = xres / 192, yres / 192
 		c.fill(0, 0, xres, yres, RGB(0,0,0))
 
@@ -157,11 +154,11 @@ class VideoFinetune(Screen):
 			if col == 0 or col == 16 or col == 116:
 				c.fill(x, offset, width, 2, RGB(255, 255, 255))
 			if i < 2:
-				c.writeText(x + width, offset, width, eh, RGB(255, 255, 255), RGB(0,0,0), gFont("Regular", self.MyFontSize), "%d." % (i+1))
+				c.writeText(x + width, offset, width, eh, RGB(255, 255, 255), RGB(0,0,0), gFont("Regular", self.fontsize), "%d." % (i+1))
 
-		c.writeText(xres / 10, yres / 6 - 40, xres * 3 / 5, 40, RGB(128,255,255), RGB(0,0,0), gFont("Regular", self.MyFontSize * 2),
+		c.writeText(xres / 10, yres / 6 - self.fontsize * 2, xres * 3 / 5, 40, RGB(128,255,255), RGB(0,0,0), gFont("Regular", self.fontsize * 2),
 			_("Brightness"))
-		c.writeText(xres / 10, yres / 5, xres / 2, yres * 4 / 6, RGB(255,255,255), RGB(0,0,0), gFont("Regular", self.MyFontSize),
+		c.writeText(xres / 10, yres / 6, xres / 2, yres * 4 / 6, RGB(255,255,255), RGB(0,0,0), gFont("Regular", self.fontsize),
 			_("If your TV has a brightness or contrast enhancement, disable it. If there is something called \"dynamic\", "
 				"set it to standard. Adjust the backlight level to a value suiting your taste. "
 				"Turn down contrast on your TV as much as possible.\nThen turn the brightness setting as "
@@ -199,11 +196,11 @@ class VideoFinetune(Screen):
 			if col == 185 or col == 235 or col == 255:
 				c.fill(x, offset, width, 2, RGB(0,0,0))
 			if i >= 13:
-				c.writeText(x + width, offset, width, eh, RGB(0, 0, 0), RGB(255, 255, 255), gFont("Regular", self.MyFontSize), "%d." % (i-13+1))
+				c.writeText(x + width, offset, width, eh, RGB(0, 0, 0), RGB(255, 255, 255), gFont("Regular", self.fontsize), "%d." % (i-13+1))
 
-		c.writeText(xres / 10, yres / 6 - 40, xres * 3 / 5, 40, RGB(128,0,0), RGB(255,255,255), gFont("Regular", self.MyFontSize * 2),
+		c.writeText(xres / 10, yres / 6 - self.fontsize * 2, xres * 3 / 5, 40, RGB(128,0,0), RGB(255,255,255), gFont("Regular", self.fontsize * 2),
 			_("Contrast"))
-		c.writeText(xres / 10, yres / 5, xres / 2, yres * 4 / 6, RGB(0,0,0), RGB(255,255,255), gFont("Regular", self.MyFontSize),
+		c.writeText(xres / 10, yres / 6, xres / 2, yres * 4 / 6, RGB(0,0,0), RGB(255,255,255), gFont("Regular", self.fontsize),
 			_("Now, use the contrast setting to turn up the brightness of the background as much as possible, "
 				"but make sure that you can still see the difference between the two brightest levels of shades."
 				"If you have done that, press OK."),
@@ -260,9 +257,9 @@ class VideoFinetune(Screen):
 				if i == 0:
 					self.bbox(x, offset, width, eh, RGB(0,0,0), bbw, bbh)
 
-		c.writeText(xres / 10, yres / 6 - 40, xres * 3 / 5, 40, RGB(128,0,0), RGB(255,255,255), gFont("Regular", self.MyFontSize * 2),
-			_("Color"))
-		c.writeText(xres / 10, yres / 5, xres / 2, yres * 4 / 6, RGB(0,0,0), RGB(255,255,255), gFont("Regular", self.MyFontSize),
+		c.writeText(xres / 10, yres / 6 - self.fontsize * 2, xres * 3 / 5, 40, RGB(128,0,0), RGB(255,255,255), gFont("Regular", self.fontsize * 2),
+			"Color")
+		c.writeText(xres / 10, yres / 6, xres / 2, yres * 4 / 6, RGB(0,0,0), RGB(255,255,255), gFont("Regular", self.fontsize),
 			_("Adjust the color settings so that all the color shades are distinguishable, but appear as saturated as possible. "
 				"If you are happy with the result, press OK to close the video fine-tuning, or use the number keys to select other test screens."),
 				RT_WRAP)
@@ -337,7 +334,7 @@ class VideoFinetune(Screen):
 		c.flush()
 
 	def testpic_overscan(self):
-		self.next = self.testpic_fullhd
+		self.next = self.testpic_fullhd or self.testpic_brightness
 		self.hide()
 		self.session.openWithCallback(self.testpicCallback, OverscanTestScreen)
 

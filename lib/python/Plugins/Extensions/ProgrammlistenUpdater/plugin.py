@@ -10,7 +10,6 @@ from Screens.MessageBox import MessageBox
 from Plugins.Plugin import PluginDescriptor
 from enigma import *
 from downloader import DownloadSetting, ConverDate
-from Components.NimManager import nimmanager
 from settinglist import *
 from restore import *
 from history import *
@@ -178,10 +177,7 @@ def Main(session, **kwargs):
     session.open(Programmlisten_Updater)
 
 def Plugins(**kwargs):
-    if nimmanager.hasNimType("DVB-S"):
-        return [
-            PluginDescriptor(name="Programmlisten-Updater V" + Version, description=_("Programmlisten-Updater from DXAndy"), icon="plugin.png", where=PluginDescriptor.WHERE_PLUGINMENU, fnc=Main),
-            PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=SessionStart),
-            PluginDescriptor(where=PluginDescriptor.WHERE_AUTOSTART, fnc=AutoStart)]
-    else:
-        return []
+    return [
+    PluginDescriptor(name="Programmlisten-Updater V" + Version, description=_("Programmlisten-Updater from DXAndy"), icon="plugin.png", where=PluginDescriptor.WHERE_PLUGINMENU, fnc=Main),
+    PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=SessionStart),
+    PluginDescriptor(where=PluginDescriptor.WHERE_AUTOSTART, fnc=AutoStart)]

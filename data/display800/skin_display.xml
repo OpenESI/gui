@@ -39,9 +39,7 @@
 		<panel name="LCDChannelSelectionProgramName" />
 		<panel name="LCDChannelSelectionProgress" />
 		<panel name="LCDChannelSelectionRemainingTime" />
-		<panel name="LCDChannelSelectionStartTime" />
-		<eLabel text="-" position="520,390" size="70,70" foregroundColor="white" font="FdLcD;60" halign="center" valign="center" />
-		<panel name="LCDChannelSelectionEndTime" />
+		<panel name="LCDChannelSelectionStartEndTime" />
 		<panel name="LCDRecordIcon" />
 	</screen>
 	<screen name="ChannelSelectionRadio_summary" position="0,0" size="800,480">
@@ -56,9 +54,7 @@
 		<panel name="LCDEPGProgramName" />
 		<panel name="LCDEPGProgress" />
 		<panel name="LCDEPGRemainingTime" />
-		<panel name="LCDEPGStartTime" />
-		<eLabel text="-" position="520,390" size="70,70" foregroundColor="white" font="FdLcD;60" halign="center" valign="center" />
-		<panel name="LCDEPGEndTime" />
+		<panel name="LCDEPGStartEndTime" />
 		<panel name="LCDRecordIcon" />
 	</screen>
 	<screen name="GraphicalEPG_summary" position="0,0" size="800,480">
@@ -77,9 +73,7 @@
 		<panel name="LCDInfoBarProgramName" />
 		<panel name="LCDInfoBarProgress" />
 		<panel name="LCDInfoBarRemainingTime" />
-		<panel name="LCDInfoBarStartTime" />
-		<eLabel text="-" position="520,390" size="70,70" foregroundColor="white" font="FdLcD;60" halign="center" valign="center" />
-		<panel name="LCDInfoBarEndTime" />
+		<panel name="LCDInfoBarStartEndTime" />
 		<panel name="LCDRecordIcon" />
 	</screen>
 	

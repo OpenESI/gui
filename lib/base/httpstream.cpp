@@ -4,7 +4,6 @@
 #include <lib/base/httpstream.h>
 #include <lib/base/eerror.h>
 #include <lib/base/wrappers.h>
-#include <lib/base/nconfig.h> // access to python config
 
 DEFINE_REF(eHttpStream);
 
@@ -177,7 +176,7 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 	result = sscanf(linebuf, "%99s %d %99s", proto, &statuscode, statusmsg);
 	if (result != 3 || (statuscode != 200 && statuscode != 206 && statuscode != 302))
 	{
-		eDebug("[eHttpStream] %s: wrong http response code: %d", __func__, statuscode);
+		eDebug("%s: wrong http response code: %d", __FUNCTION__, statuscode);
 		goto error;
 	}
 
@@ -204,7 +203,7 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 		if (playlist && !strncasecmp(linebuf, "http://", 7))
 		{
 			newurl = linebuf;
-			eDebug("[eHttpStream] %s: playlist entry: %s", __func__, newurl.c_str());
+			eDebug("%s: playlist entry: %s", __FUNCTION__, newurl.c_str());
 			break;
 		}
 		if (((statuscode == 301) || (statuscode == 302) || (statuscode == 303) || (statuscode == 307) || (statuscode == 308)) &&
@@ -213,7 +212,7 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 			newurl = &linebuf[10];
 			if (!extra_headers.empty())
 				newurl.append("#").append(extra_headers);
-			eDebug("[eHttpStream] %s: redirecting to: %s", __func__, newurl.c_str());
+			eDebug("%s: redirecting to: %s", __FUNCTION__, newurl.c_str());
 			break;
 		}
 
@@ -230,7 +229,7 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 	free(linebuf);
 	return 0;
 error:
-	eDebug("[eHttpStream] %s failed", __func__);
+	eDebug("%s failed", __FUNCTION__);
 	free(linebuf);
 	close();
 	return -1;
@@ -245,7 +244,7 @@ int eHttpStream::open(const char *url)
 	 * Spawn a new thread to establish the connection.
 	 */
 	connectionStatus = BUSY;
-	eDebug("[eHttpStream] Start thread");
+	eDebug("eHttpStream::Start thread");
 	run();
 	return 0;
 }
@@ -253,8 +252,6 @@ int eHttpStream::open(const char *url)
 void eHttpStream::thread()
 {
 	hasStarted();
-	if (eConfigManager::getConfigBoolValue("config.usage.remote_fallback_enabled", false))
-		usleep(500000); // wait half a second
 	std::string currenturl, newurl;
 	currenturl = streamUrl;
 	for (unsigned int i = 0; i < 5; i++)
@@ -262,14 +259,14 @@ void eHttpStream::thread()
 		if (openUrl(currenturl, newurl) < 0)
 		{
 			/* connection failed */
-			eDebug("[eHttpStream] Thread end NO connection");
+			eDebug("eHttpStream::Thread end NO connection");
 			connectionStatus = FAILED;
 			return;
 		}
 		if (newurl == "")
 		{
 			/* we have a valid stream connection */
-			eDebug("[eHttpStream] Thread end connection");
+			eDebug("eHttpStream::Thread end connection");
 			connectionStatus = CONNECTED;
 			return;
 		}
@@ -279,7 +276,7 @@ void eHttpStream::thread()
 		newurl = "";
 	}
 	/* too many redirect / playlist levels */
-	eDebug("[eHttpStream] hread end NO connection");
+	eDebug("eHttpStream::Thread end NO connection");
 	connectionStatus = FAILED;
 	return;
 }

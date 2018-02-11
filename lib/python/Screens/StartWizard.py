@@ -3,7 +3,6 @@ from Screens.WizardLanguage import WizardLanguage
 from Screens.VideoWizard import VideoWizard
 from Screens.Rc import Rc
 from Screens.Screen import Screen
-
 from boxbranding import getBoxType
 try:
 	from Plugins.SystemPlugins.OSDPositionSetup.overscanwizard import OverscanWizard
@@ -12,7 +11,7 @@ except:
 
 from Components.Pixmap import Pixmap
 from Components.config import config, ConfigBoolean, configfile
-
+from Components.SystemInfo import SystemInfo
 from LanguageSelection import LanguageWizard
 
 config.misc.firstrun = ConfigBoolean(default = True)
@@ -26,8 +25,6 @@ class StartWizard(WizardLanguage, Rc):
 		WizardLanguage.__init__(self, session, showSteps = False)
 		Rc.__init__(self)
 		self["wizard"] = Pixmap()
-		self["HelpWindow"] = Pixmap()
-		self["HelpWindow"].hide()
 		#Screen.setTitle(self, _("Welcome..."))
 		Screen.setTitle(self, _("StartWizard"))
 
@@ -43,8 +40,6 @@ class StartWizard(WizardLanguage, Rc):
 		config.misc.firstrun.save()
 		configfile.save()
 
-
-# mytest.py#L528ff - RestoreSettings
 wizardManager.registerWizard(VideoWizard, config.misc.videowizardenabled.value, priority = 0)
 wizardManager.registerWizard(LanguageWizard, config.misc.languageselected.value, priority = 2)
 if OverscanWizard is not None:

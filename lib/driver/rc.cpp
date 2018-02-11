@@ -74,7 +74,7 @@ eRCShortDriver::eRCShortDriver(const char *filename): eRCDriver(eRCInput::getIns
 	handle=open(filename, O_RDONLY|O_NONBLOCK);
 	if (handle<0)
 	{
-		eDebug("[eRCShortDriver] cannot open %s: %m", filename);
+		eDebug("failed to open %s", filename);
 		sn=0;
 	} else
 	{
@@ -107,7 +107,7 @@ eRCInputEventDriver::eRCInputEventDriver(const char *filename): eRCDriver(eRCInp
 	handle=open(filename, O_RDONLY|O_NONBLOCK);
 	if (handle<0)
 	{
-		eDebug("[eRCInputEventDriver] cannot open %s: %m", filename);
+		eDebug("failed to open %s", filename);
 		sn=0;
 	} else
 	{
@@ -117,18 +117,6 @@ eRCInputEventDriver::eRCInputEventDriver(const char *filename): eRCDriver(eRCInp
 		::ioctl(handle, EVIOCGBIT(EV_KEY, sizeof(keyCaps)), keyCaps);
 		memset(evCaps, 0, sizeof(evCaps));
 		::ioctl(handle, EVIOCGBIT(0, sizeof(evCaps)), evCaps);
-#if DUMPKEYS
-		int i;
-		eDebugNoNewLineStart("[eRCInputEventDriver] %s keycaps: ", filename);
-		for (i = 0; i< sizeof(keyCaps); i++)
-			eDebugNoNewLine(" %02X", keyCaps[i]);
-		eDebugNoNewLine("\n");
-		eDebugNoNewLineStart("[eRCInputEventDriver] %s evcaps: ", filename);
-		for (i = 0; i< sizeof(evCaps); i++)
-			eDebugNoNewLine(" %02X", evCaps[i]);
-		eDebugNoNewLine("\n");
-#endif
-	m_remote_control = getDeviceName().find("remote control") != std::string::npos; /* assume remote control when name says so */
 	}
 }
 
@@ -140,7 +128,6 @@ std::string eRCInputEventDriver::getDeviceName()
 #ifdef FORCE_ADVANCED_REMOTE
 	if (!strcmp(name, "dreambox remote control (native)")) return "dreambox advanced remote control (native)";
 #endif
-	eDebug("[eRCInputEventDriver] devicename=%s", name);
 	return name;
 }
 
@@ -150,7 +137,7 @@ void eRCInputEventDriver::setExclusive(bool b)
 	{
 		int grab = b;
 		if (::ioctl(handle, EVIOCGRAB, grab) < 0)
-			eDebug("[eRCInputEventDriver] EVIOCGRAB: %m");
+			perror("EVIOCGRAB");
 	}
 }
 
@@ -161,17 +148,21 @@ bool eRCInputEventDriver::hasCap(unsigned char *caps, int bit)
 
 bool eRCInputEventDriver::isKeyboard()
 {
-	if (m_remote_control)
-		return false;
+#ifdef VUPLUS_RC_WORKAROUND
+	return(false);
+#else
 	/* check whether the input device has KEY_A, in which case we assume it is a keyboard */
 	return hasCap(keyCaps, KEY_A);
+#endif
 }
 
 bool eRCInputEventDriver::isPointerDevice()
 {
-	if (m_remote_control)
-		return false;
+#ifdef VUPLUS_RC_WORKAROUND
+	return(false);
+#else
 	return hasCap(evCaps, EV_REL) || hasCap(evCaps, EV_ABS);
+#endif
 }
 
 eRCInputEventDriver::~eRCInputEventDriver()
@@ -258,9 +249,9 @@ eRCDevice *eRCInput::getDevice(const std::string &id)
 	std::map<std::string,eRCDevice*>::iterator i=devices.find(id);
 	if (i == devices.end())
 	{
-		eDebug("[eRCDevice] failed, possible choices are:");
+		eDebug("failed, possible choices are:");
 		for (std::map<std::string,eRCDevice*>::iterator i=devices.begin(); i != devices.end(); ++i)
-			eDebug("[eRCDevice]     %s", i->first.c_str());
+			eDebug("%s", i->first.c_str());
 		return 0;
 	}
 	return i->second;
