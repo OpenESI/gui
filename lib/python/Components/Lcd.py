@@ -300,7 +300,7 @@ def standbyCounterChanged(configElement):
 	config.lcd.ledbrightnessdeepstandby.apply()
 
 def InitLcd():
-	if getBoxType() in ('vipert2c','evoslimse','evoslimt2c','valalinux','tmtwin4k','tmnanom3','mbmicrov2','revo4k','force3uhd','force2nano','evoslim','wetekplay', 'wetekplay2', 'wetekhub', 'ultrabox', 'novaip', 'dm520', 'dm525', 'purehd', 'mutant11', 'xpeedlxpro', 'zgemmai55', 'sf98', 'et7x00mini', 'xpeedlxcs2', 'xpeedlxcc', 'e4hd', 'e4hdhybrid', 'mbmicro', 'beyonwizt2', 'amikomini', 'dynaspark', 'amiko8900', 'sognorevolution', 'arguspingulux', 'arguspinguluxmini', 'arguspinguluxplus', 'sparkreloaded', 'sabsolo', 'sparklx', 'gis8120', 'gb800se', 'gb800solo', 'gb800seplus', 'gbultrase', 'gbipbox', 'tmsingle', 'tmnano2super', 'iqonios300hd', 'iqonios300hdv2', 'optimussos1plus', 'optimussos1', 'vusolo', 'et4x00', 'et5x00', 'et6x00', 'et7000', 'et7100', 'mixosf7', 'mixoslumi', 'gbx1', 'gbx2', 'gbx3', 'gbx3h'):
+	if getBoxType() in ('lunix','purehdse','vipert2c','evoslimse','evoslimt2c','valalinux','tmtwin4k','tmnanom3','mbmicrov2','revo4k','force3uhd','force2nano','evoslim','wetekplay', 'wetekplay2', 'wetekhub', 'ultrabox', 'novaip', 'dm520', 'dm525', 'purehd', 'mutant11', 'xpeedlxpro', 'zgemmai55', 'sf98', 'et7x00mini', 'xpeedlxcs2', 'xpeedlxcc', 'e4hd', 'e4hdhybrid', 'mbmicro', 'beyonwizt2', 'amikomini', 'dynaspark', 'amiko8900', 'sognorevolution', 'arguspingulux', 'arguspinguluxmini', 'arguspinguluxplus', 'sparkreloaded', 'sabsolo', 'sparklx', 'gis8120', 'gb800se', 'gb800solo', 'gb800seplus', 'gbultrase', 'gbipbox', 'tmsingle', 'tmnano2super', 'iqonios300hd', 'iqonios300hdv2', 'optimussos1plus', 'optimussos1', 'vusolo', 'et4x00', 'et5x00', 'et6x00', 'et7000', 'et7100', 'mixosf7', 'mixoslumi', 'gbx1', 'gbx2', 'gbx3', 'gbx3h'):
 		detected = False
 	else:
 		detected = eDBoxLCD.getInstance().detected()
@@ -320,6 +320,7 @@ def InitLcd():
 		if can_lcdmodechecking:
 			def setLCDModeMinitTV(configElement):
 				try:
+					print 'setLCDModeMinitTV',configElement.value
 					f = open("/proc/stb/lcd/mode", "w")
 					f.write(configElement.value)
 					f.close()
@@ -327,6 +328,7 @@ def InitLcd():
 					pass
 			def setMiniTVFPS(configElement):
 				try:
+					print 'setMiniTVFPS',configElement.value
 					f = open("/proc/stb/lcd/fps", "w")
 					f.write("%d \n" % configElement.value)
 					f.close()
@@ -336,12 +338,19 @@ def InitLcd():
 				pass
 			def setLCDScreenshot(configElement):
  				ilcd.setScreenShot(configElement.value);
-				
-			config.lcd.modepip = ConfigSelection(choices={
-					"0": _("off"),
-					"5": _("PIP"),
-					"7": _("PIP with OSD")},
-					default = "0")
+
+			if getBoxType() in ('gbquad4k', 'gbue4k'):
+				config.lcd.modepip = ConfigSelection(choices={
+						"0": _("off"),
+						"4": _("PIP"),
+						"6": _("PIP with OSD")},
+						default = "0")
+			else:
+				config.lcd.modepip = ConfigSelection(choices={
+						"0": _("off"),
+						"5": _("PIP"),
+						"7": _("PIP with OSD")},
+						default = "0")
 			if config.misc.boxtype.value in ( 'gbquad', 'gbquadplus', 'gbquad4k', 'gbue4k'):
 				config.lcd.modepip.addNotifier(setLCDModePiP)
 			else:
@@ -350,12 +359,24 @@ def InitLcd():
 			config.lcd.screenshot = ConfigYesNo(default=False)
  			config.lcd.screenshot.addNotifier(setLCDScreenshot)	
 
-			config.lcd.modeminitv = ConfigSelection(choices={
-					"0": _("normal"),
-					"1": _("MiniTV"),
-					"2": _("OSD"),
-					"3": _("MiniTV with OSD")},
-					default = "0")
+			if getBoxType() in ('gbquad4k', 'gbue4k'):
+				#  (0:normal, 1:video0, 2:fb, 3:vide0+fb, 4:video1, 5:vide0+video1, 6:video1+fb, 7:video0+video1+fb)
+				config.lcd.modeminitv = ConfigSelection(default = "0", choices=[
+						("0", _("normal")),
+						("1", _("MiniTV") + _(" - video0")),
+						("3", _("MiniTV with OSD") + _(" - video0")),
+						("2", _("OSD")),
+						("4", _("MiniTV") + _(" - video1")),
+						("6", _("MiniTV with OSD") + _(" - video1")),
+						("5", _("MiniTV") + _(" - video0+video1")),
+						("7", _("MiniTV with OSD") + _(" - video0+video1"))]) 
+			else:
+				config.lcd.modeminitv = ConfigSelection(choices={
+						"0": _("normal"),
+						"1": _("MiniTV"),
+						"2": _("OSD"),
+						"3": _("MiniTV with OSD")},
+						default = "0")
 			config.lcd.fpsminitv = ConfigSlider(default=30, limits=(0, 30))
 			config.lcd.modeminitv.addNotifier(setLCDModeMinitTV)
 			config.lcd.fpsminitv.addNotifier(setMiniTVFPS)
@@ -457,19 +478,18 @@ def InitLcd():
 		config.usage.lcd_standbypowerled = ConfigSelection(default = "on", choices = [("off", _("Off")), ("on", _("On"))])
 		config.usage.lcd_standbypowerled.addNotifier(setPowerLEDstanbystate)
 
-		standby_default = 0
+		if getBoxType() in ('dm900', 'dm920', 'e4hdultra'):
+			standby_default = 4
+		elif getBoxType() in ('spycat4kmini', 'osmega'):
+			standby_default = 10
+		else:
+			standby_default = 1
 
 		if not ilcd.isOled():
 			config.lcd.contrast = ConfigSlider(default=5, limits=(0, 20))
 			config.lcd.contrast.addNotifier(setLCDcontrast);
 		else:
 			config.lcd.contrast = ConfigNothing()
-			if getBoxType() in ('dm900', 'dm920'):
-				standby_default = 4
-			elif getBoxType() in ('spycat4kmini', 'osmega'):
-				standby_default = 10
-			else:
-				standby_default = 1
 
 		if getBoxType() in ('novatwin', 'novacombo', 'mixosf5', 'mixosf5mini', 'gi9196m', 'gi9196lite', 'zgemmas2s', 'zgemmash1', 'zgemmash2', 'zgemmass', 'zgemmahs', 'zgemmah2s', 'zgemmah2h', 'spycat'):
 			config.lcd.standby = ConfigSlider(default=standby_default, limits=(0, 4))
@@ -517,7 +537,7 @@ def InitLcd():
 			config.lcd.showTv = ConfigYesNo(default = False)
 			config.lcd.showTv.addNotifier(lcdLiveTvChanged)
 
-		if SystemInfo["LCDMiniTV"]:
+		if SystemInfo["LCDMiniTV"] and config.misc.boxtype.value not in ( 'gbquad', 'gbquadplus', 'gbquad4k', 'gbue4k'):
 			config.lcd.minitvmode = ConfigSelection([("0", _("normal")), ("1", _("MiniTV")), ("2", _("OSD")), ("3", _("MiniTV with OSD"))], "0")
 			config.lcd.minitvmode.addNotifier(setLCDminitvmode)
 			config.lcd.minitvpipmode = ConfigSelection([("0", _("off")), ("5", _("PIP")), ("7", _("PIP with OSD"))], "0")

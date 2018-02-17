@@ -31,7 +31,7 @@ class OverscanWizard(Screen, ConfigListScreen):
 		from Components.ActionMap import ActionMap
 		from Components.Button import Button
 
-		self["title"] = Label(_("Overscan wizard"))
+		self["title"] = Label(_("Overscan Wizard"))
 		self["introduction"] = Label()
 
 		self["actions"] = ActionMap(["SetupActions", "ColorActions", "MenuActions"],
@@ -50,7 +50,7 @@ class OverscanWizard(Screen, ConfigListScreen):
 
 		self.Timer = eTimer()
 		if timeOut:
-			self.countdown = 10
+			self.countdown = 20
 			self.Timer.callback.append(self.TimerTimeout)
 			self.Timer.start(1000)
 
@@ -81,12 +81,12 @@ class OverscanWizard(Screen, ConfigListScreen):
 				"If you see the tips of all eight arrowheads, then your TV has overscan disabled.\n\n"
 				"Test Pattern by TigerDave - www.tigerdave.com/ht_menu.htm"))
 			self.yes_no = ConfigYesNo(default = True)
-			self.list.append(getConfigListEntry(_("Did you see all eight arrow heads?"), self.yes_no))
+			self.list.append(getConfigListEntry(_("Do you see all the eight arrowheads?"), self.yes_no))
 			self.save_new_position = False
 			setPosition(0, 720, 0, 576)
 		elif self.step == 2:
 			self.Timer.stop()
-			self["title"].setText(_("Overscan wizard"))
+			self["title"].setText(_("Overscan Wizard"))
 			self["introduction"].setText(_("It seems you did not see all the eight arrow heads. This means your TV is "
 				"has overscan enabled, and is not configured properly.\n\n"
 				"Please refer to your TVs manual to find how you can disable overscan on your TV. Look for terms like 'Just fit', 'Full width', etc. "
@@ -117,13 +117,13 @@ class OverscanWizard(Screen, ConfigListScreen):
 			self.list.append(getConfigListEntry(_("Do you want to select a different skin?"), self.yes_no))
 		elif self.step == 5:
 			self.Timer.stop()
-			self["title"].setText(_("Overscan wizard"))
+			self["title"].setText(_("Overscan Wizard"))
 			self["introduction"].setText(_("The overscan wizard has been completed.\n\n"
 				"Note: you can always start the Overscan wizard later,  via\n\nmenu->Configuration->Video-Audio-Osd-Display->Display and OSD"))
 			self.yes_no.value = True
 			self.list.append(getConfigListEntry(_("Do you want to quit the overscan wizard?"), self.yes_no))
 		elif self.step == 6:
-			config.skin.primary_skin.value = "PLi-HD/skin.xml"
+			config.skin.primary_skin.value = "AeonMOD_Adrenalinnrw/skin.xml"
 			config.save()
 			self["introduction"].setText(_("The user interface of the receiver will now restart to select the selected skin"))
 			quitMainloop(3)
@@ -134,7 +134,7 @@ class OverscanWizard(Screen, ConfigListScreen):
 
 	def TimerTimeout(self):
 		self.countdown -= 1
-		self["title"].setText(_("Overscan wizard") + " (%s)" % self.countdown)
+		self["title"].setText(_("Overscan Wizard") + " (%s)" % self.countdown)
 		if not(self.countdown):
 			self.keyCancel()
 
