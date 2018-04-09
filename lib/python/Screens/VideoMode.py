@@ -205,14 +205,17 @@ class VideoSetup(Screen, ConfigListScreen):
 		elif config.av.aspect.value == "4:3":
 			self.list.append(getConfigListEntry(_("Display 16:9 content as"), config.av.policy_169, _("When the content has an aspect ratio of 16:9, choose whether to scale/stretch the picture.")))
 
-#		if config.av.videoport.value == "HDMI":
-#			self.list.append(getConfigListEntry(_("Allow unsupported modes"), config.av.edid_override))
+		if config.av.videoport.value == "HDMI":
+			self.list.append(getConfigListEntry(_("Allow unsupported modes"), config.av.edid_override,_("This option allows you to use all HDMI Modes")))
 		if config.av.videoport.value == "Scart":
 			self.list.append(getConfigListEntry(_("Color format"), config.av.colorformat, _("Configure which color format should be used on the SCART output.")))
 			if level >= 1:
 				self.list.append(getConfigListEntry(_("WSS on 4:3"), config.av.wss, _("When enabled, content with an aspect ratio of 4:3 will be stretched to fit the screen.")))
 				if SystemInfo["ScartSwitch"]:
 					self.list.append(getConfigListEntry(_("Auto scart switching"), config.av.vcrswitch, _("When enabled, your receiver will detect activity on the VCR SCART input.")))
+
+		if not isinstance(config.av.scaler_sharpness, ConfigNothing) and not path.exists("/usr/lib/enigma2/python/Plugins/SystemPlugins/VideoEnhancement/plugin.pyo"):
+			self.list.append(getConfigListEntry(_("Scaler sharpness"), config.av.scaler_sharpness, _("This option configures the picture sharpness.")))
 
 		if SystemInfo["havecolorspace"]:
 			self.list.append(getConfigListEntry(_("HDMI Colorspace"), config.av.hdmicolorspace,_("This option allows you can config the Colorspace from Auto to RGB")))
@@ -222,6 +225,9 @@ class VideoSetup(Screen, ConfigListScreen):
 
 		if SystemInfo["havehdmicolordepth"]:
 			self.list.append(getConfigListEntry(_("HDMI Colordepth"), config.av.hdmicolordepth,_("This option allows you can config the Colordepth for UHD")))
+
+		if SystemInfo["havehdmihdrtype"]:
+			self.list.append(getConfigListEntry(_("HDMI HDR Type"), config.av.hdmihdrtype,_("This option allows you can force the HDR Modes for UHD")))
 
 		if SystemInfo["Canedidchecking"]:
 			self.list.append(getConfigListEntry(_("Bypass HDMI EDID Check"), config.av.bypass_edid_checking,_("This option allows you to bypass HDMI EDID check")))
@@ -243,7 +249,7 @@ class VideoSetup(Screen, ConfigListScreen):
 
 		if int(res) > int(config_res) or (int(res) == int(config_res) and ((pol == 'p' and config_pol == 'i') or (config_mode == '2160p30' and mode == '2160p'))):
 			setmode[config_port].setValue(config_mode)
-		if config_rate != 'multi' and (rate == 'multi' or int(config_rate) < int(rate)):
+		if config_rate not in ("auto","multi") and (rate == 'multi' or int(config_rate) < int(rate)):
 			setrate[config_mode].setValue(config_rate)
 
 	def keyLeft(self):

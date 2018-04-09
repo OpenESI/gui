@@ -33,8 +33,7 @@ config.pluginfilter.picons = ConfigYesNo(default = True)
 config.pluginfilter.pli = ConfigYesNo(default = False)
 config.pluginfilter.security = ConfigYesNo(default = True)
 config.pluginfilter.settings = ConfigYesNo(default = True)
-config.pluginfilter.skins = ConfigYesNo(default = True)
-config.pluginfilter.skincomponents = ConfigYesNo(default = True)
+config.pluginfilter.skin = ConfigYesNo(default = True)
 config.pluginfilter.display = ConfigYesNo(default = True)
 config.pluginfilter.softcams = ConfigYesNo(default = True)
 config.pluginfilter.systemplugins = ConfigYesNo(default = True)
@@ -631,6 +630,9 @@ class PluginDownloadBrowser(Screen):
 	def startIpkgListInstalled(self, pkgname = PLUGIN_PREFIX + '*'):
 		self.container.execute(self.ipkg + Ipkg.opkgExtraDestinations() + " list_installed")
 
+	def startIpkgListAvailable(self):
+		self.container.execute(self.ipkg + Ipkg.opkgExtraDestinations() + " list")
+		
 	def startRun(self):
 		listsize = self["list"].instance.size()
 		self["list"].instance.hide()
@@ -682,19 +684,7 @@ class PluginDownloadBrowser(Screen):
 				self.startIpkgListInstalled()
 		elif self.run == 1 and self.type == self.DOWNLOAD:
 			self.run = 2
-			from Components import opkg
-			pluginlist = []
-			self.pluginlist = pluginlist
-			for plugin in opkg.enumPlugins(self.PLUGIN_PREFIX):
-				if not plugin[0].endswith('-common') and not plugin[0].endswith('-meta') and plugin[0] not in self.installedplugins and ((not config.pluginbrowser.po.value and not plugin[0].endswith('-po')) or config.pluginbrowser.po.value) and ((not config.pluginbrowser.src.value and not plugin[0].endswith('-src')) or config.pluginbrowser.src.value):
-					pluginlist.append(plugin + (plugin[0][15:],))
-			if pluginlist:
-				self["text"].hide()
-				pluginlist.sort()
-				self.updateList()
-				self["list"].instance.show()
-			else:
-				self["text"].setText(_("No new plugins found"))
+			self.startIpkgListAvailable()
 		else:
 			if len(self.pluginlist) > 0:
 				self.updateList()
@@ -862,9 +852,8 @@ class PluginFilter(ConfigListScreen, Screen):
 		self.list.append(getConfigListEntry(_("systemplugins"), config.pluginfilter.systemplugins, _("This allows you to show systemplugins modules in downloads")))
 		if Check_Softcam():
 			self.list.append(getConfigListEntry(_("softcams"), config.pluginfilter.softcams, _("This allows you to show softcams modules in downloads")))
-		self.list.append(getConfigListEntry(_("skins"), config.pluginfilter.skins, _("This allows you to show skins modules in downloads")))
-		self.list.append(getConfigListEntry(_("skincomponents"), config.pluginfilter.skincomponents, _("This allows you to show skincomponents in downloads")))
-		self.list.append(getConfigListEntry(_("display"), config.pluginfilter.skins, _("This allows you to show lcd skins in downloads")))
+		self.list.append(getConfigListEntry(_("skin"), config.pluginfilter.skin, _("This allows you to show skin modules in downloads")))
+		self.list.append(getConfigListEntry(_("display"), config.pluginfilter.display, _("This allows you to show lcd skins in downloads")))
 		self.list.append(getConfigListEntry(_("picons"), config.pluginfilter.picons, _("This allows you to show picons modules in downloads")))
 		self.list.append(getConfigListEntry(_("settings"), config.pluginfilter.settings, _("This allows you to show settings modules in downloads")))
 		self.list.append(getConfigListEntry(_("m2k"), config.pluginfilter.m2k, _("This allows you to show m2k modules in downloads")))
