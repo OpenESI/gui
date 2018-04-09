@@ -94,13 +94,45 @@ class Language:
 					x()
 		except:
 			print "Selected language does not exist!"
+
+		# These should always be C.UTF-8 (or POSIX if C.UTF-8 is unavaible) or program code might behave
+		# differently depending on language setting
+		try:
+			locale.setlocale(locale.LC_CTYPE, ('C', 'UTF-8'))
+		except:
+			pass
+		try:
+			locale.setlocale(locale.LC_COLLATE, ('C', 'UTF-8'))
+		except:
+			try:
+				locale.setlocale(locale.LC_COLLATE, ('POSIX', ''))
+			except:
+				pass
+
 		# NOTE: we do not use LC_ALL, because LC_ALL will not set any of the categories, when one of the categories fails.
 		# We'd rather try to set all available categories, and ignore the others
-		for category in [locale.LC_CTYPE, locale.LC_COLLATE, locale.LC_TIME, locale.LC_MONETARY, locale.LC_MESSAGES, locale.LC_NUMERIC]:
+		for category in [locale.LC_TIME, locale.LC_MONETARY, locale.LC_MESSAGES, locale.LC_NUMERIC ]:
 			try:
 				locale.setlocale(category, (self.getLanguage(), 'UTF-8'))
 			except:
 				pass
+
+		# Also write a locale.conf as /home/root/.config/locale.conf to apply language to interactive shells as well:
+		try:
+			os.stat('/home/root/.config')
+		except:
+			os.mkdir('/home/root/.config') 
+
+		localeconf = open('/home/root/.config/locale.conf', 'w')
+		for category in ["LC_TIME", "LC_DATE", "LC_MONETARY", "LC_MESSAGES", "LC_NUMERIC", "LC_NAME", "LC_TELEPHONE", "LC_ADDRESS", "LC_PAPER", "LC_IDENTIFICATION", "LC_MEASUREMENT", "LANG" ]:
+			if category == "LANG" or (category == "LC_DATE" and os.path.exists('/usr/lib/locale/' + self.getLanguage() + '/LC_TIME')) or os.path.exists('/usr/lib/locale/' + self.getLanguage() + '/' + category):
+				localeconf.write('export %s="%s.%s"\n' % (category, self.getLanguage(), "UTF-8" ))
+			else:
+				if os.path.exists('/usr/lib/locale/C.UTF-8/' + category):
+					localeconf.write('export %s="C.UTF-8"\n' % category)
+				else:
+					localeconf.write('export %s="POSIX"\n' % category)
+		localeconf.close()
 		# HACK: sometimes python 2.7 reverts to the LC_TIME environment value, so make sure it has the correct value
 		os.environ["LC_TIME"] = self.getLanguage() + '.UTF-8'
 		os.environ["LANGUAGE"] = self.getLanguage() + '.UTF-8'
@@ -152,7 +184,7 @@ class Language:
 
 		if delLang:
 			print"DELETE LANG", delLang
-			if delLang == "en_US" or delLang == "it_IT":
+			if delLang == "en_US" or delLang == "de_DE" or delLang == "fr_FR":
 				print"Default Language can not be deleted !!"
 				return
 			elif delLang == "en_GB" or delLang == "pt_BR":
@@ -166,12 +198,12 @@ class Language:
 			ll = os.listdir(LPATH)
 			for x in ll:
 				if len(x) > 2:
-					if x != lang and x != "it":
+					if x != lang and x != "de" and x != "fr":
 						x = x.lower()
 						x = x.replace('_','-')
 						os.system("opkg remove --autoremove --force-depends " + Lpackagename + x)
 				else:
-					if x != lang[:2] and x != "en" and x != "it":
+					if x != lang[:2] and x != "en" and x != "de" and x != "fr":
 						os.system("opkg remove --autoremove --force-depends " + Lpackagename + x)
 					elif x == "pt":
 						if x != lang:
