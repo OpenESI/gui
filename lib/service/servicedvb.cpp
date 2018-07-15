@@ -42,6 +42,12 @@ using namespace std;
 #include <sstream>
 #include <iomanip>
 
+#if HAVE_ALIEN5
+extern "C" {
+#include <codec.h>
+}
+#endif
+
 class eStaticServiceDVBInformation: public iStaticServiceInformation
 {
 	DECLARE_REF(eStaticServiceDVBInformation);
@@ -1366,6 +1372,15 @@ RESULT eDVBServicePlay::start()
 
 		type = eDVBServicePMTHandler::streamclient;
 	}
+
+#if HAVE_ALIEN5
+	if(m_is_stream || m_is_pvr)
+	{
+			eDebug("[eDVBServicePlay]start m_is_pvr %d", m_is_pvr);
+			aml_set_demux2_source();
+	}
+#endif
+
 
 	m_first_program_info = 1;
 	ePtr<iTsSource> source = createTsSource(service, packetsize);
@@ -2965,15 +2980,16 @@ void eDVBServicePlay::updateDecoder(bool sendSeekableStateChanged)
 		if (!m_noaudio)
 		{
 			selectAudioStream();
-#if HAVE_AMLOGIC
-			m_decoder->setSyncPCR(pcrpid);
-#else
-			if (!(m_is_pvr || m_is_stream || m_timeshift_active))
-				m_decoder->setSyncPCR(pcrpid);
-			else
-				m_decoder->setSyncPCR(-1);
-#endif
 		}
+
+#if HAVE_AMLOGIC
+		m_decoder->setSyncPCR(pcrpid);
+#else
+		if (!(m_is_pvr || m_is_stream || m_timeshift_active))
+			m_decoder->setSyncPCR(pcrpid);
+		else
+			m_decoder->setSyncPCR(-1);
+#endif
 
 		if (m_decoder_index == 0)
 		{
@@ -3274,8 +3290,8 @@ RESULT eDVBServicePlay::getCachedSubtitle(struct SubtitleTrack &track)
 		if (!h.getProgramInfo(program))
 		{
 			bool usecache = eConfigManager::getConfigBoolValue("config.autolanguage.subtitle_usecache");
-			int stream=program.defaultSubtitleStream;
-			int tmp = m_dvb_service->getCacheEntry(eDVBService::cSUBTITLE);
+			int stream = program.defaultSubtitleStream;
+			int tmp = usecache ? m_dvb_service->getCacheEntry(eDVBService::cSUBTITLE) : -1;
 
 			if (usecache || stream == -1)
 			{
@@ -3360,8 +3376,8 @@ RESULT eDVBServicePlay::getSubtitleList(std::vector<SubtitleTrack> &subtitlelist
 					}
 					break;
 				}
-				case 0x10 ... 0x13:
-				case 0x20 ... 0x23: // dvb subtitles
+				case 0x10 ... 0x15:
+				case 0x20 ... 0x25: // dvb subtitles
 				{
 					track.type = 0;
 					track.pid = it->pid;
