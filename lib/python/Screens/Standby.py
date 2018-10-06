@@ -16,6 +16,36 @@ from gettext import dgettext
 import Components.RecordingConfig
 
 inStandby = None
+TVinStandby = None
+
+def setTVstate(value): #for recordings without waking up tv
+	global TVinStandby
+	import Components.HdmiCec
+	if value == 'reset' or config.recording.switchTVon.value or not Components.HdmiCec.hdmi_cec.instance:
+		TVinStandby = None
+	elif inStandby:
+		#print '[Standby] box in standby - skip setTVstate'
+		TVinStandby = None
+		if os.path.exists("/tmp/powerup_without_waking_tv.txt"):
+			f = open("/tmp/powerup_without_waking_tv.txt", "w")
+			if value == 'on':
+				print '[Standby] leave next standby -> wake up TV'
+				f.write('False')
+			elif value == 'off':
+				print '[Standby] leave next standby -> skip wake up TV'
+				TVinStandby = True
+				f.write('True')
+			f.close()
+	elif TVinStandby and value == 'on':
+		print '[Standby] wake up TV'
+		TVinStandby = False
+		Components.HdmiCec.hdmi_cec.instance.wakeupMessages()
+	elif (not TVinStandby and TVinStandby is not None) and value == 'off':
+		print '[Standby] standby TV'
+		TVinStandby = True
+		Components.HdmiCec.hdmi_cec.instance.standbyMessages()
+	else:
+		TVinStandby = None
 
 def setLCDModeMinitTV(value):
 	try:
@@ -32,7 +62,7 @@ class Standby2(Screen):
 		if os.path.exists("/usr/script/StandbyLeave.sh"):
 			Console().ePopen("/usr/script/StandbyLeave.sh &")
 
-		if (getBrandOEM() in ('fulan')):
+		if (getBrandOEM() in ('fulan','clap','dinobot') or getBoxType() in ('sf8008','ustym4kpro')):
 			open("/proc/stb/hdmi/output", "w").write("on")
 		#set input to encoder
 		self.avswitch.setInput("ENCODER")
@@ -148,7 +178,7 @@ class Standby2(Screen):
 			self.avswitch.setInput("SCART")
 		else:
 			self.avswitch.setInput("AUX")
-		if (getBrandOEM() in ('fulan')):
+		if (getBrandOEM() in ('fulan','clap','dinobot') or getBoxType() in ('sf8008','ustym4kpro')):
 			open("/proc/stb/hdmi/output", "w").write("off")
 
 		if int(config.usage.hdd_standby_in_standby.value) != -1: # HDD standby timer value (box in standby) / -1 = same as when box is active

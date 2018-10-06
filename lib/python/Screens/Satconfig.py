@@ -823,7 +823,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 
 	def layoutFinished(self):
 		self.newConfig()
-		self.setTitle(_("Reception Settings"))
+		self.setTitle(_("Reception Settings") + " " + _("Tuner") + " " + self.nim.slot_input_name)
 
 	def keyLeft(self):
 		cur = self["config"].getCurrent()
@@ -893,8 +893,8 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 			self.nimConfig.terrestrial.value = self.originalTerrestrialRegion
 			self.nimConfig.terrestrial.save()
 		if hasattr(self, "originalCableRegion"):
-			self.nimConfig.cable.scan_provider.value = self.originalCableRegion
-			self.nimConfig.cable.scan_provider.save()
+			self.nimConfig.dvbc.scan_provider.value = self.originalCableRegion
+			self.nimConfig.dvbc.scan_provider.save()
 		# we need to call saveAll to reset the connectedTo choices
 		self.saveAll()
 		self.restoreService(_("Zap back to service before tuner setup?"))
@@ -1023,7 +1023,7 @@ class NimSelection(Screen):
 
 	def NimSetupCB(self, index=None):
 		self.loadFBCLinks()
-		self.updateList()
+		self.updateList(index)
 
 	def showNim(self, nim):
 		return True
