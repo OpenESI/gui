@@ -1055,8 +1055,8 @@ class NumberZap(Screen):
 			self["servicename"].setText(ServiceReference(self.service).getServiceName())
 
 	def keyNumberGlobal(self, number):
-		if config.usage.numzaptimeoutmode.value is not "off":
-			if config.usage.numzaptimeoutmode.value is "standard":
+		if config.usage.numzaptimeoutmode.value != "off":
+			if config.usage.numzaptimeoutmode.value == "standard":
 				self.Timer.start(1000, True)
 			else:
 				self.Timer.start(config.usage.numzaptimeout2.value, True)
@@ -1072,7 +1072,9 @@ class NumberZap(Screen):
 			self.showPicon()
 
 		if len(self.numberString) >= int(config.usage.maxchannelnumlen.value):
-			self.keyOK()
+			if self.Timer.isActive():
+				self.Timer.stop()
+			self.Timer.start(100, True)
 
 	def showPicon(self):
 		self["Service"].newService(self.service)
@@ -1121,8 +1123,10 @@ class NumberZap(Screen):
 
 		self.Timer = eTimer()
 		self.Timer.callback.append(self.keyOK)
-		if config.usage.numzaptimeoutmode.value is not "off":
-			if config.usage.numzaptimeoutmode.value is "standard":
+		if config.usage.maxchannelnumlen.value == "1":
+			self.Timer.start(100, True)
+		elif config.usage.numzaptimeoutmode.value != "off":
+			if config.usage.numzaptimeoutmode.value == "standard":
 				self.Timer.start(3000, True)
 			else:
 				self.Timer.start(config.usage.numzaptimeout1.value, True)
@@ -1606,7 +1610,7 @@ class InfoBarMenu:
 		else:
 			config.av.aspect.value = "auto"
 		config.av.aspect.save()
-		self.session.open(MessageBox, _("AV aspect is %s." % ASPECT_MSG[config.av.aspect.value]), MessageBox.TYPE_INFO, timeout=5)
+		self.session.open(MessageBox, _("AV aspect is %s.") % ASPECT_MSG[config.av.aspect.value], MessageBox.TYPE_INFO, timeout=5)
 
 	def showSystemMenu(self):
 		menulist = mdom.getroot().findall('menu')
@@ -1647,7 +1651,7 @@ class InfoBarMenu:
 class InfoBarSimpleEventView:
 	""" Opens the Eventview for now/next """
 	def __init__(self):
-		self["EPGActions"] = HelpableActionMap(self, "InfobarEPGActions",
+		self["EventViewActions"] = HelpableActionMap(self, "InfobarEPGActions",
 			{
 				"showEventInfo": (self.openEventView, _("show event details")),
 				"InfoPressed": (self.openEventView, _("show event details")),
@@ -1765,6 +1769,7 @@ class InfoBarEPG:
 		if pluginlist:
 			pluginlist.append((_("Event Info"), self.openEventView))
 			pluginlist.append((_("Graphical EPG"), self.openGraphEPG))
+			pluginlist.append((_("Vertical EPG"), self.openVerticalEPG))
 			pluginlist.append((_("Infobar EPG"), self.openInfoBarEPG))
 			pluginlist.append((_("Multi EPG"), self.openMultiServiceEPG))
 			pluginlist.append((_("Show EPG for current channel..."), self.openSingleServiceEPG))
@@ -1876,6 +1881,8 @@ class InfoBarEPG:
 				self.openMultiServiceEPG()
 			elif config.plisettings.PLIEPG_mode.value == "single":
 				self.openSingleServiceEPG()
+			elif config.plisettings.PLIEPG_mode.value == "vertical":
+				self.openVerticalEPG()
 			elif config.plisettings.PLIEPG_mode.value == "merlinepgcenter":
 				self.openMerlinEPGCenter()	
 			elif config.plisettings.PLIEPG_mode.value == "cooltvguide" and COOLTVGUIDE:
@@ -1928,7 +1935,7 @@ class InfoBarEPG:
 	def openBouquetEPG(self, bouquet = None, bouquets = None):
 		if bouquet:
 			self.StartBouquet = bouquet
-		self.dlg_stack.append(self.session.openWithCallback(self.closed, EPGSelection, zapFunc=self.zapToService, EPGtype=self.EPGtype, StartBouquet=self.StartBouquet, StartRef=self.StartRef, bouquets = bouquets))
+		self.dlg_stack.append(self.session.openWithCallback(self.closed, EPGSelection, None, zapFunc=self.zapToService, EPGtype=self.EPGtype, StartBouquet=self.StartBouquet, StartRef=self.StartRef, bouquets = bouquets))
 
 	def closed(self, ret=False):
 		if not self.dlg_stack:
@@ -1985,6 +1992,21 @@ class InfoBarEPG:
 		self.EPGtype = "enhanced"
 		self.SingleServiceEPG()
 
+	def openVerticalEPG(self, reopen=False):
+		if self.servicelist is None:
+			return
+		if not reopen:
+			self.StartBouquet = self.servicelist.getRoot()
+			self.StartRef = self.session.nav.getCurrentlyPlayingServiceOrGroup()
+		self.EPGtype = "vertical"
+		self.VerticalEPG()
+
+	def VerticalEPG(self):
+		#self.StartBouquet = self.servicelist.getRoot()
+		#self.StartRef = self.session.nav.getCurrentlyPlayingServiceOrGroup()
+		bouquets = self.servicelist.getBouquetList()
+		self.dlg_stack.append(self.session.openWithCallback(self.closed, EPGSelection, self.servicelist, zapFunc=self.zapToService, EPGtype=self.EPGtype, StartBouquet=self.StartBouquet, StartRef=self.StartRef, bouquets = bouquets))
+
 	def openInfoBarEPG(self, reopen=False):
 		if self.servicelist is None:
 			return
@@ -2039,6 +2061,8 @@ class InfoBarEPG:
 	def reopen(self, answer):
 		if answer == 'reopengraph':
 			self.openGraphEPG(True)
+		elif answer == 'reopenvertical':
+			self.openVerticalEPG(True)
 		elif answer == 'reopeninfobargraph' or answer == 'reopeninfobar':
 			self.openInfoBarEPG(True)
 		elif answer == 'close' and isMoviePlayerInfoBar(self):
@@ -3637,6 +3661,8 @@ class InfoBarESIpanel:
 		if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/WebkitHbbTV/plugin.pyo"):
 			isHBBTV = True
 		if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/QtHbbtv/plugin.pyo"):
+			isHBBTV = True
+		if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/Hbbtv/plugin.pyo"):
 			isHBBTV = True
 
 		if isWEBBROWSER or isHBBTV:
