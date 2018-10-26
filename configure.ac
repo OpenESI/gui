@@ -1,4 +1,4 @@
-AC_INIT([enigma2],[7.0],[http://www.openesi.eu])
+AC_INIT([enigma2],[8.0],[http://www.openesi.eu])
 AM_INIT_AUTOMAKE([dist-bzip2 no-define tar-pax -Wno-portability])
 AC_CONFIG_HEADERS([enigma2_config.h])
 
@@ -889,7 +889,6 @@ lib/python/Plugins/SystemPlugins/AnimationSetup/Makefile
 lib/python/Plugins/SystemPlugins/CableScan/Makefile
 lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/Makefile
 lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/meta/Makefile
-lib/python/Plugins/SystemPlugins/OSDPositionSetup/Makefile
 lib/python/Plugins/SystemPlugins/OSD3DSetup/Makefile
 lib/python/Plugins/SystemPlugins/DefaultServicesScanner/Makefile
 lib/python/Plugins/SystemPlugins/DefaultServicesScanner/meta/Makefile
