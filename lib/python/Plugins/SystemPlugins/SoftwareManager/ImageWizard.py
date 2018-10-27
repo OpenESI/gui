@@ -11,16 +11,17 @@ from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
 from Components.Pixmap import Pixmap, MovingPixmap, MultiPixmap
 from os import popen, path, makedirs, listdir, access, stat, rename, remove, W_OK, R_OK
 from enigma import eEnv
-from boxbranding import getBoxType
+from boxbranding import getBoxType, getImageDistro
 
 from Components.config import config, getConfigListEntry, ConfigSubsection, ConfigText, ConfigLocations, ConfigBoolean
 from Components.Harddisk import harddiskmanager
 
 boxtype = getBoxType()
+distro = getImageDistro()
 
 config.misc.firstrun = ConfigBoolean(default = True)
 config.plugins.configurationbackup = ConfigSubsection()
-if boxtype in ('maram9', 'classm', 'axodin', 'axodinc', 'starsatlx', 'genius', 'evo', 'galaxym6') and not path.exists("/media/hdd/backup_%s" %boxtype):
+if boxtype in ('maram9', 'classm', 'axodin', 'axodinc', 'starsatlx', 'genius', 'evo'):
 	config.plugins.configurationbackup.backuplocation = ConfigText(default = '/media/backup/', visible_width = 50, fixed_size = False)
 else:
 	config.plugins.configurationbackup.backuplocation = ConfigText(default = '/media/hdd/', visible_width = 50, fixed_size = False)
@@ -39,6 +40,12 @@ def checkConfigBackup():
 	if len(parts):
 		for x in parts:
 			if x[1].endswith('/'):
+				fullbackupfile =  x[1] + 'backup_' + distro + '_' +  boxtype + '/' + backupfile
+				if fileExists(fullbackupfile):
+					config.plugins.configurationbackup.backuplocation.setValue(str(x[1]))
+					config.plugins.configurationbackup.backuplocation.save()
+					config.plugins.configurationbackup.save()
+					return x
 				fullbackupfile =  x[1] + 'backup_' + boxtype + '/' + backupfile
 				if fileExists(fullbackupfile):
 					config.plugins.configurationbackup.backuplocation.setValue(str(x[1]))
@@ -52,6 +59,12 @@ def checkConfigBackup():
 					config.plugins.configurationbackup.save()
 					return x
 			else:
+				fullbackupfile =  x[1] + '/backup_' + distro + '_' +   boxtype + '/' + backupfile
+				if fileExists(fullbackupfile):
+					config.plugins.configurationbackup.backuplocation.setValue(str(x[1]))
+					config.plugins.configurationbackup.backuplocation.save()
+					config.plugins.configurationbackup.save()
+					return x
 				fullbackupfile =  x[1] + '/backup_' + boxtype + '/' + backupfile
 				if fileExists(fullbackupfile):
 					config.plugins.configurationbackup.backuplocation.setValue(str(x[1]))
@@ -69,7 +82,7 @@ def checkConfigBackup():
 def checkBackupFile():
 	backuplocation = config.plugins.configurationbackup.backuplocation.value
 	if backuplocation.endswith('/'):
-		fullbackupfile =  backuplocation + 'backup_' + boxtype + '/' + backupfile
+		fullbackupfile =  backuplocation + 'backup_' + distro + '_' + boxtype + '/' + backupfile
 		if fileExists(fullbackupfile):
 			return True
 		else:
@@ -79,7 +92,7 @@ def checkBackupFile():
 			else:
 				return False
 	else:
-		fullbackupfile =  backuplocation + '/backup_' + boxtype + '/' + backupfile
+		fullbackupfile =  backuplocation + '/backup_' + distro + '_' + boxtype + '/' + backupfile
 		if fileExists(fullbackupfile):
 			return True
 		else:
