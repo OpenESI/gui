@@ -7,10 +7,9 @@ install_PYTHON =	\
 	plugin.py \
 	BackupRestore.py \
 	ImageWizard.py \
-	Flash_online.py \
 	SoftwareTools.py \
 	ImageBackup.py \
-	ShellCompatibleFunctions.py
+	Flash_online.py
 
 dist_install_DATA = \
 	imagewizard.xml \

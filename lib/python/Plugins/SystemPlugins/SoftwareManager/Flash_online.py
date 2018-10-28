@@ -62,7 +62,7 @@ def getBackupFilename():
 
 class FlashOnline(Screen):
 	skin = """
-	<screen position="center,center" size="560,400" title="Flash_OnLine-ESI">
+	<screen position="center,center" size="560,400" title="Flash On the Fly">
 		<ePixmap position="0,360"   zPosition="1" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />
 		<ePixmap position="140,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />
 		<ePixmap position="280,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on" />
@@ -100,7 +100,7 @@ class FlashOnline(Screen):
 		self["key_red"] = Button(_("Exit"))
 		self["key_yellow"] = Button(_("Local"))
 		self["info-local"] = Label(_("Local = Flash a image from local path /hdd/images"))
-		self["info-online"] = Label(_("Online = Download an image and then install"))
+		self["info-online"] = Label(_("Online = Download a image and flash it"))
 
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"],
 		{
@@ -174,9 +174,9 @@ class FlashOnline(Screen):
 			else:
 				self.multi = self.read_startup("/boot/" + self.list[self.selection]).split(".",1)[1].split(" ",1)[0]
 				self.multi = self.multi[-1:]
-			print "[Esi-Online] MULTI:",self.multi
+			print "[Flash ESI-Online] MULTI:",self.multi
 			self.devrootfs = self.find_rootfs_dev(self.list[self.selection])
-			print "[Esi-Online] MULTI rootfs ", self.devrootfs
+			print "[Flash ESI-Online] MULTI rootfs ", self.devrootfs
 			
 			self.read_current_multiboot()
 
@@ -209,8 +209,8 @@ class FlashOnline(Screen):
 		cmdline = cmdline.lstrip("/dev/")
 		self.MTDROOTFS = cmdline
 		self.MTDKERNEL = cmdline[:-1] + str(int(cmdline[-1:]) -1)
-		print "[Esi-Online] kernel device: ",self.MTDKERNEL
-		print "[Esi-Online] rootfsdevice: ",self.MTDROOTFS
+		print "[Flash ESI-Online] kernel device: ",self.MTDKERNEL
+		print "[Flash ESI-Online] rootfsdevice: ",self.MTDROOTFS
 
 	def read_startup(self, FILE):
 		file = FILE
@@ -387,8 +387,7 @@ class doFlashImage(Screen):
 			self.session.openWithCallback(self.ImageDownloadCB, JobView, job, backgroundable = False, afterEventChangeable = False)
 		else:
 			if sel == str(flashTmp):
-				self.flashWithRestoreQuestion()
-				#self.Start_Flashing()
+				self.Start_Flashing()
 			else:
 				self.unzip_image(self.filename, flashPath)
 
@@ -422,18 +421,23 @@ class doFlashImage(Screen):
 	def cmdFinished(self):
 		self.prepair_flashtmp(flashPath)
 		self.flashWithRestoreQuestion()
+		self.Start_Flashing()
 
-	def flashWithRestoreQuestion(self):
+	def flashWithRestoreQuestion(self, ret = True):
 		try:
 			if os.path.exists('/media/hdd/images/hdfrestore'):
 				os.unlink('/media/hdd/images/hdfrestore')
 				print "AfterFlashAction: delete /media/hdd/images/hdfrestore"
 		except:
 			print "AfterFlashAction: failed to delete /media/hdd/images/hdfrestore"
-		title =_("Please select what to do after first booting the image:\n")
-		list = ((_("Automatic restore of all settings and plugins?"), "completerestore"),
-		(_("Don't restore settings and plugins!"), "norestore"))
-		self.session.openWithCallback(self.AfterFlashAction, ChoiceBox,title=title,list=list)
+		if ret:
+			print "flashWithRestoreQuestion"
+			title =_("Please select what to do after first booting the image:\n")
+			list = ((_("Automatic restore of all settings and plugins?"), "completerestore"),
+			(_("Don't restore settings and plugins!"), "norestore"))
+			self.session.openWithCallback(self.AfterFlashAction, ChoiceBox,title=title,list=list)
+		else:
+			self.show()
 
 	def AfterFlashAction(self, answer):
 		print "starting AfterFlashAction"
@@ -456,7 +460,10 @@ class doFlashImage(Screen):
 						shutil.copyfile(backupsourcefile, backupdestfile)
 				except:
 					print "AfterFlashAction: failed to create /media/hdd/images/hdfrestore"
-		self.Start_Flashing()
+			else:
+				self.show()
+		else:
+			self.show()
 
 	def Start_Flashing(self):
 		print "Start Flashing"
@@ -566,8 +573,7 @@ class doFlashImage(Screen):
 					if files.endswith(".ubi") or files.endswith(".bin") or files.endswith('.jffs2') or files.endswith('.img'):
 						self.prepair_flashtmp(strPath)
 						break
-				#self.Start_Flashing()
-				self.flashWithRestoreQuestion()
+				self.Start_Flashing()
 			elif binorzip == 1:
 				self.unzip_image(strPath + '/' + filename, flashPath)
 			else:
