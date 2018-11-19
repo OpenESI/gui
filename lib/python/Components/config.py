@@ -2,6 +2,7 @@ from enigma import getPrevAsciiCode
 from Tools.NumericalTextInput import NumericalTextInput
 from Tools.Directories import resolveFilename, SCOPE_CONFIG, fileExists
 from Components.Harddisk import harddiskmanager
+from Tools.LoadPixmap import LoadPixmap
 from copy import copy as copy_copy
 from os import path as os_path
 from time import localtime, strftime
@@ -418,10 +419,11 @@ class ConfigSelection(ConfigElement):
 # descriptions.
 #
 class ConfigBoolean(ConfigElement):
-	def __init__(self, default = False, descriptions = {False: _("false"), True: _("true")}):
+	def __init__(self, default = False, descriptions = {False: _("false"), True: _("true")}, graphic=True):
 		ConfigElement.__init__(self)
 		self.descriptions = descriptions
 		self.value = self.last_value = self.default = default
+		self.graphic = graphic
 
 	def handleKey(self, key):
 		if key in (KEY_LEFT, KEY_RIGHT):
@@ -435,7 +437,12 @@ class ConfigBoolean(ConfigElement):
 		return self.descriptions[self.value]
 
 	def getMulti(self, selected):
-		return ("text", self.descriptions[self.value])
+		from config import config
+		from skin import switchPixmap
+		if self.graphic and config.usage.boolean_graphic.value and switchPixmap.get("menu_on", False) and switchPixmap.get("menu_off", False):
+			return ('pixmap', self.value and switchPixmap["menu_on"] or switchPixmap["menu_off"])
+		else:
+			return ("text", self.descriptions[self.value])
 
 	def tostring(self, value):
 		if not value:
@@ -616,7 +623,7 @@ class ConfigSequence(ConfigElement):
 			# position in the block
 			posinblock = self.marked_pos - block_len_total[blocknumber]
 
-			oldvalue = abs(self._value[blocknumber])
+			oldvalue = abs(self._value[blocknumber]) # we are using abs in order to allow change negative values like default -1 on mis
 			olddec = oldvalue % 10 ** (number_len - posinblock) - (oldvalue % 10 ** (number_len - posinblock - 1))
 			newvalue = oldvalue - olddec + (10 ** (number_len - posinblock - 1) * number)
 
@@ -2000,8 +2007,8 @@ class ConfigFile:
 		names = key.split('.')
 		if len(names) > 1:
 			if names[0] == "config":
-				ret=self.__resolveValue(names[1:], config.content.items)
-				if ret and len(ret):
+				ret = self.__resolveValue(names[1:], config.content.items)
+				if ret and len(ret) or ret == "":
 					return ret
 		print "getResolvedKey", key, "failed !! (Typo??)"
 		return ""

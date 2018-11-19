@@ -13,6 +13,7 @@ from Tools.BoundFunction import boundFunction
 from ServiceReference import ServiceReference
 from enigma import eServiceReference, eActionMap
 from Components.Label import Label
+from boxbranding import getHaveHDMIinHD, getHaveHDMIinFHD, getHaveCI
 import os
 
 def getButtonSetupKeys():
@@ -101,13 +102,15 @@ def getButtonSetupKeys():
 		(_("Prevsong long"), "prevsong_long", ""),
 		(_("Program"), "prog", ""),
 		(_("Program long"), "prog_long", ""),
-		(_("Timeshift"), "timeshift", ""),
+		(_("Time"), "time", ""),
+		(_("Time long"), "time_long", ""),
 		(_("Homepage"), "homep", ""),
 		(_("Homepage long"), "homep_long", ""),
 		(_("Search/WEB"), "search", ""),
 		(_("Search/WEB long"), "search_long", ""),
 		(_("Slow"), "slow", ""),
 		(_("Mark/Portal/Playlist"), "mark", ""),
+		(_("Mark/Portal/Playlist long"), "mark_long", ""),
 		(_("Sleep"), "sleep", ""),
 		(_("Sleep long"), "sleep_long", ""),
 		(_("Power"), "power", ""),
@@ -209,7 +212,7 @@ def getButtonSetupFunctions():
 		ButtonSetupFunctions.append((_("Move PIP"), "Infobar/movePiP", "InfoBar"))
 		ButtonSetupFunctions.append((_("Toggle PIPzap"), "Infobar/togglePipzap", "InfoBar"))
 	ButtonSetupFunctions.append((_("Activate HbbTV (Redbutton)"), "Infobar/activateRedButton", "InfoBar"))
-	if SystemInfo["HDMIin"]:
+	if getHaveHDMIinHD() in ('True') or getHaveHDMIinFHD() in ('True'):
 		ButtonSetupFunctions.append((_("Toggle HDMI-In full screen"), "Infobar/HDMIInFull", "InfoBar"))
 		ButtonSetupFunctions.append((_("Toggle HDMI-In PiP"), "Infobar/HDMIInPiP", "InfoBar"))
 	if SystemInfo["LcdLiveTV"]:
@@ -218,9 +221,16 @@ def getButtonSetupFunctions():
 		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartup/MultiBootStartup", "InfoBar"))
 	if SystemInfo["HaveMultiBootGB"]:
 		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupGB/MultiBootStartup", "InfoBar"))
+	if SystemInfo["HaveMultiBootCY"]:
+		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupCY/MultiBootStartup", "InfoBar"))
+	if SystemInfo["HaveMultiBootDS"]:
+		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupDS/MultiBootStartup", "InfoBar"))
+	if SystemInfo["HaveMultiBootOS"]:
+		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupOS/MultiBootStartup", "InfoBar"))
 	ButtonSetupFunctions.append((_("Hotkey Setup"), "Module/Screens.ButtonSetup/ButtonSetup", "Setup"))
 	ButtonSetupFunctions.append((_("Software update"), "Module/Screens.SoftwareUpdate/UpdatePlugin", "Setup"))
-	ButtonSetupFunctions.append((_("CI (Common Interface) Setup"), "Module/Screens.Ci/CiSelection", "Setup"))
+	if getHaveCI() in ('True'):
+		ButtonSetupFunctions.append((_("CI (Common Interface) Setup"), "Module/Screens.Ci/CiSelection", "Setup"))
 	ButtonSetupFunctions.append((_("Videosetup"), "Module/Screens.VideoMode/VideoSetup", "Setup"))
 	ButtonSetupFunctions.append((_("Tuner Configuration"), "Module/Screens.Satconfig/NimSelection", "Scanning"))
 	ButtonSetupFunctions.append((_("Manual Scan"), "Module/Screens.ScanSetup/ScanSetup", "Scanning"))
@@ -233,7 +243,8 @@ def getButtonSetupFunctions():
 	ButtonSetupFunctions.append((_("Plugin Browser"), "Module/Screens.PluginBrowser/PluginBrowser", "Setup"))
 	ButtonSetupFunctions.append((_("Channel Info"), "Module/Screens.ServiceInfo/ServiceInfo", "Setup"))
 	ButtonSetupFunctions.append((_("SkinSelector"), "Module/Screens.SkinSelector/SkinSelector", "Setup"))
-	ButtonSetupFunctions.append((_("LCD SkinSelector"), "Module/Screens.SkinSelector/LcdSkinSelector", "Setup"))
+	if SystemInfo["LCDSKINSetup"]:
+		ButtonSetupFunctions.append((_("LCD SkinSelector"), "Module/Screens.SkinSelector/LcdSkinSelector", "Setup"))
 	ButtonSetupFunctions.append((_("Timer"), "Module/Screens.TimerEdit/TimerEditList", "Setup"))
 	ButtonSetupFunctions.append((_("Open AutoTimer"), "Infobar/showAutoTimerList", "Setup"))
 	for plugin in plugins.getPluginsForMenu("system"):

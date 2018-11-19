@@ -1,13 +1,15 @@
 import struct
 import os
 from fcntl import ioctl
-from sys import maxint
 from enigma import eTimer, eHdmiCEC, eActionMap
 from config import config, ConfigSelection, ConfigYesNo, ConfigSubsection, ConfigText
 from Components.Console import Console
 from Tools.Directories import fileExists
 from time import time
 import Screens.Standby
+
+from sys import maxint
+
 
 config.hdmicec = ConfigSubsection()
 config.hdmicec.enabled = ConfigYesNo(default = False) # query from this value in hdmi_cec.cpp

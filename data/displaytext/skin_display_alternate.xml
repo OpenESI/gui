@@ -197,15 +197,6 @@
 		</widget>
 	</screen>
 
-<!-- ATV -->
-<!-- Quickmenü -->
-	<screen name="QuickMenu_summary" position="0,0" size="132,64">
-		<widget source="parent.summary_description" render="Label" position="fill" size="120,20" font="Regular;18" />
-	</screen>
-<!-- Infopanel -->
-	<screen name="Infopanel_summary" position="0,0" size="132,64">
-		<widget source="parent.summary_description" render="Label" position="fill" size="120,20" font="Regular;18" />
-	</screen>
 <!-- Timer-Log -->
 	<screen name="TimerEntry_summary" position="0,0" size="132,64">
 		<widget source="parent.summary_description" render="Label" position="fill" size="120,20" font="Regular;18" />       

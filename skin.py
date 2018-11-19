@@ -1,4 +1,4 @@
-from Tools.Profile import profile
+mefrom Tools.Profile import profile
 profile("LOAD:ElementTree")
 import xml.etree.cElementTree
 import os

@@ -5,7 +5,7 @@ from enigma import eDVBResourceManager, Misc_Options
 from Tools.Directories import fileExists, fileCheck
 from Tools.HardwareInfo import HardwareInfo
 
-from boxbranding import getBoxType, getMachineBuild, getDisplayType, getHaveRCA, getHaveDVI, getHaveYUV, getHaveSCART, getHaveAVJACK
+from boxbranding import getBoxType, getMachineBuild, getDisplayType, getHaveRCA, getHaveDVI, getHaveYUV, getHaveSCART, getHaveAVJACK, getHaveSCARTYUV, getHaveHDMI
 
 SystemInfo = { }
 
@@ -89,8 +89,11 @@ SystemInfo["ForceLNBPowerChanged"] = fileCheck("/proc/stb/frontend/fbc/force_lnb
 SystemInfo["ForceToneBurstChanged"] = fileCheck("/proc/stb/frontend/fbc/force_toneburst")
 SystemInfo["USETunersetup"] = SystemInfo["ForceLNBPowerChanged"] or SystemInfo["ForceToneBurstChanged"]
 SystemInfo["XcoreVFD"] = getMachineBuild() in ('xc7346','xc7439') 
-SystemInfo["HDMIin"] = getMachineBuild() in ('inihdp', 'hd2400', 'et10000', 'dm7080', 'dm820', 'dm900', 'dm920', 'vuultimo4k', 'et13000', 'sf5008', 'vuuno4kse') or getBoxType() in ('spycat4k','spycat4kcombo','gbquad4k')
+SystemInfo["HDMIin"] = getMachineBuild() in ('inihdp', 'hd2400', 'et10000', 'dm7080', 'dm820', 'dm900', 'dm920', 'vuultimo4k', 'et13000', 'sf5008', 'vuuno4kse', 'vuduo4k') or getBoxType() in ('spycat4k','spycat4kcombo','gbquad4k')
 SystemInfo["HaveRCA"] = getHaveRCA() in ('True')
 SystemInfo["HaveDVI"] = getHaveDVI() in ('True')
 SystemInfo["HaveAVJACK"] = getHaveAVJACK() in ('True')
-SystemInfo["HAVE_SCART"] = getHaveSCART() in ('True')
+SystemInfo["HAVESCART"] = getHaveSCART() in ('True')
+SystemInfo["HAVESCARTYUV"] = getHaveSCARTYUV() in ('True')
+SystemInfo["HAVEYUV"] = getHaveYUV() in ('True')
+SystemInfo["HAVEHDMI"] = getHaveHDMI() in ('True')
