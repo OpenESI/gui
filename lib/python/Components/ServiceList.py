@@ -84,11 +84,11 @@ class ServiceList(HTMLComponent, GUIComponent):
 		def foregroundColorEvent(value):
 			self.l.setColor(eListboxServiceContent.eventForeground, parseColor(value))
 		def colorServiceDescription(value):
-			self.l.setColor(eListboxServiceContent.serviceDescriptionColor, parseColor(value))
+			self.l.setColor(eListboxServiceContent.eventForeground, parseColor(value))
 		def foregroundColorEventSelected(value):
 			self.l.setColor(eListboxServiceContent.eventForegroundSelected, parseColor(value))
 		def colorServiceDescriptionSelected(value):
-			self.l.setColor(eListboxServiceContent.serviceDescriptionColorSelected, parseColor(value))
+			self.l.setColor(eListboxServiceContent.eventForegroundSelected, parseColor(value))
 		def foregroundColorEventborder(value):
 			self.l.setColor(eListboxServiceContent.eventborderForeground, parseColor(value))
 		def foregroundColorEventborderSelected(value):
@@ -115,10 +115,6 @@ class ServiceList(HTMLComponent, GUIComponent):
 			self.l.setColor(eListboxServiceContent.eventForegroundFallback, parseColor(value))
 		def colorServiceDescriptionSelectedFallback(value):
 			self.l.setColor(eListboxServiceContent.eventForegroundSelectedFallback, parseColor(value))
-		def colorServiceRecording(value):
-			self.l.setColor(eListboxServiceContent.serviceRecordingColor, parseColor(value))
-		def colorServiceWithAdvertisment(value):
-			self.l.setColor(eListboxServiceContent.serviceAdvertismentColor, parseColor(value))
 		def picServiceEventProgressbar(value):
 			pic = LoadPixmap(resolveFilename(SCOPE_ACTIVE_SKIN, value))
 			pic and self.l.setPixmap(self.l.picServiceEventProgressbar, pic)
@@ -148,13 +144,12 @@ class ServiceList(HTMLComponent, GUIComponent):
 			self.l.setNonplayableMargins(int(value))
 		def itemsDistances(value):
 			self.l.setItemsDistances(int(value))
-		if self.skinAttributes is not None:
-			for (attrib, value) in list(self.skinAttributes):
-				try:
-					locals().get(attrib)(value)
-					self.skinAttributes.remove((attrib, value))
-				except:
-					pass
+		for (attrib, value) in list(self.skinAttributes):
+			try:
+				locals().get(attrib)(value)
+				self.skinAttributes.remove((attrib, value))
+			except:
+				pass
 		rc = GUIComponent.applySkin(self, desktop, parent)
 		self.listHeight = self.instance.size().height()
 		self.listWidth = self.instance.size().width()
@@ -214,16 +209,6 @@ class ServiceList(HTMLComponent, GUIComponent):
 	def getCurrent(self):
 		r = eServiceReference()
 		self.l.getCurrent(r)
-		return r
-
-	def getPrev(self):
-		r = eServiceReference()
-		self.l.getPrev(r)
-		return r
-
-	def getNext(self):
-		r = eServiceReference()
-		self.l.getNext(r)
 		return r
 
 	def atBegin(self):
@@ -375,7 +360,6 @@ class ServiceList(HTMLComponent, GUIComponent):
 		self.setItemsPerPage()
 		self.l.setItemHeight(self.ItemHeight)
 		self.l.setVisualMode(eListboxServiceContent.visModeComplex)
-		self.l.setServicePiconDownsize(int(config.usage.servicelist_picon_downsize.value))
 
 		if config.usage.service_icon_enable.value:
 			self.l.setGetPiconNameFunc(getPiconName)
@@ -411,7 +395,3 @@ class ServiceList(HTMLComponent, GUIComponent):
 		self.l.setCryptoIconMode(int(config.usage.crypto_icon_mode.value))
 		self.l.setRecordIndicatorMode(int(config.usage.record_indicator_mode.value))
 		self.l.setColumnWidth(int(config.usage.servicelist_column.value))
-		
-	def selectionEnabled(self, enabled):
-		if self.instance is not None:
-			self.instance.setSelectionEnable(enabled)

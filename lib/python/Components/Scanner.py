@@ -21,8 +21,6 @@ def getType(file):
 		# Detect some unknown types
 		if file[-12:].lower() == "video_ts.ifo":
 			return "video/x-dvd"
-		if file == "/media/audiocd/cdplaylist.cdpls":
-			return "audio/x-cda"
 
 		p = file.rfind('.')
 		if p == -1:
@@ -34,7 +32,9 @@ def getType(file):
 	return type
 
 class Scanner:
-	def __init__(self, name, mimetypes= [], paths_to_scan = [], description = "", openfnc = None):
+	def __init__(self, name, mimetypes=None, paths_to_scan=None, description="", openfnc=None):
+		if not mimetypes: mimetypes = []
+		if not paths_to_scan: paths_to_scan = []
 		self.mimetypes = mimetypes
 		self.name = name
 		self.paths_to_scan = paths_to_scan
@@ -123,10 +123,6 @@ def scanDevice(mountpoint):
 		if p.with_subdirs == True and ScanPath(path=p.path) in paths_to_scan:
 			paths_to_scan.remove(ScanPath(path=p.path))
 
-	from Components.Harddisk import harddiskmanager
-	blockdev = mountpoint.rstrip("/").rsplit('/',1)[-1]
-	error, blacklisted, removable, is_cdrom, partitions, medium_found = harddiskmanager.getBlockDevInfo(blockdev)
-
 	# now scan the paths
 	for p in paths_to_scan:
 		path = os.path.join(mountpoint, p.path)
@@ -134,7 +130,7 @@ def scanDevice(mountpoint):
 		for root, dirs, files in os.walk(path):
 			for f in files:
 				path = os.path.join(root, f)
-				if (is_cdrom and f.endswith(".wav") and f.startswith("track")) or f == "cdplaylist.cdpls":
+				if f.endswith(".wav") and f.startswith("track"):
 					sfile = ScanFile(path,"audio/x-cda")
 				else:
 					sfile = ScanFile(path)

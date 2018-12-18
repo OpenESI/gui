@@ -11,28 +11,12 @@
 #include <vuplus_gles.h>
 #endif
 
-#ifdef HAVE_OSDANIMATION
-#include <lib/base/cfile.h>
-#endif
-
-#ifdef CONFIG_ION
-#include <lib/gdi/grc.h>
-
-extern void bcm_accel_blit(
-		int src_addr, int src_width, int src_height, int src_stride, int src_format,
-		int dst_addr, int dst_width, int dst_height, int dst_stride,
-		int src_x, int src_y, int width, int height,
-		int dst_x, int dst_y, int dwidth, int dheight,
-		int pal_addr, int flags);
-#endif
-
 gFBDC::gFBDC()
 {
 	fb=new fbClass;
-#ifndef CONFIG_ION
+
 	if (!fb->Available())
-		eFatal("[gFBDC] no framebuffer available");
-#endif
+		eFatal("no framebuffer available");
 
 	int xres;
 	int yres;
@@ -151,7 +135,7 @@ void gFBDC::exec(const gOpcode *o)
 			gettimeofday(&now, 0);
 
 			int diff = (now.tv_sec - l.tv_sec) * 1000 + (now.tv_usec - l.tv_usec) / 1000;
-			eDebug("[gFBDC] %d ms latency (%d fps)", diff, t * 1000 / (diff ? diff : 1));
+			eDebug("%d ms latency (%d fps)", diff, t * 1000 / (diff ? diff : 1));
 			l = now;
 			t = 0;
 		}
@@ -171,36 +155,9 @@ void gFBDC::exec(const gOpcode *o)
 #else
 		fb->blit();
 #endif
-#ifdef CONFIG_ION
-		if (surface_back.data_phys)
-		{
-			gUnmanagedSurface s(surface);
-			surface = surface_back;
-			surface_back = s;
-
-			fb->waitVSync();
-			if (surface.data_phys > surface_back.data_phys)
-			{
-				fb->setOffset(0);
-			}
-			else
-			{
-				fb->setOffset(surface_back.y);
-			}
-			bcm_accel_blit(
-				surface_back.data_phys, surface_back.x, surface_back.y, surface_back.stride, 0,
-				surface.data_phys, surface.x, surface.y, surface.stride,
-				0, 0, surface.x, surface.y,
-				0, 0, surface.x, surface.y,
-				0, 0);
-		}
-#endif
 		break;
 	case gOpcode::sendShow:
 	{
-#ifdef HAVE_OSDANIMATION
-		CFile::writeIntHex("/proc/stb/fb/animation_mode", 0x01);
-#endif
 #ifdef USE_LIBVUGLES2
 		gles_set_buffer((unsigned int *)surface.data);
 		gles_set_animation(1, o->parm.setShowHideInfo->point.x(), o->parm.setShowHideInfo->point.y(), o->parm.setShowHideInfo->size.width(), o->parm.setShowHideInfo->size.height());
@@ -209,9 +166,6 @@ void gFBDC::exec(const gOpcode *o)
 	}
 	case gOpcode::sendHide:
 	{
-#ifdef HAVE_OSDANIMATION
-		CFile::writeIntHex("/proc/stb/fb/animation_mode", 0x10);
-#endif
 #ifdef USE_LIBVUGLES2
 		gles_set_buffer((unsigned int *)surface.data);
 		gles_set_animation(0, o->parm.setShowHideInfo->point.x(), o->parm.setShowHideInfo->point.y(), o->parm.setShowHideInfo->size.width(), o->parm.setShowHideInfo->size.height());
@@ -225,7 +179,6 @@ void gFBDC::exec(const gOpcode *o)
 		break;
 	}
 #endif
-
 	default:
 		gDC::exec(o);
 		break;
@@ -263,22 +216,23 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 	 * we need that to read the new screen dimesnions after a resolution change
 	 * without changing the frambuffer dimensions
 	 */
+	int m_xres;
+	int m_yres;
+	int m_bpp;
+	fb->getMode(m_xres, m_yres, m_bpp);
+
 	if (xres<0 && yres<0 ) {
-		fb->SetMode(surface.x, surface.y, bpp);
+		fb->SetMode(m_xres, m_yres, bpp);
 		return;
 	}
 #else
 	if (m_pixmap && (surface.x == xres) && (surface.y == yres) && (surface.bpp == bpp))
 		return;
 #endif
-#ifndef CONFIG_ION
+
 	if (gAccel::getInstance())
 		gAccel::getInstance()->releaseAccelMemorySpace();
-#else
-	gRC *grc = gRC::getInstance();
-	if (grc)
-		grc->lock();
-#endif
+
 	fb->SetMode(xres, yres, bpp);
 
 #if defined(__sh__)
@@ -313,14 +267,11 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 		surface_back.data_phys = 0;
 	}
 
-	eDebug("[gFBDC] resolution: %d x %d x %d (stride: %d) pages: %d", surface.x, surface.y, surface.bpp, fb->Stride(), fb->getNumPages());
+	eDebug("%dkB available for acceleration surfaces.", (fb->Available() - fb_size)/1024);
+	eDebug("resolution: %d x %d x %d (stride: %d)", surface.x, surface.y, surface.bpp, fb->Stride());
 
-#ifndef CONFIG_ION
-	/* accel is already set in fb.cpp */
-	eDebug("[gFBDC] %dkB available for acceleration surfaces.", (fb->Available() - fb_size)/1024);
 	if (gAccel::getInstance())
 		gAccel::getInstance()->setAccelMemorySpace(fb->lfb + fb_size, surface.data_phys + fb_size, fb->Available() - fb_size);
-#endif
 
 	if (!surface.clut.data)
 	{
@@ -332,11 +283,6 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 	surface_back.clut = surface.clut;
 
 	m_pixmap = new gPixmap(&surface);
-
-#ifdef CONFIG_ION
-	if (grc)
-		grc->unlock();
-#endif
 }
 
 void gFBDC::saveSettings()
@@ -354,59 +300,3 @@ void gFBDC::reloadSettings()
 }
 
 eAutoInitPtr<gFBDC> init_gFBDC(eAutoInitNumbers::graphic-1, "GFBDC");
-
-#ifdef HAVE_OSDANIMATION
-void setAnimation_current(int a) {
-	switch (a) {
-		case 1:
-			CFile::writeStr("/proc/stb/fb/animation_current", "simplefade");
-			break;
-		case 2:
-			CFile::writeStr("/proc/stb/fb/animation_current", "simplezoom");
-			break;
-		case 3:
-			CFile::writeStr("/proc/stb/fb/animation_current", "growdrop");
-			break;
-		case 4:
-			CFile::writeStr("/proc/stb/fb/animation_current", "growfromleft");
-			break;
-		case 5:
-			CFile::writeStr("/proc/stb/fb/animation_current", "extrudefromleft");
-			break;
-		case 6:
-			CFile::writeStr("/proc/stb/fb/animation_current", "popup");
-			break;
-		case 7:
-			CFile::writeStr("/proc/stb/fb/animation_current", "slidedrop");
-			break;
-		case 8:
-			CFile::writeStr("/proc/stb/fb/animation_current", "slidefromleft");
-			break;
-		case 9:
-			CFile::writeStr("/proc/stb/fb/animation_current", "slidelefttoright");
-			break;
-		case 10:
-			CFile::writeStr("/proc/stb/fb/animation_current", "sliderighttoleft");
-			break;
-		case 11:
-			CFile::writeStr("/proc/stb/fb/animation_current", "slidetoptobottom");
-			break;
-		case 12:
-			CFile::writeStr("/proc/stb/fb/animation_current", "zoomfromleft");
-			break;
-		case 13:
-			CFile::writeStr("/proc/stb/fb/animation_current", "zoomfromright");
-			break;
-		case 14:
-			CFile::writeStr("/proc/stb/fb/animation_current", "stripes");
-			break;
-		default:
-			CFile::writeStr("/proc/stb/fb/animation_current", "disable");
-			break;
-	}
-}
-
-void setAnimation_speed(int speed) {
-	CFile::writeInt("/proc/stb/fb/animation_speed", speed);
-}
-#endif

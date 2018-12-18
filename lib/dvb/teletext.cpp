@@ -66,7 +66,7 @@ const char * const eDVBTeletextParser::my_country_codes[] =
 
 unsigned char country_lookup[] =
 {
-	255, 1, 4, 11, 11, 11, 5, 3,
+	255, 1, 4, 11, 11, 11, 5, 4,
 	8, 8, 0, 0, 7, 12, 10, 10,
 	10, 9, 2, 6, 6, 11, 11, 17,
 	18, 255, 255, 255, 255, 255, 255, 255
@@ -219,17 +219,14 @@ static int extractPTS(pts_t &pts, unsigned char *pkt)
 
 eDVBTeletextParser::eDVBTeletextParser(iDVBDemux *demux) : m_pid(-1)
 {
-	eDebug("[eDVBTeletextParser] Starting!");
 	setStreamID(0xBD); /* as per en 300 472 */
 
 	setPageAndMagazine(-1, -1, "und");
 
 	if (demux->createPESReader(eApp, m_pes_reader))
-		eDebug("[eDVBTeletextParser] failed to create teletext subtitle PES reader!");
-	else {
-		eDebug("[eDVBTeletextParser] created teletext subtitle PES reader!");
-		m_pes_reader->connectRead(sigc::mem_fun(*this, &eDVBTeletextParser::processData), m_read_connection);
-	}
+		eDebug("failed to create teletext subtitle PES reader!");
+	else
+		m_pes_reader->connectRead(slot(*this, &eDVBTeletextParser::processData), m_read_connection);
 }
 
 eDVBTeletextParser::~eDVBTeletextParser()
@@ -256,7 +253,6 @@ void eDVBTeletextParser::processPESPacket(uint8_t *pkt, int len)
 	pts_t pts;
 	int have_pts = extractPTS(pts, pkt);
 
-	//eDebug("[eDVBTeletextParser] PES packet len=%d", len);
 	p += 4; len -= 4; /* start code, already be verified by pes parser */
 	p += 2; len -= 2; /* length, better use the argument */
 
@@ -268,12 +264,9 @@ void eDVBTeletextParser::processPESPacket(uint8_t *pkt, int len)
 
 	while (len > 2)
 	{
-		unsigned char data_unit_id = *p++; // data_unit_id
+		p++; /* data_unit_id */
 		unsigned char data_unit_length = *p++;
 		len -= 2;
-
-		if(data_unit_id == 0xFF) //data_unit for stuffing
-			break;
 
 		if (len < data_unit_length)
 		{
@@ -370,7 +363,7 @@ void eDVBTeletextParser::processPESPacket(uint8_t *pkt, int len)
 							continue;
 						}
 						else
-							eDebugNoNewLineStart("[eDVBTeletextParser] ignore unimplemented mode: ");
+							eDebugNoNewLine("ignore unimplemented: ");
 					}
 					else //0..39 means column 0..39
 					{
@@ -380,7 +373,7 @@ void eDVBTeletextParser::processPESPacket(uint8_t *pkt, int len)
 							if (mode > 15) //char from G0 set w/ diacr.
 							{
 								unsigned int ch=data;
-								if (!(mode & 0xF))
+								if (!mode&0xF)
 								{
 									if (data == 0x2A)
 										ch = '@';
@@ -408,17 +401,17 @@ void eDVBTeletextParser::processPESPacket(uint8_t *pkt, int len)
 									continue;
 								}
 								else
-									eDebug("ignore G2 char < 0x20: ");
+									eDebugNoNewLine("ignore G2 char < 0x20: ");
 							}
 							else
-								eDebug("ignore unimplemented: ");
+								eDebugNoNewLine("ignore unimplemented: ");
 						}
 						else
-							eDebug("row is not selected.. ignore: ");
+							eDebugNoNewLine("row is not selected.. ignore: ");
 					}
-					eDebug("triplet = %08x(%s) ", val, get_bits(val, 18));
-					eDebug("address = %02x(%s) ", addr, get_bits(addr, 6));
-					eDebug("mode = %02x(%s) ", mode, get_bits(mode, 5));
+					eDebugNoNewLine("triplet = %08x(%s) ", val, get_bits(val, 18));
+					eDebugNoNewLine("address = %02x(%s) ", addr, get_bits(addr, 6));
+					eDebugNoNewLine("mode = %02x(%s) ", mode, get_bits(mode, 5));
 					eDebug("data = %02x(%s)", data, get_bits(data, 7));
 				}
 			}
@@ -433,10 +426,10 @@ void eDVBTeletextParser::processPESPacket(uint8_t *pkt, int len)
 				if ((m_M29_t1 & 0xF) == 0) // format1
 					m_M29_0_valid = 1;
 				else
-					eDebug("[eDVBTeletextParser] non handled packet M/%d/0 format %d", Y, m_M29_t1 & 0xF);
+					eDebug("non handled packet M/%d/0 format %d", Y, m_M29_t1 & 0xF);
 			}
 			else
-				eDebug("[eDVBTeletextParser] non handled packet M/%d/%d", Y, designation_code);
+				eDebug("non handled packet M/%d/%d", Y, designation_code);
 		}
 		else if (m_page_open && M == m_page_M)
 		{
@@ -448,10 +441,10 @@ void eDVBTeletextParser::processPESPacket(uint8_t *pkt, int len)
 				if ((m_X28_t1 & 0xF) == 0) // format1
 					m_X28_0_valid = 1;
 				else
-					eDebug("[eDVBTeletextParser] non handled packet X/%d/0 format %d", Y, m_X28_t1 & 0xF);
+					eDebug("non handled packet X/%d/0 format %d", Y, m_X28_t1 & 0xF);
 			}
 			else
-				eDebug("[eDVBTeletextParser] non handled packet X/%d/%d", Y, designation_code);
+				eDebug("non handled packet X/%d/%d", Y, designation_code);
 		}
 	}
 }
@@ -460,7 +453,6 @@ int eDVBTeletextParser::start(int pid)
 {
 	m_page_open = 0;
 
-	eDebug("[eDVBTeletextParser] starting PES reader on pid=%04x", pid);
 	if (m_pes_reader && pid >= 0 && pid < 0x1fff)
 	{
 		m_pid = pid;
@@ -565,7 +557,7 @@ void eDVBTeletextParser::handleLine(unsigned char *data, int len)
 			else if (b == 0xb)  // open box
 				++m_box_open;
 			else
-				eDebug("[eDVBTeletextParser] handleLine: ignore %x", b);
+				eDebug("[ignore %x]", b);
 				/* ignore other attributes */
 		}
 		else
@@ -640,9 +632,9 @@ void eDVBTeletextParser::setPageAndMagazine(int page, int magazine, const char *
 	}
 
 	if (page > 0)
-		eDebug("[eDVBTeletextParser] enable teletext subtitle page %x%02x (%s)%d", magazine, page, lang, m_L);
+		eDebug("enable teletext subtitle page %x%02x (%s)%d", magazine, page, lang, m_L);
 	else
-		eDebug("[eDVBTeletextParser] disable teletext subtitles page %x%02x (%s)", magazine, page, lang);
+		eDebug("disable teletext subtitles page %x%02x (%s)", magazine, page, lang);
 	m_M29_0_valid = 0;
 	m_X28_0_valid = 0;
 	m_page_M = magazine; /* magazine to look for */
@@ -653,12 +645,12 @@ void eDVBTeletextParser::setPageAndMagazine(int page, int magazine, const char *
 		m_page_X &= 0xFF;
 }
 
-void eDVBTeletextParser::connectNewStream(const sigc::slot0<void> &slot, ePtr<eConnection> &connection)
+void eDVBTeletextParser::connectNewStream(const Slot0<void> &slot, ePtr<eConnection> &connection)
 {
 	connection = new eConnection(this, m_new_subtitle_stream.connect(slot));
 }
 
-void eDVBTeletextParser::connectNewPage(const sigc::slot1<void, const eDVBTeletextSubtitlePage&> &slot, ePtr<eConnection> &connection)
+void eDVBTeletextParser::connectNewPage(const Slot1<void, const eDVBTeletextSubtitlePage&> &slot, ePtr<eConnection> &connection)
 {
 	connection = new eConnection(this, m_new_subtitle_page.connect(slot));
 }

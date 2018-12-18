@@ -13,7 +13,6 @@ dvb_libenigma_dvb_a_SOURCES = \
 	dvb/epgcache.cpp \
 	dvb/esection.cpp \
 	dvb/fastscan.cpp \
-	dvb/filepush.cpp \
 	dvb/frontend.cpp \
 	dvb/frontendparms.cpp \
 	dvb/metaparser.cpp \
@@ -29,15 +28,8 @@ dvb_libenigma_dvb_a_SOURCES = \
 	dvb/tstools.cpp \
 	dvb/volume.cpp \
 	dvb/streamserver.cpp \
-	dvb/rtspstreamserver.cpp \
 	dvb/pmtparse.cpp \
-	dvb/encoder.cpp \
-	dvb/fbc.cpp \
-	dvb/atsc.cpp
-
-if HAVE_AMLOGIC
-dvb_libenigma_dvb_a_SOURCES += dvb/amldecoder.cpp
-endif
+	dvb/encoder.cpp
 
 dvbincludedir = $(pkgincludedir)/lib/dvb
 dvbinclude_HEADERS = \
@@ -53,7 +45,6 @@ dvbinclude_HEADERS = \
 	dvb/epgcache.h \
 	dvb/esection.h \
 	dvb/fastscan.h \
-	dvb/filepush.h \
 	dvb/frontend.h \
 	dvb/frontendparms.h \
 	dvb/idemux.h \
@@ -74,12 +65,5 @@ dvbinclude_HEADERS = \
 	dvb/tstools.h \
 	dvb/volume.h \
 	dvb/streamserver.h \
-	dvb/rtspstreamserver.h \
 	dvb/pmtparse.h \
-	dvb/encoder.h \
-	dvb/fbc.h \
-	dvb/atsc.h
-
-if HAVE_AMLOGIC
-dvbinclude_HEADERS += dvb/amldecoder.h
-endif
+	dvb/encoder.h

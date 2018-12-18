@@ -40,8 +40,7 @@ class pliExpertInfo(Poll, Converter, object):
 			( "0xB00", "0xBFF","Conax"  ,"Co"),
 			( "0xD00", "0xDFF","CryptoW","Cw"),
 			("0x1700","0x17FF","Beta"   ,"B" ),
-			("0x1800","0x18FF","Nagra"  ,"N" ),
-			("0x2600","0x26FF","BISS"   ,"Bi"))
+			("0x1800","0x18FF","Nagra"  ,"N" ))
 		self.ecmdata = GetEcmInfo()
 
 	@cached

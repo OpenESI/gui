@@ -224,10 +224,12 @@ class EPGList(HTMLComponent, GUIComponent):
 			for x in range(len(self.list)):
 				if CompareWithAlternatives(self.list[x][0], serviceref.toString()):
 					return x
-		return 0
+		return None
 		
 	def moveToService(self, serviceref):
 		newIdx = self.getIndexFromService(serviceref)
+		if newIdx is None:
+			newIdx = 0
 		self.setCurrentIndex(newIdx)
 
 	def setCurrentIndex(self, index):

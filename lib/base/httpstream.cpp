@@ -43,26 +43,6 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 
 	close();
 
-	std::string user_agent = "Enigma2 HbbTV/1.1.1 (+PVR+RTSP+DL;openESI;;;)";
-	std::string extra_headers = "";
-	size_t pos = uri.find('#');
-	if (pos != std::string::npos)
-	{
-		extra_headers = uri.substr(pos + 1);
-		uri = uri.substr(0, pos);
-
-		pos = extra_headers.find("User-Agent=");
-		if (pos != std::string::npos)
-		{
-			size_t hpos_start = pos + 11;
-			size_t hpos_end = extra_headers.find('&', hpos_start);
-			if (hpos_end != std::string::npos)
-				user_agent = extra_headers.substr(hpos_start, hpos_end - hpos_start);
-			else
-				user_agent = extra_headers.substr(hpos_start);
-		}
-	}
-
 	int pathindex = uri.find("/", 7);
 	if (pathindex > 0)
 	{
@@ -111,7 +91,6 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 	{
 		port = 80;
 	}
-
 	streamSocket = Connect(hostname.c_str(), port, 10);
 	if (streamSocket < 0)
 		goto error;
@@ -119,48 +98,11 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 	request = "GET ";
 	request.append(uri).append(" HTTP/1.1\r\n");
 	request.append("Host: ").append(hostname).append("\r\n");
-	request.append("User-Agent: ").append(user_agent).append("\r\n");
+	request.append("User-Agent: ").append("Enigma2").append("\r\n");
 	if (authorizationData != "")
 	{
 		request.append("Authorization: Basic ").append(authorizationData).append("\r\n");
 	}
-
-	pos = 0;
-	while (pos != std::string::npos && !extra_headers.empty())
-	{
-		std::string name, value;
-		size_t start = pos;
-		size_t len = std::string::npos;
-		pos = extra_headers.find('=', pos);
-		if (pos != std::string::npos)
-		{
-			len = pos - start;
-			pos++;
-			name = extra_headers.substr(start, len);
-			start = pos;
-			len = std::string::npos;
-			pos = extra_headers.find('&', pos);
-			if (pos != std::string::npos)
-			{
-				len = pos - start;
-				pos++;
-			}
-			value = extra_headers.substr(start, len);
-		}
-		if (!name.empty() && !value.empty())
-		{
-			if (name.compare("User-Agent") == 0)
-				continue;
-			eDebug("[eHttpStream] setting extra-header '%s:%s'", name.c_str(), value.c_str());
-			request.append(name).append(": ").append(value).append("\r\n");
-		}
-		else
-		{
-			eDebug("[eHttpStream] Invalid header format %s", extra_headers.c_str());
-			break;
-		}
-	}
-
 	request.append("Accept: */*\r\n");
 	request.append("Connection: close\r\n");
 	request.append("\r\n");
@@ -176,7 +118,7 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 	result = sscanf(linebuf, "%99s %d %99s", proto, &statuscode, statusmsg);
 	if (result != 3 || (statuscode != 200 && statuscode != 206 && statuscode != 302))
 	{
-		eDebug("[eHttpStream] %s: wrong http response code: %d", __func__, statuscode);
+		eDebug("%s: wrong http response code: %d", __FUNCTION__, statuscode);
 		goto error;
 	}
 
@@ -203,16 +145,14 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 		if (playlist && !strncasecmp(linebuf, "http://", 7))
 		{
 			newurl = linebuf;
-			eDebug("[eHttpStream] %s: playlist entry: %s", __func__, newurl.c_str());
+			eDebug("%s: playlist entry: %s", __FUNCTION__, newurl.c_str());
 			break;
 		}
 		if (((statuscode == 301) || (statuscode == 302) || (statuscode == 303) || (statuscode == 307) || (statuscode == 308)) &&
 				strncasecmp(linebuf, "location: ", 10) == 0)
 		{
 			newurl = &linebuf[10];
-			if (!extra_headers.empty())
-				newurl.append("#").append(extra_headers);
-			eDebug("[eHttpStream] %s: redirecting to: %s", __func__, newurl.c_str());
+			eDebug("%s: redirecting to: %s", __FUNCTION__, newurl.c_str());
 			break;
 		}
 
@@ -229,7 +169,7 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 	free(linebuf);
 	return 0;
 error:
-	eDebug("[eHttpStream] %s failed", __func__);
+	eDebug("%s failed", __FUNCTION__);
 	free(linebuf);
 	close();
 	return -1;
@@ -244,7 +184,7 @@ int eHttpStream::open(const char *url)
 	 * Spawn a new thread to establish the connection.
 	 */
 	connectionStatus = BUSY;
-	eDebug("[eHttpStream] Start thread");
+	eDebug("eHttpStream::Start thread");
 	run();
 	return 0;
 }
@@ -252,7 +192,6 @@ int eHttpStream::open(const char *url)
 void eHttpStream::thread()
 {
 	hasStarted();
-	usleep(500000); // wait half a second in general as not only fallback receiver needs this.
 	std::string currenturl, newurl;
 	currenturl = streamUrl;
 	for (unsigned int i = 0; i < 5; i++)
@@ -260,14 +199,14 @@ void eHttpStream::thread()
 		if (openUrl(currenturl, newurl) < 0)
 		{
 			/* connection failed */
-			eDebug("[eHttpStream] Thread end NO connection");
+			eDebug("eHttpStream::Thread end NO connection");
 			connectionStatus = FAILED;
 			return;
 		}
 		if (newurl == "")
 		{
 			/* we have a valid stream connection */
-			eDebug("[eHttpStream] Thread end connection");
+			eDebug("eHttpStream::Thread end connection");
 			connectionStatus = CONNECTED;
 			return;
 		}
@@ -277,7 +216,7 @@ void eHttpStream::thread()
 		newurl = "";
 	}
 	/* too many redirect / playlist levels */
-	eDebug("[eHttpStream] hread end NO connection");
+	eDebug("eHttpStream::Thread end NO connection");
 	connectionStatus = FAILED;
 	return;
 }

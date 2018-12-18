@@ -13,29 +13,14 @@
 #include <lib/base/init_num.h>
 #include <lib/driver/input_fake.h>
 
-static bool bflag;
-
 void eRCDeviceInputDev::handleCode(long rccode)
 {
 	struct input_event *ev = (struct input_event *)rccode;
 
-#if WETEKRC
-/*
-	eDebug("[eRCDeviceInputDev] ==> BEFORE check for evtype: %x %x %x", ev->value, ev->code, ev->type);
-	eDebug("[eRCDeviceInputDev] ==> BEFORE check for evtype:-->BackspaceFLAG %d", bflag);
-*/
-	if (ev->code == KEY_BACKSPACE && ev->value == 1 ) {
-		bflag = !bflag;
-	}
-/*
-	eDebug("[eRCDeviceInputDev] ==> BEFORE check for evtype after check for evvalue:-->BackspaceFLAG %d", bflag);
-*/
-#endif
-
 	if (ev->type != EV_KEY)
 		return;
 		
-	eDebug("[eRCDeviceInputDev] %x %x %x", ev->value, ev->code, ev->type);
+	eDebug("%x %x %x", ev->value, ev->code, ev->type);
 
 	int km = iskeyboard ? input->getKeyboardMode() : eRCInput::kmNone;
 
@@ -74,10 +59,6 @@ void eRCDeviceInputDev::handleCode(long rccode)
 			case KEY_ESC:
 			case KEY_TAB:
 			case KEY_BACKSPACE:
-/*
-				bflag = !bflag;
-				eDebug("[eRCDeviceInputDev] --> AFTER flip BackspaceFLAG %d", bflag);
-*/
 			case KEY_ENTER:
 			case KEY_INSERT:
 			case KEY_DELETE:
@@ -109,168 +90,6 @@ void eRCDeviceInputDev::handleCode(long rccode)
 		}
 	}
 
-#if TIVIARRC
-	if (ev->code == KEY_EPG) {
-		ev->code = KEY_INFO;
-	}
-	else if (ev->code == KEY_MEDIA) {
-		ev->code = KEY_EPG;
-	}
-	else if (ev->code == KEY_INFO) {
-		ev->code = KEY_BACK;
-	}
-	else if (ev->code == KEY_PREVIOUS) {
-		ev->code = KEY_SUBTITLE;
-	}
-	else if (ev->code == KEY_NEXT) {
-		ev->code = KEY_TEXT;
-	}
-	else if (ev->code == KEY_BACK) {
-		ev->code = KEY_MEDIA;
-	}
-	else if (ev->code == KEY_PLAYPAUSE) {
-		ev->code = KEY_PLAY;
-	}
-	else if (ev->code == KEY_RECORD) {
-		ev->code = KEY_PREVIOUS;
-	}
-	else if (ev->code == KEY_STOP) {
-		ev->code = KEY_PAUSE;
-	}
-	else if (ev->code == KEY_PROGRAM) {
-		ev->code = KEY_STOP;
-	}
-	else if (ev->code == KEY_BOOKMARKS) {
-		ev->code = KEY_RECORD;
-	}
-	else if (ev->code == KEY_SLEEP) {
-		ev->code = KEY_NEXT;
-	}
-	else if (ev->code == KEY_TEXT) {
-		ev->code = KEY_PAGEUP;
-	}
-	else if (ev->code == KEY_SUBTITLE) {
-		ev->code = KEY_PAGEDOWN;
-	}
-	else if (ev->code == KEY_LIST) {
-		ev->code = KEY_F3;
-	}
-	else if (ev->code ==  KEY_RADIO) {
-		ev->code =  KEY_MODE;
-	}
-	else if (ev->code == KEY_AUDIO) {
-		ev->code = KEY_TV;
-	}
-	else if (ev->code == KEY_HELP) {
-		ev->code = KEY_SLEEP;
-	}
-	else if (ev->code == KEY_TV) {
-		ev->code = KEY_VMODE;
-	}
-#endif
-
-#if WETEKRC
-/*
-	eDebug("[eRCDeviceInputDev] -->BackspaceFLAG %d", bflag);
-	eDebug("[eRCDeviceInputDev] -->before change %x %x %x", ev->value, ev->code, ev->type);
-*/
-/* default is with NO numerc keys !!!*/
-	if (bflag) {
-		if (ev->code == KEY_1) {
-			ev->code = KEY_RED;
-		}
-		if (ev->code == KEY_2) {
-			ev->code = KEY_GREEN;
-		}
-		if (ev->code == KEY_3) {
-			ev->code = KEY_YELLOW;
-		}
-		if (ev->code == KEY_4) {
-			ev->code = KEY_BLUE;
-		}
-		if (ev->code == KEY_5) {
-			ev->code = KEY_PREVIOUS;
-		}
-		if (ev->code == KEY_6) {
-			ev->code = KEY_NEXT;
-		}
-		if (ev->code == KEY_7) {
-			ev->code = KEY_REWIND;
-		}
-		if (ev->code == KEY_8) {
-			ev->code = KEY_STOP;
-		}
-		if (ev->code == KEY_9) {
-			ev->code = KEY_FASTFORWARD;
-		}
-		if (ev->code == KEY_0) {
-			ev->code = KEY_PLAYPAUSE;
-		}
-	}
-/*
-	eDebug("[eRCDeviceInputDev] -->BackspaceFLAG %d", bflag);
-	eDebug("[eRCDeviceInputDev] -->after change %x %x %x", ev->value, ev->code, ev->type);
-*/
-#endif
-
-#if KEY_VIDEO_TO_KEY_ANGLE
-	if (ev->code == KEY_VIDEO) {
-		ev->code = KEY_ANGLE;
-	}
-#endif
-
-#if KEY_F7_TO_KEY_MENU
-	if (ev->code == KEY_F7) {
-		ev->code = KEY_MENU;
-	}
-#endif
-
-#if KEY_F1_TO_KEY_MEDIA
-	if (ev->code == KEY_F1) {
-		ev->code = KEY_MEDIA;
-	}
-#endif
-
-#if KEY_HOME_TO_KEY_INFO
-	if (ev->code == KEY_HOME) {
-		ev->code = KEY_INFO;
-	}
-#endif
-
-#if KEY_BACK_TO_KEY_EXIT
-	if (ev->code == KEY_BACK) {
-		ev->code = KEY_EXIT;
-	}
-#endif
-
-#if KEY_F2_TO_KEY_EPG
-	if (ev->code == KEY_F2) {
-		ev->code = KEY_EPG;
-	}
-#endif
-
-#if KEY_ENTER_TO_KEY_OK
-	if (ev->code == KEY_ENTER) {
-		ev->code = KEY_OK;
-	}
-#endif
-
-#if KEY_BOOKMARKS_TO_KEY_MEDIA
-	if (ev->code == KEY_BOOKMARKS)
-	{
-		/* formuler and triplex remote send wrong keycode */
-		ev->code = KEY_MEDIA;
-	}
-#endif
-
-#if KEY_VIDEO_TO_KEY_FAVORITES
-	if (ev->code == KEY_VIDEO)
-	{
-		/* formuler rcu fav key send key_media change this to  KEY_FAVORITES */
-		ev->code = KEY_FAVORITES;
-	}
-#endif
-
 #if KEY_FAV_TO_KEY_PVR
 	if (ev->code == KEY_FAVORITES)
 	{
@@ -284,14 +103,6 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	{
 		/* xwidowx Remote rc has a Funktion key, which sends KEY_LAST events but we need a KEY_PVR. Correct this, so we do not have to place hacks in the keymaps. */
 		ev->code = KEY_PVR;
-	}
-#endif
-
-#if KEY_LAST_TO_KEY_BACK
-	if (ev->code == KEY_LAST)
-	{
-		/* sf108 Remote rc has a Funktion key, which sends KEY_LAST events but we need a KEY_BACK. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_BACK;
 	}
 #endif
 
@@ -372,33 +183,11 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	}
 #endif
 
-#if KEY_CONTEXT_MENU_TO_KEY_AUX
-	if (ev->code == KEY_CONTEXT_MENU)
-	{
-		/* Gigablue New Remote rc has a KEY_HDMI-IN, which sends KEY_CONTEXT_MENU events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_AUX;
-	}
-#endif
-
 #if KEY_F2_TO_KEY_F6
 	if (ev->code == KEY_F2)
 	{
 		/* Gigablue New Remote rc has a KEY_PIP key, which sends KEY_F2 events. Correct this, so we do not have to place hacks in the keymaps. */
 		ev->code = KEY_F6;
-	}
-#endif
-
-#if KEY_F1_TO_KEY_F6
-	if (ev->code == KEY_F1)
-	{
-		ev->code = KEY_F6;
-	}
-#endif
-
-#if KEY_F2_TO_KEY_AUX
-	if (ev->code == KEY_F2)
-	{
-		ev->code = KEY_AUX;
 	}
 #endif
 
@@ -638,22 +427,6 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	}
 #endif
 
-#if KEY_BOOKMARKS_IS_KEY_DIRECTORY
-	if (ev->code == KEY_BOOKMARKS)
-	{
-		/* Beyonwiz U4 RCU workaround to open pluginbrowser */
-		ev->code = KEY_DIRECTORY;
-	}
-#endif
-
-#if KEY_VIDEO_TO_KEY_BOOKMARKS
-	if (ev->code == KEY_VIDEO)
-	{
-		/* Axas Ultra have two keys open Movie folder , use Media key to open Mediaportal */
-		ev->code = KEY_BOOKMARKS;
-	}
-#endif
-
 	switch (ev->value)
 	{
 		case 0:
@@ -674,7 +447,7 @@ eRCDeviceInputDev::eRCDeviceInputDev(eRCInputEventDriver *driver, int consolefd)
 		consoleFd(consolefd), shiftState(false), capsState(false)
 {
 	setExclusive(true);
-	eDebug("[eRCDeviceInputDev] device \"%s\" is a %s", id.c_str(), iskeyboard ? "keyboard" : (ismouse ? "mouse" : "remotecontrol"));
+	eDebug("Input device \"%s\" is a %s", id.c_str(), iskeyboard ? "keyboard" : (ismouse ? "mouse" : "remotecontrol"));
 }
 
 void eRCDeviceInputDev::setExclusive(bool b)
@@ -718,22 +491,17 @@ class eInputDeviceInit
 public:
 	eInputDeviceInit()
 	{
-#if WORKAROUND_KODI_INPUT
-		addAll();
-#else
 		int i = 0;
 		consoleFd = ::open("/dev/tty0", O_RDWR);
 		while (1)
 		{
 			char filename[32];
 			sprintf(filename, "/dev/input/event%d", i);
-			if (::access(filename, R_OK) < 0)
-				break;
+			if (::access(filename, R_OK) < 0) break;
 			add(filename);
 			++i;
 		}
-		eDebug("[eInputDeviceInit] Found %d input devices.", i);
-#endif
+		eDebug("Found %d input devices.", i);
 	}
 
 	~eInputDeviceInit()
@@ -747,7 +515,6 @@ public:
 
 	void add(const char* filename)
 	{
-		eDebug("[eInputDeviceInit] adding device %s", filename);
 		eRCInputEventDriver *p = new eRCInputEventDriver(filename);
 		items.push_back(new element(filename, p, new eRCDeviceInputDev(p, consoleFd)));
 	}
@@ -763,37 +530,7 @@ public:
 				return;
 			}
 		}
-		eDebug("[eInputDeviceInit] Remove '%s', not found", filename);
-	}
-
-	void addAll(void)
-	{
-		int i = 0;
-		if (consoleFd < 0)
-		{
-			consoleFd = ::open("/dev/tty0", O_RDWR);
-			printf("consoleFd %d\n", consoleFd);
-		}
-		while (1)
-		{
-			char filename[32];
-			sprintf(filename, "/dev/input/event%d", i);
-			if (::access(filename, R_OK) < 0)
-				break;
-			add(filename);
-			++i;
-		}
-		eDebug("[eInputDeviceInit] Found %d input devices.", i);
-	}
-
-	void removeAll(void)
-	{
-		int size = items.size();
-		for (itemlist::iterator it = items.begin(); it != items.end(); ++it)
-		{
-			delete *it;
-		}
-		items.clear();
+		eDebug("Remove '%s', not found", filename);
 	}
 };
 
@@ -807,14 +544,4 @@ void addInputDevice(const char* filename)
 void removeInputDevice(const char* filename)
 {
 	init_rcinputdev->remove(filename);
-}
-
-void addAllInputDevices(void)
-{
-	init_rcinputdev->addAll();
-}
-
-void removeAllInputDevices(void)
-{
-	init_rcinputdev->removeAll();
 }

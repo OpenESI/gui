@@ -1,3 +1,5 @@
+SUBDIRS = nl
+
 installdir = $(pkglibdir)/python/Plugins/Extensions/Volume_adjust
 
 install_PYTHON = \

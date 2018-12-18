@@ -33,7 +33,6 @@ protected:
 	int locked;
 	static eLCD *instance;
 	void setSize(int xres, int yres, int bpp);
-	char boxtype_name[20];
 #endif
 public:
 	static eLCD *getInstance();
@@ -46,7 +45,6 @@ public:
 	virtual int setLED(int value, int option)=0;
 	virtual void setInverted( unsigned char )=0;
 	virtual void setFlipped(bool)=0;
-	virtual void setDump(bool)=0;
 	virtual int waitVSync()=0;
 	virtual bool isOled() const=0;
 	int getLcdType() { return lcd_type; };
@@ -68,7 +66,6 @@ class eDBoxLCD: public eLCD
 {
 	unsigned char inverted;
 	bool flipped;
-	bool dump;
 #ifdef SWIG
 	eDBoxLCD();
 	~eDBoxLCD();
@@ -83,12 +80,10 @@ public:
 	int setLED(int value, int option);
 	void setInverted( unsigned char );
 	void setFlipped(bool);
-	void setDump(bool);
 	bool isOled() const { return !!lcd_type; };
 	void setPalette(gUnmanagedSurface) {};
 	void update();
 	int waitVSync() { return 0; };
-	void dumpLCD2PNG(void);
 };
 
 #endif

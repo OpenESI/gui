@@ -227,12 +227,6 @@ KEYIDS = {
 "KEY_VMODE": 227,
 "KEY_LAN": 238,
 "KEY_UNKNOWN": 240,
-"BtnA": 304,
-"BtnY": 308,
-"BtnB": 305,
-"BtnX": 307,
-"BtnTL": 310,
-"BtnTR": 311,
 "KEY_OK": 352,
 "KEY_SELECT": 353,
 "KEY_GOTO": 354,
@@ -306,5 +300,4 @@ KEYIDS = {
 "KEY_MAX": 511,
 "BTN_0": 256,
 "BTN_1": 257,
-"KEY_UNKNOWN": 999,
 }

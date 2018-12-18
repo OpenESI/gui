@@ -7,25 +7,9 @@ from Components.Sources.StaticText import StaticText
 from Components.Pixmap import Pixmap
 from Components.Console import Console
 from Components.Label import Label
-from Tools.Directories import fileExists
 from enigma import getDesktop
 from os import access, R_OK
 from boxbranding import getBoxType, getBrandOEM
-
-def getFilePath(setting):
-	if getBrandOEM() in ('dreambox'):
-		return "/proc/stb/vmpeg/0/dst_%s" % (setting)
-	else:
-		return "/proc/stb/fb/dst_%s" % (setting)
-
-def setPositionParameter(parameter, configElement):
-	f = open(getFilePath(parameter), "w")
-	f.write('%08X\n' % configElement.value)
-	f.close()
-	if fileExists(getFilePath("apply")):
-		f = open(getFilePath("apply"), "w")
-		f.write('1')
-		f.close()
 
 def InitOsd():
 	SystemInfo["CanChange3DOsd"] = access('/proc/stb/fb/3dmode', R_OK) and True or False
@@ -41,27 +25,32 @@ def InitOsd():
 		SystemInfo["CanChangeOsdPosition"] = False
 		SystemInfo["CanChange3DOsd"] = False
 
-	if getBrandOEM() in ('dreambox'):
-		SystemInfo["CanChangeOsdPosition"] = True
-
 	def setOSDLeft(configElement):
 		if SystemInfo["CanChangeOsdPosition"]:
-			setPositionParameter("left", configElement)
+			f = open("/proc/stb/fb/dst_left", "w")
+			f.write('%X' % configElement.value)
+			f.close()
 	config.osd.dst_left.addNotifier(setOSDLeft)
 
 	def setOSDWidth(configElement):
 		if SystemInfo["CanChangeOsdPosition"]:
-			setPositionParameter("width", configElement)
+			f = open("/proc/stb/fb/dst_width", "w")
+			f.write('%X' % configElement.value)
+			f.close()
 	config.osd.dst_width.addNotifier(setOSDWidth)
 
 	def setOSDTop(configElement):
 		if SystemInfo["CanChangeOsdPosition"]:
-			setPositionParameter("top", configElement)
+			f = open("/proc/stb/fb/dst_top", "w")
+			f.write('%X' % configElement.value)
+			f.close()
 	config.osd.dst_top.addNotifier(setOSDTop)
 
 	def setOSDHeight(configElement):
 		if SystemInfo["CanChangeOsdPosition"]:
-			setPositionParameter("height", configElement)
+			f = open("/proc/stb/fb/dst_height", "w")
+			f.write('%X' % configElement.value)
+			f.close()
 	config.osd.dst_height.addNotifier(setOSDHeight)
 	print 'Setting OSD position: %s %s %s %s' %  (config.osd.dst_left.value, config.osd.dst_width.value, config.osd.dst_top.value, config.osd.dst_height.value)
 
@@ -76,22 +65,10 @@ def InitOsd():
 
 	def set3DMode(configElement):
 		if SystemInfo["CanChange3DOsd"]:
-			value = configElement.value
-			print 'Setting 3D mode:',value
+			print 'Setting 3D mode:',configElement.value
 			try:
-				if SystemInfo["CanUse3DModeChoices"]:
-					f = open("/proc/stb/fb/3dmode_choices", "r")
-					choices = f.readlines()[0].split()
-					f.close()
-					if value not in choices:
-						if value == "sidebyside":
-							value = "sbs"
-						elif value == "topandbottom":
-							value = "tab"
-						elif value == "auto":
-							value = "off"
 				f = open("/proc/stb/fb/3dmode", "w")
-				f.write(value)
+				f.write(configElement.value)
 				f.close()
 			except:
 				pass
@@ -113,7 +90,7 @@ class UserInterfacePositioner2(Screen, ConfigListScreen):
 		skin = """
 			<screen position="center,center" size="1920,1080" backgroundColor="#000000" title="OSD Adjustment" >
 
-				<widget name="text" position="300,165" zPosition="1" size="1320,180" font="Regular;32" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#1f771f" transparent="1" />
+				<widget source="text" render="Label" position="300,165" zPosition="1" size="1320,180" font="Regular;32" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#1f771f" transparent="1" />
 				<widget name="config" position="225,375" zPosition="1" size="1470,315" itemHeight="45" font="Regular;30" transparent="1" />
 				<widget source="status" render="Label" position="300,713" zPosition="1" size="1320,120" font="Regular;32" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#1f771f" transparent="1" />
 				
@@ -148,7 +125,7 @@ class UserInterfacePositioner2(Screen, ConfigListScreen):
 		skin = """
 			<screen position="center,center" size="1280,720" backgroundColor="#000000" title="OSD Adjustment" >
 
-				<widget name="text" position="200,110" zPosition="1" size="880,120" font="Regular;21" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#1f771f" transparent="1" />
+				<widget source="text" render="Label" position="200,110" zPosition="1" size="880,120" font="Regular;21" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#1f771f" transparent="1" />
 				<widget name="config" position="150,250" zPosition="1" size="980,210" itemHeight="30" font="Regular;20" transparent="1" />
 				<widget source="status" render="Label" position="200,475" zPosition="1" size="880,80" font="Regular;21" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#1f771f" transparent="1" />
 				
@@ -184,8 +161,8 @@ class UserInterfacePositioner2(Screen, ConfigListScreen):
 		skin = """
 			<screen position="center,center" size="1024,576" backgroundColor="#000000" title="OSD Adjustment" >
 
-				<widget name="text"  position="200,180" zPosition="1" size="624,100" font="Regular;21" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#1f771f" transparent="1" />
-				<widget name="config" position="100,180" zPosition="1" size="824,50" font="Regular;24" halign="center" valign="center" transparent="1" />
+				<widget source="text" render="Label" position="200,180" zPosition="1" size="624,100" font="Regular;21" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#1f771f" transparent="1" />
+				<widget source="config" render="Label" position="100,180" zPosition="1" size="824,50" font="Regular;24" halign="center" valign="center" transparent="1" />
 				<widget source="status" render="Label" position="200,450" zPosition="1" size="624,80" font="Regular;21" halign="center" valign="center" foregroundColor="yellow" backgroundColor="#1f771f" transparent="1" />
 				
 				<eLabel backgroundColor="red" position="0,0" size="1024,1" zPosition="0" />
@@ -258,10 +235,9 @@ class UserInterfacePositioner2(Screen, ConfigListScreen):
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("save"))
 		self["key_yellow"] = StaticText(_("Defaults"))
-		self["key_blue"] = StaticText()
 		
 		self["title"] = StaticText(_("OSD Adjustment"))
-		self["text"] = Label(_("Please setup your user interface by adjusting the values till the edges of the red box are touching the edges of your TV.\nWhen you are ready press green to continue."))
+		self["text"] = StaticText(_("Please setup your user interface by adjusting the values till the edges of the red box are touching the edges of your TV.\nWhen you are ready press green to continue."))
 
 		self["actions"] = ActionMap(["SetupActions", "ColorActions"],
 			{
@@ -334,7 +310,6 @@ class UserInterfacePositioner2(Screen, ConfigListScreen):
 		config.osd.dst_width.setValue(720)
 		config.osd.dst_top.setValue(0)
 		config.osd.dst_height.setValue(576)
-		self["config"].l.setList(self.list)
 
 	def setPreviewPosition(self):
 		size_w = getDesktop(0).size().width()
@@ -472,7 +447,6 @@ class UserInterfacePositioner(Screen, ConfigListScreen):
 		config.osd.dst_width.setValue(720)
 		config.osd.dst_top.setValue(0)
 		config.osd.dst_height.setValue(576)
-		self["config"].l.setList(self.list)
 
 	def setPreviewPosition(self):
 		size_w = getDesktop(0).size().width()
@@ -533,12 +507,7 @@ class OSD3DSetupScreen(Screen, ConfigListScreen):
 		Screen.__init__(self, session)
 		self.setup_title = _("OSD 3D Setup")
 		self.skinName = "Setup"
-
-		self["HelpWindow"] = Pixmap()
-		self["HelpWindow"].hide()
-		self["status"] = StaticText()
-		self["footnote"] = StaticText()
-		self["description"] = StaticText()
+		self["status"] = StaticText()		
 
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("OK"))

@@ -30,10 +30,6 @@ struct Cfilepara
 		palette_size(0),
 		bits(24),
 		id(mid),
-		max_x(0),
-		max_y(0),
-		ox(0),
-		oy(0),
 		picinfo(mfile),
 		callback(true)
 	{
@@ -51,7 +47,7 @@ struct Cfilepara
 };
 #endif
 
-class ePicLoad: public eMainloop, public eThread, public sigc::trackable, public iObject
+class ePicLoad: public eMainloop, public eThread, public Object, public iObject
 {
 	DECLARE_REF(ePicLoad);
 
@@ -69,7 +65,7 @@ class ePicLoad: public eMainloop, public eThread, public sigc::trackable, public
 		int max_x;
 		int max_y;
 		double aspect_ratio;
-		unsigned int background;
+		int background;
 		bool resizetype;
 		bool usecache;
 		int thumbnailsize;
@@ -85,7 +81,6 @@ class ePicLoad: public eMainloop, public eThread, public sigc::trackable, public
 			decode_Pic,
 			decode_Thumb,
 			decode_finished,
-			decode_error,
 			quit
 		};
 		Message(int type=0)
@@ -113,6 +108,6 @@ public:
 };
 
 //for old plugins
-SWIG_VOID(int) loadPic(ePtr<gPixmap> &SWIG_OUTPUT, std::string filename, int x, int y, int aspect, int resize_mode=0, int rotate=0, unsigned int background=0, std::string cachefile="");
+SWIG_VOID(int) loadPic(ePtr<gPixmap> &SWIG_OUTPUT, std::string filename, int x, int y, int aspect, int resize_mode=0, int rotate=0, int background=0, std::string cachefile="");
 
 #endif // __picload_h__

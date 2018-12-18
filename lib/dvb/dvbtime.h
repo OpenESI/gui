@@ -5,7 +5,6 @@
 
 #include <lib/base/eerror.h>
 #include <lib/dvb/esection.h>
-#include <lib/dvb/atsc.h>
 #include <dvbsi++/time_date_section.h>
 
 class eDVBChannel;
@@ -30,46 +29,29 @@ time_t parseDVBtime(uint16_t mjd, uint32_t stime_bcd);
 time_t parseDVBtime(const uint8_t* data);
 time_t parseDVBtime(const uint8_t* data, uint16_t *hash);
 
-class TimeTable : public eGTable
+class TDT: public eGTable
 {
-protected:
 	eDVBChannel *chan;
 	ePtr<iDVBDemux> demux;
 	ePtr<eTimer> m_interval_timer;
+	int createTable(unsigned int nr, const __u8 *data, unsigned int max);
 	void ready(int);
 	int update_count;
 public:
-	TimeTable(eDVBChannel *chan, int update_count=0);
-	void startTable(eDVBTableSpec spec);
-	void startTimer(int interval);
-	int getUpdateCount() { return update_count; }
-	virtual void start() = 0;
-};
-
-class TDT: public TimeTable
-{
-	int createTable(unsigned int nr, const __u8 *data, unsigned int max);
-public:
 	TDT(eDVBChannel *chan, int update_count=0);
 	void start();
-};
-
-class STT: public TimeTable
-{
-	int createTable(unsigned int nr, const __u8 *data, unsigned int max);
-public:
-	STT(eDVBChannel *chan, int update_count=0);
-	void start();
+	void startTimer(int interval);
+	int getUpdateCount() { return update_count; }
 };
 
 #endif  // SWIG
 
-class eDVBLocalTimeHandler: public sigc::trackable
+class eDVBLocalTimeHandler: public Object
 {
 	DECLARE_REF(eDVBLocalTimeHandler);
 	struct channel_data
 	{
-		ePtr<TimeTable> timetable;
+		ePtr<TDT> tdt;
 		ePtr<eDVBChannel> channel;
 		ePtr<eConnection> m_stateChangedConn;
 		int m_prevChannelState;
@@ -77,8 +59,6 @@ class eDVBLocalTimeHandler: public sigc::trackable
 	bool m_use_dvb_time;
 	ePtr<eTimer> m_updateNonTunedTimer;
 	friend class TDT;
-	friend class STT;
-	friend class TimeTable;
 	std::map<iDVBChannel*, channel_data> m_knownChannels;
 	std::map<eDVBChannelID,int> m_timeOffsetMap;
 	ePtr<eConnection> m_chanAddedConn;
@@ -103,7 +83,6 @@ public:
 #endif
 	bool getUseDVBTime() { return m_use_dvb_time; }
 	void setUseDVBTime(bool b);
-	void syncDVBTime();
 	PSignal0<void> m_timeUpdated;
 	time_t nowTime() const { return m_time_ready ? ::time(0)+m_time_difference : -1; }
 	bool ready() const { return m_time_ready; }

@@ -1,4 +1,4 @@
-from boxbranding import getBoxType, getBrandOEM, getMachineName
+from boxbranding import getBoxType, getBrandOEM
 from Components.About import about
 
 class HardwareInfo:
@@ -47,15 +47,6 @@ class HardwareInfo:
 
 	def get_device_version(self):
 		return HardwareInfo.device_version
-
-	def get_device_model(self):
-		return getBoxType()
-
-	def get_vu_device_name(self):
-		return getBoxType()
-
-	def get_friendly_name(self):
-		return getMachineName()
 
 	def has_hdmi(self):
 		return not (HardwareInfo.device_name == 'dm800' or (HardwareInfo.device_name == 'dm8000' and HardwareInfo.device_version == None))

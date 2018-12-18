@@ -6,7 +6,7 @@
 
 class eDVBScan;
 
-class eComponentScan: public sigc::trackable, public iObject
+class eComponentScan: public Object, public iObject
 {
 	DECLARE_REF(eComponentScan);
 #ifndef SWIG
@@ -43,10 +43,9 @@ public:
 	void addInitial(const eDVBFrontendParametersSatellite &p);
 	void addInitial(const eDVBFrontendParametersCable &p);
 	void addInitial(const eDVBFrontendParametersTerrestrial &p);
-	void addInitial(const eDVBFrontendParametersATSC &p);
 
 		/* please keep the flags in sync with lib/dvb/scan.h ! */
-	enum { scanNetworkSearch=1, scanRemoveServices=4, scanDontRemoveFeeds=8, scanDontRemoveUnscanned=16, clearToScanOnFirstNIT = 32, scanOnlyFree = 64, scanBlindSearch = 128 };
+	enum { scanNetworkSearch=1, scanRemoveServices=4, scanDontRemoveFeeds=8, scanDontRemoveUnscanned=16, clearToScanOnFirstNIT = 32, scanOnlyFree = 64 };
 
 	int start(int feid, int flags=0, int networkid = 0 );
 	SWIG_VOID(RESULT) getFrontend(ePtr<iDVBFrontend> &SWIG_OUTPUT);

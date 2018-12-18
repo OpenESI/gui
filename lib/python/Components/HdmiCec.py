@@ -3,8 +3,7 @@ import os
 from fcntl import ioctl
 from sys import maxint
 from enigma import eTimer, eHdmiCEC, eActionMap
-from config import config, ConfigSelection, ConfigYesNo, ConfigSubsection, ConfigText, NoSave, ConfigInteger
-from Components.Console import Console
+from config import config, ConfigSelection, ConfigYesNo, ConfigSubsection, ConfigText
 from Tools.StbHardware import getFPWasTimerWakeup
 from Tools.Directories import fileExists
 
@@ -12,8 +11,6 @@ from Tools.Directories import fileExists
 config.hdmicec = ConfigSubsection()
 config.hdmicec.enabled = ConfigYesNo(default = False)
 config.hdmicec.control_tv_standby = ConfigYesNo(default = True)
-config.hdmicec.control_tv_standby_skipnow = ConfigYesNo(default = False)
-config.hdmicec.TVoffCounter = NoSave(ConfigInteger(default = 0))
 config.hdmicec.control_tv_wakeup = ConfigYesNo(default = True)
 config.hdmicec.report_active_source = ConfigYesNo(default = True)
 config.hdmicec.report_active_menu = ConfigYesNo(default = True)
@@ -54,7 +51,6 @@ class HdmiCec:
 
 			eHdmiCEC.getInstance().messageReceived.get().append(self.messageReceived)
 			config.misc.standbyCounter.addNotifier(self.onEnterStandby, initial_call = False)
-			config.hdmicec.TVoffCounter.addNotifier(self.TVoff, initial_call = False)
 			config.misc.DeepStandby.addNotifier(self.onEnterDeepStandby, initial_call = False)
 			self.setFixedPhysicalAddress(config.hdmicec.fixed_physical_address.value)
 
@@ -157,10 +153,10 @@ class HdmiCec:
 			self.sendMessage(address, message)
 
 	def wakeupMessages(self):
-		if self.checkifPowerupWithoutWakingTv() == 'True':
-			print "[HdmiCec] Skip waking TV, found 'True' in '/tmp/powerup_without_waking_tv.txt' (usually written by openWebif)"
-		else:
-			if config.hdmicec.enabled.value:
+		if config.hdmicec.enabled.value:
+			if self.checkifPowerupWithoutWakingTv() == 'True':
+				print "[HdmiCec] Skip waking TV, found 'True' in '/tmp/powerup_without_waking_tv.txt' (usually written by openWebif)"
+			else:
 				messages = []
 				if config.hdmicec.control_tv_wakeup.value:
 					messages.append("wakeup")
@@ -174,36 +170,26 @@ class HdmiCec:
 				if config.hdmicec.control_receiver_wakeup.value:
 					self.sendMessage(5, "keypoweron")
 					self.sendMessage(5, "setsystemaudiomode")
-			if os.path.exists("/usr/script/TvOn.sh"):
-				Console().ePopen("/usr/script/TvOn.sh &")
 
 	def standbyMessages(self):
-		if config.hdmicec.control_tv_standby_skipnow.value:
-			print "[HdmiCec] Skip turning off TV (action standby_skipTVshutdown)"
-		else:
-			if config.hdmicec.enabled.value:
-				messages = []
-				if config.hdmicec.control_tv_standby.value:
-					messages.append("standby")
-				else:
-					if config.hdmicec.report_active_source.value:
-						messages.append("sourceinactive")
-					if config.hdmicec.report_active_menu.value:
-						messages.append("menuinactive")
-				if messages:
-					self.sendMessages(0, messages)
+		if config.hdmicec.enabled.value:
+			messages = []
+			if config.hdmicec.control_tv_standby.value:
+				messages.append("standby")
+			else:
+				if config.hdmicec.report_active_source.value:
+					messages.append("sourceinactive")
+				if config.hdmicec.report_active_menu.value:
+					messages.append("menuinactive")
+			if messages:
+				self.sendMessages(0, messages)
 
-				if config.hdmicec.control_receiver_standby.value:
-					self.sendMessage(5, "keypoweroff")
-					self.sendMessage(5, "standby")
-			if os.path.exists("/usr/script/TvOff.sh"):
-				Console().ePopen("/usr/script/TvOff.sh &")
+			if config.hdmicec.control_receiver_standby.value:
+				self.sendMessage(5, "keypoweroff")
+				self.sendMessage(5, "standby")
 
 	def onLeaveStandby(self):
 		self.wakeupMessages()
-
-	def TVoff(self, configElement):
-		self.standbyMessages()
 
 	def onEnterStandby(self, configElement):
 		from Screens.Standby import inStandby

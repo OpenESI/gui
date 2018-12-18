@@ -1,4 +1,4 @@
-from enigma import eComponentScan, iDVBFrontend, eTimer
+from enigma import eComponentScan, iDVBFrontend
 from Components.NimManager import nimmanager as nimmgr
 from Components.Converter.ChannelNumbers import channelnumbers
 
@@ -8,7 +8,6 @@ class ServiceScan:
 	Running = 2
 	Done = 3
 	Error = 4
-	DonePartially = 5
 
 	Errors = {
 		0: _("error starting scanning"),
@@ -25,7 +24,7 @@ class ServiceScan:
 				errcode = self.scan.getError()
 
 				if errcode == 0:
-					self.state = self.DonePartially
+					self.state = self.Done
 					self.servicelist.listAll()
 				else:
 					self.state = self.Error
@@ -69,8 +68,7 @@ class ServiceScan:
 						if tp_text == "DVB-S2":
 							tp_text = "%s %s" % ( tp_text,
 								{ tp.Modulation_Auto : "Auto", tp.Modulation_QPSK : "QPSK",
-									tp.Modulation_8PSK : "8PSK", tp.Modulation_QAM16 : "QAM16",
-									tp.Modulation_16APSK : "16APSK", tp.Modulation_32APSK : "32APSK" }.get(tp.modulation, ""))
+									tp.Modulation_8PSK : "8PSK", tp.Modulation_QAM16 : "QAM16" }.get(tp.modulation, ""))
 						tp_text = "%s %d%c / %d / %s" % ( tp_text, tp.frequency/1000,
 							{ tp.Polarisation_Horizontal : 'H', tp.Polarisation_Vertical : 'V', tp.Polarisation_CircularLeft : 'L',
 								tp.Polarisation_CircularRight : 'R' }.get(tp.polarisation, ' '),
@@ -79,8 +77,6 @@ class ServiceScan:
 								tp.FEC_3_4 : "3/4", tp.FEC_5_6 : "5/6", tp.FEC_7_8 : "7/8",
 								tp.FEC_8_9 : "8/9", tp.FEC_3_5 : "3/5", tp.FEC_4_5 : "4/5",
 								tp.FEC_9_10 : "9/10", tp.FEC_None : "NONE" }.get(tp.fec, ""))
-						if tp.is_id > -1 and tp.system == tp.System_DVB_S2:
-							tp_text = ("%s IS %d") % (tp_text, tp.is_id)
 					elif tp_type == iDVBFrontend.feCable:
 						network = _("Cable")
 						tp = transponder.getDVBC()
@@ -117,45 +113,24 @@ class ServiceScan:
 								tp.Bandwidth_Auto : "Bw Auto", tp.Bandwidth_5MHz : "Bw 5MHz",
 								tp.Bandwidth_1_712MHz : "Bw 1.712MHz", tp.Bandwidth_10MHz : "Bw 10MHz"
 							}.get(tp.bandwidth, ""))
-					elif tp_type == iDVBFrontend.feATSC:
-						network = _("ATSC")
-						tp = transponder.getATSC()
-						freqMHz = "%0.1f MHz" % (tp.frequency/1000000.)
-						tp_text = ("%s %s %s %s") % (
-							{
-								tp.System_ATSC : _("ATSC"),
-								tp.System_DVB_C_ANNEX_B : _("DVB-C ANNEX B")
-							}.get(tp.system, ""),
-							{
-								tp.Modulation_Auto : _("Auto"),
-								tp.Modulation_QAM16 : "QAM16",
-								tp.Modulation_QAM32 : "QAM32",
-								tp.Modulation_QAM64 : "QAM64",
-								tp.Modulation_QAM128 : "QAM128",
-								tp.Modulation_QAM256 : "QAM256",
-								tp.Modulation_VSB_8 : "8VSB",
-								tp.Modulation_VSB_16 : "16VSB"
-							}.get(tp.modulation, ""),
-							freqMHz.replace(".0",""),
-							{
-								tp.Inversion_Off : _("Off"),
-								tp.Inversion_On :_("On"),
-								tp.Inversion_Unknown : _("Auto")
-							}.get(tp.inversion, ""))
 					else:
 						print "unknown transponder type in scanStatusChanged"
 				self.network.setText(network)
 				self.transponder.setText(tp_text)
 
-		if self.state == self.DonePartially:
-			self.foundServices += self.scan.getNumServices()
-			self.text.setText(ngettext("Scanning completed, %d channel found", "Scanning completed, %d channels found", self.foundServices) % self.foundServices)
+		if self.state == self.Done:
+			result = self.foundServices + self.scan.getNumServices()
+			self.text.setText(ngettext("Scanning completed, %d channel found", "Scanning completed, %d channels found", result) % result)
 
 		if self.state == self.Error:
 			self.text.setText(_("ERROR - failed to scan (%s)!") % (self.Errors[self.errorcode]) )
 
-		if self.state == self.DonePartially or self.state == self.Error:
-			self.delaytimer.start(100, True)
+		if self.state == self.Done or self.state == self.Error:
+			if self.run != len(self.scanList) - 1:
+				self.foundServices += self.scan.getNumServices()
+				self.execEnd()
+				self.run += 1
+				self.execBegin()
 
 	def __init__(self, progressbar, text, servicelist, passNumber, scanList, network, transponder, frontendInfo, lcd_summary):
 		self.foundServices = 0
@@ -169,9 +144,6 @@ class ServiceScan:
 		self.network = network
 		self.run = 0
 		self.lcd_summary = lcd_summary
-		self.scan = None
-		self.delaytimer = eTimer()
-		self.delaytimer.callback.append(self.execEnd)
 
 	def doRun(self):
 		self.scan = eComponentScan()
@@ -190,7 +162,7 @@ class ServiceScan:
 	def updatePass(self):
 		size = len(self.scanList)
 		if size > 1:
-			self.passNumber.setText(_("pass") + " " + str(self.run + 1) + "/" + str(size) + " (" + _("Tuner") + " " + str(chr(ord("A") + self.scanList[self.run]["feid"])) + ")")
+			self.passNumber.setText(_("pass") + " " + str(self.run + 1) + "/" + str(size) + " (" + _("Tuner") + " " + str(self.scanList[self.run]["feid"]) + ")")
 
 	def execBegin(self):
 		self.doRun()
@@ -207,18 +179,12 @@ class ServiceScan:
 		self.scanStatusChanged()
 
 	def execEnd(self):
-		if self.scan is None:
-			if not self.isDone():
-				print "*** warning *** scan was not finished!"
-			return
 		self.scan.statusChanged.get().remove(self.scanStatusChanged)
 		self.scan.newService.get().remove(self.newService)
-		self.scan = None
-		if self.run != len(self.scanList) - 1:
-			self.run += 1
-			self.execBegin()
-		else:
-			self.state = self.Done
+		if not self.isDone():
+			print "*** warning *** scan was not finished!"
+
+		del self.scan
 
 	def isDone(self):
 		return self.state == self.Done or self.state == self.Error
@@ -230,8 +196,4 @@ class ServiceScan:
 		self.lcd_summary.updateService(newServiceName)
 
 	def destroy(self):
-		self.state = self.Idle
-		if self.scan is not None:
-			self.scan.statusChanged.get().remove(self.scanStatusChanged)
-			self.scan.newService.get().remove(self.newService)
-			self.scan = None
+		pass

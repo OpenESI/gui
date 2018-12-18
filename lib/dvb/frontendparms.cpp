@@ -114,12 +114,12 @@ int eDVBTransponderData::getInversion() const
 	return -1;
 }
 
-int eDVBTransponderData::getFrequency() const
+unsigned int eDVBTransponderData::getFrequency() const
 {
 	return 0;
 }
 
-int eDVBTransponderData::getSymbolRate() const
+unsigned int eDVBTransponderData::getSymbolRate() const
 {
 	return 0;
 }
@@ -154,27 +154,7 @@ int eDVBTransponderData::getPilot() const
 	return -1;
 }
 
-int eDVBTransponderData::getIsId() const
-{
-	return -1;
-}
-
-int eDVBTransponderData::getPLSMode() const
-{
-	return -1;
-}
-
-int eDVBTransponderData::getPLSCode() const
-{
-	return -1;
-}
-
 int eDVBTransponderData::getSystem() const
-{
-	return -1;
-}
-
-int eDVBTransponderData::getSystems() const
 {
 	return -1;
 }
@@ -239,20 +219,20 @@ int eDVBSatelliteTransponderData::getInversion() const
 	{
 	case INVERSION_OFF: return eDVBFrontendParametersSatellite::Inversion_Off;
 	case INVERSION_ON: return eDVBFrontendParametersSatellite::Inversion_On;
-	default: eDebug("[eDVBSatelliteTransponderData] got unsupported inversion from frontend! report as INVERSION_AUTO!\n");
+	default: eDebug("got unsupported inversion from frontend! report as INVERSION_AUTO!\n");
 	case INVERSION_AUTO: return eDVBFrontendParametersSatellite::Inversion_Unknown;
 	}
 }
 
 
-int eDVBSatelliteTransponderData::getFrequency() const
+unsigned int eDVBSatelliteTransponderData::getFrequency() const
 {
 	if (originalValues) return transponderParameters.frequency;
 
 	return roundMulti((spectinvCnt&1) ? frequencyOffset - getProperty(DTV_FREQUENCY) : frequencyOffset + getProperty(DTV_FREQUENCY), 1000);
 }
 
-int eDVBSatelliteTransponderData::getSymbolRate() const
+unsigned int eDVBSatelliteTransponderData::getSymbolRate() const
 {
 	if (originalValues) return transponderParameters.symbol_rate;
 
@@ -281,7 +261,7 @@ int eDVBSatelliteTransponderData::getFecInner() const
 	case FEC_8_9: return eDVBFrontendParametersSatellite::FEC_8_9;
 	case FEC_9_10: return eDVBFrontendParametersSatellite::FEC_9_10;
 	case FEC_NONE: return eDVBFrontendParametersSatellite::FEC_None;
-	default: eDebug("[eDVBSatelliteTransponderData] got unsupported FEC from frontend! report as FEC_AUTO!\n");
+	default: eDebug("got unsupported FEC from frontend! report as FEC_AUTO!\n");
 	case FEC_AUTO: return eDVBFrontendParametersSatellite::FEC_Auto;
 	}
 }
@@ -292,11 +272,9 @@ int eDVBSatelliteTransponderData::getModulation() const
 
 	switch (getProperty(DTV_MODULATION))
 	{
-	default: eDebug("[eDVBSatelliteTransponderData] got unsupported modulation from frontend! report as QPSK!");
+	default: eDebug("got unsupported modulation from frontend! report as QPSK!");
 	case QPSK: return eDVBFrontendParametersSatellite::Modulation_QPSK;
 	case PSK_8: return eDVBFrontendParametersSatellite::Modulation_8PSK;
-	case APSK_16: return eDVBFrontendParametersSatellite::Modulation_16APSK;
-	case APSK_32: return eDVBFrontendParametersSatellite::Modulation_32APSK;
 	}
 }
 
@@ -338,42 +316,10 @@ int eDVBSatelliteTransponderData::getSystem() const
 
 	switch (getProperty(DTV_DELIVERY_SYSTEM))
 	{
-	default: eDebug("[eDVBSatelliteTransponderData] got unsupported system from frontend! report as DVBS!");
+	default: eDebug("got unsupported system from frontend! report as DVBS!");
 	case SYS_DVBS: return eDVBFrontendParametersSatellite::System_DVB_S;
 	case SYS_DVBS2: return eDVBFrontendParametersSatellite::System_DVB_S2;
 	}
-}
-
-int eDVBSatelliteTransponderData::getSystems() const
-{
-	return -1;
-}
-
-int eDVBSatelliteTransponderData::getIsId() const
-{
-	if (originalValues) return transponderParameters.is_id;
-
-	unsigned int stream_id = getProperty(DTV_STREAM_ID);
-	if (stream_id == NO_STREAM_ID_FILTER) return transponderParameters.is_id;
-	return stream_id & 0xFF;
-}
-
-int eDVBSatelliteTransponderData::getPLSMode() const
-{
-	if (originalValues) return transponderParameters.pls_mode;
-
-	unsigned int stream_id = getProperty(DTV_STREAM_ID);
-	if (stream_id == NO_STREAM_ID_FILTER) return transponderParameters.pls_mode;
-	return (stream_id >> 26) & 0x3;
-}
-
-int eDVBSatelliteTransponderData::getPLSCode() const
-{
-	if (originalValues) return transponderParameters.pls_code;
-
-	unsigned int stream_id = getProperty(DTV_STREAM_ID);
-	if (stream_id == NO_STREAM_ID_FILTER) return transponderParameters.pls_code;
-	return (stream_id >> 8) & 0x3FFFF;
 }
 
 DEFINE_REF(eDVBCableTransponderData);
@@ -401,14 +347,14 @@ int eDVBCableTransponderData::getInversion() const
 	}
 }
 
-int eDVBCableTransponderData::getFrequency() const
+unsigned int eDVBCableTransponderData::getFrequency() const
 {
 	if (originalValues) return transponderParameters.frequency;
 
 	return getProperty(DTV_FREQUENCY) / 1000;
 }
 
-int eDVBCableTransponderData::getSymbolRate() const
+unsigned int eDVBCableTransponderData::getSymbolRate() const
 {
 	if (originalValues) return transponderParameters.symbol_rate;
 
@@ -468,11 +414,6 @@ int eDVBCableTransponderData::getSystem() const
 #endif
 }
 
-int eDVBCableTransponderData::getSystems() const
-{
-	return -1;
-}
-
 DEFINE_REF(eDVBTerrestrialTransponderData);
 
 eDVBTerrestrialTransponderData::eDVBTerrestrialTransponderData(struct dtv_property *dtvproperties, unsigned int propertycount, eDVBFrontendParametersTerrestrial &transponderparms, bool original)
@@ -498,12 +439,10 @@ int eDVBTerrestrialTransponderData::getInversion() const
 	}
 }
 
-int eDVBTerrestrialTransponderData::getFrequency() const
+unsigned int eDVBTerrestrialTransponderData::getFrequency() const
 {
-	if (originalValues)
-	{
-		return transponderParameters.frequency;
-	}
+	if (originalValues) return transponderParameters.frequency;
+
 	return getProperty(DTV_FREQUENCY);
 }
 
@@ -616,7 +555,7 @@ int eDVBTerrestrialTransponderData::getHierarchyInformation() const
 
 int eDVBTerrestrialTransponderData::getPlpId() const
 {
-	if (originalValues) return transponderParameters.plp_id;
+	if (originalValues) return transponderParameters.plpid;
 
 #if defined DTV_STREAM_ID
 	return getProperty(DTV_STREAM_ID);
@@ -637,11 +576,6 @@ int eDVBTerrestrialTransponderData::getSystem() const
 	case SYS_DVBT: return eDVBFrontendParametersTerrestrial::System_DVB_T;
 	case SYS_DVBT2: return eDVBFrontendParametersTerrestrial::System_DVB_T2;
 	}
-}
-
-int eDVBTerrestrialTransponderData::getSystems() const
-{
-	return -1;
 }
 
 DEFINE_REF(eDVBATSCTransponderData);
@@ -669,7 +603,7 @@ int eDVBATSCTransponderData::getInversion() const
 	}
 }
 
-int eDVBATSCTransponderData::getFrequency() const
+unsigned int eDVBATSCTransponderData::getFrequency() const
 {
 	if (originalValues) return transponderParameters.frequency;
 
@@ -704,11 +638,6 @@ int eDVBATSCTransponderData::getSystem() const
 	case SYS_ATSC: return eDVBFrontendParametersATSC::System_ATSC;
 	case SYS_DVBC_ANNEX_B: return eDVBFrontendParametersATSC::System_DVB_C_ANNEX_B;
 	}
-}
-
-int eDVBATSCTransponderData::getSystems() const
-{
-	return -1;
 }
 
 DEFINE_REF(eDVBFrontendData);

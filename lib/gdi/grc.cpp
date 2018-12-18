@@ -1,5 +1,4 @@
 #include <unistd.h>
-#include <fstream>
 #include <lib/gdi/grc.h>
 #include <lib/gdi/font.h>
 #include <lib/base/init.h>
@@ -23,7 +22,6 @@ gRC::gRC(): rp(0), wp(0)
 #else
 ,m_notify_pump(eApp, 1)
 #endif
-,m_spinner_enabled(0), m_spinneronoff(1), m_prev_idle_count(0)
 {
 	ASSERT(!instance);
 	instance=this;
@@ -38,27 +36,13 @@ gRC::gRC(): rp(0), wp(0)
 	int res = pthread_create(&the_thread, &attr, thread_wrapper, this);
 	pthread_attr_destroy(&attr);
 	if (res)
-		eFatal("[gRC] thread couldn't be created");
+		eFatal("RC thread couldn't be created");
 	else
-		eDebug("[gRC] thread created successfully");
+		eDebug("RC thread created successfully");
 #endif
+	m_spinner_enabled = 0;
+	m_spinneronoff = 1;
 }
-
-#ifdef CONFIG_ION
-void gRC::lock()
-{
-#ifndef SYNC_PAINT
-	pthread_mutex_lock(&mutex);
-#endif
-}
-
-void gRC::unlock()
-{
-#ifndef SYNC_PAINT
-	pthread_mutex_unlock(&mutex);
-#endif
-}
-#endif
 
 DEFINE_REF(gRC);
 
@@ -70,9 +54,9 @@ gRC::~gRC()
 	o.opcode=gOpcode::shutdown;
 	submit(o);
 #ifndef SYNC_PAINT
-	eDebug("[gRC] waiting for gRC thread shutdown");
+	eDebug("waiting for gRC thread shutdown");
 	pthread_join(the_thread, 0);
-	eDebug("[gRC] thread has finished");
+	eDebug("gRC thread has finished");
 #endif
 }
 
@@ -94,7 +78,7 @@ void gRC::submit(const gOpcode &o)
 #else
 			thread();
 #endif
-			//eDebug("[gRC] render buffer full...");
+			//printf("render buffer full...\n");
 			//fflush(stdout);
 			usleep(1000);  // wait 1 msec
 			continue;
@@ -207,11 +191,7 @@ void *gRC::thread()
 				if (!idle)
 				{
 					if (!m_spinner_enabled)
-					{
-						eDebug("[gRC] main thread is non-idle! display spinner!");
-							std::ofstream dummy("/tmp/doPythonStackTrace");
-							dummy.close();
-					}
+						eDebug("main thread is non-idle! display spinner!");
 					enableSpinner();
 				} else
 					disableSpinner();
@@ -244,7 +224,7 @@ void gRC::enableSpinner()
 {
 	if (!m_spinner_dc)
 	{
-		eDebug("[gRC] enabelSpinner: no spinner DC!");
+		eDebug("no spinner DC!");
 		return;
 	}
 
@@ -266,7 +246,7 @@ void gRC::disableSpinner()
 
 	if (!m_spinner_dc)
 	{
-		eDebug("[gRC] disableSpinner: no spinner DC!");
+		eDebug("no spinner DC!");
 		return;
 	}
 
@@ -753,7 +733,7 @@ void gDC::exec(const gOpcode *o)
 			int vcentered_top = o->parm.renderText->area.top() + ((o->parm.renderText->area.height() - bbox.height()) / 2);
 			int correction = vcentered_top - bbox.top();
 			// Only center if it fits, don't push text out the top
-			if ((correction > 0) || (para->getLineCount() == 1))
+			if (correction > 0)
 			{
 				offset += ePoint(0, correction);
 			}
@@ -908,7 +888,7 @@ void gDC::exec(const gOpcode *o)
 		incrementSpinner();
 		break;
 	default:
-		eFatal("[gDC] illegal opcode %d. expect memory leak!", o->opcode);
+		eFatal("illegal opcode %d. expect memory leak!", o->opcode);
 	}
 }
 
@@ -918,7 +898,7 @@ gRGB gDC::getRGB(gColor col)
 		return gRGB(col, col, col);
 	if (col<0)
 	{
-		eFatal("[gDC] getRGB transp");
+		eFatal("bla transp");
 		return gRGB(0, 0, 0, 0xFF);
 	}
 	return m_pixmap->surface->clut.data[col];
@@ -966,7 +946,7 @@ void gDC::incrementSpinner()
 	m_spinner_temp->blit(*m_spinner_saved, eRect(0, 0, 0, 0), eRect(ePoint(0, 0), m_spinner_pos.size()));
 
 	if (m_spinner_pic[m_spinner_i])
-		m_spinner_temp->blit(*m_spinner_pic[m_spinner_i], eRect(0, 0, 0, 0), eRect(ePoint(0, 0), m_spinner_pos.size()), gPixmap::blitAlphaBlend);
+		m_spinner_temp->blit(*m_spinner_pic[m_spinner_i], eRect(0, 0, 0, 0), eRect(ePoint(0, 0), m_spinner_pos.size()), gPixmap::blitAlphaTest);
 
 	m_pixmap->blit(*m_spinner_temp, eRect(m_spinner_pos.topLeft(), eSize()), gRegion(m_spinner_pos), 0);
 	m_spinner_i++;

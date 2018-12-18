@@ -15,7 +15,7 @@ eVideoWidget::eVideoWidget(eWidget *parent)
 	if (!fullsizeTimer)
 	{
 		fullsizeTimer = eTimer::create(eApp);
-		fullsizeTimer->timeout.connect(sigc::bind(sigc::ptr_fun(&eVideoWidget::setFullsize), false));
+		fullsizeTimer->timeout.connect(bind(slot(eVideoWidget::setFullsize), false));
 	}
 	parent->setPositionNotifyChild(1);
 }
@@ -144,9 +144,4 @@ void eVideoWidget::updatePosition(int disable)
 void eVideoWidget::setDecoder(int decoder)
 {
 	m_decoder = decoder;
-}
-
-void eVideoWidget::setOverscan(bool overscan)
-{
-	m_overscan = overscan;
 }

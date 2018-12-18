@@ -24,7 +24,6 @@ void eDVBPMTParser::clearProgramInfo(program &program)
 	program.videoStreams.clear();
 	program.audioStreams.clear();
 	program.subtitleStreams.clear();
-	program.caids.clear();
 	program.pcrPid = -1;
 	program.pmtPid = -1;
 	program.textPid = -1;
@@ -36,21 +35,6 @@ void eDVBPMTParser::clearProgramInfo(program &program)
 
 	program.defaultAudioStream = 0;
 	program.defaultSubtitleStream = -1;
-}
-
-void eDVBPMTParser::processCaDescriptor(program &program, CaDescriptor *descr)
-{
-	program::capid_pair pair;
-	pair.caid = descr->getCaSystemId();
-	pair.capid = descr->getCaPid();
-	pair.databytes.clear();
-	for(std::vector<unsigned char>::const_iterator it = descr->getCaDataBytes()->begin(); it != descr->getCaDataBytes()->end(); ++it)
-	{
-		char t[3];
-		sprintf(t, "%02X", *it);
-		pair.databytes += t;
-	}
-	program.caids.push_back(pair);
 }
 
 int eDVBPMTParser::getProgramInfo(program &program)
@@ -80,7 +64,11 @@ int eDVBPMTParser::getProgramInfo(program &program)
 			{
 				if ((*desc)->getTag() == CA_DESCRIPTOR)
 				{
-					processCaDescriptor(program, (CaDescriptor*)(*desc));
+					CaDescriptor *descr = (CaDescriptor*)(*desc);
+					program::capid_pair pair;
+					pair.caid = descr->getCaSystemId();
+					pair.capid = descr->getCaPid();
+					program.caids.push_back(pair);
 				}
 				else if ((*desc)->getTag() == REGISTRATION_DESCRIPTOR)
 				{
@@ -108,19 +96,6 @@ int eDVBPMTParser::getProgramInfo(program &program)
 					video.type = videoStream::vtMPEG4_H264;
 					isvideo = 1;
 					//break; fall through !!!
-				case 0x24: // H265 HEVC
-				case 0x27: // H265 HEVC
-					if (!isvideo)
-					{
-						video.type = videoStream::vtH265_HEVC;
-						isvideo = 1;
-					}
-				case 0x42: // CAVS
-					if (!isvideo)
-					{
-						video.type = videoStream::vtCAVS;
-						isvideo = 1;
-					}
 				case 0x10: // MPEG 4 Part 2
 					if (!isvideo)
 					{
@@ -179,13 +154,6 @@ int eDVBPMTParser::getProgramInfo(program &program)
 						isaudio = 1;
 						audio.type = audioStream::atDTS;
 					}
-				case 0x84: // DDP (blueray)
-				case 0x87: // DDP (ATSC)
-					if (!isvideo && !isaudio)
-					{
-						isaudio = 1;
-						audio.type = audioStream::atDDP;
-					}
 				case 0x85: // bluray DTS-HD HRA(dvb user private...)
 				case 0x86: // bluray DTS-HD MA(dvb user private...)
 				case 0xA6: // bluray secondary DTS-HD
@@ -230,11 +198,11 @@ int eDVBPMTParser::getProgramInfo(program &program)
 									s.subtitling_type = (*it)->getSubtitlingType();
 									switch(s.subtitling_type)
 									{
-									case 0x10 ... 0x15: // dvb subtitles normal
-									case 0x20 ... 0x25: // dvb subtitles hearing impaired
+									case 0x10 ... 0x13: // dvb subtitles normal
+									case 0x20 ... 0x23: // dvb subtitles hearing impaired
 										break;
 									default:
-										eDebug("[eDVBPMTParser] dvb subtitle %s PID %04x with wrong subtitling type (%02x)... force 0x10!!",
+										eDebug("dvb subtitle %s PID %04x with wrong subtitling type (%02x)... force 0x10!!",
 										s.language_code.c_str(), s.pid, s.subtitling_type);
 										s.subtitling_type = 0x10;
 										break;
@@ -243,7 +211,7 @@ int eDVBPMTParser::getProgramInfo(program &program)
 									s.ancillary_page_id = (*it)->getAncillaryPageId();
 									std::string language = (*it)->getIso639LanguageCode();
 									s.language_code = language;
-//								eDebug("[eDVBPMTParser] add dvb subtitle %s PID %04x, type %d, composition page %d, ancillary_page %d", s.language_code.c_str(), s.pid, s.subtitling_type, s.composition_page_id, s.ancillary_page_id);
+//								eDebug("add dvb subtitle %s PID %04x, type %d, composition page %d, ancillary_page %d", s.language_code.c_str(), s.pid, s.subtitling_type, s.composition_page_id, s.ancillary_page_id);
 									issubtitle = 1;
 									program.subtitleStreams.push_back(s);
 								}
@@ -269,7 +237,7 @@ int eDVBPMTParser::getProgramInfo(program &program)
 											s.language_code = language;
 											s.teletext_page_number = (*it)->getTeletextPageNumber();
 											s.teletext_magazine_number = (*it)->getTeletextMagazineNumber();
-//										eDebug("[eDVBPMTParser] add teletext subtitle %s PID %04x, page number %d, magazine number %d", s.language_code.c_str(), s.pid, s.teletext_page_number, s.teletext_magazine_number);
+//										eDebug("add teletext subtitle %s PID %04x, page number %d, magazine number %d", s.language_code.c_str(), s.pid, s.teletext_page_number, s.teletext_magazine_number);
 											program.subtitleStreams.push_back(s);
 											issubtitle=1;
 										default:
@@ -327,12 +295,7 @@ int eDVBPMTParser::getProgramInfo(program &program)
 											video.type = videoStream::vtVC1_SM; // simple main
 										isvideo = 1;
 									}
-									break;
 								}
-								case 0x48455643: /*HEVC */
-									isvideo = 1;
-									video.type = videoStream::vtH265_HEVC;
-									break;
 								default:
 									break;
 								}
@@ -376,7 +339,11 @@ int eDVBPMTParser::getProgramInfo(program &program)
 							break;
 						case CA_DESCRIPTOR:
 						{
-							processCaDescriptor(program, (CaDescriptor*)(*desc));
+							CaDescriptor *descr = (CaDescriptor*)(*desc);
+							program::capid_pair pair;
+							pair.caid = descr->getCaSystemId();
+							pair.capid = descr->getCaPid();
+							program.caids.push_back(pair);
 							break;
 						}
 						default:
@@ -386,7 +353,7 @@ int eDVBPMTParser::getProgramInfo(program &program)
 					if (!num_descriptors && streamtype == 0x06 && prev_audio)
 					{
 						prev_audio->rdsPid = (*es)->getPid();
-						eDebug("[eDVBPMTParser] Rds PID %04x detected ? ! ?", prev_audio->rdsPid);
+						eDebug("Rds PID %04x detected ? ! ?", prev_audio->rdsPid);
 					}
 					prev_audio = 0;
 					break;
@@ -426,13 +393,13 @@ int eDVBPMTParser::getProgramInfo(program &program)
 				}
 				if (isteletext && (isaudio || isvideo))
 				{
-					eDebug("[eDVBPMTParser] ambiguous streamtype for PID %04x detected.. forced as teletext!", (*es)->getPid());
+					eDebug("ambiguous streamtype for PID %04x detected.. forced as teletext!", (*es)->getPid());
 					continue; // continue with next PID
 				}
 				else if (issubtitle && (isaudio || isvideo))
-					eDebug("[eDVBPMTParser] ambiguous streamtype for PID %04x detected.. forced as subtitle!", (*es)->getPid());
+					eDebug("ambiguous streamtype for PID %04x detected.. forced as subtitle!", (*es)->getPid());
 				else if (isaudio && isvideo)
-					eDebug("[eDVBPMTParser] ambiguous streamtype for PID %04x detected.. forced as video!", (*es)->getPid());
+					eDebug("ambiguous streamtype for PID %04x detected.. forced as video!", (*es)->getPid());
 				if (issubtitle) // continue with next PID
 					continue;
 				else if (isvideo)
@@ -476,7 +443,6 @@ eDVBPMTParser::eStreamData::eStreamData(eDVBPMTParser::program &program)
 	{
 		caIds.push_back(it->caid);
 		ecmPids.push_back(it->capid);
-		ecmDataBytes.push_back(it->databytes);
 	}
 }
 
@@ -569,13 +535,12 @@ RESULT eDVBPMTParser::eStreamData::getDemuxId(int &result) const
 	return 0;
 }
 
-RESULT eDVBPMTParser::eStreamData::getCaIds(std::vector<int> &caids, std::vector<int> &ecmpids, std::vector<std::string> &ecmdatabytes) const
+RESULT eDVBPMTParser::eStreamData::getCaIds(std::vector<int> &caids, std::vector<int> &ecmpids) const
 {
 	for (unsigned int i = 0; (i < caIds.size()) && (i < ecmPids.size()); i++)
 	{
 		caids.push_back(caIds[i]);
 		ecmpids.push_back(ecmPids[i]);
-		ecmdatabytes.push_back(ecmDataBytes[i]);
 	}
 	return 0;
 }

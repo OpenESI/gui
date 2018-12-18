@@ -1,5 +1,3 @@
-from time import time, localtime, gmtime
-from os import path
 from fcntl import ioctl
 from struct import pack, unpack
 from Components.config import config
@@ -12,7 +10,7 @@ def getFPVersion():
 			file = open("/proc/stb/info/micomver", "r")
 			ret = file.readline().strip()
 			file.close()
-		elif getBoxType() in ('dm7080','dm820','dm520','dm525','dm900','dm920'):
+		elif getBoxType() in ('dm7080','dm820'):
 			ret = open("/proc/stb/fp/version", "r").read()
 		else:	
 			ret = long(open("/proc/stb/fp/version", "r").read())
@@ -38,16 +36,25 @@ def setFPWakeuptime(wutime):
 			print "setFPWakeupTime failed!"
 
 def setRTCoffset():
-	forsleep = (localtime(time()).tm_hour-gmtime(time()).tm_hour)*3600
-	print "[RTC] set RTC offset to %s sec." % (forsleep)
+	import time
+	if time.localtime().tm_isdst == 0:
+		forsleep = 7200+time.timezone
+	else:
+		forsleep = 3600-time.timezone
+
+	t_local = time.localtime(int(time.time()))
+
+	print "set RTC to %s (rtc_offset = %s sec.)" % (time.strftime("%Y/%m/%d %H:%M", t_local), forsleep)
+
+	# Set RTC OFFSET (diff. between UTC and Local Time)
 	try:
 		open("/proc/stb/fp/rtc_offset", "w").write(str(forsleep))
 	except IOError:
-		print "setRTCoffset failed!"
+		print "set RTC Offset failed!"
 
 def setRTCtime(wutime):
-        if path.exists("/proc/stb/fp/rtc_offset"):
-		setRTCoffset()
+	if getBoxType() in ('gb800solo', 'gb800se', 'gb800ue') or getBrandOEM().startswith('ini') or getBrandOEM() in ('fulan'):
+		setRTCoffset() 
 	try:
 		f = open("/proc/stb/fp/rtc", "w")
 		f.write(str(wutime))
@@ -63,8 +70,8 @@ def setRTCtime(wutime):
 def getFPWakeuptime():
 	ret = 0
 	try:
-		f = open("/proc/stb/fp/wakeup_time", "r")
-		ret = long(f.read())
+		f = long(open("/proc/stb/fp/wakeup_time", "r"))
+		ret = f.read()
 		f.close()
 	except IOError:
 		try:
@@ -77,12 +84,9 @@ def getFPWakeuptime():
 
 wasTimerWakeup = None
 
-def getFPWasTimerWakeup(check = False):
+def getFPWasTimerWakeup():
 	global wasTimerWakeup
-	isError = False
 	if wasTimerWakeup is not None:
-		if check:
-			return wasTimerWakeup, isError
 		return wasTimerWakeup
 	wasTimerWakeup = False
 	try:
@@ -100,13 +104,10 @@ def getFPWasTimerWakeup(check = False):
 			fp.close()
 		except IOError:
 			print "wasTimerWakeup failed!"
-			isError = True
 
 	if wasTimerWakeup:
 		# clear hardware status
 		clearFPWasTimerWakeup()
-	if check:
-		return wasTimerWakeup, isError
 	return wasTimerWakeup
 
 def clearFPWasTimerWakeup():

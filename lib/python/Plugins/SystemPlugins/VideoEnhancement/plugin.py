@@ -23,7 +23,7 @@ class VideoEnhancementSetup(Screen, ConfigListScreen):
 		self["HelpWindow"].hide()
 		self["VKeyIcon"] = Boolean(False)
 		self['footnote'] = Label()
-		self["description"] = Label("")
+		self["description"] = Label(_(""))
 
 		self.list = [ ]
 		self.xtdlist = [ ]
@@ -92,11 +92,11 @@ class VideoEnhancementSetup(Screen, ConfigListScreen):
 		self.brightnessEntry = addToConfigList(_("Brightness"), config.pep.brightness, _("This option sets the picture brightness."))
 		self.blue_boostEntry = addToConfigList(_("Boost blue"), config.pep.blue_boost, _("This option allows you to boost the blue tones in the picture."), add_to_xtdlist)
 		self.green_boostEntry = addToConfigList(_("Boost green"), config.pep.green_boost, _("This option allows you to boost the green tones in the picture."), add_to_xtdlist)
-		self.contrastEntry = addToConfigList(_("Contrast"), config.pep.contrast, _("This option sets the picture contrast."))
+		self.contrastEntry = addToConfigList(_("Contrast"), config.pep.contrast, _("This option sets  the picture contrast."))
 		self.digital_contour_removalEntry = addToConfigList(_("Digital contour removal"), config.pep.digital_contour_removal, _("This option sets the surpression of false digital contours, that are the result of a limited number of discrete values."), add_to_xtdlist)
 		self.dynamic_contrastEntry = addToConfigList(_("Dynamic contrast"), config.pep.dynamic_contrast, _("This option allows to set the level of dynamic contrast of the picture."), add_to_xtdlist)
 		self.hueEntry = addToConfigList(_("Hue"), config.pep.hue, _("This option sets the picture hue."))
-		self.mosquito_noise_reductionEntry = addToConfigList(_("Mosquito noise reduction"), config.pep.mosquito_noise_reduction, _("This option set the level of surpression of mosquito noise (Mosquito Noise is random aliasing as a result of strong compression). Obviously this goes at the cost of picture details."), add_to_xtdlist)
+		self.mosquito_noise_reductionEntry = addToConfigList(_("Mosquito noise reduction"), config.pep.mosquito_noise_reduction, _("This option set the level of surpression of musquito noise (Musquito Noise is random aliasing as a result of strong compression). Obviously this goes at the cost of picture details."), add_to_xtdlist)
 		self.scaler_sharpnessEntry = addToConfigList(_("Scaler sharpness"), config.av.scaler_sharpness, _("This option sets the scaler sharpness, used when stretching picture from 4:3 to 16:9."))
 		self.scaler_vertical_dejaggingEntry = addToConfigList(_("Scaler vertical dejagging"), config.pep.scaler_vertical_dejagging, _("This option allows you enable the vertical scaler dejagging."))
 		self.smoothEntry = addToConfigList(_("Smooth"), config.pep.smooth, _("This option allows you enable smoothing filter to control the dithering process."))
@@ -157,7 +157,7 @@ class VideoEnhancementSetup(Screen, ConfigListScreen):
 
 	def confirm(self, confirmed):
 		if not confirmed:
-			print "[VideoEnhancement] not confirmed"
+			print "not confirmed"
 		else:
 			if self.splitEntry is not None:
 				config.pep.split.setValue('off')
@@ -180,7 +180,7 @@ class VideoEnhancementSetup(Screen, ConfigListScreen):
 
 	def keyYellowConfirm(self, confirmed):
 		if not confirmed:
-			print "[VideoEnhancement] not confirmed"
+			print "not confirmed"
 		else:
 			if self.contrastEntry is not None:
 				config.pep.contrast.setValue(self.oldContrast)
@@ -403,12 +403,12 @@ def videoEnhancementSetupMain(session, **kwargs):
 	session.open(VideoEnhancementSetup)
 
 def startSetup(menuid):
-	if menuid != "av":
+	if menuid != "video_menu":
 		return [ ]
-	return [(_("Video enhancement") , videoEnhancementSetupMain, "videoenhancement_setup", None)]
+	return [(_("Extended settings") , videoEnhancementSetupMain, "videoenhancement_setup", 5)]
 
 def Plugins(**kwargs):
 	list = []
 	if config.usage.setup_level.index >= 2 and os_path.exists("/proc/stb/vmpeg/0/pep_apply"):
-		list.append(PluginDescriptor(name=_("Video enhancement"), description=_("Advanced video enhancement setup"), where = PluginDescriptor.WHERE_MENU, needsRestart = False, fnc=startSetup))
+		list.append(PluginDescriptor(name=_("Video enhancement setup"), description=_("Advanced video enhancement setup"), where = PluginDescriptor.WHERE_MENU, needsRestart = False, fnc=startSetup))
 	return list

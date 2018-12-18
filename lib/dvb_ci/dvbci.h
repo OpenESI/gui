@@ -36,6 +36,11 @@ struct queueData
 	}
 };
 
+enum data_source
+{
+	TUNER_A, TUNER_B, TUNER_C, TUNER_D, CI_A, CI_B, CI_C, CI_D
+};
+
 typedef std::pair<std::string, uint32_t> providerPair;
 typedef std::set<providerPair> providerSet;
 typedef std::set<uint16_t> caidSet;
@@ -77,7 +82,7 @@ static inline int time_after(struct timespec oldtime, uint32_t delta_ms)
 }
 #endif
 
-class eDVBCISlot: public iObject, public sigc::trackable
+class eDVBCISlot: public iObject, public Object
 {
 	friend class eDVBCIInterfaces;
 	DECLARE_REF(eDVBCISlot);
@@ -95,7 +100,7 @@ class eDVBCISlot: public iObject, public sigc::trackable
 	providerSet possible_providers;
 	int use_count;
 	eDVBCISlot *linked_next; // needed for linked CI handling
-	std::string current_source;
+	data_source current_source;
 	int current_tuner;
 	bool user_mapped;
 	void data(int);
@@ -134,9 +139,8 @@ public:
 	int sendCAPMT(eDVBServicePMTHandler *ptr, const std::vector<uint16_t> &caids=std::vector<uint16_t>());
 	void removeService(uint16_t program_number=0xFFFF);
 	int getNumOfServices() { return running_services.size(); }
-	int setSource(const std::string &source);
+	int setSource(data_source source);
 	int setClockRate(int);
-	static std::string getTunerLetter(int tuner_no) { return std::string(1, char(65 + tuner_no)); }
 #ifdef __sh__
 	bool checkQueueSize();
 	void thread();
@@ -172,25 +176,7 @@ typedef std::list<CIPmtHandler> PMTHandlerList;
 
 class eDVBCIInterfaces
 {
-private:
-	typedef enum
-	{
-		interface_none,
-		interface_use_dvr,
-		interface_use_pvr,
-	} stream_interface_t;
-
-	typedef enum
-	{
-		finish_none,
-		finish_use_tuner_a,
-		finish_use_pvr_none,
-		finish_use_none,
-	} stream_finish_mode_t;
-
 	DECLARE_REF(eDVBCIInterfaces);
-	stream_interface_t m_stream_interface;
-	stream_finish_mode_t m_stream_finish_mode;
 	static eDVBCIInterfaces *instance;
 	eSmartPtrList<eDVBCISlot> m_slots;
 	eDVBCISlot *getSlot(int slotid);
@@ -217,7 +203,7 @@ public:
 	int cancelEnq(int slot);
 	int getMMIState(int slot);
 	int sendCAPMT(int slot);
-	int setInputSource(int tunerno, const std::string &source);
+	int setInputSource(int tunerno, data_source source);
 	int setCIClockRate(int slot, int rate);
 #ifdef SWIG
 public:

@@ -3,6 +3,7 @@ from time import localtime, mktime, time, strftime
 from enigma import eEPGCache, eTimer, eServiceReference, ePoint
 
 from Screens.Screen import Screen
+from Screens.TimerEdit import TimerSanityConflict
 from Screens.ChoiceBox import ChoiceBox
 from Components.ActionMap import ActionMap
 from Components.Button import Button
@@ -33,7 +34,7 @@ class EventViewContextMenu(Screen):
 			})
 
 		try:
-			if config.skin.primary_skin.value.startswith('Elgato-HD-CN/'):
+			if config.skin.primary_skin.value.startswith('Ultra.Transparent/'):
 				count = 0
 				for entry in menu:
 					menu[count] = ("        " + entry[0], entry[1])
@@ -104,16 +105,12 @@ class EventViewBase:
 		if self.cbFunc is not None:
 			self.cbFunc(self.setEvent, self.setService, +1)
 
-	def editTimer(self, timer):
-		self.session.open(TimerEntry, timer)
-
 	def removeTimer(self, timer):
-		self.closeChoiceBoxDialog()
 		timer.afterEvent = AFTEREVENT.NONE
 		self.session.nav.RecordTimer.removeEntry(timer)
 		self["key_green"].setText(_("Add timer"))
 		self.key_green_choice = self.ADD_TIMER
-
+	
 	def timerAdd(self):
 		if self.isRecording:
 			return
@@ -125,9 +122,6 @@ class EventViewBase:
 		refstr = ':'.join(serviceref.ref.toString().split(':')[:11])
 		for timer in self.session.nav.RecordTimer.timer_list:
 			if timer.eit == eventid and ':'.join(timer.service_ref.ref.toString().split(':')[:11]) == refstr:
-				# disable dialog box -> workaround for non closed dialog when press key green for delete Timer (bsod when again green, blue or ok key was pressed)
-				self.editTimer(timer)
-				break
 				cb_func1 = lambda ret: self.removeTimer(timer)
 				cb_func2 = lambda ret: self.editTimer(timer)
 				menu = [(_("Delete timer"), 'CALLFUNC', self.ChoiceBoxCB, cb_func1), (_("Edit timer"), 'CALLFUNC', self.ChoiceBoxCB, cb_func2)]
@@ -181,10 +175,6 @@ class EventViewBase:
 						if change_time:
 							simulTimerList = self.session.nav.RecordTimer.record(entry)
 					if simulTimerList is not None:
-						try:
-							from Screens.TimerEdit import TimerSanityConflict
-						except: # maybe already been imported from another module
-							pass
 						self.session.openWithCallback(self.finishSanityCorrection, TimerSanityConflict, simulTimerList)
 			self["key_green"].setText(_("Change timer"))
 			self.key_green_choice = self.REMOVE_TIMER
@@ -231,9 +221,7 @@ class EventViewBase:
 		if short == text:
 			short = ""
 
-		if short and extended and extended.replace('\n','') == short.replace('\n',''):
-			pass #extended = extended
-		elif short and extended:
+		if short and extended:
 			extended = short + '\n' + extended
 		elif short:
 			extended = short
@@ -250,36 +238,21 @@ class EventViewBase:
 
 		if not beginTimeString:
 			return
-		begintime = begindate = []
-		for x in beginTimeString.split(' '):
-			x = x.rstrip(',').rstrip('.')
-			if ':' in x:
-				begintime = x.split(':')
-			elif '.' in x:
-				begindate = x.split('.')
-			elif '/' in x:
-				begindate = x.split('/')
-				begindate.reverse()
-		###check
-		fail = False
-		try:
-			if len(begintime) < 2 and len(begindate) < 2 or int(begintime[0]) > 23 or int(begintime[1]) > 59 or int(begindate[0]) > 31 or int(begindate[1]) > 12:
-				fail = True
-		except:
-			fail = True
-
-		if fail:
-			print 'wrong timestamp detected: source = %s ,date = %s ,time = %s' %(beginTimeString,begindate,begintime)
-			return
-		###
-
+		if beginTimeString.find(', ') > -1:
+			begintime = beginTimeString.split(', ')[1].split(':')
+			begindate = beginTimeString.split(', ')[0].split('.')
+		else:
+			if len(beginTimeString.split(' ')) > 1:
+				begintime = beginTimeString.split(' ')[1].split(':')
+			else:
+				return
+			begindate = beginTimeString.split(' ')[0].split('.')
 		nowt = time()
 		now = localtime(nowt)
-
-		begin = localtime(int(mktime((now.tm_year, int(begindate[1]), int(begindate[0]), int(begintime[0]), int(begintime[1]), 0, now.tm_wday, now.tm_yday, now.tm_isdst))))
-		end = localtime(int(mktime((now.tm_year, int(begindate[1]), int(begindate[0]), int(begintime[0]), int(begintime[1]), 0, now.tm_wday, now.tm_yday, now.tm_isdst))) + event.getDuration())
-
-		self["datetime"].setText(strftime(_("%d.%m.   "), begin) + strftime(_("%-H:%M - "), begin) + strftime(_("%-H:%M"), end))
+		test = int(mktime((now.tm_year, int(begindate[1]), int(begindate[0]), int(begintime[0]), int(begintime[1]), 0, now.tm_wday, now.tm_yday, now.tm_isdst)))
+		endtime = int(mktime((now.tm_year, int(begindate[1]), int(begindate[0]), int(begintime[0]), int(begintime[1]), 0, now.tm_wday, now.tm_yday, now.tm_isdst))) + event.getDuration()
+		endtime = localtime(endtime)
+		self["datetime"].setText(event.getBeginTimeString() + ' - ' + strftime(_("%-H:%M"), endtime))
 		self["duration"].setText(_("%d min")%(event.getDuration()/60))
 		if self.SimilarBroadcastTimer is not None:
 			self.SimilarBroadcastTimer.start(400, True)
@@ -321,7 +294,7 @@ class EventViewBase:
 			ret.sort(self.sort_func)
 			for x in ret:
 				t = localtime(x[1])
-				text += strftime(_("\n%Y/%m/%d  %H:%M - "), t) + x[0]
+				text += '\n%d.%d.%d, %2d:%02d  -  %s'%(t[2], t[1], t[0], t[3], t[4], x[0])
 			descr = self["epg_description"]
 			descr.setText(descr.getText()+text)
 			descr = self["FullDescription"]
@@ -401,45 +374,3 @@ class EventViewEPGSelect(Screen, EventViewBase):
 		else:
 			self["key_blue"] = Button("")
 			self["blue"].hide()
-
-class EventViewMovieEvent(Screen):
-	def __init__(self, session, name = None, ext_desc = None, dur = None):
-		Screen.__init__(self, session)
-		self.screentitle = _("Eventview")
-		self.skinName = "EventView"
-		self.duration = ""
-		if dur:
-			self.duration = dur
-		self.ext_desc = ""
-		if name:
-			self.ext_desc = name + "\n\n"
-		if ext_desc:
-			self.ext_desc += ext_desc
-		self["epg_description"] = ScrollLabel()
-		self["datetime"] = Label()
-		self["channel"] = Label()
-		self["duration"] = Label()
-		
-		self["key_red"] = Button("")
-		self["key_green"] = Button("")
-		self["key_yellow"] = Button("")
-		self["key_blue"] = Button("")
-		self["actions"] = ActionMap(["OkCancelActions", "EventViewActions"],
-			{
-				"cancel": self.close,
-				"ok": self.close,
-				"pageUp": self.pageUp,
-				"pageDown": self.pageDown,
-			})
-		self.onShown.append(self.onCreate)
-
-	def onCreate(self):
-		self.setTitle(self.screentitle)
-		self["epg_description"].setText(self.ext_desc)
-		self["duration"].setText(self.duration)
-
-	def pageUp(self):
-		self["epg_description"].pageUp()
-
-	def pageDown(self):
-		self["epg_description"].pageDown()

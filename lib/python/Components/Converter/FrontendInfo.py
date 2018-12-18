@@ -27,11 +27,8 @@ class FrontendInfo(Converter, object):
 			self.type = self.SLOT_NUMBER
 		elif type == "TYPE":
 			self.type = self.TUNER_TYPE
-		elif type.startswith("STRING"):
+		elif type == "STRING":
 			self.type = self.STRING
-			type = type.split(",")
-			self.space_for_tuners = len(type) > 1 and int(type[1]) or 10
-			self.space_for_tuners_with_spaces = len(type) > 2 and int(type[2]) or 6
 		else:
 			self.type = self.LOCK
 
@@ -61,17 +58,15 @@ class FrontendInfo(Converter, object):
 			string = ""
 			for n in nimmanager.nim_slots:
 				if n.type:
-					if n.slot == self.source.slot_number:
-						color = "\c0000??00"
-					elif self.source.tuner_mask & 1 << n.slot:
-						color = "\c00??????"
-					elif len(nimmanager.nim_slots) <= self.space_for_tuners:
-						color = "\c007?7?7?"
-					else:
-						continue
-					if string and len(nimmanager.nim_slots) <= self.space_for_tuners_with_spaces:
+					if string:
 						string += " "
-					string += color + chr(ord("A")+n.slot)
+					if n.slot == self.source.slot_number:
+						string += "\c0000??00"
+					elif self.source.tuner_mask & 1 << n.slot:
+						string += "\c00????00"
+					else:
+						string += "\c007?7?7?"
+					string += chr(ord("A")+n.slot)
 			return string
 		if percent is None:
 			return "N/A"

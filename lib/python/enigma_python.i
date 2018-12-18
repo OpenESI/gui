@@ -42,15 +42,12 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/base/eerror.h>
 #include <lib/base/etpm.h>
 #include <lib/base/message.h>
-#include <lib/base/modelinformation.h>
-#include <lib/base/e2avahi.h>
 #include <lib/driver/rc.h>
 #include <lib/driver/rcinput_swig.h>
 #include <lib/service/event.h>
 #include <lib/service/iservice.h>
 #include <lib/service/service.h>
 #include <lib/service/servicedvb.h>
-#include <lib/service/servicepeer.h>
 #include <lib/gdi/fb.h>
 #include <lib/gdi/font.h>
 #include <lib/gdi/gpixmap.h>
@@ -98,7 +95,6 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/dvb/fastscan.h>
 #include <lib/dvb/cablescan.h>
 #include <lib/dvb/encoder.h>
-#include <lib/dvb/streamserver.h>
 #include <lib/components/scan.h>
 #include <lib/components/file_eraser.h>
 #include <lib/components/tuxtxtapp.h>
@@ -124,7 +120,7 @@ is usually caused by not marking PSignals as immutable.
 %define %typemap_output_simple(Type)
  %typemap(in,numinputs=0) Type *OUTPUT ($*1_ltype temp),
               Type &OUTPUT ($*1_ltype temp)
-   "$1 = new Type; (void)temp;";
+   "$1 = new Type;";
  %fragment("t_out_helper"{Type},"header",
      fragment="t_output_helper") {}
  %typemap(argout,fragment="t_out_helper"{Type}) Type *OUTPUT, Type &OUTPUT
@@ -134,7 +130,7 @@ is usually caused by not marking PSignals as immutable.
 %define %typemap_output_ptr(Type)
  %typemap(in,numinputs=0) Type *OUTPUT ($*1_ltype temp),
               Type &OUTPUT ($*1_ltype temp)
-   "$1 = new Type; (void)temp;";
+   "$1 = new Type;";
  %fragment("t_out_helper"{Type},"header",
      fragment="t_output_helper") {}
  %typemap(argout,fragment="t_out_helper"{Type}) Type *OUTPUT, Type &OUTPUT
@@ -159,13 +155,10 @@ typedef long time_t;
 
 %immutable eSocketNotifier::activated;
 %include <lib/base/ebase.h>
-%include <lib/base/modelinformation.h>
 %include <lib/base/smartptr.h>
 %include <lib/service/event.h>
 %include <lib/service/iservice.h>
 %include <lib/service/service.h>
-%include <lib/base/e2avahi.h>
-%include <lib/service/servicepeer.h>
 
 // TODO: embed these...
 %immutable ePicLoad::PictureData;
@@ -203,7 +196,6 @@ typedef long time_t;
 %include <lib/gdi/fb.h>
 %include <lib/gdi/font.h>
 %include <lib/gdi/gpixmap.h>
-%include <lib/gdi/gfbdc.h>
 %include <lib/gdi/gmaindc.h>
 %include <lib/gdi/epoint.h>
 %include <lib/gdi/erect.h>
@@ -261,7 +253,6 @@ typedef long time_t;
 %include <lib/python/python.h>
 %include <lib/python/pythonconfig.h>
 %include <lib/gdi/picload.h>
-%include <lib/dvb/streamserver.h>
 /**************  eptr  **************/
 
 /**************  signals  **************/
@@ -417,26 +408,6 @@ int getUsedEncoderCount()
 }
 %}
 
-int getLinkedSlotID(int);
-%{
-int getLinkedSlotID(int fe)
-{
-        eFBCTunerManager *mgr = eFBCTunerManager::getInstance();
-        if (mgr) return mgr->getLinkedSlotID(fe);
-        return -1;
-}
-%}
-
-bool isFBCLink(int);
-%{
-bool isFBCLink(int fe)
-{
-        eFBCTunerManager *mgr = eFBCTunerManager::getInstance();
-        if (mgr) return mgr->isFBCLink(fe);
-        return false;
-}
-%}
-
 /************** temp *****************/
 
 	/* need a better place for this, i agree. */
@@ -449,10 +420,8 @@ extern void addFont(const char *filename, const char *alias, int scale_factor, i
 extern const char *getEnigmaVersionString();
 extern const char *getGStreamerVersionString();
 extern void dump_malloc_stats(void);
-#ifndef HAVE_OSDANIMATION
 extern void setAnimation_current(int a);
 extern void setAnimation_speed(int speed);
-#endif
 %}
 
 extern void addFont(const char *filename, const char *alias, int scale_factor, int is_replacement, int renderflags = 0);
@@ -463,10 +432,8 @@ extern eApplication *getApplication();
 extern const char *getEnigmaVersionString();
 extern const char *getGStreamerVersionString();
 extern void dump_malloc_stats(void);
-#ifndef HAVE_OSDANIMATION
 extern void setAnimation_current(int a);
 extern void setAnimation_speed(int speed);
-#endif
 
 %include <lib/python/python_console.i>
 %include <lib/python/python_base.i>

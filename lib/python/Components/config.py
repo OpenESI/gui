@@ -385,14 +385,21 @@ class ConfigSelection(ConfigElement):
 		self.value = self.choices[(i + 1) % nchoices]
 
 	def getText(self):
-		if self._descr is None:
-			self._descr = self.description[self.value]
-		return self._descr
+		if self._descr is not None:
+			return self._descr
+		descr = self._descr = self.description[self.value]
+		if descr:
+			return _(descr)
+		return descr
 
 	def getMulti(self, selected):
-		if self._descr is None:
-			self._descr = self.description[self.value]
-		return ("text", self._descr)
+		if self._descr is not None:
+			descr = self._descr
+		else:
+			descr = self._descr = self.description[self.value]
+		if descr:
+			return "text", _(descr)
+		return "text", descr
 
 	# HTML
 	def getHTML(self, id):
@@ -417,8 +424,9 @@ class ConfigSelection(ConfigElement):
 # several customized versions exist for different
 # descriptions.
 #
+boolean_descriptions = {False: _("false"), True: _("true")}
 class ConfigBoolean(ConfigElement):
-	def __init__(self, default = False, descriptions = {False: _("false"), True: _("true")}):
+	def __init__(self, default = False, descriptions = boolean_descriptions):
 		ConfigElement.__init__(self)
 		self.descriptions = descriptions
 		self.value = self.last_value = self.default = default
@@ -432,10 +440,16 @@ class ConfigBoolean(ConfigElement):
 			self.value = True
 
 	def getText(self):
-		return self.descriptions[self.value]
+		descr = self.descriptions[self.value]
+		if descr:
+			return _(descr)
+		return descr
 
 	def getMulti(self, selected):
-		return ("text", self.descriptions[self.value])
+		descr = self.descriptions[self.value]
+		if descr:
+			return "text", _(descr)
+		return "text", descr
 
 	def tostring(self, value):
 		if not value:
@@ -468,17 +482,20 @@ class ConfigBoolean(ConfigElement):
 			self.changedFinal()
 			self.last_value = self.value
 
+yes_no_descriptions = {False: _("no"), True: _("yes")}
 class ConfigYesNo(ConfigBoolean):
 	def __init__(self, default = False):
-		ConfigBoolean.__init__(self, default = default, descriptions = {False: _("no"), True: _("yes")})
+		ConfigBoolean.__init__(self, default = default, descriptions = yes_no_descriptions)
 
+on_off_descriptions = {False: _("off"), True: _("on")}
 class ConfigOnOff(ConfigBoolean):
 	def __init__(self, default = False):
-		ConfigBoolean.__init__(self, default = default, descriptions = {False: _("off"), True: _("on")})
+		ConfigBoolean.__init__(self, default = default, descriptions = on_off_descriptions)
 
+enable_disable_descriptions = {False: _("disable"), True: _("enable")}
 class ConfigEnableDisable(ConfigBoolean):
 	def __init__(self, default = False):
-		ConfigBoolean.__init__(self, default = default, descriptions = {False: _("disable"), True: _("enable")})
+		ConfigBoolean.__init__(self, default = default, descriptions = enable_disable_descriptions)
 
 class ConfigDateTime(ConfigElement):
 	def __init__(self, default, formatstring, increment = 86400):
@@ -662,10 +679,7 @@ class ConfigSequence(ConfigElement):
 		return str(v)
 
 	def fromstring(self, value):
-		try:
-			return [int(x) for x in value.split(self.seperator)]
-		except:
-			return self.default
+		return [int(x) for x in value.split(self.seperator)]
 
 	def onDeselect(self, session):
 		if self.last_value != self._value:
@@ -1218,13 +1232,6 @@ class ConfigSelectionNumber(ConfigSelection):
 
 	index = property(getIndex)
 
-	def isChanged(self):
-		sv = self.saved_value
-		strv = str(self.tostring(self.value))
-		if sv is None and strv == str(self.default):
-			return False
-		return strv != str(sv)
-
 	def handleKey(self, key):
 		if not self.wraparound:
 			if key == KEY_RIGHT:
@@ -1250,14 +1257,7 @@ class ConfigNumber(ConfigText):
 		ConfigText.__init__(self, str(default), fixed_size = False)
 
 	def getValue(self):
-		try:
-			return int(self.text)
-		except ValueError:
-			if self.text == "true":
-				self.text = "1"
-			else:
-				self.text = str(default)
-			return int(self.text)
+		return int(self.text)
 
 	def setValue(self, val):
 		self.text = str(val)
@@ -1351,30 +1351,25 @@ class ConfigSlider(ConfigElement):
 		self.max = limits[1]
 		self.increment = increment
 
-	def checkValues(self, value = None):
-		if value is None:
-			value = self.value
-		if value < self.min:
-			value = self.min
-		elif value > self.max:
-			value = self.max
-		if self.value != value:		#avoid call of setter if value not changed
-			self.value = value
+	def checkValues(self):
+		if self.value < self.min:
+			self.value = self.min
+
+		if self.value > self.max:
+			self.value = self.max
 
 	def handleKey(self, key):
 		if key == KEY_LEFT:
-			tmp = self.value - self.increment
+			self.value -= self.increment
 		elif key == KEY_RIGHT:
-			tmp = self.value + self.increment
+			self.value += self.increment
 		elif key == KEY_HOME:
 			self.value = self.min
-			return
 		elif key == KEY_END:
 			self.value = self.max
-			return
 		else:
 			return
-		self.checkValues(tmp)
+		self.checkValues()
 
 	def getText(self):
 		return "%d / %d" % (self.value, self.max)
@@ -1484,77 +1479,6 @@ class ConfigSet(ConfigElement):
 		return eval(val)
 
 	description = property(lambda self: descriptionList(self.choices.choices, choicesList.LIST_TYPE_LIST))
-
-
-class ConfigDictionarySet(ConfigElement):
-	def __init__(self, default = {}):
-		ConfigElement.__init__(self)
-		self.default = default
-		self.dirs = {}
-		self.value = self.default
-
-	def getKeys(self):
-		return self.dir_pathes
-
-	def setValue(self, value):
-		if isinstance(value, dict):
-			self.dirs = value
-			self.changed()
-
-	def getValue(self):
-		return self.dirs
-
-	value = property(getValue, setValue)
-
-	def tostring(self, value):
-		return str(value)
-
-	def fromstring(self, val):
-		return eval(val)
-
-	def load(self):
-		sv = self.saved_value
-		if sv is None:
-			tmp = self.default
-		else:
-			tmp = self.fromstring(sv)
-		self.dirs = tmp
-
-	def changeConfigValue(self, value, config_key, config_value):
-		if isinstance(value, str) and isinstance(config_key, str):
-			if value in self.dirs:
-				self.dirs[value][config_key] = config_value
-			else:
-				self.dirs[value] = {config_key : config_value}
-			self.changed()
-
-	def getConfigValue(self, value, config_key):
-		if isinstance(value, str) and isinstance(config_key, str):
-			if value in self.dirs and config_key in self.dirs[value]:
-				return self.dirs[value][config_key]
-		return None
-
-	def removeConfigValue(self, value, config_key):
-		if isinstance(value, str) and isinstance(config_key, str):
-			if value in self.dirs and config_key in self.dirs[value]:
-				try:
-					del self.dirs[value][config_key]
-				except KeyError:
-					pass
-				self.changed()
-
-	def save(self):
-		del_keys = []
-		for key in self.dirs:
-			if not len(self.dirs[key]):
-				del_keys.append(key)
-		for del_key in del_keys:
-			try:
-				del self.dirs[del_key]
-			except KeyError:
-				pass
-			self.changed()
-		self.saved_value = self.tostring(self.dirs)
 
 class ConfigLocations(ConfigElement):
 	def __init__(self, default=None, visible_width=False):
@@ -1888,7 +1812,7 @@ class Config(ConfigSubsection):
 		ConfigSubsection.__init__(self)
 
 	def pickle_this(self, prefix, topickle, result):
-		for (key, val) in sorted(topickle.items(), key=lambda x: int(x[0]) if x[0].isdigit() else x[0].lower()):
+		for (key, val) in topickle.items():
 			name = '.'.join((prefix, key))
 			if isinstance(val, dict):
 				self.pickle_this(name, val, result)
@@ -1915,22 +1839,7 @@ class Config(ConfigSubsection):
 			(name, val) = result
 			val = val.strip()
 
-			#convert old settings
-			if l.startswith("config.Nims."):
-				tmp = name.split('.')
-				if tmp[3] == "cable":
-					tmp[3] = "dvbc"
-				elif tmp[3].startswith ("cable"):
-					tmp[3] = "dvbc." + tmp[3]
-				elif tmp[3].startswith("terrestrial"):
-					tmp[3] = "dvbt." + tmp[3]
-				else:
-					if tmp[3] not in ('dvbs', 'dvbc', 'dvbt', 'multiType'):
-						tmp[3] = "dvbs." + tmp[3]
-				name =".".join(tmp)
-
 			names = name.split('.')
-
 			base = configbase
 
 			for n in names[1:-1]:
@@ -2125,15 +2034,3 @@ class ConfigCECAddress(ConfigSequence):
 	def getHTML(self, id):
 		# we definitely don't want leading zeros
 		return '.'.join(["%d" % d for d in self.value])
-
-class ConfigAction(ConfigElement):
-	def __init__(self, action, *args):
-		ConfigElement.__init__(self)
-		self.value = "(OK)"
-		self.action = action
-		self.actionargs = args
-	def handleKey(self, key):
-		if (key == KEY_OK):
-			self.action(*self.actionargs)
-	def getMulti(self, dummy):
-		pass

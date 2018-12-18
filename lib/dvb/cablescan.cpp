@@ -37,7 +37,7 @@ void eCableScan::start(int frontendid)
 
 	if (res->allocateRawChannel(m_channel, frontendid))
 	{
-		eDebug("[eCableScan] failed to allocate channel!");
+		eDebug("eCableScan: failed to allocate channel!");
 		scanCompleted(-1);
 		return;
 	}
@@ -64,7 +64,7 @@ void eCableScan::start(int frontendid)
 
 void eCableScan::NITReady(int error)
 {
-	eDebug("[eCableScan] NITReady %d", error);
+	eDebug("eCableScan::NITReady %d", error);
 
 	if (!error)
 	{
@@ -81,7 +81,7 @@ void eCableScan::NITReady(int error)
 
 void eCableScan::SDTReady(int error)
 {
-	eDebug("[eCableScan] SDTReady %d", error);
+	eDebug("eCableScan::SDTReady %d", error);
 
 	if (!error)
 	{
@@ -121,17 +121,7 @@ int eCableScan::nextChannel()
 
 	m_SDT = new eTable<ServiceDescriptionSection>;
 	CONNECT(m_SDT->tableReady, eCableScan::SDTReady);
-	eDVBTableSpec spec = eDVBSDTSpec();
-	/*
-	 * limit the SDT timeout to 5s (e2 defaults to 60s),
-	 * so we do not have to wait for too long when channels
-	 * from the NIT are not available.
-	 * We should actually implement a channel statechange handler
-	 * (to receive tune failed status) but limiting the SDT reader
-	 * timeout has the same effect, and is a lot simpler
-	 */
-	spec.timeout = 5000;
-	m_SDT->start(m_demux, spec);
+	m_SDT->start(m_demux, eDVBSDTSpec());
 	return 0;
 }
 
@@ -282,13 +272,6 @@ void eCableScan::parseSDT()
 				if (it != serviceIdToChannelId.end())
 				{
 					logicalchannelid = it->second;
-
-					/* check if logical logicalchannalid was already used in the TV numberedServiceRefs list to give priority when the serviceid was already used in the HD 					logicalchannelid list */
-					std::map<int, eServiceReferenceDVB>::const_iterator it = numberedServiceRefs.find(logicalchannelid);
-					if (it != numberedServiceRefs.end())
-					{
-						logicalchannelid = 0;
-					}
 				}
 			}
 			if (logicalchannelid)
@@ -400,7 +383,7 @@ void eCableScan::createBouquets()
 		}
 		else
 		{
-			eDebug("[eCableScan] failed to create bouquet!");
+			eDebug("failed to create bouquet!");
 		}
 	}
 	else
@@ -451,7 +434,7 @@ void eCableScan::createBouquets()
 			}
 			else
 			{
-				eDebug("[eCableScan] failed to create bouquet!");
+				eDebug("failed to create bouquet!");
 			}
 		}
 		else

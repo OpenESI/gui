@@ -42,25 +42,25 @@ eConsolePy_appClosed(eConsolePy *self, void *closure)
 }
 
 static PyGetSetDef eConsolePy_getseters[] = {
-	{(char*)"dataAvail",
+	{"dataAvail",
 	 (getter)eConsolePy_dataAvail, (setter)0,
-	 (char*)"dataAvail callback list",
+	 "dataAvail callback list",
 	 NULL},
-	{(char*)"stdoutAvail",
+	{"stdoutAvail",
 	 (getter)eConsolePy_stdoutAvail, (setter)0,
-	 (char*)"stdoutAvail callback list",
+	 "stdoutAvail callback list",
 	 NULL},
-	{(char*)"stderrAvail",
+	{"stderrAvail",
 	 (getter)eConsolePy_stderrAvail, (setter)0,
-	 (char*)"stderrAvail callback list",
+	 "stderrAvail callback list",
 	 NULL},
-	{(char*)"dataSent",
+	{"dataSent",
 	 (getter)eConsolePy_dataSent, (setter)0,
-	 (char*)"dataSent callback list",
+	 "dataSent callback list",
 	 NULL},
-	{(char*)"appClosed",
+	{"appClosed",
 	 (getter)eConsolePy_appClosed, (setter)0,
-	 (char*)"appClosed callback list",
+	 "appClosed callback list",
 	 NULL},
 	{NULL} /* Sentinel */
 };
@@ -218,16 +218,6 @@ eConsolePy_setCWD(eConsolePy* self, PyObject *args)
 }
 
 static PyObject *
-eConsolePy_setBufferSize(eConsolePy* self, PyObject *args)
-{
-	int size = 0;
-	if (!PyArg_ParseTuple(args, "i", &size))
-		return NULL;
-	self->cont->setBufferSize(size);
-	Py_RETURN_NONE;
-}
-
-static PyObject *
 eConsolePy_kill(eConsolePy* self)
 {
 	self->cont->kill();
@@ -298,38 +288,35 @@ eConsolePy_readFromFile(eConsolePy* self, PyObject *args)
 }
 
 static PyMethodDef eConsolePy_methods[] = {
-	{(char*)"setCWD", (PyCFunction)eConsolePy_setCWD, METH_VARARGS,
-	 (char*)"set working dir"
+	{"setCWD", (PyCFunction)eConsolePy_setCWD, METH_VARARGS,
+	 "set working dir"
 	},
-	{(char*)"setBufferSize", (PyCFunction)eConsolePy_setBufferSize, METH_VARARGS,
-	 (char*)"set transfer buffer size"
+	{"execute", (PyCFunction)eConsolePy_execute, METH_VARARGS,
+	 "execute command"
 	},
-	{(char*)"execute", (PyCFunction)eConsolePy_execute, METH_VARARGS,
-	 (char*)"execute command"
+	{"dumpToFile", (PyCFunction)eConsolePy_dumpToFile, METH_VARARGS,
+	 "set output file"
 	},
-	{(char*)"dumpToFile", (PyCFunction)eConsolePy_dumpToFile, METH_VARARGS,
-	 (char*)"set output file"
+	{"readFromFile", (PyCFunction)eConsolePy_readFromFile, METH_VARARGS,
+	 "set input file"
 	},
-	{(char*)"readFromFile", (PyCFunction)eConsolePy_readFromFile, METH_VARARGS,
-	 (char*)"set input file"
+	{"getPID", (PyCFunction)eConsolePy_getPID, METH_NOARGS,
+	 "execute command"
 	},
-	{(char*)"getPID", (PyCFunction)eConsolePy_getPID, METH_NOARGS,
-	 (char*)"execute command"
+	{"kill", (PyCFunction)eConsolePy_kill, METH_NOARGS,
+	 "kill application"
 	},
-	{(char*)"kill", (PyCFunction)eConsolePy_kill, METH_NOARGS,
-	 (char*)"kill application"
+	{"sendCtrlC", (PyCFunction)eConsolePy_sendCtrlC, METH_NOARGS,
+	 "send Ctrl-C to application"
 	},
-	{(char*)"sendCtrlC", (PyCFunction)eConsolePy_sendCtrlC, METH_NOARGS,
-	 (char*)"send Ctrl-C to application"
+	{"sendEOF", (PyCFunction)eConsolePy_sendEOF, METH_NOARGS,
+	 "send EOF to application"
 	},
-	{(char*)"sendEOF", (PyCFunction)eConsolePy_sendEOF, METH_NOARGS,
-	 (char*)"send EOF to application"
+	{"write", (PyCFunction)eConsolePy_write, METH_VARARGS,
+	 "write data to application"
 	},
-	{(char*)"write", (PyCFunction)eConsolePy_write, METH_VARARGS,
-	 (char*)"write data to application"
-	},
-	{(char*)"running", (PyCFunction)eConsolePy_running, METH_NOARGS,
-	 (char*)"returns the running state"
+	{"running", (PyCFunction)eConsolePy_running, METH_NOARGS,
+	 "returns the running state"
 	},
 	{NULL}  /* Sentinel */
 };

@@ -8,7 +8,6 @@ from enigma import eSize, ePoint, eRect, gFont, eWindow, eLabel, ePixmap, eWindo
 from Components.config import ConfigSubsection, ConfigText, config, ConfigYesNo, ConfigSelection, ConfigNothing
 from Components.Converter.Converter import Converter
 from Components.Sources.Source import Source, ObsoleteSource
-from Components.SystemInfo import SystemInfo
 from Tools.Directories import resolveFilename, SCOPE_SKIN, SCOPE_SKIN_IMAGE, SCOPE_FONTS, SCOPE_ACTIVE_SKIN, SCOPE_ACTIVE_LCDSKIN, SCOPE_CURRENT_SKIN, SCOPE_CONFIG, fileExists
 from Tools.Import import my_import
 from Tools.LoadPixmap import LoadPixmap
@@ -54,9 +53,6 @@ dom_skins = [ ]
 
 def addSkin(name, scope = SCOPE_SKIN):
 	# read the skin
-	if name is None or not len(name):
-		print "[SKIN ERROR] attempt to add a skin without filename"
-		return False
 	filename = resolveFilename(scope, name)
 	if fileExists(filename):
 		mpath = os.path.dirname(filename) + "/"
@@ -90,16 +86,12 @@ def skin_user_skinname():
 
 # example: loadSkin("nemesis_greenline/skin.xml")
 config.skin = ConfigSubsection()
-DEFAULT_SKIN = "Elgato-HD-CN/skin.xml"
+DEFAULT_SKIN = "Adrenalinnrw_Mod_RED/skin.xml"
 if not fileExists(resolveFilename(SCOPE_SKIN, DEFAULT_SKIN)):
 	DEFAULT_SKIN = "skin.xml"
 config.skin.primary_skin = ConfigText(default=DEFAULT_SKIN)
 
-
-if SystemInfo["grautec"]:
-	DEFAULT_DISPLAY_SKIN = "skin_display_grautec.xml"
-else:
-	DEFAULT_DISPLAY_SKIN = "skin_display.xml"
+DEFAULT_DISPLAY_SKIN = "skin_display.xml"
 config.skin.display_skin = ConfigText(default=DEFAULT_DISPLAY_SKIN)
 
 profile("LoadSkin")
@@ -466,11 +458,7 @@ class AttributeParser:
 	def shadowOffset(self, value):
 		self.guiObject.setShadowOffset(parsePosition(value, self.scaleTuple))
 	def noWrap(self, value):
-		self.guiObject.setNoWrap(int(value))
-	def linelength(self, value):
-		pass
-	def OverScan(self, value):
-		self.guiObject.setOverscan(value)
+		self.guiObject.setNoWrap(1)
 
 def applySingleAttribute(guiObject, desktop, attrib, value, scale = ((1,1),(1,1))):
 	# Someone still using applySingleAttribute?
@@ -579,12 +567,7 @@ def loadSingleSkinData(desktop, skin, path_prefix):
 			try:
 				name = get("name")
 				value = get("value")
-				if name.find('Font') != -1:
-					font = value.split(";")
-					if isinstance(font, list) and len(font) == 2:
-						parameters[name] = (str(font[0]), int(font[1]))
-				else:
-					parameters[name] = map(int, value.split(","))
+				parameters[name] = map(int, value.split(","))
 			except Exception, ex:
 				print "[SKIN] bad parameter", ex
 

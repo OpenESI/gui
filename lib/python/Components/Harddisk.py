@@ -4,24 +4,13 @@ from Tools.CList import CList
 from SystemInfo import SystemInfo
 from Components.Console import Console
 from Tools.HardwareInfo import HardwareInfo
-from boxbranding import getBoxType, getMachineBuild
 import Task
-import re
 
 def readFile(filename):
 	file = open(filename)
 	data = file.read().strip()
 	file.close()
 	return data
-
-def getextdevices(ext):
-	cmd ='blkid -t TYPE=%s -o device'%ext
-	extdevices = os.popen(cmd).read().replace('\n', ',').rstrip(",")
-	if extdevices == "":
-		return None
-	else:
-		extdevices = [x.strip() for x in extdevices.split(",")]
-		return extdevices
 
 def getProcMounts():
 	try:
@@ -65,7 +54,7 @@ class Harddisk:
 	def __init__(self, device, removable = False):
 		self.device = device
 
-		if os.access("/dev/.udev", 0) or os.access("/run/udev/data", 0):
+		if os.access("/dev/.udev", 0):
 			self.type = DEVTYPE_UDEV
 		elif os.access("/dev/.devfsd", 0):
 			self.type = DEVTYPE_DEVFS
@@ -114,10 +103,7 @@ class Harddisk:
 
 	def partitionPath(self, n):
 		if self.type == DEVTYPE_UDEV:
-			if self.dev_path.startswith('/dev/mmcblk'):
-				return self.dev_path + "p" + n
-			else:
-				return self.dev_path + n
+			return self.dev_path + n
 		elif self.type == DEVTYPE_DEVFS:
 			return self.dev_path + '/part' + n
 
@@ -183,12 +169,12 @@ class Harddisk:
 				vendor = readFile(self.phys_path + '/vendor')
 				model = readFile(self.phys_path + '/model')
 				return vendor + '(' + model + ')'
-			elif self.device.startswith('mmcblk'):
+			elif self.device.startswith('mmcblk0'):
 				return readFile(self.sysfsPath('device/name'))
 			else:
 				raise Exception, "no hdX or sdX or mmcX"
 		except Exception, e:
-			#print "[Harddisk] Failed to get model:", e
+			print "[Harddisk] Failed to get model:", e
 			return "-?-"
 
 	def free(self):
@@ -374,6 +360,17 @@ class Harddisk:
 		big_o_options = ["dir_index"]
 		if isFileSystemSupported("ext4"):
 			task.setTool("mkfs.ext4")
+			if size > 20000:
+				try:
+					file = open("/proc/version","r")
+					version = map(int, file.read().split(' ', 4)[2].split('.',2)[:2])
+					file.close()
+					if (version[0] > 3) or (version[0] > 2 and version[1] >= 2):
+						# Linux version 3.2 supports bigalloc and -C option, use 256k blocks
+						task.args += ["-C", "262144"]
+						big_o_options.append("bigalloc")
+				except Exception, ex:
+					print "Failed to detect Linux version:", ex
 		else:
 			task.setTool("mkfs.ext3")
 		if size > 250000:
@@ -494,12 +491,9 @@ class Harddisk:
 		self.timer.callback.append(self.runIdle)
 		self.idle_running = True
 		self.hdd_timer = False
-		try:
-			configsettings = readFile('/etc/enigma2/settings')
-			if "config.usage.hdd_timer" in configsettings:
-				self.hdd_timer = True
-		except:
-			self.hdd_timer = False
+		configsettings = readFile('/etc/enigma2/settings')
+		if "config.usage.hdd_timer" in configsettings:
+			self.hdd_timer = True
 		self.setIdleTime(self.max_idle_time) # kick the idle polling loop
 
 	def runIdle(self):
@@ -665,37 +659,6 @@ DEVICEDB = \
 		"/devices/platform/strict-ahci.0/ata1/": _("SATA"),     # front
 		"/devices/platform/strict-ahci.0/ata2/": _("SATA"),     # back
 	},
-	"dm520":
-	{
-		"/devices/platform/ehci-brcm.0/usb1/1-2/": _("Back, outer USB"),
-		"/devices/platform/ohci-brcm.0/usb2/2-2/": _("Back, outer USB"),
-		"/devices/platform/ehci-brcm.0/usb1/1-1/": _("Back, inner USB"),
-		"/devices/platform/ohci-brcm.0/usb2/2-1/": _("Back, inner USB"),
-	},
-	"dm900":
-	{
-		"/devices/platform/brcmstb-ahci.0/ata1/": _("SATA"),
-		"/devices/rdb.4/f03e0000.sdhci/mmc_host/mmc0/": _("eMMC"),
-		"/devices/rdb.4/f03e0200.sdhci/mmc_host/mmc1/": _("SD"),
-		"/devices/rdb.4/f0470600.ohci_v2/usb6/6-0:1.0/port1/": _("Front USB"),
-		"/devices/rdb.4/f0470300.ehci_v2/usb3/3-0:1.0/port1/": _("Front USB"),
-		"/devices/rdb.4/f0471000.xhci_v2/usb2/2-0:1.0/port1/": _("Front USB"),
-		"/devices/rdb.4/f0470400.ohci_v2/usb5/5-0:1.0/port1/": _("Back USB"),
-		"/devices/rdb.4/f0470500.ehci_v2/usb4/4-0:1.0/port1/": _("Back USB"),
-		"/devices/rdb.4/f0471000.xhci_v2/usb2/2-0:1.0/port2/": _("Back USB"),
-	},
-	"dm920":
-	{
-		"/devices/platform/brcmstb-ahci.0/ata1/": _("SATA"),
-		"/devices/rdb.4/f03e0000.sdhci/mmc_host/mmc0/": _("eMMC"),
-		"/devices/rdb.4/f03e0200.sdhci/mmc_host/mmc1/": _("SD"),
-		"/devices/rdb.4/f0470600.ohci_v2/usb6/6-0:1.0/port1/": _("Front USB"),
-		"/devices/rdb.4/f0470300.ehci_v2/usb3/3-0:1.0/port1/": _("Front USB"),
-		"/devices/rdb.4/f0471000.xhci_v2/usb2/2-0:1.0/port1/": _("Front USB"),
-		"/devices/rdb.4/f0470400.ohci_v2/usb5/5-0:1.0/port1/": _("Back USB"),
-		"/devices/rdb.4/f0470500.ehci_v2/usb4/4-0:1.0/port1/": _("Back USB"),
-		"/devices/rdb.4/f0471000.xhci_v2/usb2/2-0:1.0/port2/": _("Back USB"),
-	},
 	"dm800se":
 	{
 		"/devices/pci0000:01/0000:01:00.0/host0/target0:0:0/0:0:0:0": _("SATA"),
@@ -727,8 +690,6 @@ DEVICEDB = \
 	}
 	}
 
-DEVICEDB["dm525"] = DEVICEDB["dm520"]
-
 def addInstallTask(job, package):
 	task = Task.LoggingTask(job, "update packages")
 	task.setTool('opkg')
@@ -755,17 +716,7 @@ class HarddiskManager:
 		devpath = "/sys/block/" + blockdev
 		error = False
 		removable = False
-		BLACKLIST=[]
-		if getMachineBuild() in ('ustym4kpro','dags72604','u51','u52','u53','u5','u5pvr','cc1','sf8008','vuzero4k','et1x000','vuuno4k','vuuno4kse','vuultimo4k','vusolo4k','hd51','hd52','sf4008','dm900','dm7080','dm820', 'gb7252', 'dags7252', 'vs1500','h7','8100s','et13000','sf5008'):
-			BLACKLIST=["mmcblk0"]
-		elif getMachineBuild() in ('xc7439','osmio4k'):
-			BLACKLIST=["mmcblk1"]
-
 		blacklisted = False
-		if blockdev[:7] in BLACKLIST:
-			blacklisted = True
-		if blockdev.startswith("mmcblk") and (re.search(r"mmcblk\dboot", blockdev) or re.search(r"mmcblk\drpmb", blockdev)):
-			blacklisted = True
 		is_cdrom = False
 		partitions = []
 		try:
@@ -775,8 +726,7 @@ class HarddiskManager:
 				dev = int(readFile(devpath + "/dev").split(':')[0])
 			else:
 				dev = None
-			devlist = [1, 7, 31, 253, 254] # ram, loop, mtdblock, romblock, ramzswap
-			if dev in devlist:
+			if dev in (1, 7, 31, 253, 254, 179): # ram, loop, mtdblock, romblock, ramzswap, mmcblk
 				blacklisted = True
 			if blockdev[0:2] == 'sr':
 				is_cdrom = True
@@ -791,8 +741,6 @@ class HarddiskManager:
 			if not is_cdrom and os.path.exists(devpath):
 				for partition in os.listdir(devpath):
 					if partition[0:len(blockdev)] != blockdev:
-						continue
-					if dev == 179 and not re.search(r"mmcblk\dp\d+", partition):
 						continue
 					partitions.append(partition)
 			else:
@@ -872,29 +820,10 @@ class HarddiskManager:
 				self.on_partition_list_change("add", p)
 			# see if this is a harddrive
 			l = len(device)
-			if l and (not device[l-1].isdigit() or (device.startswith('mmcblk') and not re.search(r"mmcblk\dp\d+", device))):
+			if l and (not device[l-1].isdigit() or device == 'mmcblk0'):
 				self.hdd.append(Harddisk(device, removable))
 				self.hdd.sort()
 				SystemInfo["Harddisk"] = True
-		return error, blacklisted, removable, is_cdrom, partitions, medium_found
-
-	def addHotplugAudiocd(self, device, physdev = None):
-		# device is the device name, without /dev
-		# physdev is the physical device path, which we (might) use to determine the userfriendly name
-		if not physdev:
-			dev, part = self.splitDeviceName(device)
-			try:
-				physdev = os.path.realpath('/sys/block/' + dev + '/device')[4:]
-			except OSError:
-				physdev = dev
-				print "couldn't determine blockdev physdev for device", device
-		error, blacklisted, removable, is_cdrom, partitions, medium_found = self.getBlockDevInfo(device)
-		if not blacklisted and medium_found:
-			description = self.getUserfriendlyDeviceName(device, physdev)
-			p = Partition(mountpoint = "/media/audiocd", description = description, force_mounted = True, device = device)
-			self.partitions.append(p)
-			self.on_partition_list_change("add", p)
-			SystemInfo["Harddisk"] = False
 		return error, blacklisted, removable, is_cdrom, partitions, medium_found
 
 	def removeHotplugPartition(self, device):
@@ -904,7 +833,7 @@ class HarddiskManager:
 				if x.mountpoint: # Plugins won't expect unmounted devices
 					self.on_partition_list_change("remove", x)
 		l = len(device)
-		if l and (not device[l-1].isdigit() or (device.startswith('mmcblk') and not re.search(r"mmcblk\dp\d+", device))):
+		if l and not device[l-1].isdigit():
 			for hdd in self.hdd:
 				if hdd.device == device:
 					hdd.stop()
@@ -944,20 +873,13 @@ class HarddiskManager:
 		return [x for x in parts if not x.device or x.device in devs]
 
 	def splitDeviceName(self, devname):
-		if re.search(r"^mmcblk\d(?:p\d+$|$)", devname):
-			m = re.search(r"(?P<dev>mmcblk\d)p(?P<part>\d+)$", devname)
-			if m:
-				return m.group('dev'), m.group('part') and int(m.group('part')) or 0
-			else:
+		# this works for: sdaX, hdaX, sr0 (which is in fact dev="sr0", part=""). It doesn't work for other names like mtdblock3, but they are blacklisted anyway.
+		dev = devname[:3]
+		part = devname[3:]
+		for p in part:
+			if not p.isdigit():
 				return devname, 0
-		else:
-			# this works for: sdaX, hdaX, sr0 (which is in fact dev="sr0", part=""). It doesn't work for other names like mtdblock3, but they are blacklisted anyway.
-			dev = devname[:3]
-			part = devname[3:]
-			for p in part:
-				if not p.isdigit():
-					return devname, 0
-			return dev, part and int(part) or 0
+		return dev, part and int(part) or 0
 
 	def getUserfriendlyDeviceName(self, dev, phys):
 		dev, part = self.splitDeviceName(dev)
