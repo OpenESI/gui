@@ -331,6 +331,20 @@
 		<panel name="SummaryClockPanel" />
 	</screen>
 	
+<!-- Infopanel -->
+	<screen name="Infopanel_summary" position="0,0" size="720,576">
+		<widget source="parent.Title" render="Label" position="15,20" foregroundColor="#e5b243" size="670,120" font="FdLcD;70" halign="center" valign="top" />
+		<widget source="parent.summary_description" render="Label" position="10,20" size="670,376" font="FdLcD;70" halign="center" valign="center"  />
+		<panel name="SummaryClockPanel" />
+	</screen>
+	
+<!-- Quickmenü -->
+	<screen name="QuickMenu_summary" position="0,0" size="720,576">
+		<widget source="parent.Title" render="Label" position="15,20" foregroundColor="#e5b243" size="670,120" font="FdLcD;70" halign="center" valign="top" />
+		<widget source="parent.summary_description" render="Label" position="10,20" size="670,376" font="FdLcD;70" halign="center" valign="center" foregroundColor="#e5b243" />
+		<panel name="SummaryClockPanel" />
+	</screen>
+	
 <!-- Servicescan -->
 	<screen name="ServiceScanSummary" position="0,0" size="720,576">
 		<widget name="Title" position="10,20" size="670,376" font="FdLcD;70" halign="center" valign="center"  />
