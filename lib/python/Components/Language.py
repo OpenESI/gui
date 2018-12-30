@@ -27,29 +27,29 @@ class Language:
 		self.ll = os.listdir(LPATH)
 		# FIXME make list dynamically
 		# name, iso-639 language, iso-3166 country. Please don't mix language&country!
-		self.addLanguage("English (UK)", "en", "GB", "ISO-8859-15")
 		self.addLanguage("English (US)", "en", "US", "ISO-8859-15")
-		self.addLanguage("Italiano", "it", "IT", "ISO-8859-15")
 		self.addLanguage("Deutsch", "de", "DE", "ISO-8859-15")
-		self.addLanguage("Français", "fr", "FR", "ISO-8859-15")
 		self.addLanguage("Arabic", "ar", "AE", "ISO-8859-15")
 		self.addLanguage("Български", "bg", "BG", "ISO-8859-15")
 		self.addLanguage("Català", "ca", "AD", "ISO-8859-15")
 		self.addLanguage("Česky", "cs", "CZ", "ISO-8859-15")
 		self.addLanguage("SChinese", "zh", "CN", "UTF-8")
-		self.addLanguage("TChinese", "hk", "HK", "UTF-8")
+		self.addLanguage("TChinese", "zh", "HK", "UTF-8")
 		self.addLanguage("Dansk", "da", "DK", "ISO-8859-15")
 		self.addLanguage("Ελληνικά", "el", "GR", "ISO-8859-7")
+		self.addLanguage("English (UK)", "en", "GB", "ISO-8859-15")
 		self.addLanguage("Español", "es", "ES", "ISO-8859-15")
 		self.addLanguage("Eesti", "et", "EE", "ISO-8859-15")
 		self.addLanguage("Persian", "fa", "IR", "ISO-8859-15")
 		self.addLanguage("Suomi", "fi", "FI", "ISO-8859-15")
+		self.addLanguage("Français", "fr", "FR", "ISO-8859-15")
 		self.addLanguage("Frysk", "fy", "NL", "ISO-8859-15")
 		self.addLanguage("Hebrew", "he", "IL", "ISO-8859-15")
 		self.addLanguage("Hrvatski", "hr", "HR", "ISO-8859-15")
 		self.addLanguage("Magyar", "hu", "HU", "ISO-8859-15")
 		self.addLanguage("Indonesian", "id", "ID", "ISO-8859-15")
 		self.addLanguage("Íslenska", "is", "IS", "ISO-8859-15")
+		self.addLanguage("Italiano", "it", "IT", "ISO-8859-15")
 		self.addLanguage("Kurdish", "ku", "KU", "ISO-8859-15")
 		self.addLanguage("Lietuvių", "lt", "LT", "ISO-8859-15")
 		self.addLanguage("Latviešu", "lv", "LV", "ISO-8859-15")
@@ -71,14 +71,9 @@ class Language:
 
 	def addLanguage(self, name, lang, country, encoding):
 		try:
-			if lang in self.ll:
-				if country == "GB" or country == "BR":
-					if (lang + "_" + country) in self.ll:
-						self.lang[str(lang + "_" + country)] = ((name, lang, country, encoding))
-						self.langlist.append(str(lang + "_" + country))
-				else:
-					self.lang[str(lang + "_" + country)] = ((name, lang, country, encoding))
-					self.langlist.append(str(lang + "_" + country))
+			if lang in self.ll or (lang + "_" + country) in self.ll:
+				self.lang[str(lang + "_" + country)] = ((name, lang, country, encoding))
+				self.langlist.append(str(lang + "_" + country))
 
 		except:
 			print "Language " + str(name) + " not found"

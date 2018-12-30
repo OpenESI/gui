@@ -26,21 +26,19 @@
 #define UTF16LE_ENCODING		0x17
 #define HUFFMAN_ENCODING		0x1F
 
-#define NO_TABLEID			0x0800
-#define IGNORE_TABLEID			0x0100
+#define MASK_NO_TABLEID			0x0800
+#define MASK_IGNORE_TABLEID		0x0100
 
 class eDVBTextEncodingHandler
 {
 	std::map<std::string, int> m_CountryCodeDefaultMapping;
 	std::map<int, int> m_TransponderDefaultMapping;
-	std::map<int, int> m_EncodingMapping;
 	std::set<int> m_TransponderUseTwoCharMapping;
 public:
 	eDVBTextEncodingHandler();
 	void getTransponderDefaultMapping(int tsidonid, int &table);
 	bool getTransponderUseTwoCharMapping(int tsidonid);
 	int getCountryCodeDefaultMapping( const std::string &country_code );
-	void getEncodingMapping(int itable, int &table);
 };
 
 extern eDVBTextEncodingHandler encodingHandler;

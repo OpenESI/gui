@@ -97,6 +97,7 @@ def InitUsageConfig():
 	config.usage.service_icon_enable = ConfigYesNo(default = False)
 	config.usage.service_icon_enable.addNotifier(refreshServiceList)
 	config.usage.servicelist_picon_downsize = ConfigSelectionNumber(default = -2, stepwidth = 1, min = -8, max = 0, wraparound = True)
+	config.usage.servicelist_picon_ratio = ConfigSelection(default = "167", choices = [("100", _("1:1")), ("150", _("3:2")), ("133", _("4:3")), ("250", _("5:2")), ("167", _("5:3")), ("233", _("7:3"))])
 	config.usage.servicelist_cursor_behavior = ConfigSelection(default = "keep", choices = [
 		("standard", _("Standard")),
 		("keep", _("Keep service")),
@@ -835,6 +836,7 @@ def InitUsageConfig():
 	config.subtitles.colourise_dialogs = ConfigYesNo(default = False)
 	config.subtitles.subtitle_borderwidth = ConfigSelection(choices = ["1", "2", "3", "4", "5"], default = "3")
 	config.subtitles.subtitle_fontsize  = ConfigSelection(choices = ["%d" % x for x in range(16,101) if not x % 2], default = "40")
+	config.subtitles.showbackground = ConfigYesNo(default = False)
 
 	subtitle_delay_choicelist = []
 	for i in range(-54000000, 54045000, 45000):

@@ -1,4 +1,4 @@
-mefrom Tools.Profile import profile
+from Tools.Profile import profile
 profile("LOAD:ElementTree")
 import xml.etree.cElementTree
 import os
@@ -64,7 +64,7 @@ dom_skins = [ ]
 def addSkin(name, scope = SCOPE_SKIN):
 	# read the skin
 	if name is None or not len(name):
-		#print "[SKIN ERROR] attempt to add a skin without filename"
+		print "[SKIN ERROR] attempt to add a skin without filename"
 		return False
 	filename = resolveFilename(scope, name)
 	if fileExists(filename):
@@ -111,12 +111,28 @@ def skin_user_skinname():
 # example: loadSkin("nemesis_greenline/skin.xml")
 config.skin = ConfigSubsection()
 config.skin.primary_skin = ConfigText(default = DEFAULT_SKIN)
-#config.skin.display_skin = ConfigText(default = DEFAULT_DISPLAY_SKIN)
-#config.skin.display_skin = ConfigSelection(default = "skin_display.xml", choices = [("skin_display.xml", _("Channel Name")),("skin_text_clock.xml", _("Clock"))])
-if SystemInfo["FrontpanelDisplay"] or SystemInfo["LcdDisplay"] or SystemInfo["OledDisplay"] or SystemInfo["FBLCDDisplay"]:
-	config.skin.display_skin = ConfigText(default = "skin_display.xml")
-else:
-	config.skin.display_skin = ConfigText(default = "skin_display_text.xml")
+config.skin.display_skin = ConfigText(default = DEFAULT_DISPLAY_SKIN)
+
+##################################################################################################
+if fileExists('/etc/.restore_skins'):
+	os.unlink('/etc/.restore_skins')
+	import glob
+	lastpath = ''
+	for skin in sorted(glob.glob('/usr/lib/enigma2/python/Plugins/Extensions/*/ActivateSkinSettings.py*')):
+		try:
+			print '[RESTORE_SKIN] restore skin from "%s" ...' % skin
+			skinpath, ext = os.path.splitext(skin)
+			if skinpath == lastpath or not ext in '.pyo':
+				print '[RESTORE_SKIN] ...skip!'
+				continue
+			lastpath = skinpath
+			if getattr(__import__(skin.replace('/usr/lib/enigma2/python/','').replace(ext,'').replace('/','.'), fromlist=['ActivateSkinSettings']), 'ActivateSkinSettings')().WriteSkin(True):
+				print '[RESTORE_SKIN] ... failed!'
+			else:
+				print '[RESTORE_SKIN] ... done!'
+		except Exception, err:
+			print '[RESTORE_SKIN] ...error occurred: ', err
+##################################################################################################
 
 def skinExists(skin = False):
 	if not skin or not isinstance(skin, skin):
@@ -135,7 +151,7 @@ def getSkinPath():
 	if not primary_skin_path.endswith('/'):
 		primary_skin_path = primary_skin_path + '/'
 	return primary_skin_path
-
+	
 primary_skin_path = getSkinPath()
 
 profile("LoadSkin")
@@ -150,31 +166,22 @@ if not name or not res:
 addSkin('skin_box.xml')
 # add optional discrete second infobar
 addSkin('skin_second_infobar.xml')
-
-# Only one of these is present, compliments of AM_CONDITIONAL
-if getBoxType() == "inihde":
-	config.skin.display_skin = ConfigText(default = "skin_display_text.xml")
-
 display_skin_id = 1
-
-if SystemInfo["FrontpanelDisplay"] or SystemInfo["LcdDisplay"] or SystemInfo["OledDisplay"] or SystemInfo["FBLCDDisplay"]:
-	if fileExists('/usr/share/enigma2/display/skin_display.xml'):
-		if fileExists(resolveFilename(SCOPE_CONFIG, config.skin.display_skin.value)):
-			addSkin(config.skin.display_skin.value, SCOPE_CONFIG)
-		else:
-			addSkin('display/' + config.skin.display_skin.value)
-
-if addSkin('skin_display.xml'):
-	# Color OLED DM800 / DM800SE
+if getBoxType().startswith('dm'):
 	display_skin_id = 2
-
-if addSkin('skin_display96.xml'):
-	# Color OLED
-	display_skin_id = 2
-
-if addSkin('skin_display128.xml'):
-	# Color OLED DM7020HD / DM8000
-	display_skin_id = 2
+try:
+	if not addSkin(os.path.join('display', config.skin.display_skin.value)):
+		raise DisplaySkinError, "display skin not found"
+except Exception, err:
+	print "SKIN ERROR:", err
+	skin = DEFAULT_DISPLAY_SKIN
+	if config.skin.display_skin.value == skin:
+		skin = 'skin_display.xml'
+	print "defaulting to standard display skin...", skin
+	config.skin.display_skin.value = skin
+	skin = os.path.join('display', skin)
+	addSkin(skin)
+	del skin
 
 # Add Skin for Display
 try:
@@ -183,6 +190,7 @@ except:
 	addSkin('skin_text.xml')
 
 addSkin('skin_subtitles.xml')
+
 
 try:
 	addSkin(primary_skin_path + 'skin_user_colors.xml', SCOPE_SKIN)
@@ -253,6 +261,8 @@ def parseCoordinate(s, e, size=0, font=None):
 	if val < 0:
 		val = 0
 	return val
+
+
 
 def getParentSize(object, desktop):
 	size = eSize()
@@ -366,6 +376,8 @@ def loadPixmap(path, desktop):
 		return ptr
 	print("pixmap file %s not found!" % path)
 
+
+
 pngcache = []
 def cachemenu():
 	pixmaplist = []
@@ -389,6 +401,7 @@ try:
 		cachemenu()
 except:
 	print "fail cache main menu"
+
 
 class AttributeParser:
 	def __init__(self, guiObject, desktop, scale=((1,1),(1,1))):
@@ -785,12 +798,17 @@ def loadSingleSkinData(desktop, skin, path_prefix):
 			resolved_font = resolveFilename(SCOPE_FONTS, filename, path_prefix=path_prefix)
 			if not fileExists(resolved_font): #when font is not available look at current skin path
 				resolved_font = resolveFilename(SCOPE_ACTIVE_SKIN, filename)
-				if fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, filename)):
-					resolved_font = resolveFilename(SCOPE_ACTIVE_SKIN, filename)
+				if fileExists(resolveFilename(SCOPE_CURRENT_SKIN, filename)):
+					resolved_font = resolveFilename(SCOPE_CURRENT_SKIN, filename)
 				elif fileExists(resolveFilename(SCOPE_ACTIVE_LCDSKIN, filename)):
 					resolved_font = resolveFilename(SCOPE_ACTIVE_LCDSKIN, filename)
 			addFont(resolved_font, name, scale, is_replacement, render)
 			#print "Font: ", resolved_font, name, scale, is_replacement
+
+		fallbackFont = resolveFilename(SCOPE_FONTS, "fallback.font", path_prefix=path_prefix)
+		if fileExists(fallbackFont):
+			addFont(fallbackFont, "Fallback", 100, -1, 0)
+
 		for alias in c.findall("alias"):
 			get = alias.attrib.get
 			try:
@@ -904,6 +922,8 @@ def loadSingleSkinData(desktop, skin, path_prefix):
 				style.setColor(eWindowStyleSkinned.__dict__["col" + colorType], color)
 			except:
 				raise SkinError("Unknown color %s" % colorType)
+				#pass
+			#print "  color:", type, color
 		x = eWindowStyleManager.getInstance()
 		x.setStyle(style_id, style)
 	for margin in skin.findall("margin"):
@@ -1153,8 +1173,11 @@ def readSkin(screen, skin, names, desktop):
 			try:
 				cwvalue = constant_widgets[wname]
 			except KeyError:
-				print "\033[91m[SKIN] ERROR - given constant-widget: '%s' not found in skin\033[0m" % wname
-				return
+				if config.crash.skin_error_crash.value:
+					print "[SKIN] ERROR - given constant-widget: '%s' not found in skin" % wname
+				else:
+					print "\033[91m[SKIN] ERROR - given constant-widget: '%s' not found in skin\033[0m" % wname
+					return
 		if cwvalue:
 			for x in cwvalue:
 				myscreen.append((x))
@@ -1177,18 +1200,18 @@ def readSkin(screen, skin, names, desktop):
 			print "widget has no name and no source!"
 			return
 		if wname:
-			#print "Widget name=", wname
+#			print "Widget name=", wname
 			visited_components.add(wname)
 			# get corresponding 'gui' object
 			try:
 				attributes = screen[wname].skinAttributes = [ ]
 			except:
-				raise SkinError("component with name '" + wname + "' was not found in skin of screen '" + name + "'!")
+				print "component with name '" + wname + "' was not found in skin of screen '" + name + "'!"
 			# assert screen[wname] is not Source
 			collectAttributes(attributes, widget, context, skin_path_prefix, ignore=('name',))
 		elif wsource:
 			# get corresponding source
-			#print "Widget source=", wsource
+#			print "Widget source=", wsource
 			while True: # until we found a non-obsolete source
 				# parse our current "wsource", which might specifiy a "related screen" before the dot,
 				# for example to reference a parent, global or session-global screen.
@@ -1200,14 +1223,14 @@ def readSkin(screen, skin, names, desktop):
 					if scr is None:
 						#print wsource
 						#print name
-						raise SkinError("specified related screen '" + wsource + "' was not found in screen '" + name + "'!")
+						print("specified related screen '" + wsource + "' was not found in screen '" + name + "'!")
 					path = path[1:]
 				# resolve the source.
 				source = scr.get(path[0])
 				if isinstance(source, ObsoleteSource):
 					# however, if we found an "obsolete source", issue warning, and resolve the real source.
 					print "WARNING: SKIN '%s' USES OBSOLETE SOURCE '%s', USE '%s' INSTEAD!" % (name, wsource, source.new_source)
-					print "OBSOLETE SOURCE WILL BE REMOVED %s, PLEASE UPDATE!" % (source.removal_date)
+					print "OBSOLETE SOURCE WILL BE REMOVED %s, PLEASE UPDATE!" % source.removal_date
 					if source.description:
 						print source.description
 					wsource = source.new_source
@@ -1216,11 +1239,14 @@ def readSkin(screen, skin, names, desktop):
 					break
 
 			if source is None:
-				raise SkinError("source '" + wsource + "' was not found in screen '" + name + "'!")
+				if config.crash.skin_error_crash.value:
+					raise SkinError("source '" + wsource + "' was not found in screen '" + name + "'!")
+				else:
+					print("\033[91m[Skin] Error: Source '" + wsource + "' was not found in screen '" + name + "'!")
 
 			wrender = get_attr('render')
 			if not wrender:
-				raise SkinError("you must define a renderer with render= for source '%s'" % (wsource))
+				print("you must define a renderer with render= for source '%s'" % wsource)
 			for converter in widget.findall("convert"):
 				ctype = converter.get('type')
 				assert ctype, "'convert'-tag needs a 'type'-attribute"
@@ -1230,7 +1256,13 @@ def readSkin(screen, skin, names, desktop):
 				except:
 					parms = ""
 				#print "Params:", parms
-				converter_class = my_import('.'.join(("Components", "Converter", ctype))).__dict__.get(ctype)
+				try:
+					converter_class = my_import('.'.join(("Components", "Converter", ctype))).__dict__.get(ctype)
+				except ImportError:
+					if config.crash.skin_error_crash.value:
+						raise SkinError("[Skin] Error: Converter '%s' not found" % ctype)
+					else:
+						print("\033[91m[Skin] Error: Converter '%s' not found\033[0m" % ctype)
 				c = None
 				for i in source.downstream_elements:
 					if isinstance(i, converter_class) and i.converter_arguments == parms:
@@ -1240,7 +1272,14 @@ def readSkin(screen, skin, names, desktop):
 					c.connect(source)
 				source = c
 
-			renderer_class = my_import('.'.join(("Components", "Renderer", wrender))).__dict__.get(wrender)
+			try:
+				renderer_class = my_import('.'.join(("Components", "Renderer", wrender))).__dict__.get(wrender)
+			except ImportError:
+				if config.crash.skin_error_crash.value:
+					raise SkinError("[Skin] Error: Renderer '%s' not found" % wrender)
+				else:
+					print("\033[91m[Skin] Error: Renderer '%s' not found\033[0m" % wrender)
+					return
 			renderer = renderer_class() # instantiate renderer
 			renderer.connect(source) # connect to source
 			attributes = renderer.skinAttributes = [ ]
@@ -1289,13 +1328,13 @@ def readSkin(screen, skin, names, desktop):
 				print "[SKIN] SKIN ERROR in screen '%s' widget '%s':" % (name, w.tag), e
 
 		cw = widget.findall("constant-widget")
-		if cw:
+		if cw:					
 			for w in cw:
 				process(w)
 			for w in myscreen.findall("widget"):
 				process(w)
 		for w in widget.getchildren():
-			if cw and w.tag in ("constant-widget","widget"):
+			if cw and w.tag in ("constant-widget","widget"):	
 				continue
 			process(w)
 
