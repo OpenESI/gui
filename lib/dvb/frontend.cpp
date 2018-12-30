@@ -1436,6 +1436,10 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 	{
 		ret = (int)((((double(snr) / (65535.0 / 100.0)) * 0.1950) - 1.0000) * 100);
 	}
+	else if (!strcmp(m_description, "DVB-C NIM(3128 FBC)"))
+	{
+		ret = (int)(snr / 17);
+	}
 	else if (!strcmp(m_description, "GIGA DVB-C/T NIM (SP8221L)")
 		|| !strcmp(m_description, "GIGA DVB-C/T NIM (SI4765)")
 		|| !strcmp(m_description, "GIGA DVB-C/T NIM (SI41652)")
@@ -1454,7 +1458,7 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 				cab_max = 4200;
 				break;
 			case feTerrestrial:
-				ret = (int)(snr / 75);
+				ret = (int)(snr / 30);
 				ter_max = 1700;
 				break;
 		}
@@ -1574,6 +1578,11 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 				sat_max = 1550;
 				break;
 		}
+	}
+	else if (!strncmp(m_description, "Si2166D", 7)) // SF8008 S2
+	{
+		ret = snr;
+		sat_max = 1620;
 	}
 	else if (!strncmp(m_description, "Si216", 5)) // all new Models with SI Tuners
 	{
