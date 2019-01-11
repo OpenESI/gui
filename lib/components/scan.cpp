@@ -47,6 +47,8 @@ void eComponentScan::scanEvent(int evt)
 			break;
 	}
 	statusChanged();
+	if (m_failed > 0)
+		m_done = 1;
 }
 
 eComponentScan::eComponentScan(): m_done(-1), m_failed(0)
@@ -83,6 +85,12 @@ void eComponentScan::addInitial(const eDVBFrontendParametersTerrestrial &p)
 	m_initial.push_back(parm);
 }
 
+void eComponentScan::addInitial(const eDVBFrontendParametersATSC &p)
+{
+	ePtr<eDVBFrontendParameters> parm = new eDVBFrontendParameters();
+	parm->setATSC(p);
+	m_initial.push_back(parm);
+}
 
 int eComponentScan::start(int feid, int flags, int networkid)
 {
@@ -107,7 +115,7 @@ int eComponentScan::start(int feid, int flags, int networkid)
 
 	std::list<ePtr<iDVBFrontendParameters> > list;
 	m_scan = new eDVBScan(channel);
-	m_scan->connectEvent(slot(*this, &eComponentScan::scanEvent), m_scan_event_connection);
+	m_scan->connectEvent(sigc::mem_fun(*this, &eComponentScan::scanEvent), m_scan_event_connection);
 
 	if (!(flags & scanRemoveServices))
 	{
@@ -140,6 +148,12 @@ int eComponentScan::start(int feid, int flags, int networkid)
 							break;
 						case iDVBFrontend::feTerrestrial:
 							db->removeFlags(eDVBService::dxNewFound, 0xEEEE0000, -1, -1, -1);
+							break;
+						case iDVBFrontend::feATSC:
+							eDVBFrontendParametersATSC parm;
+							tp->getATSC(parm);
+							int ns = parm.system == eDVBFrontendParametersATSC::System_ATSC ? 0xEEEE0000 : 0xFFFF0000;
+							db->removeFlags(eDVBService::dxNewFound, ns, -1, -1, -1);
 							break;
 					}
 				}

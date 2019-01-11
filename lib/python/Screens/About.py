@@ -8,7 +8,7 @@ from Components.About import about
 from Components.ScrollLabel import ScrollLabel
 from Components.Console import Console
 from enigma import eTimer, getEnigmaVersionString
-from boxbranding import getBoxType, getMachineBrand, getMachineName, getImageVersion, getImageBuild, getDriverDate
+from boxbranding import getBoxType, getMachineBuild, getMachineBrand, getMachineName, getImageVersion, getImageBuild, getDriverDate
 
 from Components.Pixmap import MultiPixmap
 from Components.Network import iNetwork
@@ -22,26 +22,71 @@ def getAboutText():
 	AboutText = ""
 	AboutText += _("Model:\t%s %s\n") % (getMachineBrand(), getMachineName())
 
+	bootloader = ""
+	if path.exists('/sys/firmware/devicetree/base/bolt/tag'):
+		f = open('/sys/firmware/devicetree/base/bolt/tag', 'r')
+		bootloader = f.readline().replace('\x00', '').replace('\n', '')
+		f.close()
+		AboutText += _("Bootloader:\t\t%s\n") % (bootloader)
+
 	if path.exists('/proc/stb/info/chipset'):
 		AboutText += _("Chipset:\t%s") % about.getChipSetString() + "\n"
 
 	cpuMHz = ""
-	if path.exists('/proc/cpuinfo'):
-		f = open('/proc/cpuinfo', 'r')
-		temp = f.readlines()
-		f.close()
+	if getMachineBuild() in ('vusolo4k','vuultimo4k','vuzero4k'):
+		cpuMHz = "   (1,5 GHz)"
+	elif getMachineBuild() in ('formuler1tc','formuler1', 'triplex'):
+		cpuMHz = "   (1,3 GHz)"
+	elif getMachineBuild() in ('vuuno4kse','vuuno4k','dm900','dm920', 'gb7252', 'dags7252','xc7439','8100s'):
+		cpuMHz = "   (1,7 GHz)"
+	elif getMachineBuild() in ('sf5008','et13000','et1x000','hd52','hd51','sf4008','vs1500','h7'):
 		try:
-			for lines in temp:
-				lisp = lines.split(': ')
-				if lisp[0].startswith('cpu MHz'):
-					#cpuMHz = "   (" +  lisp[1].replace('\n', '') + " MHz)"
-					cpuMHz = "   (" +  str(int(float(lisp[1].replace('\n', '')))) + " MHz)"
-					break
+			import binascii
+			f = open('/sys/firmware/devicetree/base/cpus/cpu@0/clock-frequency', 'rb')
+			clockfrequency = f.read()
+			f.close()
+			cpuMHz = "   (%s MHz)" % str(round(int(binascii.hexlify(clockfrequency), 16)/1000000,1))
 		except:
-			pass
+			cpuMHz = "   (1,7 GHz)"
+	else:
+		if path.exists('/proc/cpuinfo'):
+			f = open('/proc/cpuinfo', 'r')
+			temp = f.readlines()
+			f.close()
+			try:
+				for lines in temp:
+					lisp = lines.split(': ')
+					if lisp[0].startswith('cpu MHz'):
+						#cpuMHz = "   (" +  lisp[1].replace('\n', '') + " MHz)"
+						cpuMHz = "   (" +  str(int(float(lisp[1].replace('\n', '')))) + " MHz)"
+						break
+			except:
+				pass
 
 	AboutText += _("CPU:\t%s") % about.getCPUString() + cpuMHz + "\n"
 	AboutText += _("Cores:\t%s") % about.getCpuCoresString() + "\n"
+
+	imagestarted = ""
+	bootname = ''
+	if path.exists('/boot/bootname'):
+		f = open('/boot/bootname', 'r')
+		bootname = f.readline().split('=')[1]
+		f.close()
+
+	if path.exists('/boot/STARTUP'):
+		f = open('/boot/STARTUP', 'r')
+		f.seek(22)
+		image = f.read(1) 
+		f.close()
+		if bootname: bootname = "   (%s)" %bootname 
+		AboutText += _("Selected Image:\t%s") % "STARTUP_" + image + bootname + "\n"
+	elif path.exists('/boot/cmdline.txt'):
+		f = open('/boot/cmdline.txt', 'r')
+		f.seek(38)
+		image = f.read(1) 
+		f.close()
+		if bootname: bootname = "   (%s)" %bootname 
+		AboutText += _("Selected Image:\t%s") % "STARTUP_" + image + bootname + "\n"
 
 	AboutText += _("Version:\t%s") % getImageVersion() + "\n"
 	AboutText += _("Build:\t%s") % getImageBuild() + "\n"
@@ -57,7 +102,9 @@ def getAboutText():
 	AboutText += _("GStreamer:\t%s") % about.getGStreamerVersionString() + "\n"
 	AboutText += _("Python:\t%s") % about.getPythonVersionString() + "\n"
 
-	AboutText += _("Installed:\t%s") % about.getFlashDateString() + "\n"
+	if getMachineBuild() not in ('vuzero4k','sf5008','et13000','et1x000','hd51','hd52','vusolo4k','vuuno4k','vuuno4kse','vuultimo4k','sf4008','dm820','dm7080','dm900','dm920', 'gb7252', 'dags7252', 'vs1500','h7','xc7439','8100s','u5','u5pvr'):
+		AboutText += _("Installed:\t%s") % about.getFlashDateString() + "\n"
+
 	AboutText += _("Last update:\t%s") % getEnigmaVersionString() + "\n"
 
 	fp_version = getFPVersion()
@@ -74,6 +121,10 @@ def getAboutText():
 		f.close()
 	elif path.exists('/proc/stb/fp/temp_sensor'):
 		f = open('/proc/stb/fp/temp_sensor', 'r')
+		tempinfo = f.read()
+		f.close()
+	elif path.exists('/proc/stb/sensors/temp/value'):
+		f = open('/proc/stb/sensors/temp/value', 'r')
 		tempinfo = f.read()
 		f.close()
 	if tempinfo and int(tempinfo.replace('\n', '')) > 0:
@@ -111,10 +162,10 @@ class About(Screen):
 			})
 
 	def populate(self):
-		self["lab1"] = StaticText(_("EuroSat"))
-		self["lab2"] = StaticText(_("EuroSat Image"))
+		self["lab1"] = StaticText(_("openESI"))
+		self["lab2"] = StaticText(_("By openESI Team"))
 		model = None
-		self["lab3"] = StaticText(_("Support at") + " www.euro-sat-image.com")
+		self["lab3"] = StaticText(_("Support at") + " www.openesi.eu")
 
 		AboutText = getAboutText()[0]
 
@@ -259,14 +310,16 @@ class SystemMemoryInfo(Screen):
 		Screen.__init__(self, session)
 		Screen.setTitle(self, _("Memory Information"))
 		self.skinName = ["SystemMemoryInfo", "About"]
-		self["lab1"] = StaticText(_("EuroSat"))
-		self["lab2"] = StaticText(_("EuroSat Image"))
 		self["AboutScrollLabel"] = ScrollLabel()
+		self["lab1"] = StaticText()
+		self["lab2"] = StaticText()
 
 		self["actions"] = ActionMap(["SetupActions", "ColorActions"],
 			{
 				"cancel": self.close,
 				"ok": self.close,
+				"up": self["AboutScrollLabel"].pageUp,
+				"down": self["AboutScrollLabel"].pageDown,
 			})
 
 		out_lines = file("/proc/meminfo").readlines()
@@ -427,18 +480,18 @@ class SystemNetworkInfo(Screen):
 						if status[self.iface]["essid"] == "off":
 							essid = _("No Connection")
 						else:
-							essid = status[self.iface]["essid"]
+							essid = str(status[self.iface]["essid"])
 						if status[self.iface]["accesspoint"] == "Not-Associated":
 							accesspoint = _("Not-Associated")
 							essid = _("No Connection")
 						else:
-							accesspoint = status[self.iface]["accesspoint"]
+							accesspoint = str(status[self.iface]["accesspoint"])
 						if self.has_key("BSSID"):
 							self.AboutText += _('Accesspoint:') + '\t' + accesspoint + '\n'
 						if self.has_key("ESSID"):
 							self.AboutText += _('SSID:') + '\t' + essid + '\n'
 
-						quality = status[self.iface]["quality"]
+						quality = str(status[self.iface]["quality"])
 						if self.has_key("quality"):
 							self.AboutText += _('Link Quality:') + '\t' + quality + '\n'
 
@@ -449,7 +502,7 @@ class SystemNetworkInfo(Screen):
 						if self.has_key("bitrate"):
 							self.AboutText += _('Bitrate:') + '\t' + bitrate + '\n'
 
-						signal = status[self.iface]["signal"]
+						signal = str(status[self.iface]["signal"])
 						if self.has_key("signal"):
 							self.AboutText += _('Signal Strength:') + '\t' + signal + '\n'
 
@@ -527,7 +580,7 @@ class SystemNetworkInfo(Screen):
 class AboutSummary(Screen):
 	def __init__(self, session, parent):
 		Screen.__init__(self, session, parent=parent)
-		self["selected"] = StaticText("EuroSat:" + getImageVersion())
+		self["selected"] = StaticText("openESI:" + getImageVersion())
 
 		AboutText = getAboutText()[1]
 
@@ -579,7 +632,7 @@ class ViewGitLog(Screen):
 		fd = open('/etc/' + self.logtype + '-git.log', 'r')
 		releasenotes = fd.read()
 		fd.close()
-		releasenotes = releasenotes.replace('\neurosat: build', "\n\neurosat: build")
+		releasenotes = releasenotes.replace('\nopenesi: build', "\n\nopenesi: build")
 		self["text"].setText(releasenotes)
 		summarytext = releasenotes
 		try:

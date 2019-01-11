@@ -113,6 +113,37 @@ void eListboxServiceContent::getCurrent(eServiceReference &ref)
 		ref = eServiceReference();
 }
 
+void eListboxServiceContent::getPrev(eServiceReference &ref)
+{
+	if (cursorValid())
+	{
+		list::iterator cursor(m_cursor);
+		if (cursor == m_list.begin())
+		{
+			cursor = m_list.end();
+		}
+		ref = *(--cursor);
+	}
+	else
+		ref = eServiceReference();
+}
+
+void eListboxServiceContent::getNext(eServiceReference &ref)
+{
+	if (cursorValid())
+	{
+		list::iterator cursor(m_cursor);
+		cursor++;
+		if (cursor == m_list.end())
+		{
+			cursor = m_list.begin();
+		}
+ 		ref = *(cursor);
+	}
+	else
+		ref = eServiceReference();
+}
+
 int eListboxServiceContent::getNextBeginningWithChar(char c)
 {
 //	printf("Char: %c\n", c);
@@ -281,7 +312,10 @@ void eListboxServiceContent::sort()
 DEFINE_REF(eListboxServiceContent);
 
 eListboxServiceContent::eListboxServiceContent()
-	:m_visual_mode(visModeSimple), m_size(0), m_current_marked(false), m_itemheight(25), m_servicetype_icon_mode(0), m_crypto_icon_mode(0), m_column_width(0), m_progressbar_height(6), m_progressbar_border_width(2), m_record_indicator_mode(0), m_nonplayable_margins(10), m_items_distances(8)
+	:m_visual_mode(visModeSimple),m_cursor_number(0), m_saved_cursor_number(0), m_size(0), m_current_marked(false),
+	m_itemheight(25), m_hide_number_marker(false), m_service_picon_downsize(0), m_servicetype_icon_mode(0),
+	m_crypto_icon_mode(0), m_record_indicator_mode(0), m_column_width(0), m_progressbar_height(6), m_progressbar_border_width(2),
+	m_nonplayable_margins(10), m_items_distances(8)
 {
 	memset(m_color_set, 0, sizeof(m_color_set));
 	cursorHome();
@@ -385,11 +419,11 @@ int eListboxServiceContent::setCurrentMarked(bool state)
 					else
 					{
 						int pos = cursorGet();
-						eDebugNoNewLine("move %s to %d ", ref.toString().c_str(), pos);
+						eDebugNoNewLineStart("move %s to %d ", ref.toString().c_str(), pos);
 						if (list->moveService(ref, cursorGet()))
-							eDebug("failed");
+							eDebugNoNewLineEnd("failed");
 						else
-							eDebug("ok");
+							eDebugNoNewLineEnd("ok");
 					}
 				}
 			}
@@ -707,7 +741,9 @@ void eListboxServiceContent::paint(gPainter &painter, eWindowStyle &style, const
 		}
 		if (m_record_indicator_mode == 3 && isRecorded)
 		{
-			if (m_color_set[serviceRecorded])
+			if (m_color_set[serviceRecordingColor])
+				painter.setForegroundColor(m_color[serviceRecordingColor]);
+			else if (m_color_set[serviceRecorded])
 				painter.setForegroundColor(m_color[serviceRecorded]);
 			else
 				painter.setForegroundColor(gRGB(0xb40431));
@@ -771,18 +807,30 @@ void eListboxServiceContent::paint(gPainter &painter, eWindowStyle &style, const
 						text = evt->getEventName();
 						if (serviceAvail)
 						{
-							if (!selected && m_color_set[eventForeground])
-								painter.setForegroundColor(m_color[eventForeground]);
-							else if (selected && m_color_set[eventForegroundSelected])
-								painter.setForegroundColor(m_color[eventForegroundSelected]);
+							if (!selected)
+							{
+								if (serviceFallback && m_color_set[eventForegroundFallback]) // fallback receiver
+									painter.setForegroundColor(m_color[eventForegroundFallback]);
+								else if(m_color_set[serviceDescriptionColor])
+									painter.setForegroundColor(m_color[serviceDescriptionColor]);
+								else if(m_color_set[eventForeground]) //serviceDescriptionColor
+									painter.setForegroundColor(m_color[eventForeground]);
+								else	//default color (Tulip Tree)
+									painter.setForegroundColor(gRGB(0xe7b53f));
+
+							}
 							else
-								painter.setForegroundColor(gRGB(0xe7b53f));
+							{
+								if (serviceFallback && m_color_set[eventForegroundSelectedFallback])
+									painter.setForegroundColor(m_color[eventForegroundSelectedFallback]);
+								else if(m_color_set[serviceDescriptionColorSelected])
+									painter.setForegroundColor(m_color[serviceDescriptionColorSelected]);
+								else if(m_color_set[eventForeground]) //serviceDescriptionColor
+									painter.setForegroundColor(m_color[eventForegroundSelected]);
+								else	//default color (Tulip Tree)
+									painter.setForegroundColor(gRGB(0xe7b53f));
 
-							if (serviceFallback && !selected && m_color_set[eventForegroundFallback]) // fallback receiver
-								painter.setForegroundColor(m_color[eventForegroundFallback]);
-							else if (serviceFallback && selected && m_color_set[eventForegroundSelectedFallback])
-								painter.setForegroundColor(m_color[eventForegroundSelectedFallback]);
-
+							}
 						}
 						break;
 					}
@@ -854,7 +902,7 @@ void eListboxServiceContent::paint(gPainter &painter, eWindowStyle &style, const
 							 * bit wider in case the icons are diffently
 							 * shaped, and to add a bit of margin between
 							 * icon and text. */
-							const int iconWidth = area.height() * 9 / 5;
+							const int iconWidth = (area.height() + m_service_picon_downsize * 2) * 1.67 + m_items_distances;
 							m_element_position[celServiceInfo].setLeft(area.left() + iconWidth);
 							m_element_position[celServiceInfo].setWidth(area.width() - iconWidth);
 							area = m_element_position[celServiceName];
@@ -864,7 +912,7 @@ void eListboxServiceContent::paint(gPainter &painter, eWindowStyle &style, const
 								area.moveBy(offset);
 								painter.clip(area);
 								painter.blitScale(piconPixmap,
-									eRect(area.left(), area.top(), iconWidth, area.height()),
+									eRect(area.left(), area.top() - m_service_picon_downsize, iconWidth, area.height() + m_service_picon_downsize * 2),
 									area,
 									gPainter::BT_ALPHABLEND | gPainter::BT_KEEP_ASPECT_RATIO);
 								painter.clippop();
@@ -990,7 +1038,7 @@ void eListboxServiceContent::paint(gPainter &painter, eWindowStyle &style, const
 					if (e == celFolderPixmap)
 						if (m_element_position[celServiceEventProgressbar].left() == 0)
 							area.setLeft(0);
-						xoffset = pixmap_size.width() + m_items_distances;
+					xoffset = pixmap_size.width() + m_items_distances;
 					area.moveBy(offset);
 					painter.clip(area);
 					painter.blit(pixmap, ePoint(area.left(), offset.y() + correction), area, gPainter::BT_ALPHABLEND);

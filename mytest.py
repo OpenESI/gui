@@ -10,7 +10,7 @@ profile("PYTHON_START")
 
 import Tools.RedirectOutput
 import enigma
-from boxbranding import getBoxType, getBrandOEM
+from boxbranding import getBoxType, getBrandOEM, getMachineBuild
 import eConsoleImpl
 import eBaseImpl
 enigma.eTimer = eBaseImpl.eTimer
@@ -18,10 +18,15 @@ enigma.eSocketNotifier = eBaseImpl.eSocketNotifier
 enigma.eConsoleAppContainer = eConsoleImpl.eConsoleAppContainer
 boxtype = getBoxType()
 
-if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal/plugin.pyo") and boxtype in ('dm7080','dm820'):
+if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal/plugin.pyo") and boxtype in ('dm7080','dm820','dm520','dm525','dm900','dm920'):
 	import pyo_patcher
 
 from traceback import print_exc
+
+profile("SetupDevices")
+import Components.SetupDevices
+Components.SetupDevices.InitSetupDevices()
+
 profile("SimpleSummary")
 from Screens import InfoBar
 from Screens.SimpleSummary import SimpleSummary
@@ -62,7 +67,7 @@ config.misc.radiopic = ConfigText(default = radiopic)
 #config.misc.isNextRecordTimerAfterEventActionAuto = ConfigYesNo(default=False)
 #config.misc.isNextPowerTimerAfterEventActionAuto = ConfigYesNo(default=False)
 config.misc.nextWakeup = ConfigText(default = "-1,-1,0,0,-1,0")	#wakeup time, timer begins, set by (0=rectimer,1=zaptimer, 2=powertimer or 3=plugin), go in standby, next rectimer, force rectimer
-config.misc.SyncTimeUsing = ConfigSelection(default = "0", choices = [("0", "Transponder Time"), ("1", _("NTP"))])
+config.misc.SyncTimeUsing = ConfigSelection(default = "0", choices = [("0", _("Transponder Time")), ("1", _("NTP"))])
 config.misc.NTPserver = ConfigText(default = 'pool.ntp.org', fixed_size=False)
 
 config.misc.startCounter = ConfigInteger(default=0) # number of e2 starts...
@@ -370,40 +375,20 @@ class PowerKey:
 		globalActionMap.actions["power_long"]=self.powerlong
 		globalActionMap.actions["deepstandby"]=self.shutdown # frontpanel long power button press
 		globalActionMap.actions["discrete_off"]=self.standby
-		globalActionMap.actions["sleeptimer_standby"]=self.sleepStandby
-		globalActionMap.actions["sleeptimer_deepstandby"]=self.sleepDeepStandby
+		globalActionMap.actions["sleeptimer"]=self.openSleepTimer
+		globalActionMap.actions["powertimer_standby"]=self.sleepStandby
+		globalActionMap.actions["powertimer_deepstandby"]=self.sleepDeepStandby
 		self.standbyblocked = 1
 
 	def MenuClosed(self, *val):
 		self.session.infobar = None
 
 	def shutdown(self):
-		wasRecTimerWakeup = False
-		recordings = self.session.nav.getRecordings(False,Components.RecordingConfig.recType(config.recording.warn_box_restart_rec_types.getValue()))
-		if not recordings:
-			next_rec_time = self.session.nav.RecordTimer.getNextRecordingTime()
-		if recordings or (next_rec_time > 0 and (next_rec_time - time()) < 360):
-			if os.path.exists("/tmp/was_rectimer_wakeup") and not self.session.nav.RecordTimer.isRecTimerWakeup():
-				f = open("/tmp/was_rectimer_wakeup", "r")
-				file = f.read()
-				f.close()
-				wasRecTimerWakeup = int(file) and True or False
-			if self.session.nav.RecordTimer.isRecTimerWakeup() or wasRecTimerWakeup or self.session.nav.RecordTimer.isRecording():
-				print "PowerOff (timer wakewup) - Recording in progress or a timer about to activate, entering standby!"
-				lastrecordEnd = 0
-				for timer in self.session.nav.RecordTimer.timer_list:
-					if lastrecordEnd == 0 or lastrecordEnd >= timer.begin:
-						print "Set after-event for recording %s to DEEP-STANDBY." % timer.name
-						timer.afterEvent = 2
-						if timer.end > lastrecordEnd:
-							lastrecordEnd = timer.end + 900
-				from Screens.MessageBox import MessageBox
-				self.session.openWithCallback(self.gotoStandby,MessageBox,_("PowerOff while Recording in progress!\nEntering standby, after recording the box will shutdown."), type = MessageBox.TYPE_INFO, timeout = 10)
-			else:
-				print "PowerOff - Now!"
-				self.session.open(Screens.Standby.TryQuitMainloop, 1)
+		recordings = self.session.nav.getRecordingsCheckBeforeActivateDeepStandby()
+		if recordings:
+			from Screens.MessageBox import MessageBox
+			self.session.openWithCallback(self.gotoStandby,MessageBox,_("Recording(s) are in progress or coming up in few seconds!\nEntering standby, after recording the box will shutdown."), type = MessageBox.TYPE_INFO, close_on_any_key = True, timeout = 10)
 		elif not Screens.Standby.inTryQuitMainloop and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND:
-			print "PowerOff - Now!"
 			self.session.open(Screens.Standby.TryQuitMainloop, 1)
 
 	def powerlong(self):
@@ -428,13 +413,25 @@ class PowerKey:
 						menu_screen.setTitle(_("Standby / restart"))
 						return
 		elif action == "standby":
+			try:
+				config.hdmicec.control_tv_standby_skipnow.setValue(False)
+			except:
+				pass # no HdmiCec
 			self.standby()
-		elif action == "sleeptimerStandby":
+		elif action == "standby_noTVshutdown":
+			try:
+				config.hdmicec.control_tv_standby_skipnow.setValue(True)
+			except:
+				pass # no HdmiCec
+			self.standby()
+		elif action == "powertimerStandby":
 			val = 3
 			self.setSleepTimer(val)
-		elif action == "sleeptimerDeepStandby":
+		elif action == "powertimerDeepStandby":
 			val = 4
 			self.setSleepTimer(val)
+		elif action == "sleeptimer":
+			self.openSleepTimer()
 
 	def powerdown(self):
 		self.standbyblocked = 0
@@ -449,6 +446,10 @@ class PowerKey:
 	def standby(self):
 		if not Screens.Standby.inStandby and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND and self.session.in_exec:
 			self.session.open(Screens.Standby.Standby)
+
+	def openSleepTimer(self):
+		from Screens.SleepTimerEdit import SleepTimerEdit
+		self.session.open(SleepTimerEdit)
 
 	def setSleepTimer(self, val):
 		from PowerTimer import PowerTimerEntry
@@ -466,10 +467,10 @@ class PowerKey:
 			simulTimerList = self.session.nav.PowerTimer.record(entry)
 
 	def sleepStandby(self):
-		self.doAction(action = "sleeptimerStandby")
+		self.doAction(action = "powertimerStandby")
 
 	def sleepDeepStandby(self):
-		self.doAction(action = "sleeptimerDeepStandby")
+		self.doAction(action = "powertimerDeepStandby")
 
 profile("Scart")
 from Screens.Scart import Scart
@@ -511,7 +512,10 @@ def autorestoreLoop():
 	count = 0
 	if os.path.exists("/media/hdd/images/config/autorestore"):
 		f = open("/media/hdd/images/config/autorestore", "r")
-		count = int(f.read())
+		try:
+			count = int(f.read())
+		except:
+			count = 0;
 		f.close()
 		if count >= 3:
 			return False
@@ -577,7 +581,7 @@ def runScreenTest():
 	profile("Init:PowerKey")
 	power = PowerKey(session)
 	
-	if boxtype in ('sf3038', 'spycat', 'e4hd', 'e4hdc', 'mbmicro', 'et7500', 'mixosf5', 'mixosf7', 'mixoslumi', 'gi9196m', 'maram9', 'ixussone', 'ixussone', 'uniboxhd1', 'uniboxhd2', 'uniboxhd3', 'sezam5000hd', 'mbtwin', 'sezam1000hd', 'mbmini', 'atemio5x00', 'beyonwizt3') or getBrandOEM() in ('fulan'):
+	if boxtype in ('alphatriple','spycat4kmini','tmtwin4k','mbmicrov2','revo4k','force3uhd','wetekplay', 'wetekplay2', 'wetekhub', 'dm7020hd', 'dm7020hdv2', 'osminiplus', 'osmega', 'sf3038', 'spycat', 'e4hd', 'e4hdhybrid', 'mbmicro', 'et7500', 'mixosf5', 'mixosf7', 'mixoslumi', 'gi9196m', 'maram9', 'ixussone', 'ixusszero', 'uniboxhd1', 'uniboxhd2', 'uniboxhd3', 'sezam5000hd', 'mbtwin', 'sezam1000hd', 'mbmini', 'atemio5x00', 'beyonwizt3', '9910lx', '9911lx') or getBrandOEM() in ('fulan') or getMachineBuild() in ('dags7362' , 'dags73625', 'dags5'):
 		profile("VFDSYMBOLS")
 		import Components.VfdSymbols
 		Components.VfdSymbols.SymbolsCheck(session)
@@ -649,67 +653,83 @@ def runScreenTest():
 	nextPowerTime = tmp[0]
 	nextPowerTimeInStandby = tmp[1]
 	#plugintimer
-	nextPluginTime = plugins.getNextWakeupTime()
-	nextPluginTimeInStandby = 1
+	tmp = plugins.getNextWakeupTime(getPluginIdent = True)
+	nextPluginTime = tmp[0]
+	nextPluginIdent = tmp[1] #"pluginname | pluginfolder"
+	tmp = tmp[1].lower()
+	#start in standby, depending on plugin type
+	if "epgrefresh" in tmp:
+		nextPluginName = "EPGRefresh"
+		nextPluginTimeInStandby = 1
+	elif "vps" in tmp:
+		nextPluginName = "VPS"
+		nextPluginTimeInStandby = 1
+	elif "serienrecorder" in tmp:
+		nextPluginName = "SerienRecorder"
+		nextPluginTimeInStandby = 0 # plugin function for deep standby from standby not compatible (not available)
+	elif "elektro" in tmp:
+		nextPluginName = "Elektro"
+		nextPluginTimeInStandby = 1
+	elif "minipowersave" in tmp:
+		nextPluginName = "MiniPowersave"
+		nextPluginTimeInStandby = 1
+	elif "enhancedpowersave" in tmp:
+		nextPluginName = "EnhancedPowersave"
+		nextPluginTimeInStandby = 1
+	else:
+		#default for plugins
+		nextPluginName = nextPluginIdent
+		nextPluginTimeInStandby = 0
 
 	wakeupList = [
 		x for x in ((nextRecordTime, 0, nextRecordTimeInStandby),
 					(nextZapTime, 1, nextZapTimeInStandby),
 					(nextPowerTime, 2, nextPowerTimeInStandby),
 					(nextPluginTime, 3, nextPluginTimeInStandby))
-		#if x[0] != -1 and x[0] >= nowTime - 60 #no startTime[0] in the past (e.g. vps-plugin -> if current time between 'recordtimer begin - vps initial time' is startTime in the past ...)
 		if x[0] != -1
 	]
 	wakeupList.sort()
 
-	# individual wakeup time offset
-	if config.workaround.wakeuptimeoffset.value == "standard":
-		if boxtype.startswith("gb"):
-			wpoffset = -120 # Gigaboxes already starts 2 min. before wakeup time
-		else:
-			wpoffset = 0
-	else:
-		wpoffset = int(config.workaround.wakeuptimeoffset.value)
-
-	config.misc.nextWakeup.value = "-1,-1,0,0,-1,0"
+	print "="*100
 	if wakeupList and wakeupList[0][0] > 0:
 		startTime = wakeupList[0]
-		# wakeup time is 5 min before timer starts + offset
-		wptime = startTime[0] - 300 - wpoffset
+		# wakeup time before timer begins
+		wptime = startTime[0] - (config.workaround.wakeuptime.value * 60)
 		if (wptime - nowTime) < 120: # no time to switch box back on
 			wptime = int(nowTime) + 120  # so switch back on in 120 seconds
 
+		#check for plugin-, zap- or power-timer to enable the 'forced' record-timer wakeup
 		forceNextRecord = 0
-		if startTime[1] != 0 and nextRecordTime > 0:
-			#check for plugin-, zap- or power-timer to enable the forced record-timer wakeup - when next record starts in 15 mins
-			if abs(nextRecordTime - startTime[0]) <= 900:
-				forceNextRecord = 1
-			else:
-			#check for vps-plugin to enable the record-timer wakeup
-				try:
-					if config.plugins.vps.allow_wakeup.value:
-						if startTime[0] + config.plugins.vps.initial_time.value * 60 == nextRecordTime \
-						or startTime[0] - 20 + config.plugins.vps.initial_time.value * 60 == nextRecordTime: #vps using begin time, not start prepare time
-							forceNextRecord = 1
-				except:
-					pass
 		setStandby = startTime[2]
-		print "="*100
-		print "[mytest.py] set next wakeup type to '%s' %s" % ({0:"record-timer",1:"zap-timer",2:"power-timer",3:"plugin-timer"}[startTime[1]],{0:"and starts normal",1:"and starts in standby"}[setStandby])
+		if startTime[1] != 0 and nextRecordTime > 0:
+			#when next record starts in 15 mins
+			if abs(nextRecordTime - startTime[0]) <= 900:
+				setStandby = forceNextRecord = 1
+			#by vps-plugin
+			elif startTime[1] == 3 and nextPluginName == "VPS":
+				setStandby = forceNextRecord = 1
+
+		if startTime[1] == 3:
+			nextPluginName = " (%s)" % nextPluginName
+		else:
+			nextPluginName = ""
+		print "[mytest.py] set next wakeup type to '%s'%s %s" % ({0:"record-timer",1:"zap-timer",2:"power-timer",3:"plugin-timer"}[startTime[1]], nextPluginName, {0:"and starts normal",1:"and starts in standby"}[setStandby])
 		if forceNextRecord:
-			print "[mytest.py] timer is set from 'vps-plugin' or just before a 'record-timer' starts, set 'record-timer' wakeup flag"
+			print "[mytest.py] set from 'vps-plugin' or just before a 'record-timer' starts, set 'record-timer' wakeup flag"
 		print "[mytest.py] set next wakeup time to", strftime("%a, %Y/%m/%d %H:%M:%S", localtime(wptime))
 		#set next wakeup
 		setFPWakeuptime(wptime)
 		#set next standby only after shutdown in deep standby
-		#print Screens.Standby.quitMainloopCode
-		if Screens.Standby.quitMainloopCode != 1:
-			setStandby = 2 # 0=no standby, but get in standby if wakeup to timer start > 60 sec, 1=standby, 2=no standby, when before was not in deep-standby
+		if Screens.Standby.quitMainloopCode != 1 and Screens.Standby.quitMainloopCode != 45:
+			setStandby = 2 # 0=no standby, but get in standby if wakeup to timer start > 60 sec (not for plugin-timer, here is no standby), 1=standby, 2=no standby, when before was not in deep-standby
 		config.misc.nextWakeup.value = "%d,%d,%d,%d,%d,%d" % (wptime,startTime[0],startTime[1],setStandby,nextRecordTime,forceNextRecord)
 	else:
+		config.misc.nextWakeup.value = "-1,-1,0,0,-1,0"
+		if not boxtype.startswith('azboxm'): #skip for Azbox (mini)ME - setting wakeup time to past reboots box 
+			setFPWakeuptime(int(nowTime) - 3600) #minus one hour -> overwrite old wakeup time
 		print "[mytest.py] no set next wakeup time"
-	print "="*100
 	config.misc.nextWakeup.save()
+	print "="*100
 
 	profile("stopService")
 	session.nav.stopService()
@@ -731,10 +751,6 @@ profile("InputDevice")
 import Components.InputDevice
 Components.InputDevice.InitInputDevices()
 import Components.InputHotplug
-
-profile("SetupDevices")
-import Components.SetupDevices
-Components.SetupDevices.InitSetupDevices()
 
 profile("AVSwitch")
 import Components.AVSwitch
@@ -764,6 +780,9 @@ Components.NetworkTime.AutoNTPSync()
 profile("keymapparser")
 import keymapparser
 keymapparser.readKeymap(config.usage.keymap.value)
+keymapparser.readKeymap(config.usage.keytrans.value)
+if os.path.exists(config.usage.keymap_usermod.value):
+	keymapparser.readKeymap(config.usage.keymap_usermod.value)
 
 profile("Network")
 import Components.Network
@@ -783,6 +802,22 @@ if boxtype in ('uniboxhd1', 'uniboxhd2', 'uniboxhd3', 'sezam5000hd', 'mbtwin', '
 			f.close()
 	except:
 		print "Error disable enable_clock for ini5000 boxes"
+
+if boxtype in ('dm7080', 'dm820', 'dm900', 'dm920', 'gb7252'):
+	f=open("/proc/stb/hdmi-rx/0/hdmi_rx_monitor","r")
+	check=f.read()
+	f.close()
+	if check.startswith("on"):
+		f=open("/proc/stb/hdmi-rx/0/hdmi_rx_monitor","w")
+		f.write("off")
+		f.close()
+	f=open("/proc/stb/audio/hdmi_rx_monitor","r")
+	check=f.read()
+	f.close()
+	if check.startswith("on"):
+		f=open("/proc/stb/audio/hdmi_rx_monitor","w")
+		f.write("off")
+		f.close()
 
 profile("UserInterface")
 import Screens.UserInterfacePositioner

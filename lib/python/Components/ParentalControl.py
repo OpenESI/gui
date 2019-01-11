@@ -18,7 +18,7 @@ LIST_BLACKLIST = "blacklist"
 
 def InitParentalControl():
 	config.ParentalControl = ConfigSubsection()
-	config.ParentalControl.storeservicepin = ConfigSelection(default = "never", choices = [("never", _("never")), ("5", _("%d minutes") % 5), ("30", _("%d minutes") % 30), ("60", _("%d minutes") % 60), ("standby", _("until standby/restart"))])
+	config.ParentalControl.storeservicepin = ConfigSelection(default = "never", choices = [("never", _("never")), ("5", _("5 minutes")), ("30", _("30 minutes")), ("60", _("60 minutes")), ("standby", _("until standby/restart"))])
 	config.ParentalControl.configured = ConfigYesNo(default = False)
 	config.ParentalControl.setuppinactive = ConfigYesNo(default = False)
 	config.ParentalControl.retries = ConfigSubsection()
@@ -37,6 +37,8 @@ def InitParentalControl():
 	config.ParentalControl.config_sections.standby_menu = ConfigYesNo(default = False)
 	config.ParentalControl.config_sections.movie_list = ConfigYesNo(default = False)
 	config.ParentalControl.config_sections.context_menus = ConfigYesNo(default = False)
+	config.ParentalControl.config_sections.infopanel = ConfigYesNo(default = False)
+	config.ParentalControl.config_sections.quickmenu = ConfigYesNo(default = False)
 
 	#Added for backwards compatibility with some 3rd party plugins that depend on this config
 	config.ParentalControl.servicepinactive = config.ParentalControl.configured
@@ -168,7 +170,7 @@ class ParentalControl:
 			self.sessionPinCached = True
 			self.sessionPinTimer.startLongTimer(self.pinIntervalSeconds)
 
-	def servicePinEntered(self, service, result):
+	def servicePinEntered(self, service, result=None):
 		if result is not None and result:
 			self.setSessionPinCached()
 			self.hideBlacklist()

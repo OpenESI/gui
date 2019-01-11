@@ -4,6 +4,8 @@
 #include <lib/dvb/idvb.h>
 #include <list>
 
+#include <lib/dvb/fbc.h>
+
 #ifndef SWIG
 class eSecCommand
 {
@@ -26,7 +28,12 @@ public:
 		START_TUNE_TIMEOUT,
 		SET_ROTOR_MOVING,
 		SET_ROTOR_STOPPED,
-		DELAYED_CLOSE_FRONTEND
+		DELAYED_CLOSE_FRONTEND,
+		TAKEOVER,
+		WAIT_TAKEOVER,
+		RELEASE_TAKEOVER,
+		IF_TUNER_UNLOCKED_GOTO,
+		CHANGE_TUNER_TYPE
 	};
 	int cmd;
 	struct rotor
@@ -244,22 +251,19 @@ public:
 
 	int m_slot_mask; // useable by slot ( 1 | 2 | 4...)
 
-	unsigned int m_lof_hi,	// for 2 band universal lnb 10600 Mhz (high band offset frequency)
-				m_lof_lo,	// for 2 band universal lnb  9750 Mhz (low band offset frequency)
-				m_lof_threshold;	// for 2 band universal lnb 11750 Mhz (band switch frequency)
+	int m_lof_hi,	// for 2 band universal lnb 10600 Mhz (high band offset frequency)
+		m_lof_lo,	// for 2 band universal lnb  9750 Mhz (low band offset frequency)
+		m_lof_threshold;	// for 2 band universal lnb 11750 Mhz (band switch frequency)
 
 	bool m_increased_voltage; // use increased voltage ( 14/18V )
 
-	std::map<int, eDVBSatelliteSwitchParameters> m_satellites;
+	std::multimap<int, eDVBSatelliteSwitchParameters> m_satellites;
 	eDVBSatelliteDiseqcParameters m_diseqc_parameters;
 	eDVBSatelliteRotorParameters m_rotor_parameters;
 
 	int m_prio; // to override automatic tuner management ... -1 is Auto
 #endif
 public:
-#define guard_offset_min (-8000)
-#define guard_offset_max 8000
-#define guard_offset_step 8000
 #define MAX_SATCR 32
 
 #define MAX_EN50607_POSITIONS 		64
@@ -272,14 +276,12 @@ public:
 	int SatCR_positions;
 	int SatCR_idx;
 	int SatCR_format;
+	int SatCR_switch_reliable;
 	unsigned int SatCRvco;
 	unsigned int TuningWord;
+	unsigned int GuardTuningWord;
+	unsigned int GuardTuningWord_a;
 	unsigned int UnicableConfigWord;
-	int old_frequency;
-	int old_polarisation;
-	int old_orbital_position;
-	int guard_offset_old;
-	int guard_offset;
 };
 
 class eDVBRegisteredFrontend;
@@ -314,7 +316,7 @@ private:
 	static eDVBSatelliteEquipmentControl *instance;
 	eDVBSatelliteLNBParameters m_lnbs[144]; // i think its enough
 	int m_lnbidx; // current index for set parameters
-	std::map<int, eDVBSatelliteSwitchParameters>::iterator m_curSat;
+	std::multimap<int, eDVBSatelliteSwitchParameters>::iterator m_curSat;
 	eSmartPtrList<eDVBRegisteredFrontend> &m_avail_frontends, &m_avail_simulate_frontends;
 	int m_rotorMoving;
 	int m_not_linked_slot_mask;
@@ -329,8 +331,8 @@ public:
 #ifndef SWIG
 	eDVBSatelliteEquipmentControl(eSmartPtrList<eDVBRegisteredFrontend> &avail_frontends, eSmartPtrList<eDVBRegisteredFrontend> &avail_simulate_frontends);
 	RESULT prepare(iDVBFrontend &frontend, const eDVBFrontendParametersSatellite &sat, int &frequency, int frontend_id, unsigned int tunetimeout);
-	RESULT prepareSTelectronicSatCR(iDVBFrontend &frontend, eDVBSatelliteLNBParameters &lnb_param, long band, int ifreq, int &tunerfreq, unsigned int &tuningword);
-	RESULT prepareRFmagicCSS(iDVBFrontend &frontend, eDVBSatelliteLNBParameters &lnb_param, long band, int ifreq, int &tunerfreq, unsigned int &tuningword);
+	RESULT prepareSTelectronicSatCR(iDVBFrontend &frontend, eDVBSatelliteLNBParameters &lnb_param, long band, int ifreq, int &tunerfreq, unsigned int &tuningword, int guard_offset);
+	RESULT prepareRFmagicCSS(iDVBFrontend &frontend, eDVBSatelliteLNBParameters &lnb_param, long band, int ifreq, int &tunerfreq, unsigned int &tuningword, int guard_offset);
 	void prepareTurnOffSatCR(iDVBFrontend &frontend); // used for unicable
 	int canTune(const eDVBFrontendParametersSatellite &feparm, iDVBFrontend *, int frontend_id, int *highest_score_lnb=0);
 	bool currentLNBValid() { return m_lnbidx > -1 && m_lnbidx < (int)(sizeof(m_lnbs) / sizeof(eDVBSatelliteLNBParameters)); }
@@ -366,6 +368,7 @@ public:
 	RESULT getMaxMovableLnbNum() {return MAX_MOVABLE_LNBS;}
 /* Unicable Specific Parameters */
 	RESULT setLNBSatCRpositionnumber(int UnicablePositionNumber);
+	RESULT setLNBSatCRTuningAlgo(int SatCR_switch_reliable);
 	RESULT setLNBSatCRformat(int SatCR_format);	//DiSEqc or JESS (or ...)
 	RESULT setLNBSatCR(int SatCR_idx);
 	RESULT setLNBSatCRvco(int SatCRvco);
@@ -389,6 +392,12 @@ public:
 	void setRotorMoving(int, bool); // called from the frontend's
 	bool isRotorMoving();
 	bool canMeasureInputPower() { return m_canMeasureInputPower; }
+
+	PyObject *getBandCutOffFrequency(int slot_no, int orbital_position);
+	PyObject *getFrequencyRangeList(int slot_no, int orbital_position);
+
+	friend class eFBCTunerManager;
+
 };
 
 #endif

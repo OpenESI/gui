@@ -11,11 +11,13 @@
 #include <lib/actions/action.h>
 #include <lib/driver/rc.h>
 #include <lib/base/ioprio.h>
+#include <lib/base/e2avahi.h>
 #include <lib/base/ebase.h>
 #include <lib/base/eenv.h>
 #include <lib/base/eerror.h>
 #include <lib/base/init.h>
 #include <lib/base/init_num.h>
+#include <lib/base/nconfig.h>
 #include <lib/gdi/gmaindc.h>
 #include <lib/gdi/glcddc.h>
 #include <lib/gdi/grc.h>
@@ -31,11 +33,15 @@
 #include <lib/python/connections.h>
 #include <lib/python/python.h>
 #include <lib/python/pythonconfig.h>
+#include <lib/service/servicepeer.h>
 
 #include "bsod.h"
 #include "version_info.h"
 
 #include <gst/gst.h>
+
+#include <lib/base/eerroroutput.h>
+ePtr<eErrorOutput> m_erroroutput;
 
 #ifdef OBJECT_DEBUG
 int object_total_remaining;
@@ -61,12 +67,34 @@ void keyEvent(const eRCKey &key)
 {
 	static eRCKey last(0, 0, 0);
 	static int num_repeat;
+	static int long_press_emulation_pushed = false;
+	static time_t long_press_emulation_start = 0;
 
 	ePtr<eActionMap> ptr;
 	eActionMap::getInstance(ptr);
 	/*eDebug("key.code : %02x \n", key.code);*/
 
-	if ((key.code == last.code) && (key.producer == last.producer) && key.flags & eRCKey::flagRepeat)
+	int flags = key.flags;
+	int long_press_emulation_key = eConfigManager::getConfigIntValue("config.usage.long_press_emulation_key");
+	if ((long_press_emulation_key > 0) && (key.code == long_press_emulation_key))
+	{
+		long_press_emulation_pushed = true;
+		long_press_emulation_start = time(NULL);
+		last = key;
+		return;
+	}
+
+	if (long_press_emulation_pushed && (time(NULL) - long_press_emulation_start < 10) && (key.producer == last.producer))
+	{
+		// emit make-event first
+		ptr->keyPressed(key.producer->getIdentifier(), key.code, key.flags);
+		// then setup condition for long-event
+		num_repeat = 3;
+		last = key;
+		flags = eRCKey::flagRepeat;
+	}
+
+	if ((key.code == last.code) && (key.producer == last.producer) && flags & eRCKey::flagRepeat)
 		num_repeat++;
 	else
 	{
@@ -86,7 +114,9 @@ void keyEvent(const eRCKey &key)
 		ptr->keyPressed(key.producer->getIdentifier(), 510 /* faked KEY_ASCII */, 0);
 	}
 	else
-		ptr->keyPressed(key.producer->getIdentifier(), key.code, key.flags);
+		ptr->keyPressed(key.producer->getIdentifier(), key.code, flags);
+
+	long_press_emulation_pushed = false;
 }
 
 /************************************************/
@@ -98,7 +128,7 @@ void keyEvent(const eRCKey &key)
 #include <lib/dvb/dvbtime.h>
 #include <lib/dvb/epgcache.h>
 
-class eMain: public eApplication, public Object
+class eMain: public eApplication, public sigc::trackable
 {
 	eInit init;
 	ePythonConfigQuery config;
@@ -111,6 +141,8 @@ class eMain: public eApplication, public Object
 public:
 	eMain()
 	{
+		e2avahi_init(this);
+		init_servicepeer();
 		init.setRunlevel(eAutoInitNumbers::main);
 		/* TODO: put into init */
 		m_dvbdb = new eDVBDB();
@@ -124,6 +156,8 @@ public:
 	{
 		m_dvbdb->saveServicelist();
 		m_mgr->releaseCachedChannel();
+		done_servicepeer();
+		e2avahi_close();
 	}
 };
 
@@ -225,6 +259,17 @@ int main(int argc, char **argv)
 
 	gst_init(&argc, &argv);
 
+	for (int i = 0; i < argc; i++)
+	{
+		if (!(strcmp(argv[i], "--debug-no-color")) or !(strcmp(argv[i], "--nc")))
+		{
+			logOutputColors = 0;
+		}
+	}
+
+	m_erroroutput = new eErrorOutput();
+	m_erroroutput->run();
+
 	// set pythonpath if unset
 	setenv("PYTHONPATH", eEnv::resolve("${libdir}/enigma2/python").c_str(), 0);
 	printf("PYTHONPATH: %s\n", getenv("PYTHONPATH"));
@@ -311,7 +356,7 @@ int main(int argc, char **argv)
 
 	gRC::getInstance()->setSpinnerDC(my_dc);
 
-	eRCInput::getInstance()->keyEvent.connect(slot(keyEvent));
+	eRCInput::getInstance()->keyEvent.connect(sigc::ptr_fun(&keyEvent));
 
 	printf("executing main\n");
 
@@ -344,7 +389,7 @@ int main(int argc, char **argv)
 		p.clear();
 		p.flush();
 	}
-
+	m_erroroutput = NULL;
 	return exit_code;
 }
 
@@ -395,6 +440,8 @@ void setAnimation_speed(int speed)
 	gles_set_animation_speed(speed);
 }
 #else
+#ifndef HAVE_OSDANIMATION
 void setAnimation_current(int a) {}
 void setAnimation_speed(int speed) {}
+#endif
 #endif

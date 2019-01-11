@@ -7,7 +7,7 @@
 #define TABLE_eDebug(x...) do { if (m_debug) eDebug(x); } while(0)
 #define TABLE_eDebugNoNewLine(x...) do { if (m_debug) eDebugNoNewLine(x); } while(0)
 
-class eGTable: public iObject, public Object
+class eGTable: public iObject, public sigc::trackable
 {
 	DECLARE_REF(eGTable);
 	ePtr<iDVBSectionReader> m_reader;
@@ -25,7 +25,7 @@ protected:
 	virtual int createTable(unsigned int nr, const uint8_t *data, unsigned int max)=0;
 	virtual unsigned int totalSections(unsigned int max) { return max + 1; }
 public:
-	Signal1<void, int> tableReady;
+	sigc::signal1<void, int> tableReady;
 	eGTable();
 	RESULT start(iDVBSectionReader *reader, const eDVBTableSpec &table);
 	RESULT start(iDVBDemux *reader, const eDVBTableSpec &table);
@@ -41,6 +41,7 @@ class eTable: public eGTable
 private:
 	std::vector<Section*> sections;
 	std::set<int> avail;
+	unsigned char m_section_data[4096];
 protected:
 	int createTable(unsigned int nr, const uint8_t *data, unsigned int max)
 	{
@@ -53,6 +54,9 @@ protected:
 		}
 		if (avail.find(nr) != avail.end())
 			delete sections[nr];
+
+		memset(m_section_data, 0, 4096);
+		memcpy(m_section_data, data, 4096);
 
 		sections.resize(max);
 		sections[nr] = new Section(data);
@@ -75,6 +79,7 @@ protected:
 	}
 public:
 	std::vector<Section*> &getSections() { return sections; }
+	unsigned char* getBufferData() { return m_section_data; }
 	~eTable()
 	{
 		for (std::set<int>::iterator i(avail.begin()); i != avail.end(); ++i)
@@ -82,12 +87,12 @@ public:
 	}
 };
 
-class eAUGTable: public Object
+class eAUGTable: public sigc::trackable
 {
 protected:
 	void slotTableReady(int);
 public:
-	Signal1<void, int> tableReady;
+	sigc::signal1<void, int> tableReady;
 	virtual void getNext(int err)=0;
 };
 

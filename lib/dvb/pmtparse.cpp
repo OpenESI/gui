@@ -24,6 +24,7 @@ void eDVBPMTParser::clearProgramInfo(program &program)
 	program.videoStreams.clear();
 	program.audioStreams.clear();
 	program.subtitleStreams.clear();
+	program.caids.clear();
 	program.pcrPid = -1;
 	program.pmtPid = -1;
 	program.textPid = -1;
@@ -96,6 +97,19 @@ int eDVBPMTParser::getProgramInfo(program &program)
 					video.type = videoStream::vtMPEG4_H264;
 					isvideo = 1;
 					//break; fall through !!!
+				case 0x24: // H265 HEVC
+				case 0x27: // H265 HEVC
+					if (!isvideo)
+					{
+						video.type = videoStream::vtH265_HEVC;
+						isvideo = 1;
+					}
+				case 0x42: // CAVS
+					if (!isvideo)
+					{
+						video.type = videoStream::vtCAVS;
+						isvideo = 1;
+					}
 				case 0x10: // MPEG 4 Part 2
 					if (!isvideo)
 					{
@@ -153,6 +167,13 @@ int eDVBPMTParser::getProgramInfo(program &program)
 					{
 						isaudio = 1;
 						audio.type = audioStream::atDTS;
+					}
+				case 0x84: // DDP (blueray)
+				case 0x87: // DDP (ATSC)
+					if (!isvideo && !isaudio)
+					{
+						isaudio = 1;
+						audio.type = audioStream::atDDP;
 					}
 				case 0x85: // bluray DTS-HD HRA(dvb user private...)
 				case 0x86: // bluray DTS-HD MA(dvb user private...)
@@ -296,6 +317,10 @@ int eDVBPMTParser::getProgramInfo(program &program)
 										isvideo = 1;
 									}
 								}
+								case 0x48455643: /*HEVC */
+									isvideo = 1;
+									video.type = videoStream::vtH265_HEVC;
+									break;
 								default:
 									break;
 								}

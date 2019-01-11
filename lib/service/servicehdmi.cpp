@@ -103,7 +103,7 @@ long long eStaticServiceHDMIInfo::getFileSize(const eServiceReference &ref)
 }
 
 eServiceHDMI::eServiceHDMI(eServiceReference ref)
- : m_ref(ref), m_decoder_index(0)
+ : m_ref(ref), m_decoder_index(0), m_noaudio(false)
 {
 
 }
@@ -114,7 +114,7 @@ eServiceHDMI::~eServiceHDMI()
 
 DEFINE_REF(eServiceHDMI);
 
-RESULT eServiceHDMI::connectEvent(const Slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection)
+RESULT eServiceHDMI::connectEvent(const sigc::slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection)
 {
 	connection = new eConnection((iPlayableService*)this, m_event.connect(event));
 	return 0;
@@ -124,7 +124,8 @@ RESULT eServiceHDMI::start()
 {
 	m_decoder = new eTSMPEGDecoder(NULL, m_decoder_index);
 	m_decoder->setVideoPID(1, 0);
-	m_decoder->setAudioPID(1, 0);
+	if (!m_noaudio)
+		m_decoder->setAudioPID(1, 0);
 	m_decoder->play();
 	m_event(this, evStart);
 	return 0;
@@ -137,9 +138,10 @@ RESULT eServiceHDMI::stop()
 	return 0;
 }
 
-RESULT eServiceHDMI::setTarget(int target)
+RESULT eServiceHDMI::setTarget(int target, bool noaudio = false)
 {
 	m_decoder_index = target;
+	m_noaudio = noaudio;
 	return 0;
 }
 
@@ -318,7 +320,7 @@ RESULT eServiceHDMIRecord::frontendInfo(ePtr<iFrontendInformation> &ptr)
 	return 0;
 }
 
-RESULT eServiceHDMIRecord::connectEvent(const Slot2<void,iRecordableService*,int> &event, ePtr<eConnection> &connection)
+RESULT eServiceHDMIRecord::connectEvent(const sigc::slot2<void,iRecordableService*,int> &event, ePtr<eConnection> &connection)
 {
 	connection = new eConnection((iRecordableService*)this, m_event.connect(event));
 	return 0;

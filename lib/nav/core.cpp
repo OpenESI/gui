@@ -1,6 +1,8 @@
 #include <lib/nav/core.h>
 #include <lib/base/eerror.h>
 #include <lib/python/python.h>
+#include <lib/dvb/idvb.h>
+#include <lib/dvb/dvb.h>
 
 eNavigation* eNavigation::instance;
 
@@ -33,19 +35,19 @@ RESULT eNavigation::playService(const eServiceReference &service)
 	if (m_runningService)
 	{
 		m_runningService->setTarget(m_decoder);
-		m_runningService->connectEvent(slot(*this, &eNavigation::serviceEvent), m_service_event_conn);
+		m_runningService->connectEvent(sigc::mem_fun(*this, &eNavigation::serviceEvent), m_service_event_conn);
 		res = m_runningService->start();
 	}
 	return res;
 }
 
-RESULT eNavigation::connectEvent(const Slot1<void,int> &event, ePtr<eConnection> &connection)
+RESULT eNavigation::connectEvent(const sigc::slot1<void,int> &event, ePtr<eConnection> &connection)
 {
 	connection = new eConnection(this, m_event.connect(event));
 	return 0;
 }
 
-RESULT eNavigation::connectRecordEvent(const Slot2<void,ePtr<iRecordableService>,int> &event, ePtr<eConnection> &connection)
+RESULT eNavigation::connectRecordEvent(const sigc::slot2<void,ePtr<iRecordableService>,int> &event, ePtr<eConnection> &connection)
 {
 	connection = new eConnection(this, m_record_event.connect(event));
 	return 0;
@@ -91,7 +93,7 @@ RESULT eNavigation::recordService(const eServiceReference &ref, ePtr<iRecordable
 		else
 		{
 			ePtr<eConnection> conn;
-			service->connectEvent(slot(*this, &eNavigation::recordEvent), conn);
+			service->connectEvent(sigc::mem_fun(*this, &eNavigation::recordEvent), conn);
 			m_recordings[service]=conn;
 			m_recordings_services[service]=ref;
 			m_recordings_types[service]=type;
@@ -191,6 +193,25 @@ void eNavigation::getRecordingsTypesOnly(std::vector<pNavigation::RecordType> &r
 		}
 		//else
 		//	eDebug("[core.cpp] getRecordingsTypesOnly: not returning type %d (asked for type %d)", m_recordings_types[it->first], type);
+	}
+}
+
+void eNavigation::getRecordingsSlotIDsOnly(std::vector<int> &slotids, pNavigation::RecordType type)
+{
+	for (std::map<ePtr<iRecordableService>, eServiceReference >::iterator it(m_recordings_services.begin()); it != m_recordings_services.end(); ++it)
+	{
+		if (m_recordings_types[it->first] & type)
+		{
+			ePtr<iFrontendInformation> fe_info;
+			it->first->frontendInfo(fe_info);
+			if (fe_info)
+				slotids.push_back(fe_info->getFrontendInfo(iFrontendInformation_ENUMS::frontendNumber));
+			else
+				slotids.push_back(-1);
+		//	eDebug("[core.cpp] getRecordingsSlotIDsOnly: returning type %d (asked for type %d)", m_recordings_types[it->first], type);
+		}
+		//else
+		//	eDebug("[core.cpp] getRecordingsSlotIDsOnly: not returning type %d (asked for type %d)", m_recordings_types[it->first], type);
 	}
 }
 

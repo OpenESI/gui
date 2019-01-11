@@ -31,7 +31,7 @@ protected:
 	void cursorRestore();
 	int size();
 
-	RESULT connectItemChanged(const Slot0<void> &itemChanged, ePtr<eConnection> &connection);
+	RESULT connectItemChanged(const sigc::slot0<void> &itemChanged, ePtr<eConnection> &connection);
 
 	// void setOutputDevice ? (for allocating colors, ...) .. requires some work, though
 	void setSize(const eSize &size);
@@ -100,6 +100,7 @@ private:
 #define BT_ALPHABLEND 2
 #define BT_SCALE 4
 #define BT_KEEP_ASPECT_RATIO 8
+#define BT_FIXRATIO 8
 #endif // SWIG
 
 #endif

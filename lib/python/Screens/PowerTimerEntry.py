@@ -9,13 +9,16 @@ from Components.Label import Label
 from Components.Sources.StaticText import StaticText
 from Components.Pixmap import Pixmap
 from Components.SystemInfo import SystemInfo
+from Components.Sources.Boolean import Boolean
 from PowerTimer import AFTEREVENT, TIMERTYPE
 from time import localtime, mktime, time, strftime
 from datetime import datetime
+from Screens.Setup import SetupSummary
 
 class TimerEntry(Screen, ConfigListScreen):
 	def __init__(self, session, timer):
 		Screen.__init__(self, session)
+		self.setup_title = _("Timer entry")
 		self.timer = timer
 
 		self.entryDate = None
@@ -23,12 +26,17 @@ class TimerEntry(Screen, ConfigListScreen):
 
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
+		self["VKeyIcon"] = Boolean(False)
 
+		self["locationdescription"] = Label("")
+		self["locationfreespace"] = Label("")
+		self["description"] = Label("")
 		self["oktext"] = Label(_("OK"))
 		self["canceltext"] = Label(_("Cancel"))
 		self["ok"] = Pixmap()
 		self["cancel"] = Pixmap()
 		self["summary_description"] = StaticText("")
+		self["description"] = Label("")
 
 		self.createConfig()
 
@@ -121,7 +129,7 @@ class TimerEntry(Screen, ConfigListScreen):
 		self.timerentry_repeated = ConfigSelection(default = repeated, choices = [("daily", _("daily")), ("weekly", _("weekly")), ("weekdays", _("Mon-Fri")), ("user", _("user defined"))])
 		self.timerrntry_autosleepdelay = ConfigSelection(choices = time_table, default = self.timer.autosleepdelay)
 		self.timerentry_autosleeprepeat = ConfigSelection(choices = [("once",_("once")), ("repeated", _("repeated"))], default = self.timer.autosleeprepeat)
-		self.timerrntry_autosleepinstandbyonly = ConfigSelection(choices = [("yes",_("Yes")), ("no", _("No"))],default = self.timer.autosleepinstandbyonly)
+		self.timerrntry_autosleepinstandbyonly = ConfigSelection(choices = [("yes",_("only in Standby")), ("no", _("Standard (always)")), ("noquery", _("without Query"))],default = self.timer.autosleepinstandbyonly)
 		self.timerrntry_autosleepwindow = ConfigSelection(choices = [("yes",_("Yes")), ("no", _("No"))],default = self.timer.autosleepwindow)
 		self.timerrntry_autosleepbegin = ConfigClock(default = self.timer.autosleepbegin)
 		self.timerrntry_autosleepend = ConfigClock(default = self.timer.autosleepend)
@@ -172,7 +180,7 @@ class TimerEntry(Screen, ConfigListScreen):
 
 		if self.timerentry_timertype.value == "autostandby" or self.timerentry_timertype.value == "autodeepstandby":
 			if self.timerentry_timertype.value == "autodeepstandby":
-				self.list.append(getConfigListEntry(_("Only active when in standby"), self.timerrntry_autosleepinstandbyonly))
+				self.list.append(getConfigListEntry(_("Execution condition"), self.timerrntry_autosleepinstandbyonly, _("The setting 'without query' is the same as 'standard' without additional confirmation query. All other dependencies (e.g. recordings, time range) stay persist.")))
 			self.list.append(getConfigListEntry(_("Sleep delay"), self.timerrntry_autosleepdelay))
 			self.list.append(getConfigListEntry(_("Repeat type"), self.timerentry_autosleeprepeat))
 
@@ -229,13 +237,23 @@ class TimerEntry(Screen, ConfigListScreen):
 
 		self[widget].list = self.list
 		self[widget].l.setList(self.list)
-		self.checkSummary()
+
+	def layoutFinished(self):
+		self.setTitle(_(self.setup_title))
 
 	def createSummary(self):
-		pass
+		return SetupSummary
 
-	def checkSummary(self):
-		self["summary_description"].text = self["config"].getCurrent()[0]
+	# for summary:
+	def changedEntry(self):
+		for x in self.onChangedEntry:
+			x()
+
+	def getCurrentEntry(self):
+		return self["config"].getCurrent() and self["config"].getCurrent()[0] or ""
+
+	def getCurrentValue(self):
+		return self["config"].getCurrent() and str(self["config"].getCurrent()[1].getText()) or ""
 
 	def newConfig(self):
 		if self["config"].getCurrent() in (self.timerType, self.timerTypeEntry, self.frequencyEntry, self.entryShowEndTime, self.autosleepwindowEntry, self.netExtendedEntry, self.nettrafficEntry, self.netipEntry, self.ipcountEntry):
@@ -255,11 +273,9 @@ class TimerEntry(Screen, ConfigListScreen):
 
 	def keyUp(self):
 		self["config"].moveUp()
-		self.checkSummary()
 
 	def keyDown(self):
 		self["config"].moveDown()
-		self.checkSummary()
 
 	def getTimestamp(self, date, mytime):
 		d = localtime(date)
@@ -439,7 +455,7 @@ class TimerLog(Screen):
 		self.updateText()
 
 	def fillLogList(self):
-		self.list = [(str(strftime("%Y-%m-%d %H-%M", localtime(x[0])) + " - " + x[2]), x) for x in self.log_entries]
+		self.list = [(str(strftime(_("%Y-%m-%d %H-%M"), localtime(x[0])) + " - " + x[2]), x) for x in self.log_entries]
 
 	def clearLog(self):
 		self.log_entries = []

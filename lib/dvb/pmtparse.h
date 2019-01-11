@@ -9,7 +9,7 @@
 #include <dvbsi++/program_association_section.h>
 #include <dvbsi++/application_information_section.h>
 
-class eDVBPMTParser: public Object
+class eDVBPMTParser: public sigc::trackable
 {
 protected:
 	eAUTable<eTable<ProgramMapSection> > m_PMT;
@@ -23,7 +23,7 @@ public:
 	{
 		int pid;
 		int component_tag;
-		enum { vtMPEG2, vtMPEG4_H264, vtMPEG1, vtMPEG4_Part2, vtVC1, vtVC1_SM };
+		enum { vtMPEG2, vtMPEG4_H264, vtMPEG1, vtMPEG4_Part2, vtVC1, vtVC1_SM, vtH265_HEVC, vtCAVS };
 		int type;
 	};
 

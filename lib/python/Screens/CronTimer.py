@@ -4,6 +4,7 @@ from Components.ConfigList import ConfigListScreen
 from Components.Console import Console
 from Components.Label import Label
 from Components.Sources.List import List
+from Components.Sources.StaticText import StaticText
 from Components.Pixmap import Pixmap
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -35,7 +36,7 @@ class CronTimers(Screen):
 
 		self['key_red'] = Label(_("Delete"))
 		self['key_green'] = Label(_("Add"))
-		self['key_yellow'] = Label(_("Start"))
+		self['key_yellow'] = StaticText(_("Start"))
 		self['key_blue'] = Label(_("Autostart"))
 		self.list = []
 		self['list'] = List(self.list)
@@ -44,6 +45,7 @@ class CronTimers(Screen):
 			self["list"].onSelectionChanged.append(self.selectionChanged)
 		self.service_name = 'busybox-cron'
 		self.InstallCheck()
+		
 
 	def InstallCheck(self):
 		self.Console.ePopen('/usr/bin/opkg list_installed ' + self.service_name, self.checkNetworkState)
@@ -189,20 +191,20 @@ class CronTimers(Screen):
 				if len(parts)>5 and not parts[0].startswith("#"):
 					if parts[1] == '*':
 						line2 = 'H: 00:' + parts[0].zfill(2) + '\t'
-						for i in range(5, len(parts)-1):
+						for i in range(5, len(parts)):
 							line2 = line2 + parts[i] + ' '
 						res = (line2, line)
 						self.list.append(res)
 					elif parts[2] == '*' and parts[4] == '*':
 						line2 = 'D: ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t'
-						for i in range(5, len(parts)-1):
+						for i in range(5, len(parts)):
 							line2 = line2 + parts[i] + ' '
 						res = (line2, line)
 						self.list.append(res)
 					elif parts[3] == '*':
 						if parts[4] == "*":
 							line2 = 'M:  Day ' + parts[2] + '  ' + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t'
-							for i in range(5, len(parts)-1):
+							for i in range(5, len(parts)):
 								line2 = line2 + parts[i] + ' '
 						header = 'W:  '
 						day = ""
@@ -223,7 +225,7 @@ class CronTimers(Screen):
 
 						if day:
 							line2 = header + day + parts[1].zfill(2) + ':' + parts[0].zfill(2) + '\t'
-							for i in range(5, len(parts)-1):
+							for i in range(5, len(parts)):
 								line2 = line2 + parts[i] + ' '
 						res = (line2, line)
 						self.list.append(res)
@@ -281,6 +283,8 @@ class CronTimersConfig(Screen, ConfigListScreen):
 		self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'VirtualKeyboardActions', "MenuActions"], {'red': self.close,'green': self.checkentry, 'back': self.close, 'showVirtualKeyboard': self.KeyText, "menu": self.closeRecursive})
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
+		self['footnote'] = Label()
+		self['description'] = Label()
 		self.createSetup()
 
 	def createSetup(self):
@@ -305,7 +309,7 @@ class CronTimersConfig(Screen, ConfigListScreen):
 		if config.crontimers.runwhen.value == 'Weekly':
 			self.list.append(getConfigListEntry(_("What Day of week ?"), config.crontimers.dayofweek))
 		if config.crontimers.runwhen.value == 'Monthly':
-			self.list.append(getConfigListEntry(_("What date of month ?"), config.crontimers.dayofmonth))
+			self.list.append(getConfigListEntry(_("What Day of month ?"), config.crontimers.dayofmonth))
 		self.list.append(getConfigListEntry(_("Command type"), config.crontimers.commandtype))
 		if config.crontimers.commandtype.value == 'custom':
 			self.list.append(getConfigListEntry(_("Command To Run"), config.crontimers.user_command))
@@ -340,7 +344,7 @@ class CronTimersConfig(Screen, ConfigListScreen):
 	def checkentry(self):
 		msg = ''
 		if (config.crontimers.commandtype.value == 'predefined' and config.crontimers.predefined_command.value == '') or config.crontimers.commandtype.value == 'custom' and config.crontimers.user_command.value == '':
-			msg = 'You must set at least one Command'
+			msg = _("You must set at least one Command")
 		if msg:
 			self.session.open(MessageBox, msg, MessageBox.TYPE_ERROR)
 		else:

@@ -1,5 +1,1 @@
-Enigma2
-
------------
-
-EuroSat E2
+OpenESI ENIGMA2

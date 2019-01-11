@@ -1,12 +1,21 @@
 import os
 from enigma import eConsoleAppContainer
 from Components.Harddisk import harddiskmanager
-from Components.config import config
+from Components.config import config, ConfigSubsection, ConfigYesNo
 from shutil import rmtree
 from boxbranding import getImageDistro, getImageVersion
 
 opkgDestinations = []
 opkgStatusPath = ''
+
+def Load_defaults():
+	config.plugins.softwaremanager = ConfigSubsection()
+	config.plugins.softwaremanager.overwriteSettingsFiles = ConfigYesNo(default=False)
+	config.plugins.softwaremanager.overwriteDriversFiles = ConfigYesNo(default=True)
+	config.plugins.softwaremanager.overwriteEmusFiles = ConfigYesNo(default=True)
+	config.plugins.softwaremanager.overwritePiconsFiles = ConfigYesNo(default=True)
+	config.plugins.softwaremanager.overwriteBootlogoFiles = ConfigYesNo(default=True)
+	config.plugins.softwaremanager.overwriteSpinnerFiles = ConfigYesNo(default=True)
 
 def opkgExtraDestinations():
 	global opkgDestinations
@@ -151,6 +160,12 @@ class IpkgComponent:
 	def parseLine(self, data):
 		if self.currentCommand in (self.CMD_LIST, self.CMD_UPGRADE_LIST):
 			item = data.split(' - ', 2)
+			try:
+				# workaround when user use update with own button config
+				if config.plugins.softwaremanager.overwriteSettingsFiles.value:
+					pass
+			except:
+				Load_defaults()
 			if item[0].find('-settings-') > -1 and not config.plugins.softwaremanager.overwriteSettingsFiles.value:
 				self.excludeList.append(item)
 				return
@@ -166,7 +181,7 @@ class IpkgComponent:
 			elif item[0].find('-bootlogo') > -1 and not config.plugins.softwaremanager.overwriteBootlogoFiles.value:
 				self.excludeList.append(item)
 				return
-			elif item[0].find('eurosat-spinner') > -1 and not config.plugins.softwaremanager.overwriteSpinnerFiles.value:
+			elif item[0].find('openesi-spinner') > -1 and not config.plugins.softwaremanager.overwriteSpinnerFiles.value:
 				self.excludeList.append(item)
 				return
 			else:

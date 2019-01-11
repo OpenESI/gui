@@ -12,6 +12,8 @@
 #include <lib/dvb/sec.h>
 #include <lib/dvb/specs.h>
 
+#include <lib/dvb/fbc.h>
+
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -30,6 +32,14 @@ DEFINE_REF(eDVBAllocatedFrontend);
 eDVBAllocatedFrontend::eDVBAllocatedFrontend(eDVBRegisteredFrontend *fe): m_fe(fe)
 {
 	m_fe->inc_use();
+	if (m_fe->m_frontend->is_FBCTuner())
+	{
+		eFBCTunerManager* fbcmng = eFBCTunerManager::getInstance();
+		if (fbcmng)
+		{
+			fbcmng->unLink(m_fe);
+		}
+	}
 }
 
 eDVBAllocatedFrontend::~eDVBAllocatedFrontend()
@@ -120,6 +130,14 @@ eDVBResourceManager::eDVBResourceManager()
 		m_boxtype = DM7080;
 	else if (!strncmp(tmp, "dm820\n", rd))
 		m_boxtype = DM820;
+	else if (!strncmp(tmp, "dm520\n", rd))
+		m_boxtype = DM520;
+	else if (!strncmp(tmp, "dm525\n", rd))
+		m_boxtype = DM525;
+	else if (!strncmp(tmp, "dm900\n", rd))
+		m_boxtype = DM900;
+	else if (!strncmp(tmp, "dm920\n", rd))
+		m_boxtype = DM920;
 	else if (!strncmp(tmp, "Gigablue\n", rd))
 		m_boxtype = GIGABLUE;
 	else if (!strncmp(tmp, "gb800solo\n", rd))
@@ -144,9 +162,19 @@ eDVBResourceManager::eDVBResourceManager()
 		m_boxtype = GIGABLUE;
 	else if (!strncmp(tmp, "gbultraue\n", rd))
 		m_boxtype = GIGABLUE;
+	else if (!strncmp(tmp, "gbultraueh\n", rd))
+		m_boxtype = GIGABLUE;
 	else if (!strncmp(tmp, "gbx1\n", rd))
 		m_boxtype = GIGABLUE;
+	else if (!strncmp(tmp, "gbx2\n", rd))
+		m_boxtype = GIGABLUE;
 	else if (!strncmp(tmp, "gbx3\n", rd))
+		m_boxtype = GIGABLUE;
+	else if (!strncmp(tmp, "gbx3h\n", rd))
+		m_boxtype = GIGABLUE;
+	else if (!strncmp(tmp, "gbquad4k\n", rd))
+		m_boxtype = GIGABLUE;
+	else if (!strncmp(tmp, "gbue4k\n", rd))
 		m_boxtype = GIGABLUE;
 	else if (!strncmp(tmp, "ebox5000\n", rd))
 		m_boxtype = DM800;
@@ -156,6 +184,12 @@ eDVBResourceManager::eDVBResourceManager()
 		m_boxtype = DM800;
 	else if (!strncmp(tmp, "ebox7358\n", rd))
 		m_boxtype = DM800SE;
+	else if (!strncmp(tmp, "wetekplay\n", rd))
+		m_boxtype = WETEKPLAY;
+	else if (!strncmp(tmp, "wetekplay2\n", rd))
+		m_boxtype = WETEKPLAY2;
+	else if (!strncmp(tmp, "wetekhub\n", rd))
+		m_boxtype = WETEKHUB;
 	else {
 		eDebug("boxtype detection via /proc/stb/info not possible... use fallback via demux count!\n");
 		if (m_demux.size() == 3)
@@ -169,6 +203,8 @@ eDVBResourceManager::eDVBResourceManager()
 	eDebug("found %zd adapter, %zd frontends(%zd sim) and %zd demux, boxtype %d",
 		m_adapter.size(), m_frontend.size(), m_simulate_frontend.size(), m_demux.size(), m_boxtype);
 
+	m_fbc_mng = new eFBCTunerManager(this);
+	
 	CONNECT(m_releaseCachedChannelTimer->timeout, eDVBResourceManager::releaseCachedChannel);
 }
 
@@ -298,6 +334,11 @@ bool eDVBAdapterLinux::isusb(int nr)
 {
 	char devicename[256];
 	snprintf(devicename, sizeof(devicename), "/sys/class/dvb/dvb%d.frontend0/device/ep_00", nr);
+	if (::access(devicename, X_OK) >= 0)
+	{
+		return true;
+	}
+	snprintf(devicename, sizeof(devicename), "/sys/class/dvb/dvb%d.frontend0/device/ep_84", nr);
 	return ::access(devicename, X_OK) >= 0;
 }
 
@@ -312,34 +353,41 @@ eDVBUsbAdapter::eDVBUsbAdapter(int nr)
 	char filename[256];
 	char name[128] = {0};
 	int vtunerid = nr - 1;
-	char *line;
-	size_t line_size = 256;
+	char buffer[4*1024];
+	char* buf_pos;
+	ssize_t rd;
+	int fd;
 
 	pumpThread = 0;
 
 	int num_fe = 0;
-	
+
 	demuxFd = vtunerFd = pipeFd[0] = pipeFd[1] = -1;
 
 	/* we need to know exactly what frontend is internal or initialized! */
-	CFile f("/proc/bus/nim_sockets", "r");
-	if (!f)
+	fd = open("/proc/bus/nim_sockets", O_RDONLY);
+	if (fd < 0)
 	{
 		eDebug("Cannot open /proc/bus/nim_sockets");
 		goto error;
 	}
-	
-	line = (char*) malloc(line_size);
-	while (getline(&line, &line_size, f) != -1)
+	rd = read(fd, buffer, sizeof(buffer));
+	if (rd < 0)
+	{
+		eDebug("Cannot read /proc/bus/nim_sockets");
+		goto error;
+	}
+	buf_pos = buffer;
+	while ((buf_pos = strstr(buf_pos, "Frontend_Device: ")) != NULL)
 	{
 		int num_fe_tmp;
-		if (sscanf(line, "%*[ \t]Frontend_Device: %d", &num_fe_tmp) == 1)
+		if (sscanf(buf_pos, "Frontend_Device: %d", &num_fe_tmp) == 1)
 		{
 			if (num_fe_tmp > num_fe)
 				num_fe = num_fe_tmp;
 		}
+		buf_pos += 1;
 	}
-	free(line);
 	num_fe++;
 	snprintf(filename, sizeof(filename), "/dev/dvb/adapter0/frontend%d", num_fe);
 	virtualFrontendName = filename;
@@ -448,6 +496,16 @@ eDVBUsbAdapter::eDVBUsbAdapter(int nr)
 		goto error;
 	}
 
+#ifdef VMSG_TYPE2
+#define VTUNER_GET_MESSAGE  11
+#define VTUNER_SET_RESPONSE 12
+#define VTUNER_SET_NAME     13
+#define VTUNER_SET_TYPE     14
+#define VTUNER_SET_HAS_OUTPUTS 15
+#define VTUNER_SET_FE_INFO  16
+#define VTUNER_SET_NUM_MODES 17
+#define VTUNER_SET_MODES 18
+#else
 #define VTUNER_GET_MESSAGE  1
 #define VTUNER_SET_RESPONSE 2
 #define VTUNER_SET_NAME     3
@@ -456,6 +514,7 @@ eDVBUsbAdapter::eDVBUsbAdapter(int nr)
 #define VTUNER_SET_FE_INFO  6
 #define VTUNER_SET_NUM_MODES 7
 #define VTUNER_SET_MODES 8
+#endif
 #define VTUNER_SET_DELSYS 32
 #define VTUNER_SET_ADAPTER 33
 	ioctl(vtunerFd, VTUNER_SET_NAME, name);
@@ -537,7 +596,7 @@ void *eDVBUsbAdapter::vtunerPump()
 		unsigned char pad[64]; /* nobody knows the much data the driver will try to copy into our struct, add some padding to be sure */
 	};
 
-#define DEMUX_BUFFER_SIZE (8 * ((188 / 4) * 4096)) /* 1.5MB */
+#define DEMUX_BUFFER_SIZE (16 * 1024 * 188 ) /* 3 MB */
 	ioctl(demuxFd, DMX_SET_BUFFER_SIZE, DEMUX_BUFFER_SIZE);
 
 	while (running)
@@ -572,6 +631,7 @@ void *eDVBUsbAdapter::vtunerPump()
 
 						if (pidcount > 1)
 						{
+							eDebug("[adenin]rmove PID %d(0x%04x)", pidList[i], pidList[i]);
 							::ioctl(demuxFd, DMX_REMOVE_PID, &pidList[i]);
 							pidcount--;
 						}
@@ -592,6 +652,7 @@ void *eDVBUsbAdapter::vtunerPump()
 
 						if (pidcount)
 						{
+							eDebug("[adenin]add PID %d(0x%04x)", message.pidlist[i], message.pidlist[i]);
 							::ioctl(demuxFd, DMX_ADD_PID, &message.pidlist[i]);
 							pidcount++;
 						}
@@ -806,7 +867,60 @@ bool eDVBResourceManager::frontendIsCompatible(int index, const char *type)
 	return false;
 }
 
-void eDVBResourceManager::setFrontendType(int index, const char *type)
+int eDVBResourceManager::getFrontendType(int index)
+{
+	for (eSmartPtrList<eDVBRegisteredFrontend>::iterator i(m_frontend.begin()); i != m_frontend.end(); ++i)
+	{
+		if (i->m_frontend->getSlotID() == index)
+			return i->m_frontend->getCurrentType();
+	}
+	return -1;
+}
+
+bool eDVBResourceManager::frontendIsMultistream(int index)
+{
+	for (eSmartPtrList<eDVBRegisteredFrontend>::iterator i(m_frontend.begin()); i != m_frontend.end(); ++i)
+	{
+		if (i->m_frontend->getSlotID() == index)
+		{
+			return i->m_frontend->is_multistream();
+		}
+	}
+	return false;
+}
+
+std::string eDVBResourceManager::getFrontendCapabilities(int index)
+{
+	fe_delivery_system_t delsys;
+	for (eSmartPtrList<eDVBRegisteredFrontend>::iterator i(m_frontend.begin()); i != m_frontend.end(); ++i)
+	{
+		if (i->m_frontend->getSlotID() == index)
+		{
+			switch (i->m_frontend->getCurrentType())
+			{
+				case iDVBFrontend::feSatellite:
+					delsys = SYS_DVBS;
+					break;
+				case iDVBFrontend::feCable:
+#if defined SYS_DVBC_ANNEX_A
+					delsys = SYS_DVBC_ANNEX_A;
+#else
+					delsys = SYS_DVBC_ANNEX_AC;
+#endif
+					break;
+				case iDVBFrontend::feTerrestrial:
+					delsys = SYS_DVBT;
+					break;
+				default:
+					return i->m_frontend->getCapabilities();
+			}
+			return i->m_frontend->getCapabilities(delsys);
+		}
+	}
+	return "";
+}
+
+void eDVBResourceManager::setFrontendType(int index, const char *type, bool append)
 {
 	for (eSmartPtrList<eDVBRegisteredFrontend>::iterator i(m_frontend.begin()); i != m_frontend.end(); ++i)
 	{
@@ -837,22 +951,40 @@ void eDVBResourceManager::setFrontendType(int index, const char *type)
 				whitelist.push_back(SYS_ATSC);
 				whitelist.push_back(SYS_DVBC_ANNEX_B);
 			}
-			i->m_frontend->setDeliverySystemWhitelist(whitelist);
+			i->m_frontend->setDeliverySystemWhitelist(whitelist, append);
 			break;
 		}
 	}
 }
 
-RESULT eDVBResourceManager::allocateFrontend(ePtr<eDVBAllocatedFrontend> &fe, ePtr<iDVBFrontendParameters> &feparm, bool simulate)
+RESULT eDVBResourceManager::allocateFrontend(ePtr<eDVBAllocatedFrontend> &fe, ePtr<iDVBFrontendParameters> &feparm, bool simulate, bool returnScoreOnly)
 {
 	eSmartPtrList<eDVBRegisteredFrontend> &frontends = simulate ? m_simulate_frontend : m_frontend;
-	ePtr<eDVBRegisteredFrontend> best;
+//	ePtr<eDVBRegisteredFrontend> best;
+	eDVBRegisteredFrontend *best = NULL;
 	int bestval = 0;
 	int foundone = 0;
 
+	int check_fbc_linked = 0;
+	eDVBRegisteredFrontend *fbc_fe = NULL;
+	eDVBRegisteredFrontend *best_fbc_fe = NULL;
+	eFBCTunerManager* fbcmng = m_fbc_mng;
+
 	for (eSmartPtrList<eDVBRegisteredFrontend>::iterator i(frontends.begin()); i != frontends.end(); ++i)
 	{
-		int c = i->m_frontend->isCompatibleWith(feparm);
+		int c = 0;
+		fbc_fe = NULL;
+		if (!check_fbc_linked && i->m_frontend->is_FBCTuner() && fbcmng && fbcmng->canLink(*i))
+		{
+			check_fbc_linked = 1;
+			c = fbcmng->isCompatibleWith(feparm, *i, fbc_fe, simulate);
+
+//			eDebug("[eDVBResourceManager::allocateFrontend] fbcmng->isCompatibleWith slotid : %p (%d), fbc_fe : %p (%d), score : %d", (eDVBRegisteredFrontend *)*i,  i->m_frontend->getSlotID(), fbc_fe, fbc_fe?fbc_fe->m_frontend->getSlotID():-1, c);			
+		}
+		else
+		{
+			c = i->m_frontend->isCompatibleWith(feparm);
+		}
 
 		if (c)	/* if we have at least one frontend which is compatible with the source, flag this. */
 			foundone = 1;
@@ -863,15 +995,31 @@ RESULT eDVBResourceManager::allocateFrontend(ePtr<eDVBAllocatedFrontend> &fe, eP
 			if (c > bestval)
 			{
 				bestval = c;
-				best = i;
+//				best = i;
+				best = *i;
+				best_fbc_fe = fbc_fe;
 			}
 		}
-//		else
+		else
+		{
 //			eDebug("Slot %d, score %d... but BUSY!!!!!!!!!!!", i->m_frontend->getSlotID(), c);
+		}
+
+		eDVBRegisteredFrontend *tmp = *i;
 	}
 
+	if (returnScoreOnly)
+	{
+		return bestval;
+	}
+	
 	if (best)
 	{
+		if (fbcmng && best_fbc_fe)
+		{
+			fbcmng->addLink(best, best_fbc_fe, simulate);
+		}
+
 		fe = new eDVBAllocatedFrontend(best);
 		return 0;
 	}
@@ -980,6 +1128,45 @@ RESULT eDVBResourceManager::allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBA
 				unused = i;
 				break;
 			}
+		}
+	}
+	else if (m_boxtype == WETEKPLAY || m_boxtype == WETEKPLAY2 || m_boxtype == WETEKHUB)
+	{	
+		int n=0;
+		iDVBAdapter *adapter = fe ? fe->m_adapter : m_adapter.begin(); /* look for a demux on the same adapter as the frontend, or the first adapter for dvr playback */
+		int source = fe ? fe->m_frontend->getDVBID() : -1;
+		cap |= capHoldDecodeReference; // this is checked in eDVBChannel::getDemux
+		
+		for (; i != m_demux.end(); ++i, ++n)
+		{
+			if (fe)
+			{
+				if (!i->m_inuse && ((n == 0 && source == 0) ||
+					(n == 1 && source == 1)))
+				{
+					if (!unused) 
+					{
+						unused = i;
+						break;
+					}
+				}
+				else if(i->m_adapter == adapter && 
+					i->m_demux->getSource() == source)
+				{
+					demux = new eDVBAllocatedDemux(i);
+					return 0;
+				}
+		    }
+			else if (n == (m_demux.size() - 1)) // always use last demux for PVR 
+			{
+				if (i->m_inuse)
+				{
+					demux = new eDVBAllocatedDemux(i);
+					return 0;
+				}
+				unused = i;
+				break;
+			}  
 		}
 	}
 	else
@@ -1103,12 +1290,79 @@ RESULT eDVBResourceManager::getChannelList(ePtr<iDVBChannelList> &list)
 		return -ENOENT;
 }
 
+RESULT eDVBResourceManager::getActiveChannels(std::list<active_channel> &list)
+{
+	list = m_active_channels;
+	return 0;
+}
+
 #define eDebugNoSimulate(x...) \
 	do { \
 		if (!simulate) \
 			eDebug(x); \
 	} while(0)
 
+bool eDVBResourceManager::frontendPreferenceAllowsChannelUse(const eDVBChannelID &channelid, eUsePtr<iDVBChannel> channel, bool simulate)
+{
+	ePtr<iDVBFrontend> fe;
+	channel->getFrontend(fe);
+	int slotid = fe->readFrontendData(iFrontendInformation_ENUMS::frontendNumber);
+	
+	int preferredFrontend = eDVBFrontend::getPreferredFrontend();
+	if (preferredFrontend < 0)
+	{
+		//eDebug("frontend %d allowed, no frontend preference", slotid);      
+		return true; /* no frontend preference */
+	}
+    
+	if (!((preferredFrontend >= 0) && (preferredFrontend & eDVBFrontend::preferredFrontendPrioForced)) && !((preferredFrontend >= 0) && (preferredFrontend & eDVBFrontend::preferredFrontendPrioHigh)))
+	{
+		//eDebug("frontend %d allowed, sharing/caching channels is allowed for any frontend", slotid);      
+		return true; /* sharing/caching channels is allowed for any frontend */
+	}
+
+	ePtr<eDVBFrontend> dummy_fe1;
+	if (dummy_fe1->isPreferred(preferredFrontend,slotid))
+	{
+		//eDebug("frontend %d allowed, preferred frontend", slotid);      
+		return true; /* preferred frontend */
+	}
+
+	if (!m_list)
+	{
+		//eDebug("frontend %d allowed, no channel list set", slotid);      
+		return true; /* no channel list set */
+	}
+
+	ePtr<iDVBFrontendParameters> feparm;
+	if (m_list->getChannelFrontendData(channelid, feparm))
+	{
+		//eDebug("frontend %d allowed, channel not found", slotid);      
+		return true; /* channel not found */
+	}
+
+	ePtr<eDVBAllocatedFrontend> dummy_fe;
+	int score = allocateFrontend(dummy_fe, feparm, simulate, /*returnScoreOnly=*/true);
+	//eDebug("frontend %d score %d", slotid, score);      
+	if (score < eDVBFrontend::preferredFrontendScore)
+	{
+		if ((preferredFrontend >= 0) && (preferredFrontend & eDVBFrontend::preferredFrontendPrioForced))
+		{
+			//eDebug("frontend %d forbidden, no preferred frontend available, no sharing allowed", slotid);      
+			return false; /* no preferred frontend available, no sharing allowed */
+		}
+		else
+		{
+			//eDebug("frontend %d allowed, no new preferred frontend available, use shared or cached channel", slotid);      
+			return true; /* no new preferred frontend available, use shared or cached channel */
+		}
+	}
+	else
+	{
+		//eDebug("frontend %d forbidden, a new preferred frontend is available, dont use shared or cached channel", slotid);      
+		return false;
+	}
+}
 
 RESULT eDVBResourceManager::allocateChannel(const eDVBChannelID &channelid, eUsePtr<iDVBChannel> &channel, bool simulate)
 {
@@ -1118,11 +1372,21 @@ RESULT eDVBResourceManager::allocateChannel(const eDVBChannelID &channelid, eUse
 	if (!simulate && m_cached_channel)
 	{
 		eDVBChannel *cache_chan = (eDVBChannel*)&(*m_cached_channel);
-		if(channelid==cache_chan->getChannelID())
+		if((m_boxtype != WETEKPLAY && m_boxtype != WETEKPLAY2 && m_boxtype != WETEKHUB) && (channelid==cache_chan->getChannelID()))
 		{
-			eDebug("use cached_channel");
-			channel = m_cached_channel;
-			return 0;
+			ePtr<iDVBFrontend> fe;
+			m_cached_channel->getFrontend(fe);
+			int slotid = fe->readFrontendData(iFrontendInformation_ENUMS::frontendNumber);
+			if (frontendPreferenceAllowsChannelUse(channelid,m_cached_channel,simulate))
+			{
+				eDebug("use cached_channel, frontend=%d",slotid);
+				channel = m_cached_channel;
+				return 0;
+			}
+			else
+			{
+				eDebug("strict frontend preference policy, don't use cached_channel, frontend=%d",slotid);
+			}
 		}
 		m_cached_channel_state_changed_conn.disconnect();
 		m_cached_channel=0;
@@ -1135,9 +1399,19 @@ RESULT eDVBResourceManager::allocateChannel(const eDVBChannelID &channelid, eUse
 		eDebugNoSimulate("available channel.. %04x:%04x", i->m_channel_id.transport_stream_id.get(), i->m_channel_id.original_network_id.get());
 		if (i->m_channel_id == channelid)
 		{
-			eDebugNoSimulate("found shared channel..");
-			channel = i->m_channel;
-			return 0;
+			ePtr<iDVBFrontend> fe;
+			i->m_channel->getFrontend(fe);
+			int slotid = fe->readFrontendData(iFrontendInformation_ENUMS::frontendNumber);
+			if (frontendPreferenceAllowsChannelUse(channelid,i->m_channel,simulate))
+			{
+				eDebugNoSimulate("found shared channel.. i=%d, frontend=%d (preferred=%d)",std::distance(active_channels.begin(), i),slotid,eDVBFrontend::getPreferredFrontend());
+				channel = i->m_channel;
+				return 0;
+			}
+			else
+			{
+				eDebugNoSimulate("strict frontend preference policy, don't use shared channel.. i=%d, frontend=%d (preferred=%d)",std::distance(active_channels.begin(), i),slotid,eDVBFrontend::getPreferredFrontend());
+			}
 		}
 	}
 
@@ -1162,8 +1436,10 @@ RESULT eDVBResourceManager::allocateChannel(const eDVBChannelID &channelid, eUse
 
 	int err = allocateFrontend(fe, feparm, simulate);
 	if (err)
+	{
+		eDebugNoSimulate("can't allocate frontend!");
 		return err;
-
+	}
 	RESULT res;
 	ePtr<eDVBChannel> ch = new eDVBChannel(this, fe);
 
@@ -1171,6 +1447,7 @@ RESULT eDVBResourceManager::allocateChannel(const eDVBChannelID &channelid, eUse
 	if (res)
 	{
 		channel = 0;
+		eDebugNoSimulate("channel id not found!");
 		return errChidNotFound;
 	}
 
@@ -1256,6 +1533,7 @@ RESULT eDVBResourceManager::allocatePVRChannel(const eDVBChannelID &channelid, e
 		 * (allowing e.g. epgcache to be started)
 		 */
 		ePtr<iDVBFrontendParameters> feparm;
+		if (m_list) m_list->getChannelFrontendData(channelid, feparm);
 		ch->setChannel(channelid, feparm);
 	}
 	channel = ch;
@@ -1306,7 +1584,7 @@ RESULT eDVBResourceManager::removeChannel(eDVBChannel *ch)
 	return -ENOENT;
 }
 
-RESULT eDVBResourceManager::connectChannelAdded(const Slot1<void,eDVBChannel*> &channelAdded, ePtr<eConnection> &connection)
+RESULT eDVBResourceManager::connectChannelAdded(const sigc::slot1<void,eDVBChannel*> &channelAdded, ePtr<eConnection> &connection)
 {
 	connection = new eConnection((eDVBResourceManager*)this, m_channelAdded.connect(channelAdded));
 	return 0;
@@ -1317,14 +1595,33 @@ int eDVBResourceManager::canAllocateFrontend(ePtr<iDVBFrontendParameters> &fepar
 	eSmartPtrList<eDVBRegisteredFrontend> &frontends = simulate ? m_simulate_frontend : m_frontend;
 	ePtr<eDVBRegisteredFrontend> best;
 	int bestval = 0;
+	int check_fbc_linked = 0;
+	eDVBRegisteredFrontend *fbc_fe = NULL;
+//	eDVBRegisteredFrontend *best_fbc_fe = NULL;
+	eFBCTunerManager *fbcmng = m_fbc_mng;
 
 	for (eSmartPtrList<eDVBRegisteredFrontend>::iterator i(frontends.begin()); i != frontends.end(); ++i)
+	{
 		if (!i->m_inuse)
 		{
-			int c = i->m_frontend->isCompatibleWith(feparm);
+			int c = 0;
+			fbc_fe = NULL;
+			if (!check_fbc_linked && i->m_frontend->is_FBCTuner() && fbcmng && fbcmng->canLink(*i))
+			{
+				check_fbc_linked = 1;
+				c = fbcmng->isCompatibleWith(feparm, *i, fbc_fe, simulate);
+			}
+			else
+			{
+				c = i->m_frontend->isCompatibleWith(feparm);
+			}
 			if (c > bestval)
+			{
 				bestval = c;
+//				best_fbc_fe = fbc_fe;
+			}
 		}
+	}
 	return bestval;
 }
 
@@ -1346,6 +1643,8 @@ int tuner_type_channel_default(ePtr<iDVBChannelList> &channellist, const eDVBCha
 						return 40000;
 					case iDVBFrontend::feTerrestrial:
 						return 30000;
+					case iDVBFrontend::feATSC:
+						return 20000;
 					default:
 						break;
 				}
@@ -1542,7 +1841,7 @@ eDVBChannel::eDVBChannel(eDVBResourceManager *mgr, eDVBAllocatedFrontend *fronte
 	m_skipmode_n = m_skipmode_m = m_skipmode_frames = 0;
 
 	if (m_frontend)
-		m_frontend->get().connectStateChange(slot(*this, &eDVBChannel::frontendStateChanged), m_conn_frontendStateChanged);
+		m_frontend->get().connectStateChange(sigc::mem_fun(*this, &eDVBChannel::frontendStateChanged), m_conn_frontendStateChanged);
 }
 
 eDVBChannel::~eDVBChannel()
@@ -1564,42 +1863,45 @@ void eDVBChannel::frontendStateChanged(iDVBFrontend*fe)
 	if (fe->getState(state))
 		return;
 
+	int tuner_id = fe->getDVBID();
 	if (state == iDVBFrontend::stateLock)
 	{
-		eDebug("OURSTATE: ok");
+		eDebug("OURSTATE: tuner %d ok", tuner_id);
 		ourstate = state_ok;
 	} else if (state == iDVBFrontend::stateTuning)
 	{
-		eDebug("OURSTATE: tuning");
+		eDebug("OURSTATE: tuner %d tuning", tuner_id);
 		ourstate = state_tuning;
 	} else if (state == iDVBFrontend::stateLostLock)
 	{
 			/* on managed channels, we try to retune in order to re-acquire lock. */
+		fe->setData(eDVBFrontend::CUR_FREQ,0);
 		if (m_current_frontend_parameters)
 		{
-			eDebug("OURSTATE: lost lock, trying to retune");
+			eDebug("OURSTATE: tuner %d lost lock, trying to retune", tuner_id);
 			ourstate = state_tuning;
 			m_frontend->get().tune(*m_current_frontend_parameters);
 		} else
 			/* on unmanaged channels, we don't do this. the client will do this. */
 		{
-			eDebug("OURSTATE: lost lock, unavailable now.");
+			eDebug("OURSTATE: tuner %d lost lock, unavailable now.", tuner_id);
 			ourstate = state_unavailable;
 		}
 	} else if (state == iDVBFrontend::stateFailed)
 	{
 		ourstate = state_failed;
+		fe->setData(eDVBFrontend::CUR_FREQ,0);
 			/* on managed channels, we do a retry */
 		if (m_current_frontend_parameters)
 		{
-			eDebug("OURSTATE: failed, retune");
+			eDebug("OURSTATE: tuner %d failed, retune", tuner_id);
 			m_frontend->get().tune(*m_current_frontend_parameters);
 		} else
 		{ /* nothing we can do */
-			eDebug("OURSTATE: failed, fatal");
+			eDebug("OURSTATE: tuner %d failed, fatal", tuner_id);
 		}
 	} else
-		eFatal("state unknown");
+		eFatal("tuner %d state unknown", tuner_id);
 
 	if (ourstate != m_state)
 	{
@@ -1989,6 +2291,8 @@ RESULT eDVBChannel::setChannel(const eDVBChannelID &channelid, ePtr<iDVBFrontend
 	m_channel_id = channelid;
 	m_mgr->addChannel(channelid, this);
 
+	m_current_frontend_parameters = feparm;
+
 	if (!m_frontend)
 	{
 		/* no frontend, no need to tune (must be a streamed service) */
@@ -1999,7 +2303,6 @@ RESULT eDVBChannel::setChannel(const eDVBChannelID &channelid, ePtr<iDVBFrontend
 			/* if tuning fails, shutdown the channel immediately. */
 	int res;
 	res = m_frontend->get().tune(*feparm);
-	m_current_frontend_parameters = feparm;
 
 	if (res)
 	{
@@ -2011,13 +2314,13 @@ RESULT eDVBChannel::setChannel(const eDVBChannelID &channelid, ePtr<iDVBFrontend
 	return 0;
 }
 
-RESULT eDVBChannel::connectStateChange(const Slot1<void,iDVBChannel*> &stateChange, ePtr<eConnection> &connection)
+RESULT eDVBChannel::connectStateChange(const sigc::slot1<void,iDVBChannel*> &stateChange, ePtr<eConnection> &connection)
 {
 	connection = new eConnection((iDVBChannel*)this, m_stateChanged.connect(stateChange));
 	return 0;
 }
 
-RESULT eDVBChannel::connectEvent(const Slot2<void,iDVBChannel*,int> &event, ePtr<eConnection> &connection)
+RESULT eDVBChannel::connectEvent(const sigc::slot2<void,iDVBChannel*,int> &event, ePtr<eConnection> &connection)
 {
 	connection = new eConnection((iDVBChannel*)this, m_event.connect(event));
 	return 0;
@@ -2246,7 +2549,7 @@ void eDVBChannel::setCueSheet(eCueSheet *cuesheet)
 	m_conn_cueSheetEvent = 0;
 	m_cue = cuesheet;
 	if (m_cue)
-		m_cue->connectEvent(slot(*this, &eDVBChannel::cueSheetEvent), m_conn_cueSheetEvent);
+		m_cue->connectEvent(sigc::mem_fun(*this, &eDVBChannel::cueSheetEvent), m_conn_cueSheetEvent);
 }
 
 void eDVBChannel::setOfflineDecodeMode(int parityswitchdelay)
@@ -2371,7 +2674,7 @@ void eCueSheet::setDecodingDemux(iDVBDemux *demux, iTSMPEGDecoder *decoder)
 	m_decoder = decoder;
 }
 
-RESULT eCueSheet::connectEvent(const Slot1<void,int> &event, ePtr<eConnection> &connection)
+RESULT eCueSheet::connectEvent(const sigc::slot1<void,int> &event, ePtr<eConnection> &connection)
 {
 	connection = new eConnection(this, m_event.connect(event));
 	return 0;

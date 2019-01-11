@@ -174,6 +174,11 @@
 		<panel name="SummaryClockPanel" />
 	</screen>
 
+<!-- RDS info -->
+	<screen name="RdsInfoDisplaySummary" position="fill">
+		<widget source="message" render="Label" position="0,0" size="220,176" font="FdLcD;30" halign="center" valign="center" />
+	</screen>
+	
 <!-- Plugin browser -->
 	<screen name="PluginBrowserSummary" position="fill">
 		<widget source="parent.Title" render="Label" foregroundColor="#FFFF00" position="0,0" size="220,26" font="FdLcD;25" halign="center" noWrap="1" />
@@ -184,9 +189,9 @@
 <!-- JobView Summary -->
 	<screen name="JobView_summary" position="0,0" size="220,176">
 		<widget source="parent.summary_job_name" render="Label" position="0,38" size="220,26" font="FdLcD;24" halign="left" noWrap="1" />
-		<widget source="parent.summary_job_task" render="Label" position="0,66" size="220,20" font="FdLcD;19" halign="left" noWrap="1" />
-		<widget source="parent.summary_job_progress" render="Progress" position="6,50" size="60,12" borderWidth="1" zPosition="1" />
-		<widget source="parent.summary_job_progress" render="Label" position="66,50" size="50,12" font="FdLcD;12" zposition="0" halign="center" transparent="1" >
+		<widget source="parent.summary_job_task" render="Label" position="0,80" size="220,20" font="FdLcD;19" halign="left" noWrap="1" />
+		<widget source="parent.summary_job_progress" render="Progress" position="6,125" size="100,15" borderWidth="1" zPosition="1" />
+		<widget source="parent.summary_job_progress" render="Label" position="115,120" size="95,25" font="FdLcD;22" zposition="1" transparent="1" >
 			<convert type="ProgressToText" />
 		</widget>
 		<panel name="SummaryIconsPanel" />
@@ -204,8 +209,8 @@
 	
 <!-- Servicescan -->
 	<screen name="ServiceScanSummary" position="0,0" size="220,176">
-		<widget source="parent.Title" render="Label" position="0,0" size="220,55" font="FdLcD;26" halign="center" valign="center" foregroundColor="#FFFF00" />
-		<widget name="scan_progress" render="Progress" position="0,60" size="220,12" foregroundColor="#02c6ff" borderWidth="2" />
+		<widget name="Title" position="0,0" size="220,55" font="FdLcD;26" halign="center" valign="center" foregroundColor="#FFFF00" />
+		<widget name="scan_progress" position="0,60" size="220,12" foregroundColor="#02c6ff" borderWidth="2" />
 		<panel name="SummaryClockPanel" />
 	</screen> 
 
@@ -344,8 +349,8 @@
 			<convert type="ServicePosition">Remaining,Negate</convert>
 		</widget>
 		<panel name="SummaryClockPanel" />
-	</screen>
-	
+	</screen>	
+		
 <!-- softwaremanagment -->
 	<screen name="BackupSelection_summary" position="0,0" size="220,176">
 		<widget source="parent.Title" render="Label" position="0,0" size="220,55" font="FdLcD;26" halign="center" valign="center" foregroundColor="#FFFF00" />

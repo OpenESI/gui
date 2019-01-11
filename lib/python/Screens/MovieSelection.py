@@ -235,6 +235,8 @@ class MovieBrowserConfiguration(ConfigListScreen,Screen):
 					  getConfigListEntry(_("Background delete speed"), config.misc.erase_speed, _("Configure the speed of the background deletion process. Lower speed will consume less hard disk drive performance.")),
 					  getConfigListEntry(_("Fontsize"), config.movielist.fontsize, _("This allows you change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size")),
 					  getConfigListEntry(_("Number of rows"), config.movielist.itemsperpage, _("Number of rows to display")),
+					  getConfigListEntry(_("Use extended List"), config.movielist.useextlist, _("Use the extended List")),
+					  getConfigListEntry(_("Update delay for Events in List"), config.movielist.eventinfo_delay, _("Update delay for Events in List. Scrolling in List is faster with higher delay, specialy on big Lists !")),
 					  getConfigListEntry(_("Use slim screen"), config.movielist.useslim, _("Use the alternative screen")),
 					  getConfigListEntry(_("Sort"), cfg.moviesort, _("Set the default sorting method.")),
 					  getConfigListEntry(_("Show extended description"), cfg.description, _("Show or hide the extended description, (skin dependent).")),
@@ -350,6 +352,7 @@ class MovieContextMenu(Screen, ProtectedScreen):
 		self["HelpWindow"].hide()
 		self["VKeyIcon"] = Boolean(False)
 		self['footnote'] = Label("")
+		self['description'] = Label("")
 		self["status"] = StaticText()
 
 		self.csel = csel
@@ -672,7 +675,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 				'reset': _("Reset"),
 				'tags': _("Tags"),
 				'addbookmark': _("Add bookmark"),
-				'bookmarks': _("Location"),
+				'bookmarks': _("Bookmarks"),
 				'rename': _("Rename"),
 				'gohome': _("Home"),
 				'sort': _("Sort"),
@@ -2020,8 +2023,8 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 		import NetworkSetup
 		self.session.open(NetworkSetup.NetworkMountsMenu)
 
-        def showDeviceMounts(self):
-		from Plugins.Extensions.EuroPanel.MountManager import HddMount
+	def showDeviceMounts(self):
+		from Plugins.Extensions.Infopanel.MountManager import HddMount
 		self.session.open(HddMount)
 
 	def showActionFeedback(self, text):
