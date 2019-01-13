@@ -247,6 +247,8 @@
 		<key id="KEY_F5" mapto="openTimerList" flags="b" />
 		<key id="KEY_TIME" mapto="openTimerList" flags="b" />
 		<key id="KEY_PROGRAM" mapto="openAutoTimerList" flags="l" />
+		<key id="KEY_CALENDAR" mapto="openAutoTimerList" flags="b" />
+		<key id="KEY_EJECTCD" mapto="openSimpleUnmount" flags="b" />
 		<key id="KEY_SEARCH" mapto="openEPGSearch" flags="b" />
 		<key id="KEY_SEARCH" mapto="openIMDB" flags="l" />
 		<key id="KEY_SLEEP" mapto="openSleepTimer" flags="b" />
@@ -256,6 +258,7 @@
 		<key id="KEY_CONNECT" mapto="HarddiskSetup" flags="b" />
 		<key id="KEY_WWW" mapto="showWWW" flags="b" />
 		<key id="KEY_SETUP" mapto="showSetup" flags="m" />
+		<key id="KEY_QUESTION" mapto="showInformation" flags="m" />
 		<key id="KEY_DIRECTORY" mapto="showPluginBrowser" flags="b" />
 		<key id="KEY_PVR" mapto="showMovies" flags="b" />
 		<key id="KEY_PROG1" mapto="HarddiskSetup" flags="b" />
@@ -293,10 +296,12 @@
 
 	<map context="InfobarTimerButtonActions">
 			<key id="KEY_PROGRAM" mapto="timerSelection" flags="b" />
+			<key id="KEY_CALENDAR" mapto="openAutoTimerList" flags="b" />
 	</map>
 
 	<map context="InfobarVmodeButtonActions">
 			<key id="KEY_VMODE" mapto="vmodeSelection" flags="m" />
+			<key id="KEY_ANGLE" mapto="vmodeSelection" flags="m" />
 	</map>
 
 	<map context="InfobarPiPActions">
@@ -651,6 +656,10 @@
 		<key id="KEY_NEXT" mapto="nextMarker" flags="m" />
 		<key id="KEY_BACK" mapto="prevMarker" flags="m" />
 		<key id="KEY_FORWARD" mapto="nextMarker" flags="m" />
+	</map>
+
+	<map context="ChannelSelectInfoActions">
+		<key id="KEY_INFO" mapto="showEventInfo" flags="m" />
 	</map>
 
 	<map context="ChannelSelectEPGActions">
@@ -1013,17 +1022,21 @@
 		<key id="KEY_ARCHIVE" mapto="archive_long" flags="l"/>
 		<key id="KEY_OPEN" mapto="open" flags="b"/>
 		<key id="KEY_OPEN" mapto="open_long" flags="l"/>
+		<key id="KEY_OPTION" mapto="option" flags="b"/>
+		<key id="KEY_OPTION" mapto="option_long" flags="l"/>
 		<key id="KEY_WWW" mapto="www" flags="b"/>
 		<key id="KEY_WWW" mapto="www_long" flags="l"/>
 		<key id="KEY_HOMEPAGE" mapto="homep" flags="b"/>
 		<key id="KEY_HOMEPAGE" mapto="homep_long" flags="l"/>
 		<key id="KEY_DIRECTORY" mapto="directory" flags="b"/>
 		<key id="KEY_DIRECTORY" mapto="directory_long" flags="l"/>
-		<key id="KEY_TIME" mapto="timeshift" flags="b"/>
+		<key id="KEY_TIME" mapto="time" flags="b"/>
+		<key id="KEY_TIME" mapto="time_long" flags="l"/>
 		<key id="KEY_SEARCH" mapto="search" flags="b"/>
 		<key id="KEY_SEARCH" mapto="search_long" flags="l"/>
 		<key id="KEY_RESTART" mapto="slow" flags="b"/>
 		<key id="KEY_BOOKMARKS" mapto="mark" flags="b"/>
+		<key id="KEY_BOOKMARKS" mapto="mark_long" flags="l"/>
 		<key id="KEY_POWER" mapto="power" flags="b"/>
 		<key id="KEY_POWER" mapto="power_long" flags="l"/>
 		<key id="KEY_SLEEP" mapto="sleep" flags="b"/>
@@ -1054,6 +1067,8 @@
 		<key id="KEY_AUX" mapto="HDMIin_long" flags="l"/>
 		<key id="KEY_ZOOM" mapto="zoom" flags="b"/>
 		<key id="KEY_ZOOM" mapto="zoom_long" flags="l"/>
+		<key id="KEY_EJECTCD" mapto="ejectcd" flags="b"/>
+		<key id="KEY_EJECTCD" mapto="ejectcd_long" flags="l"/>
 	</map>
 	<map context="SubtitlesActions">
 		<key id="KEY_SUBTITLE" mapto="subtitles" flags="m" />

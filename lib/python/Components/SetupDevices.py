@@ -29,7 +29,7 @@ def InitSetupDevices():
 	elif getMachineBrand() in ('Zgemma','Beyonwiz') or getBrandOEM() in ('airdigital'):
 		config.osd.language = ConfigText(default = "en_US")
 	else:
-		config.osd.language = ConfigText(default = "de_DE")
+		config.osd.language = ConfigText(default = "it_IT")
 	config.osd.language.addNotifier(languageNotifier)
 
 	config.parental = ConfigSubsection()

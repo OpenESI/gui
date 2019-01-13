@@ -227,7 +227,7 @@ class FlashOnline(Screen):
 		files = []
 		if SystemInfo["HaveMultiBoot"]:
 			path = PATH
-			if getMachineBuild() in ("ustym4kpro","hd51","vs1500","h7","8100s","gb7252","cc1","sf8008","osmio4k","ustym4kpro"):
+			if getMachineBuild() in ("hd51","vs1500","h7","8100s","gb7252","cc1","sf8008"):
 				for name in os.listdir(path):
 					if name != 'bootname' and os.path.isfile(os.path.join(path, name)):
 						try:
@@ -352,7 +352,7 @@ class doFlashImage(Screen):
 			box = "sf8"
 		elif box.startswith('et') and not box in ('et8000', 'et8500', 'et8500s', 'et10000'):
 			box = box[0:3] + 'x00'
-		elif box == 'odinm9' and self.feed == "atv":
+		elif box == "odinm9":
 			box = 'maram9'
 		elif box == "dm525":
 			box = 'dm520'
@@ -473,13 +473,13 @@ class doFlashImage(Screen):
 			if self.simulate:
 				text += _("Simulate (no write)")
 				if SystemInfo["HaveMultiBoot"]:
-					if getMachineBuild() in ("cc1","sf8008","ustym4kpro"):
+					if getMachineBuild() in ("cc1","sf8008"):
 						cmdlist.append("%s -r%s -k%s %s > /dev/null 2>&1" % (ofgwritePath, self.MTDROOTFS, self.MTDKERNEL, flashTmp))
 					else:
 						cmdlist.append("%s -n -r -k -m%s %s > /dev/null 2>&1" % (ofgwritePath, self.multi, flashTmp))
-				elif getMachineBuild() in ("h9combo","u51","u52","u53","u5","u5pvr","cc1","sf8008","ustym4kpro","hd60","v8plus"):
+				elif getMachineBuild() in ("u51","u52","u53","u5","u5pvr","cc1","sf8008"):
 					cmdlist.append("%s -n -r%s -k%s %s > /dev/null 2>&1" % (ofgwritePath, MTDROOTFS, MTDKERNEL, flashTmp))
-				elif getMachineBuild() in ("h9","i55plus"):
+				elif getMachineBuild() in ("h9"):
 					cmdlist.append("%s -n -f -r -k %s > /dev/null 2>&1" % (ofgwritePath, flashTmp))
 				else:
 					cmdlist.append("%s -n -r -k %s > /dev/null 2>&1" % (ofgwritePath, flashTmp))
@@ -492,13 +492,13 @@ class doFlashImage(Screen):
 				if SystemInfo["HaveMultiBoot"]:
 					if self.List not in ("STARTUP","cmdline.txt"):
 						os.system('mkfs.ext4 -F ' + self.devrootfs)
-					if getMachineBuild() in ("cc1","sf8008","ustym4kpro"):
+					if getMachineBuild() in ("cc1","sf8008"):
 						cmdlist.append("%s -r%s -k%s %s > /dev/null 2>&1" % (ofgwritePath, self.MTDROOTFS, self.MTDKERNEL, flashTmp))
 					else:
 						cmdlist.append("%s -r -k -m%s %s > /dev/null 2>&1" % (ofgwritePath, self.multi, flashTmp))
-				elif getMachineBuild() in ("h9combo","u51","u52","u53","u5","u5pvr","cc1","sf8008","ustym4kpro","hd60","v8plus"):
+				elif getMachineBuild() in ("u51","u52","u53","u5","u5pvr","cc1","sf8008"):
 					cmdlist.append("%s -r%s -k%s %s > /dev/null 2>&1" % (ofgwritePath, MTDROOTFS, MTDKERNEL, flashTmp))
-				elif getMachineBuild() in ("h9","i55plus"):
+				elif getMachineBuild() in ("h9"):
 					cmdlist.append("%s -f -r -k %s > /dev/null 2>&1" % (ofgwritePath, flashTmp))
 				else:
 					cmdlist.append("%s -r -k %s > /dev/null 2>&1" % (ofgwritePath, flashTmp))

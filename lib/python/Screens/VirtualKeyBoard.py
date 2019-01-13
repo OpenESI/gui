@@ -316,7 +316,7 @@ class VirtualKeyBoard(Screen):
 				[u">", u"Z", u"X", u"C", u"V", u"B", u"N", u"M", u";", u":", u"_", u"CLEAR"],
 				[u"SHIFT", u"SPACE", u"|", u"^", u"OK", u"LEFT", u"RIGHT", u"~"]]
 			self.lang = 'en_US'
-			self.nextLang = 'de_DE'
+			self.nextLang = 'it_IT'
 		self["country"].setText(self.lang)
 
 	def virtualKeyBoardEntryComponent(self, keys):

@@ -1,13 +1,13 @@
 # -*- coding: UTF-8 -*-
-# date: 30.08.2014  13:39:12
+# date: 3.01.2019  14:25:12
 #
 
 LANG_TEXT = {
-"de_DE": {
-	 "T1": "Für Sprachauswahl Hoch/Runter-Tasten nutzen. Danach OK drücken.",
-	 "T2": "Sprachauswahl",
-	 "T3": "Abbrechen",
-	 "T4": "Speichern",
+"it_IT": {
+	 "T1": "Selezionare la propria lingua utilizzando i tasti Sù/Giù. Premere OK per confermare.",
+	 "T2": "Selezione lingua",
+	 "T3": "Annull.",
+	 "T4": "Salvare",
 },
 "ar_AE": {
 	 "T1": "من فضلك أستخدم ذر السهم العلوى أو السفلى لإختيار اللغه. ثم أضغط موافق .",
@@ -44,6 +44,12 @@ LANG_TEXT = {
 	 "T2": "Valg af sprog",
 	 "T3": "Fortryd",
 	 "T4": "Gem",
+},
+"de_DE": {
+	 "T1": "Für Sprachauswahl Hoch/Runter-Tasten nutzen. Danach OK drücken.",
+	 "T2": "Sprachauswahl",
+	 "T3": "Abbrechen",
+	 "T4": "Speichern",
 },
 "el_GR": {
 	 "T1": "Χρησιμοποιήστε τα πλήκτρα ΠΑΝΩ και ΚΑΤΩ για επιλογή γλώσσας. Μετά πιέστε το ΟΚ.",
@@ -129,12 +135,7 @@ LANG_TEXT = {
 	 "T3": "Hætta við",
 	 "T4": "Vista",
 },
-"it_IT": {
-	 "T1": "Selezionare la propria lingua utilizzando i tasti Sù/Giù. Premere OK per confermare.",
-	 "T2": "Selezione lingua",
-	 "T3": "Annull.",
-	 "T4": "Salvare",
-},
+
 "ku_KU": {
 	 "T1": "Please use the UP and DOWN keys to select your language. Afterwards press the OK button.",
 	 "T2": "Language selection",
