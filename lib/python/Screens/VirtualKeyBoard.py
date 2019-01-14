@@ -121,7 +121,7 @@ class VirtualKeyBoard(Screen):
 		self.buildVirtualKeyBoard()
 
 	def setLang(self):
-		if self.lang == 'de_DE':
+		if self.lang == 'it_IT':
 			self.keys_list = [
 				[u"EXIT", u"1", u"2", u"3", u"4", u"5", u"6", u"7", u"8", u"9", u"0", u"BACKSPACE"],
 				[u"q", u"w", u"e", u"r", u"t", u"z", u"u", u"i", u"o", u"p", u"ü", u"+"],
