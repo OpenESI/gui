@@ -376,6 +376,7 @@ class ServiceList(HTMLComponent, GUIComponent):
 		self.l.setItemHeight(self.ItemHeight)
 		self.l.setVisualMode(eListboxServiceContent.visModeComplex)
 		self.l.setServicePiconDownsize(int(config.usage.servicelist_picon_downsize.value))
+		self.l.setServicePiconRatio(int(config.usage.servicelist_picon_ratio.value))
 
 		if config.usage.service_icon_enable.value:
 			self.l.setGetPiconNameFunc(getPiconName)
@@ -411,3 +412,7 @@ class ServiceList(HTMLComponent, GUIComponent):
 		self.l.setCryptoIconMode(int(config.usage.crypto_icon_mode.value))
 		self.l.setRecordIndicatorMode(int(config.usage.record_indicator_mode.value))
 		self.l.setColumnWidth(int(config.usage.servicelist_column.value))
+		
+	def selectionEnabled(self, enabled):
+		if self.instance is not None:
+			self.instance.setSelectionEnable(enabled)

@@ -52,6 +52,7 @@ class VirtualKeyBoard(Screen):
 
 		self.keyImages =  {
 				"BACKSPACE": self.key_backspace,
+				"CLEAR": self.key_clr,
 				"ALL": self.key_all,
 				"EXIT": self.key_esc,
 				"OK": self.key_ok,
@@ -72,7 +73,7 @@ class VirtualKeyBoard(Screen):
 			}
 
 		self["country"] = StaticText("")
-		self["header"] = Label()
+		self["header"] = Label(title)
 		self["text"] = Input(currPos=len(kwargs.get("text", "").decode("utf-8",'ignore')), allMarked=False, **kwargs)
 		self["list"] = VirtualKeyBoardList([])
 
@@ -120,19 +121,33 @@ class VirtualKeyBoard(Screen):
 		self.buildVirtualKeyBoard()
 
 	def setLang(self):
-		if self.lang == 'de_DE':
+		if self.lang == 'it_IT':
 			self.keys_list = [
 				[u"EXIT", u"1", u"2", u"3", u"4", u"5", u"6", u"7", u"8", u"9", u"0", u"BACKSPACE"],
 				[u"q", u"w", u"e", u"r", u"t", u"z", u"u", u"i", u"o", u"p", u"ü", u"+"],
 				[u"a", u"s", u"d", u"f", u"g", u"h", u"j", u"k", u"l", u"ö", u"ä", u"#"],
 				[u"<", u"y", u"x", u"c", u"v", u"b", u"n", u"m", u",", ".", u"-", u"ALL"],
-				[u"SHIFT", u"SPACE", u"@", u"ß", u"OK", u"LEFT", u"RIGHT"]]
+				[u"SHIFT", u"SPACE", u"@", u"ß", u"[", u"]", u"OK", u"LEFT", u"RIGHT"]]
 			self.shiftkeys_list = [
 				[u"EXIT", u"!", u'"', u"§", u"$", u"%", u"&", u"/", u"(", u")", u"=", u"BACKSPACE"],
 				[u"Q", u"W", u"E", u"R", u"T", u"Z", u"U", u"I", u"O", u"P", u"Ü", u"*"],
 				[u"A", u"S", u"D", u"F", u"G", u"H", u"J", u"K", u"L", u"Ö", u"Ä", u"'"],
 				[u">", u"Y", u"X", u"C", u"V", u"B", u"N", u"M", u";", u":", u"_", u"CLEAR"],
-				[u"SHIFT", u"SPACE", u"?", u"\\", u"OK", u"LEFT", u"RIGHT"]]
+				[u"SHIFT", u"SPACE", u"?", u"\\",u"|",u"^", u"OK", u"LEFT", u"RIGHT"]]
+			self.nextLang = 'hu_HU'
+		elif self.lang == 'hu_HU':
+			self.keys_list = [
+				[u"EXIT", u"0", u"1", u"2", u"3", u"4", u"5", u"6", u"7", u"8", u"9", u"BACKSPACE"],
+				[u"q", u"w", u"e", u"r", u"t", u"z", u"u", u"i", u"o", u"p", u"ő", u"ú"],
+				[u"a", u"s", u"d", u"f", u"g", u"h", u"j", u"k", u"l", u"é", u"á", u"ű"],
+				[u"í", u"y", u"x", u"c", u"v", u"b", u"n", u"m", u",", ".", u"-", u"ALL"],
+				[u"SHIFT", u"SPACE", u"ö", u"ü", u"ó", u"#", u"@", u"*", u"OK", u"LEFT", u"RIGHT", u"CLEAR"]]
+			self.shiftkeys_list = [
+				[u"EXIT", u"§", u"'", u'"', u"+", u"!", u"%", u"/", u"=", u"(", u")", u"BACKSPACE"],
+				[u"Q", u"W", u"E", u"R", u"T", u"Z", u"U", u"I", u"O", u"P", u"Ő", u"Ú"],
+				[u"A", u"S", u"D", u"F", u"G", u"H", u"J", u"K", u"L", u"É", u"Á", u"Ű"],
+				[u"Í", u"Y", u"X", u"C", u"V", u"B", u"N", u"M", u"?", u":", u"_", u";"],
+				[u"SHIFT", u"Ö", u"Ü", u"Ó", u"&", u"<", u">", u"{", u"}", u"[", u"]", u"\\"]]
 			self.nextLang = 'es_ES'
 		elif self.lang == 'es_ES':
 			self.keys_list = [
@@ -266,7 +281,7 @@ class VirtualKeyBoard(Screen):
 				[u"EXIT", u"1", u"2", u"3", u"4", u"5", u"6", u"7", u"8", u"9", u"0", u"BACKSPACE"],
 				[u"ض", u"ص", u"ث", u"ق", u"ف", u"غ", u"ع", u"ه", u"خ", u"ح", u"ج", u"د"],
 				[u"ش", u"س", u"ي", u"ب", u"ل", u"ا", u"ت", u"ن", u"م", u"ك", u"ط", u"#"],
-				[u"ئ", u"ء", u"ؤ", u"ر", u"لا", u"ى", u"ة", u"و", u"ز", "ظ", u"ذ", u"CLEAR"],
+				[u"ئ", u"ء", u"ؤ", u"ر", u"لا", u"ى", u"ة", u"و", u"ز", "ظ", u"ذ", u"ALL"],
 				[u"SHIFT", u"SPACE", u"+", u"-", u"*", u"/", u".", u",", u"@", u"%", u"&", u"OK"]]
 			self.shiftkeys_list = [
 				[u"EXIT", u"!", u'"', u"§", u"$", u"^", u"<", u">", u"(", u")", u"=", u"BACKSPACE"],
@@ -299,7 +314,7 @@ class VirtualKeyBoard(Screen):
 				[u"Q", u"W", u"E", u"R", u"T", u"Y", u"U", u"I", u"O", u"P", u"+", u"]"],
 				[u"A", u"S", u"D", u"F", u"G", u"H", u"J", u"K", u"L", u"?", u'"', u"|"],
 				[u">", u"Z", u"X", u"C", u"V", u"B", u"N", u"M", u";", u":", u"_", u"CLEAR"],
-				[u"SHIFT", u"SPACE", u"OK", u"LEFT", u"RIGHT", u"~"]]
+				[u"SHIFT", u"SPACE", u"|", u"^", u"OK", u"LEFT", u"RIGHT", u"~"]]
 			self.lang = 'en_US'
 			self.nextLang = 'it_IT'
 		self["country"].setText(self.lang)

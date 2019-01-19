@@ -29,7 +29,7 @@
 
 <!-- main-->
 	<screen name="InfoBarSummary" position="fill" >
-		<widget source="session.CurrentService" render="LcdPicon" zPosition="1" position="center,10" size="220,80" alphatest="blend" >
+		<widget source="session.CurrentService" render="LcdPicon" zPosition="1" position="center,10" size="133,80" alphatest="blend" >
 			<convert type="ServiceName">Reference</convert>
 		</widget>
 		<widget source="session.Event_Now" render="Label" position="0,90" size="220,55" font="FdLcD;22" halign="center" >
@@ -105,6 +105,13 @@
 
 <!-- setup-->
 	<screen name="SetupSummary" position="0,0" size="220,176"> 
+		<widget source="SetupTitle" render="Label" position="0,0" foregroundColor="#FFFF00" size="220,25" font="FdLcD;24" halign="center" valign="center" />
+		<widget source="SetupEntry" render="Label" position="0,26" size="220,50" font="FdLcD;24" halign="center" valign="center" />
+		<widget source="SetupValue" render="Label" position="0,78" size="220,50" font="FdLcD;22" halign="center" valign="top" />
+	</screen>
+	
+<!-- Blindscan-->
+	<screen name="SetupSummary2" position="0,0" size="220,176"> 
 		<widget source="SetupTitle" render="Label" position="0,0" foregroundColor="#FFFF00" size="220,25" font="FdLcD;24" halign="center" valign="center" />
 		<widget source="SetupEntry" render="Label" position="0,26" size="220,50" font="FdLcD;24" halign="center" valign="center" />
 		<widget source="SetupValue" render="Label" position="0,78" size="220,50" font="FdLcD;22" halign="center" valign="top" />
@@ -291,7 +298,10 @@
 			<convert type="MovieInfo">FileSize</convert>
 		</widget>
 	</screen>
-	<screen name="EMCMoviePlayerSummaryGBHDQ" position="0,0" size="220,176"> 
+	<screen name="EMCSelectionSummary" position="0,0" size="220,176">
+		<panel name="EMCSelection_summary" />
+	</screen>
+	<screen name="EMCMoviePlayerSummary" position="0,0" size="220,176"> 
 		<widget source="session.CurrentService" render="Label" position="0,0" size="220,90" foregroundColor="#FFFF00" font="FdLcD;26" valign="top" halign="center" >
 			<convert type="ServiceName">Name</convert>
 		</widget>
@@ -330,6 +340,18 @@
 		<widget source="message" render="Label" position="0,0" size="220,176" font="FdLcD;30" halign="center" valign="center" />
 	</screen>
 
+<!-- Infopanel -->
+	<screen name="Infopanel_summary" position="0,0" size="220,176">
+		<widget source="parent.Title" render="Label" position="0,0" foregroundColor="#FFFF00" size="220,80" font="FdLcD;35" halign="center" valign="top" />
+		<widget source="parent.summary_description" render="Label" position="0,82" size="220,80" font="FdLcD;30" halign="center" valign="center"  />
+	</screen>
+	
+<!-- Quickmenü -->
+	<screen name="QuickMenu_summary" position="0,0" size="220,176">
+		<widget source="parent.Title" render="Label" position="0,0" foregroundColor="#FFFF00" size="220,80" font="FdLcD;35" halign="center" valign="top" />
+		<widget source="parent.summary_description" render="Label" position="0,82" size="220,80" font="FdLcD;30" halign="center" valign="center"  />
+	</screen>
+	
 <!-- softwaremanagment -->
 	<screen name="BackupSelection_summary" position="0,0" size="220,176">
 		<widget source="parent.Title" render="Label" position="0,0" size="220,55" font="FdLcD;26" halign="center" valign="center" foregroundColor="#FFFF00" />

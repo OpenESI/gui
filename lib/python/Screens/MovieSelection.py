@@ -1653,8 +1653,9 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 
 	def do_rename(self):
 		item = self.getCurrentSelection()
-		if not canRename(item):
+		if not canMove(item):
 			return
+		self.extension = ""
 		if isFolder(item):
 			p = os.path.split(item[0].getPath())
 			if not p[1]:
@@ -1664,6 +1665,10 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 		else:
 			info = item[1]
 			name = info.getName(item[0])
+			full_name = os.path.split(item[0].getPath())[1]
+			if full_name == name: # split extensions for files without metafile
+				name, self.extension = os.path.splitext(name)
+
 		from Screens.VirtualKeyBoard import VirtualKeyBoard
 		self.session.openWithCallback(self.renameCallback, VirtualKeyBoard,
 			title = _("Rename"),
@@ -2024,7 +2029,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 		self.session.open(NetworkSetup.NetworkMountsMenu)
 
 	def showDeviceMounts(self):
-		from Plugins.Extensions.Infopanel.MountManager import HddMount
+		from Plugins.Extensions.ESIteam.MountManager import HddMount
 		self.session.open(HddMount)
 
 	def showActionFeedback(self, text):

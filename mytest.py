@@ -18,8 +18,9 @@ enigma.eSocketNotifier = eBaseImpl.eSocketNotifier
 enigma.eConsoleAppContainer = eConsoleImpl.eConsoleAppContainer
 boxtype = getBoxType()
 
-if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal/plugin.pyo") and boxtype in ('dm7080','dm820','dm520','dm525','dm900','dm920'):
-	import pyo_patcher
+
+#if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal/plugin.pyo") and boxtype in ('dm7080','dm820','dm520','dm525','dm900','dm920'):
+#	import pyo_patcher
 
 from traceback import print_exc
 
@@ -66,7 +67,7 @@ if os.path.exists(resolveFilename(SCOPE_CONFIG, "radio.mvi")):
 config.misc.radiopic = ConfigText(default = radiopic)
 #config.misc.isNextRecordTimerAfterEventActionAuto = ConfigYesNo(default=False)
 #config.misc.isNextPowerTimerAfterEventActionAuto = ConfigYesNo(default=False)
-config.misc.nextWakeup = ConfigText(default = "-1,-1,0,0,-1,0")	#wakeup time, timer begins, set by (0=rectimer,1=zaptimer, 2=powertimer or 3=plugin), go in standby, next rectimer, force rectimer
+config.misc.nextWakeup = ConfigText(default = "-1,-1,-1,0,0,-1,0")	#last shutdown time, wakeup time, timer begins, set by (0=rectimer,1=zaptimer, 2=powertimer or 3=plugin), go in standby, next rectimer, force rectimer
 config.misc.SyncTimeUsing = ConfigSelection(default = "0", choices = [("0", _("Transponder Time")), ("1", _("NTP"))])
 config.misc.NTPserver = ConfigText(default = 'pool.ntp.org', fixed_size=False)
 
@@ -314,8 +315,9 @@ class Session:
 
 	def openWithCallback(self, callback, screen, *arguments, **kwargs):
 		dlg = self.open(screen, *arguments, **kwargs)
-		dlg.callback = callback
-		return dlg
+		if dlg != 'config.crash.bsodpython.value=True':
+			dlg.callback = callback
+			return dlg
 
 	def open(self, screen, *arguments, **kwargs):
 		if self.dialog_stack and not self.in_exec:
@@ -323,7 +325,15 @@ class Session:
 			# ...unless it's the very first screen.
 
 		self.pushCurrent()
-		dlg = self.current_dialog = self.instantiateDialog(screen, *arguments, **kwargs)
+		if config.crash.bsodpython.value:
+			try:
+				dlg = self.current_dialog = self.instantiateDialog(screen, *arguments, **kwargs)
+			except:
+				self.popCurrent()
+				raise
+				return 'config.crash.bsodpython.value=True'
+		else:
+			dlg = self.current_dialog = self.instantiateDialog(screen, *arguments, **kwargs)
 		dlg.isTmp = True
 		dlg.callback = None
 		self.execBegin()
@@ -397,6 +407,10 @@ class PowerKey:
 		self.doAction(action = config.usage.on_long_powerpress.value)
 
 	def doAction(self, action):
+		if Screens.Standby.TVinStandby.getTVstate('standby'):
+			Screens.Standby.TVinStandby.setTVstate('on')
+			return
+
 		self.standbyblocked = 1
 		if action == "shutdown":
 			self.shutdown()
@@ -413,16 +427,10 @@ class PowerKey:
 						menu_screen.setTitle(_("Standby / restart"))
 						return
 		elif action == "standby":
-			try:
-				config.hdmicec.control_tv_standby_skipnow.setValue(False)
-			except:
-				pass # no HdmiCec
+			Screens.Standby.TVinStandby.skipHdmiCecNow(False)
 			self.standby()
 		elif action == "standby_noTVshutdown":
-			try:
-				config.hdmicec.control_tv_standby_skipnow.setValue(True)
-			except:
-				pass # no HdmiCec
+			Screens.Standby.TVinStandby.skipHdmiCecNow(True)
 			self.standby()
 		elif action == "powertimerStandby":
 			val = 3
@@ -445,6 +453,7 @@ class PowerKey:
 
 	def standby(self):
 		if not Screens.Standby.inStandby and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND and self.session.in_exec:
+			self.session.nav.skipWakeup = True
 			self.session.open(Screens.Standby.Standby)
 
 	def openSleepTimer(self):
@@ -504,6 +513,10 @@ from Screens.Ci import CiHandler
 profile("Load:VolumeControl")
 from Components.VolumeControl import VolumeControl
 
+profile("Load:StackTracePrinter")
+from Components.StackTrace import StackTracePrinter
+StackTracePrinterInst = StackTracePrinter()
+
 from time import time, localtime, strftime
 from Tools.StbHardware import setFPWakeuptime, setRTCtime
 
@@ -529,7 +542,9 @@ def runScreenTest():
 	config.misc.startCounter.value += 1
 
 	profile("readPluginList")
+	enigma.pauseInit()
 	plugins.readPluginList(resolveFilename(SCOPE_PLUGINS))
+	enigma.resumeInit()
 
 	profile("Init:Session")
 	nav = Navigation(config.misc.nextWakeup.value)
@@ -581,7 +596,7 @@ def runScreenTest():
 	profile("Init:PowerKey")
 	power = PowerKey(session)
 	
-	if boxtype in ('alphatriple','spycat4kmini','tmtwin4k','mbmicrov2','revo4k','force3uhd','wetekplay', 'wetekplay2', 'wetekhub', 'dm7020hd', 'dm7020hdv2', 'osminiplus', 'osmega', 'sf3038', 'spycat', 'e4hd', 'e4hdhybrid', 'mbmicro', 'et7500', 'mixosf5', 'mixosf7', 'mixoslumi', 'gi9196m', 'maram9', 'ixussone', 'ixusszero', 'uniboxhd1', 'uniboxhd2', 'uniboxhd3', 'sezam5000hd', 'mbtwin', 'sezam1000hd', 'mbmini', 'atemio5x00', 'beyonwizt3', '9910lx', '9911lx') or getBrandOEM() in ('fulan') or getMachineBuild() in ('dags7362' , 'dags73625', 'dags5'):
+	if boxtype in ('ustym4kpro','sf8008','sf8008s','sf8008t','clap4k','alien5','osninopro','osnino','osninoplus','alphatriple','spycat4kmini','tmtwin4k','mbmicrov2','revo4k','force3uhd','wetekplay', 'wetekplay2', 'wetekhub', 'dm7020hd', 'dm7020hdv2', 'osminiplus', 'osmega', 'sf3038', 'spycat', 'e4hd', 'e4hdhybrid', 'mbmicro', 'et7500', 'mixosf5', 'mixosf7', 'mixoslumi', 'gi9196m', 'maram9', 'ixussone', 'ixusszero', 'uniboxhd1', 'uniboxhd2', 'uniboxhd3', 'sezam5000hd', 'mbtwin', 'sezam1000hd', 'mbmini', 'atemio5x00', 'beyonwizt3', '9910lx', '9911lx', '9920lx') or getBrandOEM() in ('fulan') or getMachineBuild() in ('dags7362' , 'dags73625', 'dags5'):
 		profile("VFDSYMBOLS")
 		import Components.VfdSymbols
 		Components.VfdSymbols.SymbolsCheck(session)
@@ -613,13 +628,14 @@ def runScreenTest():
 		import Screens.PowerLost
 		Screens.PowerLost.PowerLost(session)
 
-	config.usage.shutdownOK.setValue(False)
-	config.usage.shutdownOK.save()
 	if not RestoreSettings:
+		config.usage.shutdownOK.setValue(False)
+		config.usage.shutdownOK.save()
 		configfile.save()
 
 	# kill showiframe if it is running (sh4 hack...)
-	os.system("killall -9 showiframe")
+	if getMachineBuild() in ('spark' , 'spark7162'):
+		os.system("killall -9 showiframe")
 
 	runReactor()
 
@@ -722,9 +738,9 @@ def runScreenTest():
 		#set next standby only after shutdown in deep standby
 		if Screens.Standby.quitMainloopCode != 1 and Screens.Standby.quitMainloopCode != 45:
 			setStandby = 2 # 0=no standby, but get in standby if wakeup to timer start > 60 sec (not for plugin-timer, here is no standby), 1=standby, 2=no standby, when before was not in deep-standby
-		config.misc.nextWakeup.value = "%d,%d,%d,%d,%d,%d" % (wptime,startTime[0],startTime[1],setStandby,nextRecordTime,forceNextRecord)
+		config.misc.nextWakeup.value = "%d,%d,%d,%d,%d,%d,%d" % (int(nowTime),wptime,startTime[0],startTime[1],setStandby,nextRecordTime,forceNextRecord)
 	else:
-		config.misc.nextWakeup.value = "-1,-1,0,0,-1,0"
+		config.misc.nextWakeup.value = "%d,-1,-1,0,0,-1,0" % (int(nowTime))
 		if not boxtype.startswith('azboxm'): #skip for Azbox (mini)ME - setting wakeup time to past reboots box 
 			setFPWakeuptime(int(nowTime) - 3600) #minus one hour -> overwrite old wakeup time
 		print "[mytest.py] no set next wakeup time"
@@ -756,6 +772,10 @@ profile("AVSwitch")
 import Components.AVSwitch
 Components.AVSwitch.InitAVSwitch()
 Components.AVSwitch.InitiVideomodeHotplug()
+
+profile("HdmiRecord")
+import Components.HdmiRecord
+Components.HdmiRecord.InitHdmiRecord()
 
 profile("RecordingConfig")
 import Components.RecordingConfig

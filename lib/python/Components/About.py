@@ -31,13 +31,8 @@ def getKernelVersionString():
 		return _("unknown")
 	
 def getModelString():
-	try:
-		file = open("/proc/stb/info/boxtype", "r")
-		model = file.readline().strip()
-		file.close()
+		model = getBoxType()
 		return model
-	except IOError:
-		return "unknown"
 
 def getChipSetString():
 	if getMachineBuild() in ('dm7080','dm820'):
@@ -48,6 +43,8 @@ def getChipSetString():
 		return "7252S"
 	elif getMachineBuild() in ('hd51','vs1500','h7'):
 		return "7251S"
+	elif getMachineBuild() in ('alien5'):
+		return "S905D"
 	else:
 		try:
 			f = open('/proc/stb/info/chipset', 'r')
@@ -58,13 +55,19 @@ def getChipSetString():
 			return "unavailable"
 
 def getCPUSpeedString():
-	if getMachineBuild() in ('vusolo4k','vuultimo4k', 'vuzero4k'):
+	if getMachineBuild() in ('dags72604','vusolo4k','vuultimo4k', 'vuzero4k'):
 		return "1,5 GHz"
-	elif getMachineBuild() in ('formuler1tc','formuler1', 'triplex'):
+	elif getMachineBuild() in ('formuler1tc','formuler1', 'triplex', 'tiviaraplus'):
 		return "1,3 GHz"
+	elif getMachineBuild() in ('u51','u52','u53','u54','u55','u5','u5pvr','h9','h9combo','cc1','sf8008','sf8008s','sf8008t','hd60','hd61','i55plus','ustym4kpro','v8plus','multibox'):
+		return "1,6 GHz"
 	elif getMachineBuild() in ('vuuno4kse','vuuno4k','dm900','dm920', 'gb7252', 'dags7252','xc7439','8100s'):
 		return "1,7 GHz"
-	elif getMachineBuild() in ('hd51','hd52','sf4008','vs1500','et1x000','h7','et13000','sf5008'):
+	elif getMachineBuild() in ('alien5'):
+		return "2,0 GHz"
+	elif getMachineBuild() in ('vuduo4k'):
+		return "2,1 GHz"
+	elif getMachineBuild() in ('hd51','hd52','sf4008','vs1500','et1x000','h7','et13000','sf5008','osmio4k'):
 		try:
 			import binascii
 			f = open('/sys/firmware/devicetree/base/cpus/cpu@0/clock-frequency', 'rb')
@@ -92,10 +95,13 @@ def getCPUSpeedString():
 		except IOError:
 			return "unavailable"
 
-
 def getCPUString():
-if getMachineBuild() in ('vuuno4kse','vuuno4k', 'vuultimo4k','vusolo4k', 'vuzero4k', 'hd51', 'hd52', 'sf4008', 'dm900','dm920', 'gb7252', 'dags7252', 'vs1500', 'et1x000', 'xc7439','h7','8100s','et13000','sf5008'):
+	if getMachineBuild() in ('vuduo4k','osmio4k','dags72604','vuuno4kse','vuuno4k', 'vuultimo4k','vusolo4k', 'vuzero4k', 'hd51', 'hd52', 'sf4008', 'dm900','dm920', 'gb7252', 'dags7252', 'vs1500', 'et1x000', 'xc7439','h7','8100s','et13000','sf5008'):
 		return "Broadcom"
+	elif getMachineBuild() in ('u51','u52','u53','u54','u55','u5','u5pvr','h9','h9combo','cc1','sf8008','sf8008s','sf8008t','hd60','hd61','i55plus','ustym4kpro','v8plus','multibox'):
+		return "Hisilicon"
+	elif getMachineBuild() in ('alien5'):
+		return "AMlogic"
 	else:
 		try:
 			system="unknown"
@@ -123,7 +129,7 @@ def getCpuCoresString():
 			if len(splitted) > 1:
 				splitted[1] = splitted[1].replace('\n','')
 				if splitted[0].startswith("processor"):
-					if getMachineBuild() in ('vuultimo4k'):
+					if getMachineBuild() in ('u51','u52','u53','u54','u55','vuultimo4k','u5','u5pvr','h9','h9combo','alien5','cc1','sf8008','sf8008s','sf8008t','hd60','hd61','i55plus','ustym4kpro','v8plus','vuduo4k','multibox'):
 						cores = 4
 					elif int(splitted[1]) > 0:
 						cores = 2

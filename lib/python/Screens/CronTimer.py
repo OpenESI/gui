@@ -5,6 +5,7 @@ from Components.Console import Console
 from Components.Label import Label
 from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
+from Components.Sources.Boolean import Boolean
 from Components.Pixmap import Pixmap
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -40,10 +41,10 @@ class CronTimers(Screen):
 		self['key_blue'] = Label(_("Autostart"))
 		self.list = []
 		self['list'] = List(self.list)
-		self['actions'] = ActionMap(['WizardActions', 'ColorActions', "MenuActions"], {'ok': self.info, 'back': self.UninstallCheck, 'red': self.delcron, 'green': self.addtocron, 'yellow': self.CrondStart, 'blue': self.autostart, "menu": self.closeRecursive})
+		self['actions'] = ActionMap(['WizardActions', 'ColorActions', "MenuActions"], {'ok': self.info, 'back': self.UninstallCheck, 'red': self.delcron, 'green': self.addtocron, 'yellow': self.CrondStart, 'blue': self.autostart})
 		if not self.selectionChanged in self["list"].onSelectionChanged:
 			self["list"].onSelectionChanged.append(self.selectionChanged)
-		self.service_name = 'busybox-cron'
+		self.service_name = 'cronie'
 		self.InstallCheck()
 		
 
@@ -134,19 +135,19 @@ class CronTimers(Screen):
 
 	def CrondStart(self):
 		if not self.my_crond_run:
-			self.Console.ePopen('/etc/init.d/busybox-cron start', self.StartStopCallback)
+			self.Console.ePopen('/etc/init.d/crond start', self.StartStopCallback)
 		elif self.my_crond_run:
-			self.Console.ePopen('/etc/init.d/busybox-cron stop', self.StartStopCallback)
+			self.Console.ePopen('/etc/init.d/crond stop', self.StartStopCallback)
 
 	def StartStopCallback(self, result = None, retval = None, extra_args = None):
 		sleep(3)
 		self.updateList()
 
 	def autostart(self):
-		if fileExists('/etc/rc2.d/S20busybox-cron'):
-			self.Console.ePopen('update-rc.d -f busybox-cron remove')
+		if fileExists('/etc/rc2.d/S90crond'):
+			self.Console.ePopen('update-rc.d -f crond remove')
 		else:
-			self.Console.ePopen('update-rc.d -f busybox-cron defaults')
+			self.Console.ePopen('update-rc.d -f crond defaults 90 60')
 		sleep(3)
 		self.updateList()
 
@@ -163,7 +164,7 @@ class CronTimers(Screen):
 		self['labdisabled'].hide()
 		self.my_crond_active = False
 		self.my_crond_run = False
-		if path.exists('/etc/rc3.d/S20busybox-cron'):
+		if path.exists('/etc/rc3.d/S90crond'):
 			self['labdisabled'].hide()
 			self['labactive'].show()
 			self.my_crond_active = True
@@ -258,9 +259,6 @@ class CronTimers(Screen):
 			myline = mysel[1]
 			self.session.open(MessageBox, _(myline), MessageBox.TYPE_INFO)
 
-	def closeRecursive(self):
-		self.close(True)
-
 config.crontimers = ConfigSubsection()
 config.crontimers.commandtype = NoSave(ConfigSelection(choices = [ ('custom',_("Custom")),('predefined',_("Predefined")) ]))
 config.crontimers.cmdtime = NoSave(ConfigClock(default=0))
@@ -280,7 +278,8 @@ class CronTimersConfig(Screen, ConfigListScreen):
 		ConfigListScreen.__init__(self, self.list, session = self.session, on_change = self.changedEntry)
 		self['key_red'] = Label(_("Close"))
 		self['key_green'] = Label(_("Save"))
-		self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'VirtualKeyboardActions', "MenuActions"], {'red': self.close,'green': self.checkentry, 'back': self.close, 'showVirtualKeyboard': self.KeyText, "menu": self.closeRecursive})
+		self['actions'] = ActionMap(['WizardActions', 'ColorActions', 'VirtualKeyboardActions', "MenuActions"], {'red': self.close,'green': self.checkentry, 'back': self.close, 'showVirtualKeyboard': self.KeyText})
+		self["VKeyIcon"] = Boolean(False)
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
 		self['footnote'] = Label()
@@ -289,11 +288,11 @@ class CronTimersConfig(Screen, ConfigListScreen):
 
 	def createSetup(self):
 		predefinedlist = []
-		f = listdir('/usr/script')
+		f = listdir('/usr/lib/enigma2/python/Plugins/Extensions/ESIteam/scripts')
 		if f:
 			for line in f:
 				parts = line.split()
-				path = "/usr/script/"
+				path = "/usr/lib/enigma2/python/Plugins/Extensions/ESIteam/scripts/"
 				pkg = parts[0]
 				description = path + parts[0]
 				if pkg.find('.sh') >= 0:

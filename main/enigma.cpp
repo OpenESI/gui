@@ -43,6 +43,8 @@
 #include <lib/base/eerroroutput.h>
 ePtr<eErrorOutput> m_erroroutput;
 
+bool verbose = false;
+
 #ifdef OBJECT_DEBUG
 int object_total_remaining;
 
@@ -219,14 +221,24 @@ void quitMainloop(int exitCode)
 		if (fd >= 0)
 		{
 			if (ioctl(fd, 10 /*FP_CLEAR_WAKEUP_TIMER*/) < 0)
-				eDebug("FP_CLEAR_WAKEUP_TIMER failed (%m)");
+				eDebug("[quitMainloop] FP_CLEAR_WAKEUP_TIMER failed (%m)");
 			close(fd);
 		}
 		else
-			eDebug("open /dev/dbox/fp0 for wakeup timer clear failed!(%m)");
+			eDebug("[quitMainloop] open /dev/dbox/fp0 for wakeup timer clear failed!(%m)");
 	}
 	exit_code = exitCode;
 	eApp->quit(0);
+}
+
+void pauseInit()
+{
+	eInit::pauseInit();
+}
+
+void resumeInit()
+{
+	eInit::resumeInit();
 }
 
 static void sigterm_handler(int num)
@@ -265,6 +277,11 @@ int main(int argc, char **argv)
 		{
 			logOutputColors = 0;
 		}
+
+		if (!(strcmp(argv[i], "--verbose")))
+		{
+			verbose = true;
+		}
 	}
 
 	m_erroroutput = new eErrorOutput();
@@ -274,8 +291,6 @@ int main(int argc, char **argv)
 	setenv("PYTHONPATH", eEnv::resolve("${libdir}/enigma2/python").c_str(), 0);
 	printf("PYTHONPATH: %s\n", getenv("PYTHONPATH"));
 	printf("DVB_API_VERSION %d DVB_API_VERSION_MINOR %d\n", DVB_API_VERSION, DVB_API_VERSION_MINOR);
-
-	bsodLogInit();
 
 	ePython python;
 	eMain main;
@@ -306,7 +321,7 @@ int main(int argc, char **argv)
 
 /*	if (double_buffer)
 	{
-		eDebug(" - double buffering found, enable buffered graphics mode.");
+		eDebug("[MAIN]  - double buffering found, enable buffered graphics mode.");
 		dsk.setCompositionMode(eWidgetDesktop::cmBuffered);
 	} */
 
@@ -325,28 +340,39 @@ int main(int argc, char **argv)
 
 	std::string active_skin = getConfigCurrentSpinner("config.skin.primary_skin");
 
-	eDebug("Loading spinners...");
+	eDebug("[MAIN] Loading spinners...");
 
 	{
-		int i;
+		int i = 0;
+		bool def = false;
+		std::string path = "${sysconfdir}/enigma2/spinner";
 #define MAX_SPINNER 64
 		ePtr<gPixmap> wait[MAX_SPINNER];
-		for (i=0; i<MAX_SPINNER; ++i)
+		while(i < MAX_SPINNER)
 		{
 			char filename[64];
 			std::string rfilename;
-			snprintf(filename, sizeof(filename), "${datadir}/enigma2/%s/wait%d.png", active_skin.c_str(), i + 1);
+			snprintf(filename, sizeof(filename), "%s/wait%d.png", path.c_str(), i + 1);
 			rfilename = eEnv::resolve(filename);
 			loadPNG(wait[i], rfilename.c_str());
 
 			if (!wait[i])
 			{
 				if (!i)
-					eDebug("failed to load %s! (%m)", rfilename.c_str());
+				{
+					if (!def)
+					{
+						def = true;
+						snprintf(filename, sizeof(filename), "${datadir}/enigma2/%s", active_skin.c_str());
+						path = filename;
+						continue;
+					}
+				}
 				else
-					eDebug("found %d spinner!", i);
+					eDebug("[MAIN] found %d spinner!", i);
 				break;
 			}
+			i++;
 		}
 		if (i)
 			my_dc->setSpinner(eRect(ePoint(25, 25), wait[0]->size()), wait, i);
@@ -358,7 +384,7 @@ int main(int argc, char **argv)
 
 	eRCInput::getInstance()->keyEvent.connect(sigc::ptr_fun(&keyEvent));
 
-	printf("executing main\n");
+	eDebug("[MAIN] executing main\n");
 
 	bsodCatchSignals();
 	catchTermSignal();
@@ -376,7 +402,7 @@ int main(int argc, char **argv)
 
 	if (exit_code == 5) /* python crash */
 	{
-		eDebug("(exit code 5)");
+		eDebug("[MAIN] (exit code 5)");
 		bsodFatal(0);
 	}
 

@@ -116,8 +116,7 @@
 		<key id="KEY_F3" mapto="openIMDB" flags="l" />
 		<key id="KEY_F4" mapto="showPluginBrowser" flags="l" />
 		<key id="KEY_F4" mapto="extensions" flags="b" />
-		<!--key id="KEY_BLUE" mapto="extensions" flags="l" /-->
-		<!--key id="KEY_BLUE" mapto="quickmenu" flags="b" /-->
+		<key id="KEY_BLUE" mapto="extensions" flags="l" />
 	</map>
 
 	<map context="InfoBarQuickMenu">
@@ -289,6 +288,8 @@
 
 	<map context="InfobarRedButtonActions">
 		<key id="KEY_RED" mapto="activateRedButton" flags="l" />
+	    <key id="KEY_RED" mapto="activateRedButton" flags="b" />
+	    
 	</map>
 
 	<map context="InfobarTimerButtonActions">
@@ -898,10 +899,9 @@
 		<key id="KEY_CHANNELUP" mapto="incUphop" flags="m"/>
 		<key id="KEY_CHANNELDOWN" mapto="decUphop" flags="m"/>
 	</map>
-	<map context="InfoBarESIpanel">
-		<key id="KEY_RED" mapto="esiPanel" flags="b" />
-		<key id="KEY_RED" mapto="softcamPanel" flags="l" />
-	</map>
+		<map context="ESIBluePanel">
+			<key id="KEY_BLUE" mapto="esiteam" flags="b" />
+		</map>
 
 	<map context="DVDPlayerActions">
 		<key id="KEY_MENU" mapto="dvdMenu" flags="m"/>
@@ -1009,7 +1009,8 @@
 		<key id="KEY_HOMEPAGE" mapto="homep_long" flags="l"/>
 		<key id="KEY_DIRECTORY" mapto="directory" flags="b"/>
 		<key id="KEY_DIRECTORY" mapto="directory_long" flags="l"/>
-		<key id="KEY_TIME" mapto="timeshift" flags="b"/>
+		<key id="KEY_TIME" mapto="time" flags="b"/>
+		<key id="KEY_TIME" mapto="time_long" flags="l"/>		
 		<key id="KEY_SEARCH" mapto="search" flags="b"/>
 		<key id="KEY_SEARCH" mapto="search_long" flags="l"/>
 		<key id="KEY_RESTART" mapto="slow" flags="b"/>
