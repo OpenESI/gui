@@ -12,12 +12,11 @@ class ServicePosition(Poll, Converter, object):
 	TYPE_REMAINING = 2
 	TYPE_GAUGE = 3
 	TYPE_SUMMARY = 4
-	TYPE_ENDTIME = 5
-	TYPE_VFD_LENGTH = 6
-	TYPE_VFD_POSITION = 7
-	TYPE_VFD_REMAINING = 8
-	TYPE_VFD_GAUGE = 9
-	TYPE_VFD_SUMMARY = 10
+	TYPE_VFD_LENGTH = 5
+	TYPE_VFD_POSITION = 6
+	TYPE_VFD_REMAINING = 7
+	TYPE_VFD_GAUGE = 8
+	TYPE_VFD_SUMMARY = 9
 
 	def __init__(self, type):
 		Poll.__init__(self)
@@ -53,8 +52,6 @@ class ServicePosition(Poll, Converter, object):
 			self.type = self.TYPE_VFD_GAUGE
 		elif type == "VFDSummary":
 			self.type = self.TYPE_VFD_SUMMARY
-		elif type == "EndTime":
-			self.type = self.TYPE_ENDTIME
 		else:
 			raise ElementError("type must be {Length|Position|Remaining|Gauge|Summary} with optional arguments {Negate|Detailed|ShowHours|ShowNoSeconds|ShowNoSeconds2} for ServicePosition converter")
 
@@ -62,8 +59,6 @@ class ServicePosition(Poll, Converter, object):
 			self.poll_interval = 100
 		elif self.type == self.TYPE_LENGTH or self.type == self.TYPE_VFD_LENGTH:
 			self.poll_interval = 2000
-		elif self.type == self.TYPE_ENDTIME:
-			self.poll_interval = 1000
 		else:
 			self.poll_interval = 500
 
@@ -143,7 +138,7 @@ class ServicePosition(Poll, Converter, object):
 			r = -r
 			sign_r = "-"
 
-		if self.type < self.TYPE_VFD_LENGTH:
+		if self.type < 5:
 			if config.usage.elapsed_time_positive_osd.value:
 				sign_p = "+"
 				sign_r = "-"
@@ -301,12 +296,7 @@ class ServicePosition(Poll, Converter, object):
 							elif self.type == self.TYPE_POSITION:
 								return sign_p + ngettext("%d Min", "%d Mins", (p/60)) % (p/60)
 							elif self.type == self.TYPE_REMAINING and self.OnlyMinute:
-								if config.usage.elapsed_time_positive_vfd.value:
-									myRestMinuten = "%+6d" % (r/60)
-								else:
-									myRestMinuten = "%+6d" % (r/60*-1)
-								if (r/60) == 0:
-									myRestMinuten = " "
+								myRestMinuten = ngettext("%+6d", "%+6d", (r/60)) % (r/60)
 								time = getTime()
 								t = localtime(time)
 								d = _("%-H:%M")

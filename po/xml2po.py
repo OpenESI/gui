@@ -26,7 +26,7 @@ class parseXML(ContentHandler, LexicalHandler):
 			self.last_comment = comment
 
 	def startElement(self, name, attrs):
-		for x in ["text", "title", "value", "caption", "description"]:
+		for x in ["text", "title", "titleshort", "value", "caption", "description"]:
 			try:
 				k = str(attrs[x].encode('utf-8'))
 				if k.strip() != "" and not self.ishex.match(k):
@@ -62,6 +62,7 @@ for arg in sys.argv[1:]:
 		if c:
 			for l in c.split('\n'):
 				print "#. ", l
+		k=k.replace('\"', '\\"')
 		print 'msgid "' + str(k) + '"'
 		print 'msgstr ""'
 

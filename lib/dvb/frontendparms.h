@@ -16,9 +16,9 @@
 
 extern int roundMulti(int value, int m);//round value to multiple of m
 
-class eDVBFrontendParametersSatellite
+
+struct eDVBFrontendParametersSatellite
 {
-public:
 #ifndef SWIG
 	void set(const SatelliteDeliverySystemDescriptor  &);
 	void set(const S2SatelliteDeliverySystemDescriptor  &);
@@ -52,12 +52,15 @@ public:
 	enum {
 		Pilot_Off, Pilot_On, Pilot_Unknown
 	};
+
 	enum {
 		Band_Unknown, Band_C, Band_Ka, Band_Ku
 	};
+
 	enum {
 		PLS_Root, PLS_Gold, PLS_Combo, PLS_Unknown
 	};
+
 	enum {
 		No_Stream_Id_Filter = NO_STREAM_ID_FILTER
 	};
@@ -69,9 +72,8 @@ public:
 };
 SWIG_ALLOW_OUTPUT_SIMPLE(eDVBFrontendParametersSatellite);
 
-class eDVBFrontendParametersCable
+struct eDVBFrontendParametersCable
 {
-public:
 #ifndef SWIG
 	void set(const CableDeliverySystemDescriptor  &);
 #endif
@@ -100,11 +102,10 @@ public:
 };
 SWIG_ALLOW_OUTPUT_SIMPLE(eDVBFrontendParametersCable);
 
-class eDVBFrontendParametersTerrestrial
+struct eDVBFrontendParametersTerrestrial
 {
-public:
 #ifndef SWIG
-	void set(const TerrestrialDeliverySystemDescriptor  &);
+	void set(const TerrestrialDeliverySystemDescriptor &);
 	void set(const T2DeliverySystemDescriptor &);
 #endif
 	enum {
@@ -117,7 +118,7 @@ public:
 	 * (and it's too late to fix this now, we would break backward compatibility)
 	 */
 	enum {
-		FEC_1_2=0, FEC_2_3=1, FEC_3_4=2, FEC_5_6=3, FEC_7_8=4, FEC_Auto=5, FEC_6_7=6, FEC_8_9=7
+		FEC_1_2=0, FEC_2_3=1, FEC_3_4=2, FEC_5_6=3, FEC_7_8=4, FEC_Auto=5, FEC_6_7=6, FEC_8_9=7, FEC_3_5=8, FEC_4_5=9
 	};
 
 	enum {
@@ -157,9 +158,8 @@ public:
 };
 SWIG_ALLOW_OUTPUT_SIMPLE(eDVBFrontendParametersTerrestrial);
 
-class eDVBFrontendParametersATSC
+struct eDVBFrontendParametersATSC
 {
-public:
 	enum {
 		Inversion_Off, Inversion_On, Inversion_Unknown
 	};

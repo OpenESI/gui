@@ -1,16 +1,33 @@
+# -*- coding: utf-8 -*-
 from boxbranding import getBoxType, getMachineBuild, getImageVersion
+from time import *
+from types import *
 from sys import modules
-import socket, fcntl, struct, time, os
-
-def getImageVersionString():
-	return getImageVersion()
+import sys, os, time, socket, fcntl, struct, subprocess, threading, traceback, commands, datetime
+from os import path, system, remove as os_remove, rename as os_rename, popen, getcwd, chdir
 
 def getVersionString():
 	return getImageVersion()
 
+def getImageVersionString():
+	try:
+		if os.path.isfile('/var/lib/opkg/status'):
+			st = os.stat('/var/lib/opkg/status')
+		else:
+			st = os.stat('/usr/lib/ipkg/status')
+		tm = time.localtime(st.st_mtime)
+		if tm.tm_year >= 2011:
+			return time.strftime("%Y-%m-%d %H:%M:%S", tm)
+	except:
+		pass
+	return _("unavailable")
+
 def getFlashDateString():
 	try:
-		return time.strftime(_("%Y-%m-%d"), time.localtime(os.stat("/boot").st_ctime))
+		if path.exists("/boot/STARTUP"):
+			return _("Multiboot active")
+		else:
+			return time.strftime(_("%Y-%m-%d"), time.localtime(os.stat("/boot").st_ctime))
 	except:
 		return _("unknown")
 
@@ -18,8 +35,12 @@ def getEnigmaVersionString():
 	return getImageVersion()
 
 def getGStreamerVersionString():
-	import enigma
-	return enigma.getGStreamerVersionString()
+	try:
+		from glob import glob
+		gst = [x.split("Version: ") for x in open(glob("/var/lib/opkg/info/gstreamer[0-9].[0-9].control")[0], "r") if x.startswith("Version:")][0]
+		return "%s" % gst[1].split("+")[0].replace("\n","")
+	except:
+		return _("unknown")
 
 def getKernelVersionString():
 	try:
@@ -29,13 +50,39 @@ def getKernelVersionString():
 		return kernelversion
 	except:
 		return _("unknown")
-	
+
 def getModelString():
-		model = getBoxType()
+	try:
+		file = open("/proc/stb/info/boxtype", "r")
+		model = file.readline().strip()
+		file.close()
 		return model
+	except IOError:
+		return _("unknown")
+
+def getIsBroadcom():
+	try:
+		file = open('/proc/cpuinfo', 'r')
+		lines = file.readlines()
+		for x in lines:
+			splitted = x.split(': ')
+			if len(splitted) > 1:
+				splitted[1] = splitted[1].replace('\n','')
+				if splitted[0].startswith("Hardware"):
+					system = splitted[1].split(' ')[0]
+				elif splitted[0].startswith("system type"):
+					if splitted[1].split(' ')[0].startswith('BCM'):
+						system = 'Broadcom'
+		file.close()
+		if 'Broadcom' in system:
+			return True
+		else:
+			return False
+	except:
+		return False
 
 def getChipSetString():
-	if getMachineBuild() in ('dm7080','dm820'):
+	if getMachineBuild() in ('dm7080', 'dm820'):
 		return "7435"
 	elif getMachineBuild() in ('dm520','dm525'):
 		return "73625"
@@ -52,22 +99,20 @@ def getChipSetString():
 			f.close()
 			return str(chipset.lower().replace('\n','').replace('bcm','').replace('brcm','').replace('sti',''))
 		except IOError:
-			return "unavailable"
+			return _("unavailable")
 
 def getCPUSpeedString():
-	if getMachineBuild() in ('dags72604','vusolo4k','vuultimo4k', 'vuzero4k'):
+	if getMachineBuild() in ('vusolo4k','vuultimo4k', 'vuzero4k'):
 		return "1,5 GHz"
 	elif getMachineBuild() in ('formuler1tc','formuler1', 'triplex', 'tiviaraplus'):
 		return "1,3 GHz"
-	elif getMachineBuild() in ('u51','u52','u53','u54','u55','u5','u5pvr','h9','h9combo','cc1','sf8008','sf8008s','sf8008t','hd60','hd61','i55plus','ustym4kpro','v8plus','multibox'):
+	elif getMachineBuild() in ('u51','u52','u53','u5','u5pvr','h9'):
 		return "1,6 GHz"
 	elif getMachineBuild() in ('vuuno4kse','vuuno4k','dm900','dm920', 'gb7252', 'dags7252','xc7439','8100s'):
 		return "1,7 GHz"
 	elif getMachineBuild() in ('alien5'):
 		return "2,0 GHz"
-	elif getMachineBuild() in ('vuduo4k'):
-		return "2,1 GHz"
-	elif getMachineBuild() in ('hd51','hd52','sf4008','vs1500','et1x000','h7','et13000','sf5008','osmio4k'):
+	elif getMachineBuild() in ('hd51','hd52','sf4008','vs1500','et1x000','h7','et13000','sf5008'):
 		try:
 			import binascii
 			f = open('/sys/firmware/devicetree/base/cpus/cpu@0/clock-frequency', 'rb')
@@ -93,12 +138,23 @@ def getCPUSpeedString():
 			file.close()
 			return mhz
 		except IOError:
-			return "unavailable"
+			return _("unavailable")
+
+def getCPUArch():
+	import os
+	if os.uname()[4].startswith("arm"):
+		return _("ARM")
+	elif os.uname()[4].startswith("sh4"):
+		return _("SH4")
+	elif os.uname()[4].startswith("mips"):
+		return _("Mipsel")
+	else:
+		return _("unknown")
 
 def getCPUString():
-	if getMachineBuild() in ('vuduo4k','osmio4k','dags72604','vuuno4kse','vuuno4k', 'vuultimo4k','vusolo4k', 'vuzero4k', 'hd51', 'hd52', 'sf4008', 'dm900','dm920', 'gb7252', 'dags7252', 'vs1500', 'et1x000', 'xc7439','h7','8100s','et13000','sf5008'):
+	if getMachineBuild() in ('vuuno4kse','vuuno4k', 'vuultimo4k','vusolo4k', 'vuzero4k', 'hd51', 'hd52', 'sf4008', 'dm900','dm920', 'gb7252', 'dags7252', 'vs1500', 'et1x000', 'xc7439','h7','8100s','et13000','sf5008'):
 		return "Broadcom"
-	elif getMachineBuild() in ('u51','u52','u53','u54','u55','u5','u5pvr','h9','h9combo','cc1','sf8008','sf8008s','sf8008t','hd60','hd61','i55plus','ustym4kpro','v8plus','multibox'):
+	elif getMachineBuild() in ('u51','u52','u53','u5','u5pvr','h9'):
 		return "Hisilicon"
 	elif getMachineBuild() in ('alien5'):
 		return "AMlogic"
@@ -113,12 +169,36 @@ def getCPUString():
 					splitted[1] = splitted[1].replace('\n','')
 					if splitted[0].startswith("system type"):
 						system = splitted[1].split(' ')[0]
+					elif splitted[0].startswith("model name"):
+						system = splitted[1].split(' ')[0]
 					elif splitted[0].startswith("Processor"):
 						system = splitted[1].split(' ')[0]
 			file.close()
 			return system
 		except IOError:
-			return "unavailable"
+			return _("unavailable")
+
+def getCpuCoresString2():
+	MachinesCores = {
+					1 : 'Single core',
+					2 : 'Dual core',
+					4 : 'Quad core',
+					8 : 'Octa core'
+					}
+	try:
+		cores = 1
+		file = open('/proc/cpuinfo', 'r')
+		lines = file.readlines()
+		file.close()
+		for x in lines:
+			splitted = x.split(': ')
+			if len(splitted) > 1:
+				splitted[1] = splitted[1].replace('\n','')
+				if splitted[0].startswith("processor"):
+					cores = int(splitted[1]) + 1
+		return MachinesCores[cores]
+	except IOError:
+		return _("unavailable")
 
 def getCpuCoresString():
 	try:
@@ -129,7 +209,7 @@ def getCpuCoresString():
 			if len(splitted) > 1:
 				splitted[1] = splitted[1].replace('\n','')
 				if splitted[0].startswith("processor"):
-					if getMachineBuild() in ('u51','u52','u53','u54','u55','vuultimo4k','u5','u5pvr','h9','h9combo','alien5','cc1','sf8008','sf8008s','sf8008t','hd60','hd61','i55plus','ustym4kpro','v8plus','vuduo4k','multibox'):
+					if getMachineBuild() in ('u51','u52','u53','vuultimo4k','u5','u5pvr','h9','alien5'):
 						cores = 4
 					elif int(splitted[1]) > 0:
 						cores = 2
@@ -138,7 +218,7 @@ def getCpuCoresString():
 		file.close()
 		return cores
 	except IOError:
-		return "unavailable"
+		return _("unavailable")
 
 def _ifinfo(sock, addr, ifname):
 	iface = struct.pack('256s', ifname[:15])
@@ -174,13 +254,191 @@ def getIfTransferredData(ifname):
 			f.close()
 			return rx_bytes, tx_bytes
 
+def getDriverInstalledDate():
+	try:
+		from glob import glob
+		try:
+			driver = [x.split("-")[-2:-1][0][-8:] for x in open(glob("/var/lib/opkg/info/*-dvb-modules-*.control")[0], "r") if x.startswith("Version:")][0]
+			return  "%s-%s-%s" % (driver[:4], driver[4:6], driver[6:])
+		except:
+			driver = [x.split("Version:") for x in open(glob("/var/lib/opkg/info/*-dvb-proxy-*.control")[0], "r") if x.startswith("Version:")][0]
+			return  "%s" % driver[1].replace("\n","")
+	except:
+		return _("unknown")
+
 def getPythonVersionString():
+	import sys
+	return "%s.%s.%s" % (sys.version_info.major,sys.version_info.minor,sys.version_info.micro)
+
+def getFFmpegVersionString():
 	try:
 		import commands
-		status, output = commands.getstatusoutput("python -V")
+		ffmpegV = commands.getoutput("ffmpeg -version | awk 'NR==1{print $3}'")
+		if ffmpegV:
+			try:
+				output = ffmpegV
+				return output.split(' ')[0]
+			except:
+				pass
+		else:
+			return getFFmpegVersionString()
+	except:
+		return _("unknown")
+
+def getCPUTempString():
+	try:
+		temperature = None
+		if os.path.isfile('/proc/stb/fp/temp_sensor_avs'):
+			if temperature:
+				temperature = open("/proc/stb/fp/temp_sensor_avs").readline().replace('\n','')
+				return _("%s°C") % temperature
+		elif os.path.isfile('/sys/devices/virtual/thermal/thermal_zone0/temp'):
+			if temperature:
+				temperature = open("/sys/devices/virtual/thermal/thermal_zone0/temp").readline().replace('\n','')
+				return _("%s°C") % temperature
+		elif os.path.isfile('/proc/stb/power/avs'):
+			if temperature:
+				temperature = open("/proc/stb/power/avs").readline().replace('\n','')
+				return _("%s°C") % celsius
+	except:
+		return _("undefined")
+
+def getUptimeString():
+	try:
+		import commands
+		output = commands.getoutput("uptime | grep up | awk '{print $3,$4}'")
+		return output.split(',')[0]
+	except:
+		return _("unknown")
+
+def getLoadCPUString():
+	try:
+		import commands
+		output = commands.getoutput("top -bn1 | grep load | awk '{printf \"%.2f\", $(NF-2)}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMusageString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==2{printf \"%s/%sMB %.2f%%\", $3,$2,$3*100/$2 }'")
 		return output.split(' ')[1]
+	except:
+		return _("unknown")
+
+def getRAMFreePorcString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==2{printf \"%s/%sMB %.2f%%\", $4,$2,$4*100/$2 }'")
+		return output.split(' ')[1]
+	except:
+		return _("unknown")
+
+def getRAMTotalString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==2{print $2}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMUsedString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==2{print $3}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMUsedKBString():
+	try:
+		import commands
+		output = commands.getoutput("free | grep Mem: | awk '{print $3}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMFreeString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==2{print $4}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMSharingString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==2{print $5}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMStoredString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==2{print $6}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMCachedString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==2{print $7}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMSwapTotalString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==3{print $2}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMSwapUsedString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==3{print $3}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMSwapFreeString():
+	try:
+		import commands
+		output = commands.getoutput("free -m | awk 'NR==3{print $4}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMTotalGlobalString():
+	try:
+		import commands
+		output = commands.getoutput("free -h -t | sed '1 d' | grep Total: | awk '{print $2}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMUsedGlobalString():
+	try:
+		import commands
+		output = commands.getoutput("free -h -t | sed '1 d' | grep Total: | awk '{print $3}'")
+		return output.split(' ')[0]
+	except:
+		return _("unknown")
+
+def getRAMFreeGlobalString():
+	try:
+		import commands
+		output = commands.getoutput("free -h -t | sed '1 d' | grep Total: | awk '{print $4}'")
+		return output.split(' ')[0]
 	except:
 		return _("unknown")
 
 # For modules that do "from About import about"
 about = modules[__name__]
+

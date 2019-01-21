@@ -56,9 +56,9 @@ void eTimer::start(long msek, bool singleShot)
 		bSingleShot = singleShot;
 		interval = msek;
 		clock_gettime(CLOCK_MONOTONIC, &nextActivation);
-//		eDebug("[eTimer] this = %p\nnow sec = %d, nsec = %d\nadd %d msec", this, nextActivation.tv_sec, nextActivation.tv_nsec, msek);
+//		eDebug("this = %p\nnow sec = %d, nsec = %d\nadd %d msec", this, nextActivation.tv_sec, nextActivation.tv_nsec, msek);
 		nextActivation += (msek<0 ? 0 : msek);
-//		eDebug("[eTimer] next Activation sec = %d, nsec = %d", nextActivation.tv_sec, nextActivation.tv_nsec );
+//		eDebug("next Activation sec = %d, nsec = %d", nextActivation.tv_sec, nextActivation.tv_nsec );
 		context.addTimer(this);
 	}
 }
@@ -73,10 +73,10 @@ void eTimer::startLongTimer(int seconds)
 		bActive = bSingleShot = true;
 		interval = 0;
 		clock_gettime(CLOCK_MONOTONIC, &nextActivation);
-//		eDebug("[eTimer] this = %p\nnow sec = %d, nsec = %d\nadd %d sec", this, nextActivation.tv_sec, nextActivation.tv_nsec, seconds);
+//		eDebug("this = %p\nnow sec = %d, nsec = %d\nadd %d sec", this, nextActivation.tv_sec, nextActivation.tv_nsec, seconds);
 		if ( seconds > 0 )
 			nextActivation.tv_sec += seconds;
-//		eDebug("[eTimer] next Activation sec = %d, nsec = %d", nextActivation.tv_sec, nextActivation.tv_nsec );
+//		eDebug("next Activation sec = %d, nsec = %d", nextActivation.tv_sec, nextActivation.tv_nsec );
 		context.addTimer(this);
 	}
 }
@@ -94,16 +94,16 @@ void eTimer::changeInterval(long msek)
 {
 	if (bActive)  // Timer is running?
 	{
-		context.removeTimer(this);	 // then stop
-		nextActivation -= interval;  // sub old interval
+		context.removeTimer(this); // then stop
+		nextActivation -= interval; // sub old interval
 	}
 	else
 		bActive=true; // then activate Timer
 
-	interval = msek;   			 			// set new Interval
-	nextActivation += interval;		// calc nextActivation
+	interval = msek; // set new Interval
+	nextActivation += interval; // calc nextActivation
 
-	context.addTimer(this);				// add Timer to context TimerList
+	context.addTimer(this); // add Timer to context TimerList
 }
 
 void eTimer::activate()   // Internal Funktion... called from eApplication
@@ -166,20 +166,19 @@ void eMainloop::removeSocketNotifier(eSocketNotifier *sn)
 		return;
 	}
 	for (i = notifiers.begin(); i != notifiers.end(); ++i)
-		eDebug("[eMainloop::removeSocketNotifier] fd=%d, sn=%p", i->second->getFD(), (void*)i->second);
-	eFatal("[eMainloop::removeSocketNotifier] removed socket notifier which is not present, fd=%d", fd);
+		eDebug("fd=%d, sn=%p", i->second->getFD(), (void*)i->second);
+	eFatal("removed socket notifier which is not present, fd=%d", fd);
 }
 
-int eMainloop::processOneEvent(unsigned int twisted_timeout, PyObject **res, ePyObject additional)
+int eMainloop::processOneEvent(long user_timeout, PyObject **res, ePyObject additional)
 {
 	int return_reason = 0;
-		/* get current time */
 
 	if (additional && !PyDict_Check(additional))
-		eFatal("[eMainloop::processOneEvent] additional, but it's not dict");
+		eFatal("additional, but it's not dict");
 
 	if (additional && !res)
-		eFatal("[eMainloop::processOneEvent] additional, but no res");
+		eFatal("additional, but no res");
 
 	long poll_timeout = -1; /* infinite in case of empty timer list */
 
@@ -188,6 +187,7 @@ int eMainloop::processOneEvent(unsigned int twisted_timeout, PyObject **res, ePy
 		if (it != m_timer_list.end())
 		{
 			eTimer *tmr = *it;
+			/* get current time */
 			timespec now;
 			clock_gettime(CLOCK_MONOTONIC, &now);
 			/* process all timers which are ready. first remove them out of the list. */
@@ -210,9 +210,9 @@ int eMainloop::processOneEvent(unsigned int twisted_timeout, PyObject **res, ePy
 		}
 	}
 
-	if ((twisted_timeout > 0) && (poll_timeout > 0) && ((unsigned int)poll_timeout > twisted_timeout))
+	if (poll_timeout < 0 || (user_timeout >= 0 && poll_timeout > user_timeout))
 	{
-		poll_timeout = twisted_timeout;
+		poll_timeout = user_timeout;
 		return_reason = 1;
 	}
 
@@ -250,9 +250,23 @@ int eMainloop::processOneEvent(unsigned int twisted_timeout, PyObject **res, ePy
 		}
 	}
 
-	ret = _poll(pfd, fdcount, poll_timeout);
 
-	/* ret > 0 means that there are some active poll entries. */
+	m_is_idle = 1;
+	++m_idle_count;
+
+	if (this == eApp)
+	{
+		Py_BEGIN_ALLOW_THREADS
+		{
+			ret = ::poll(pfd, fdcount, poll_timeout);
+		}
+		Py_END_ALLOW_THREADS
+	} else
+		ret = ::poll(pfd, fdcount, poll_timeout);
+
+	m_is_idle = 0;
+
+			/* ret > 0 means that there are some active poll entries. */
 	if (ret > 0)
 	{
 		int i=0;
@@ -297,7 +311,7 @@ int eMainloop::processOneEvent(unsigned int twisted_timeout, PyObject **res, ePy
 	{
 			/* when we got a signal, we get EINTR. */
 		if (errno != EINTR)
-			eDebug("[eMainloop::processOneEvent] poll made error: %m");
+			eDebug("poll made error (%m)");
 		else
 			return_reason = 2; /* don't assume the timeout has passed when we got a signal */
 	}
@@ -338,7 +352,7 @@ int eMainloop::iterate(unsigned int twisted_timeout, PyObject **res, ePyObject d
 		if (app_quit_now)
 			return -1;
 
-		int to = 0;
+		int to = -1;
 		if (twisted_timeout)
 		{
 			timespec now, timeout;
@@ -391,27 +405,6 @@ void eMainloop::quit(int ret)
 {
 	retval = ret;
 	app_quit_now = true;
-}
-
-int eMainloop::_poll(struct pollfd *fds, nfds_t nfds, int timeout)
-{
-	return ::poll(fds, nfds, timeout);
-}
-
-int eApplication::_poll(struct pollfd *fds, nfds_t nfds, int timeout)
-{
-	int result;
-
-	m_is_idle = 1;
-	++m_idle_count;
-	/* Py_BEGIN_ALLOW_THREADS contains a memory barrier, and that will
-	 * make the idleCount() and isIdle() interfaces work properly */
-	Py_BEGIN_ALLOW_THREADS
-	result = ::poll(fds, nfds, timeout);
-	Py_END_ALLOW_THREADS
-	m_is_idle = 0;
-
-	return result;
 }
 
 eApplication* eApp = 0;

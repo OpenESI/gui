@@ -117,7 +117,7 @@ public:
 
 typedef struct _GstElement GstElement;
 
-typedef enum { atUnknown, atMPEG, atMP3, atAC3, atDTS, atAAC, atPCM, atOGG, atFLAC, atWMA, atDRA } audiotype_t;
+typedef enum { atUnknown, atMPEG, atMP3, atAC3, atDTS, atAAC, atAACHE, atPCM, atOGG, atFLAC, atWMA, atDRA } audiotype_t;
 typedef enum { stUnknown, stPlainText, stSSA, stASS, stSRT, stVOB, stPGS } subtype_t;
 typedef enum { ctNone, ctMPEGTS, ctMPEGPS, ctMKV, ctAVI, ctMP4, ctVCD, ctCDA, ctASF, ctOGG, ctWEBM, ctDRA } containertype_t;
 
@@ -245,6 +245,7 @@ public:
 		gboolean is_video;
 		gboolean is_streaming;
 		gboolean is_hls;
+		std::string protocol;
 		sourceStream()
 			:audiotype(atUnknown), containertype(ctNone), is_audio(FALSE), is_video(FALSE), is_streaming(FALSE), is_hls(FALSE)
 		{
@@ -292,6 +293,7 @@ protected:
 	int m_cuesheet_changed, m_cutlist_enabled;
 	void loadCuesheet();
 	void saveCuesheet();
+
 private:
 	static int pcm_delay;
 	static int ac3_delay;
@@ -339,6 +341,7 @@ private:
 	int m_state;
 	GstElement *m_gst_playbin;
 	GstTagList *m_stream_tags;
+	bool m_coverart;
 
 	eFixedMessagePump<ePtr<GstMessageContainer> > m_pump;
 

@@ -19,9 +19,9 @@ int fileExist(const char* filename){
 	struct stat buffer;
 	int exist = stat(filename,&buffer);
 	if(exist == 0)
-	    return 1;
+		return 1;
 	else // -1
-	    return 0;
+		return 0;
 }
 
 void noRTC()
@@ -59,7 +59,7 @@ void setRTC(time_t time)
 				prev_time = time;
 		}
 		else
-			eDebug("[eDVBLocalTimeHandler] write /proc/stb/fp/rtc failed: %m");
+			eDebug("write /proc/stb/fp/rtc failed (%m)");
 		fclose(f);
 	}
 	else
@@ -68,7 +68,7 @@ void setRTC(time_t time)
 		if ( fd >= 0 )
 		{
 			if ( ::ioctl(fd, FP_IOCTL_SET_RTC, (void*)&time ) < 0 )
-				eDebug("[eDVBLocalTimeHandler] FP_IOCTL_SET_RTC failed: %m");
+				eDebug("FP_IOCTL_SET_RTC failed(%m)");
 			else
 				prev_time = time;
 			close(fd);
@@ -86,7 +86,7 @@ time_t getRTC()
 		// sanity check to detect corrupt atmel firmware
 		unsigned int tmp;
 		if (fscanf(f, "%u", &tmp) != 1)
-			eDebug("[eDVBLocalTimeHandler] read /proc/stb/fp/rtc failed: %m");
+			eDebug("read /proc/stb/fp/rtc failed (%m)");
 		else
 			if (strncmp(mybox,"gb800solo", sizeof(mybox)) == 0 || strncmp(mybox,"gb800se", sizeof(mybox)) == 0 || strncmp(mybox,"gb800ue", sizeof(mybox)) == 0)
 				rtc_time=0; // sorry no RTC
@@ -100,7 +100,7 @@ time_t getRTC()
 		if ( fd >= 0 )
 		{
 			if ( ::ioctl(fd, FP_IOCTL_GET_RTC, (void*)&rtc_time ) < 0 )
-				eDebug("[eDVBLocalTimeHandler] FP_IOCTL_GET_RTC failed: %m");
+				eDebug("FP_IOCTL_GET_RTC failed(%m)");
 			close(fd);
 		}
 	}
@@ -265,7 +265,7 @@ eDVBLocalTimeHandler::~eDVBLocalTimeHandler()
 	instance=0;
 	if (ready())
 	{
-		eDebug("[eDVBLocalTimeHandler] set RTC to previous valid time");
+		eDebug("set RTC to previous valid time");
 		if (strncmp(mybox,"gb800solo", sizeof(mybox)) == 0 || strncmp(mybox,"gb800se", sizeof(mybox)) == 0 || strncmp(mybox,"gb800ue", sizeof(mybox)) == 0)
 				eDebug("Dont set RTC to previous valid time, giga box");
 			else
@@ -604,7 +604,7 @@ void eDVBLocalTimeHandler::updateTime( time_t tp_time, eDVBChannel *chan, int up
 			}
 		}
 
- 		 /*emit*/ m_timeUpdated();
+		 /*emit*/ m_timeUpdated();
 	}
 
 	if ( restart_tdt )

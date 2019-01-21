@@ -39,14 +39,6 @@ int CFile::writeInt(const char *filename, int value)
 	return fprintf(f, "%d", value);
 }
 
-int CFile::writeStr(const char *filename, std::string value)
-{
-	CFile f(filename, "w");
-	if (f)
-		fprintf(f, "%s", value.c_str());
-	return 0;
-}
-
 int CFile::write(const char *filename, const char *value)
 {
 	CFile f(filename, "w");
@@ -55,9 +47,17 @@ int CFile::write(const char *filename, const char *value)
 	return fprintf(f, "%s", value);
 }
 
+int CFile::writeStr(const char *filename, std::string value)
+{
+	CFile f(filename, "w");
+	if (f)
+		fprintf(f, "%s", value.c_str());
+	return 0;
+}
+
 std::string CFile::read(const std::string &filename)
 {
-	std::ifstream file(filename.c_str());
+	std::ifstream file(filename);
 	if (!file.good())
 		return std::string();
 	std::stringstream ss;
@@ -68,7 +68,7 @@ std::string CFile::read(const std::string &filename)
 bool CFile::contains_word(const std::string &filename, const std::string &word_to_match)
 {
 	std::string word;
-	std::ifstream file(filename.c_str());
+	std::ifstream file(filename);
 
 	if (!file.good())
 		return false;

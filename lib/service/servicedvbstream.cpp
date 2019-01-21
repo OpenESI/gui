@@ -48,7 +48,7 @@ void eDVBServiceStream::serviceEvent(int event)
 	}
 	case eDVBServicePMTHandler::eventTuneFailed:
 	{
-		eDebug("[eDVBServiceStream] stream failed to tune");
+		eDebug("[eDVBServiceStream] failed to tune");
 		tuneFailed();
 		break;
 	}

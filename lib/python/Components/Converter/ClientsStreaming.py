@@ -1,9 +1,14 @@
 from Converter import Converter
 from Poll import Poll
 from Components.Element import cached
+from Components.Sources.StreamService import StreamServiceList
 from enigma import eStreamServer
 from ServiceReference import ServiceReference
 import socket
+try:
+	from Plugins.Extensions.OpenWebif.controllers.stream import streamList
+except:
+	streamList = []
 
 class ClientsStreaming(Converter, Poll, object):
 	UNKNOWN = -1
@@ -55,13 +60,15 @@ class ClientsStreaming(Converter, Poll, object):
 	def getText(self):
 		if self.streamServer is None:
 			return ""
+		if StreamServiceList and streamList is None:
+			return ""
 
 		clients = []
 		refs = []
 		ips = []
 		names = []
 		encoders = []
-		extrainfo = _("ClientIP") + "\t" + _("Transcode")  + "\t" + _("Channel")  + "\n"
+		extrainfo = _("ClientIP") + "\t\t" + _("Transcode")  + "\t" + _("Channel")  + "\n"
 		info = ""
 
 		for x in self.streamServer.getConnectedClients():
@@ -95,11 +102,23 @@ class ClientsStreaming(Converter, Poll, object):
 			info += ("%s %-8s %s\n") % (strtype, ip, service_name)
 
 			clients.append((ip, service_name, encoder))
-			
+
 			extrainfo += ("%-8s\t%s\t%s") % (ip, encoder, service_name) +"\n"
-			
-			
-			
+
+		if StreamServiceList and streamList:
+			for x in StreamServiceList:
+				ip = "ip n/a"
+				servicename = "(unknown service)"
+				service_name = servicename
+				names.append((service_name))
+				for stream in streamList:
+					if hasattr(stream, 'getService') and stream.getService() and stream.getService().__deref__() == x:
+						service_name = ServiceReference(stream.ref.toString()).getServiceName()
+						ip = stream.clientIP or ip
+			info = ("T %s %s\n") % (ip, service_name)
+			clients.append((ip, service_name))
+			extrainfo += ("T\t%s\t%s") % (ip, service_name) +"\n"
+
 		if self.type == self.REF:
 			return ' '.join(refs)
 		elif self.type == self.IP:
@@ -129,7 +148,9 @@ class ClientsStreaming(Converter, Poll, object):
 	def getBoolean(self):
 		if self.streamServer is None:
 			return False
-		return self.streamServer.getConnectedClients() and True or False
+		if StreamServiceList and streamList is None:
+			return  False
+		return (self.streamServer.getConnectedClients() or StreamServiceList or streamList) and True or False
 
 	boolean = property(getBoolean)
 

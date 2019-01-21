@@ -19,7 +19,7 @@ class MovieInfo(Converter, object):
 			self.type = self.MOVIE_REC_SERVICE_NAME
 		elif type == "FileSize":
 			self.type = self.MOVIE_REC_FILESIZE
-		elif type in ("RecordServiceRef", "Reference"):
+		elif type == "RecordServiceRef":
 			self.type = self.MOVIE_REC_SERVICE_REF
 		else:
 			raise ElementError("'%s' is not <ShortDescription|MetaDescription|RecordServiceName|FileSize> for MovieInfo converter" % type)
@@ -44,7 +44,13 @@ class MovieInfo(Converter, object):
 				    or service.getPath())
 			elif self.type == self.MOVIE_REC_SERVICE_NAME:
 				rec_ref_str = info.getInfoString(service, iServiceInformation.sServiceref)
-				return ServiceReference(rec_ref_str).getServiceName()
+				service_name = ServiceReference(rec_ref_str).getServiceName()
+				if not service_name:
+					path = service.getPath().split(' - ')
+					if len(path) >=3 and path[0][-13:].replace(' ','').isdigit():
+						return path[1]
+				else:
+					return service_name
 			elif self.type == self.MOVIE_REC_SERVICE_REF:
 				rec_ref_str = info.getInfoString(service, iServiceInformation.sServiceref)
 				return str(ServiceReference(rec_ref_str))
@@ -54,11 +60,11 @@ class MovieInfo(Converter, object):
 				filesize = info.getInfoObject(service, iServiceInformation.sFileSize)
 				if filesize is not None:
 					if filesize >= 100000*1024*1024:
-						return _("%.0f GB") % (filesize / (1024.0*1024.0*1024.0))
+						return _("%0.0f GB") % (filesize / (1024.0*1024.0*1024.0))
 					elif filesize >= 100000*1024:
-						return _("%.2f GB") % (filesize / (1024.0*1024.0*1024.0))
+						return _("%0.2f GB") % (filesize / (1024.0*1024.0*1024.0))
 					else:
-						return _("%.0f MB") % (filesize / (1024.0*1024.0))
+						return _("%0.0f MB") % (filesize / (1024.0*1024.0))
 		return ""
 
 	text = property(getText)

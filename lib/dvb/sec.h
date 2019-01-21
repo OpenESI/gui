@@ -2,9 +2,9 @@
 #define __dvb_sec_h
 
 #include <lib/dvb/idvb.h>
-#include <list>
-
 #include <lib/dvb/fbc.h>
+
+#include <list>
 
 #ifndef SWIG
 class eSecCommand
@@ -267,9 +267,9 @@ public:
 public:
 #define MAX_SATCR 32
 
-#define MAX_EN50607_POSITIONS 		64
-#define MAX_FIXED_LNB_POSITIONS		64
-#define MAX_MOVABLE_LNBS 		6
+#define MAX_EN50607_POSITIONS 64
+#define MAX_FIXED_LNB_POSITIONS 64
+#define MAX_MOVABLE_LNBS 6
 
 #define MAX_LNBNUM (MAX_FIXED_LNB_POSITIONS + MAX_MOVABLE_LNBS)
 

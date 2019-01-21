@@ -417,13 +417,11 @@ class eDVBFrontendParametersATSC;
 
 class iDVBFrontendParameters: public iObject
 {
-#ifdef SWIG
 public:
+#ifdef SWIG
 	iDVBFrontendParameters();
 	~iDVBFrontendParameters();
-private:
 #endif
-public:
 	enum { flagOnlyFree = 1 };
 	virtual SWIG_VOID(RESULT) getSystem(int &SWIG_OUTPUT) const = 0;
 	virtual SWIG_VOID(RESULT) getSystems(int &SWIG_OUTPUT) const = 0;
@@ -554,7 +552,9 @@ public:
 	virtual bool changeType(int type)=0;
 	virtual int getCurrentType()=0;
 	virtual void overrideType(int type)=0; //workaraound for dvb api < 5
-
+#if defined DTV_ENUM_DELSYS
+	virtual bool setDeliverySystem(const char *type)=0;
+#endif
 };
 SWIG_TEMPLATE_TYPEDEF(ePtr<iDVBFrontend>, iDVBFrontendPtr);
 

@@ -5,9 +5,8 @@
 extern "C" void init_enigma();
 extern "C" void eBaseInit(void);
 extern "C" void eConsoleInit(void);
-extern void quitMainloop(int exitCode);
 extern void bsodFatal(const char *component);
-extern bool bsodRestart();
+extern void quitMainloop(int exitCode);
 
 #define SKIP_PART2
 #include <lib/python/python.h>
@@ -41,10 +40,10 @@ ePyObject::operator PyObject*()
 	{
 		if (!m_erased && m_ob->ob_refcnt > 0)
 			return m_ob;
-		eDebug("[ePyObject] invalid access PyObject %s with refcount <= 0 %d",
+		eDebug("invalid access PyObject %s with refcount <= 0 %d",
 			m_erased ? "deleted" : "undeleted", m_ob->ob_refcnt);
 		if (m_file)
-			eDebug("[ePyObject] last modified in file %s line %d from %d to %d",
+			eDebug("last modified in file %s line %d from %d to %d",
 				m_file, m_line, m_from, m_to);
 		bsodFatal("enigma2, refcnt");
 	}
@@ -55,27 +54,27 @@ void ePyObject::incref(const char *file, int line)
 {
 	if (!m_ob)
 	{
-		eDebug("[ePyObject] invalid incref python object with null pointer %s %d!!!", file, line);
+		eDebug("invalid incref python object with null pointer %s %d!!!", file, line);
 		if (m_file)
-			eDebug("[ePyObject] last modified in file %s line %d from %d to %d",
+			eDebug("last modified in file %s line %d from %d to %d",
 				m_file, m_line, m_from, m_to);
 		bsodFatal("enigma2, refcnt");
 	}
 	if (m_erased || m_ob->ob_refcnt <= 0)
 	{
-		eDebug("[ePyObject] invalid incref %s python object with refcounting value %d in file %s line %d!!!",
+		eDebug("invalid incref %s python object with refcounting value %d in file %s line %d!!!",
 			m_erased ? "deleted" : "undeleted", m_ob->ob_refcnt, file, line);
 		if (m_file)
-			eDebug("[ePyObject] last modified in file %s line %d from %d to %d",
+			eDebug("last modified in file %s line %d from %d to %d",
 				m_file, m_line, m_from, m_to);
 		bsodFatal("enigma2, refcnt");
 	}
 	if (m_ob->ob_refcnt == 0x7FFFFFFF)
 	{
-		eDebug("[ePyObject] invalid incref %s python object with refcounting value %d (MAX_INT!!!) in file %s line %d!!!",
+		eDebug("invalid incref %s python object with refcounting value %d (MAX_INT!!!) in file %s line %d!!!",
 			m_erased ? "deleted" : "undeleted", m_ob->ob_refcnt, file, line);
 		if (m_file)
-			eDebug("[ePyObject] last modified in file %s line %d from %d to %d",
+			eDebug("last modified in file %s line %d from %d to %d",
 				m_file, m_line, m_from, m_to);
 		bsodFatal("enigma2, refcnt");
 	}
@@ -90,18 +89,18 @@ void ePyObject::decref(const char *file, int line)
 {
 	if (!m_ob)
 	{
-		eDebug("[ePyObject] invalid decref python object with null pointer %s %d!!!", file, line);
+		eDebug("invalid decref python object with null pointer %s %d!!!", file, line);
 		if (m_file)
-			eDebug("[ePyObject] last modified in file %s line %d from %d to %d",
+			eDebug("last modified in file %s line %d from %d to %d",
 				m_file, m_line, m_from, m_to);
 		bsodFatal("enigma2, refcnt");
 	}
 	if (m_erased || m_ob->ob_refcnt <= 0)
 	{
-		eDebug("[ePyObject] invalid decref %s python object with refcounting value %d in file %s line %d!!!",
+		eDebug("invalid decref %s python object with refcounting value %d in file %s line %d!!!",
 			m_erased ? "deleted" : "undeleted", m_ob->ob_refcnt, file, line);
 		if (m_file)
-			eDebug("[ePyObject] last modified in file %s line %d from %d to %d",
+			eDebug("last modified in file %s line %d from %d to %d",
 				m_file, m_line, m_from, m_to);
 		bsodFatal("enigma2, refcnt");
 	}
@@ -122,7 +121,7 @@ ePython::ePython()
 {
 //	Py_VerboseFlag = 1;
 
-//	Py_OptimizeFlag = 1;
+	Py_OptimizeFlag = 1;
 
 	Py_Initialize();
 	PyEval_InitThreads();
@@ -207,14 +206,13 @@ int ePython::call(ePyObject pFunc, ePyObject pArgs)
 		 	PyErr_Print();
 			ePyObject FuncStr = PyObject_Str(pFunc);
 			ePyObject ArgStr = PyObject_Str(pArgs);
-		 	eDebug("[ePyObject] (PyObject_CallObject(%s,%s) failed)", PyString_AS_STRING(FuncStr), PyString_AS_STRING(ArgStr));
+		 	eDebug("(PyObject_CallObject(%s,%s) failed)", PyString_AS_STRING(FuncStr), PyString_AS_STRING(ArgStr));
 			Py_DECREF(FuncStr);
 			Py_DECREF(ArgStr);
 			/* immediately show BSOD, so we have the actual error at the bottom */
 		 	bsodFatal(0);
 			/* and make sure we quit (which would also eventually cause a bsod, but with useless termination messages) */
-			if (bsodRestart())
-				quitMainloop(5);
+			quitMainloop(5);
 		}
 	}
 	return res;

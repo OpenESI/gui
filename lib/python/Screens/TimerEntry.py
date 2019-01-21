@@ -7,7 +7,8 @@ from enigma import eEPGCache
 from Screens.Screen import Screen
 import ChannelSelection
 from ServiceReference import ServiceReference
-from Components.config import config, ConfigSelection, ConfigText, ConfigSubList, ConfigDateTime, ConfigClock, ConfigYesNo, getConfigListEntry
+from Components.config import config, ConfigSelection, ConfigText, ConfigSubList, \
+	ConfigDateTime, ConfigClock, ConfigYesNo, getConfigListEntry
 from Components.ActionMap import NumberActionMap, ActionMap
 from Components.ConfigList import ConfigListScreen
 from Components.MenuList import MenuList
@@ -81,6 +82,8 @@ class TimerEntry(Screen, ConfigListScreen):
 		justplay = self.timer.justplay
 		always_zap = self.timer.always_zap
 		rename_repeat = self.timer.rename_repeat
+		conflict_detection = self.timer.conflict_detection
+		config.movielist.videodirs.load()
 
 		afterevent = {
 			AFTEREVENT.NONE: "nothing",
@@ -98,11 +101,8 @@ class TimerEntry(Screen, ConfigListScreen):
 
 		weekday_table = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
 
-		# calculate default values
-		day = []
+		day = list([int(x) for x in reversed('{0:07b}'.format(self.timer.repeated))])
 		weekday = 0
-		for x in (0, 1, 2, 3, 4, 5, 6):
-			day.append(0)
 		if self.timer.repeated: # repeated
 			type = "repeated"
 			if self.timer.repeated == 31: # Mon-Fri
@@ -110,21 +110,10 @@ class TimerEntry(Screen, ConfigListScreen):
 			elif self.timer.repeated == 127: # daily
 				repeated = "daily"
 			else:
-				flags = self.timer.repeated
 				repeated = "user"
-				count = 0
-				for x in (0, 1, 2, 3, 4, 5, 6):
-					if flags == 1: # weekly
-# 						print "Set to weekday " + str(x)
-						weekday = x
-					if flags & 1 == 1: # set user defined flags
-						day[x] = 1
-						count += 1
-					else:
-						day[x] = 0
-					flags >>= 1
-				if count == 1:
+				if day.count(1) == 1:
 					repeated = "weekly"
+					weekday = day.index(1)
 		else: # once
 			type = "once"
 			repeated = None
@@ -141,6 +130,10 @@ class TimerEntry(Screen, ConfigListScreen):
 		self.timerentry_afterevent = ConfigSelection(choices = [("nothing", _("do nothing")), ("standby", _("go to standby")), ("deepstandby", shutdownString), ("auto", _("auto"))], default = afterevent)
 		self.timerentry_recordingtype = ConfigSelection(choices = [("normal", _("normal")), ("descrambled+ecm", _("descramble and record ecm")), ("scrambled+ecm", _("don't descramble, record ecm"))], default = recordingtype)
 		self.timerentry_type = ConfigSelection(choices = [("once",_("once")), ("repeated", _("repeated"))], default = type)
+		# Fix UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 17: ordinal not in range(128)
+		import sys
+		reload(sys)
+		sys.setdefaultencoding('utf-8')
 		self.timerentry_name = ConfigText(default = self.timer.name.replace('\xc2\x86', '').replace('\xc2\x87', '').encode("utf-8"), visible_width = 50, fixed_size = False)
 		self.timerentry_description = ConfigText(default = self.timer.description, visible_width = 50, fixed_size = False)
 		self.timerentry_tags = self.timer.tags[:]
@@ -155,6 +148,8 @@ class TimerEntry(Screen, ConfigListScreen):
 
 		self.timerentry_repeated = ConfigSelection(default = repeated, choices = [("weekly", _("weekly")), ("daily", _("daily")), ("weekdays", _("Mon-Fri")), ("user", _("user defined"))])
 		self.timerentry_renamerepeat = ConfigYesNo(default = rename_repeat)
+
+		self.timerentry_conflictdetection = ConfigYesNo(default = conflict_detection)
 
 		self.timerentry_date = ConfigDateTime(default = self.timer.begin, formatstring = _("%d %B %Y"), increment = 86400)
 		self.timerentry_starttime = ConfigClock(default = self.timer.begin)
@@ -235,6 +230,9 @@ class TimerEntry(Screen, ConfigListScreen):
 		self.entryEndTime = getConfigListEntry(_("End time"), self.timerentry_endtime, _("Set the time the timer must stop."))
 		if self.timerentry_justplay.value != "zap" or self.timerentry_showendtime.value:
 			self.list.append(self.entryEndTime)
+
+		self.conflictDetectionEntry = getConfigListEntry(_("Enable timer conflict detection"), self.timerentry_conflictdetection)
+		self.list.append(self.conflictDetectionEntry)
 
 		self.channelEntry = getConfigListEntry(_("Channel"), self.timerentry_service, _("Set the channel for this timer."))
 		self.list.append(self.channelEntry)
@@ -362,6 +360,16 @@ class TimerEntry(Screen, ConfigListScreen):
 			ConfigListScreen.handleKeyFileCallback(self, answer)
 			self.newConfig()
 
+	def openMovieLocationBox(self, answer=""):
+		self.session.openWithCallback(
+			self.pathSelected,
+			MovieLocationBox,
+			_("Select target folder"),
+			self.timerentry_dirname.value,
+			filename = answer,
+			minFree = 100 # We require at least 100MB free space
+			)
+
 	def keySelect(self):
 		cur = self["config"].getCurrent()
 		if cur == self.channelEntry:
@@ -372,13 +380,21 @@ class TimerEntry(Screen, ConfigListScreen):
 				currentBouquet=True
 			)
 		elif config.usage.setup_level.index >= 2 and cur == self.dirname:
-			self.session.openWithCallback(
-				self.pathSelected,
-				MovieLocationBox,
-				_("Select target folder"),
-				self.timerentry_dirname.value,
-				minFree = 100 # We require at least 100MB free space
-			)
+			menu = [(_("Open select location"), "empty")]
+			if self.timerentry_type.value == "repeated" and self.timerentry_name.value:
+				menu.append((_("Open select location as timer name"), "timername"))
+			if len(menu) == 1:
+				self.openMovieLocationBox()
+			elif len(menu) == 2:
+				text = _("Select action")
+				def selectAction(choice):
+					if choice:
+						if choice[1] == "timername":
+							self.openMovieLocationBox(self.timerentry_name.value)
+						elif choice[1] == "empty":
+							self.openMovieLocationBox()
+				self.session.openWithCallback(selectAction, ChoiceBox, title=text, list=menu)
+
 		elif getPreferredTagEditor() and cur == self.tagsSet:
 			self.session.openWithCallback(
 				self.tagEditFinished,
@@ -439,6 +455,7 @@ class TimerEntry(Screen, ConfigListScreen):
 		self.timer.justplay = self.timerentry_justplay.value == "zap"
 		self.timer.always_zap = self.timerentry_justplay.value == "zap+record"
 		self.timer.rename_repeat = self.timerentry_renamerepeat.value
+		self.timer.conflict_detection = self.timerentry_conflictdetection.value
 		if self.timerentry_justplay.value == "zap":
 			if not self.timerentry_showendtime.value:
 				self.timerentry_endtime.value = self.timerentry_starttime.value
@@ -448,7 +465,7 @@ class TimerEntry(Screen, ConfigListScreen):
 			self.timerentry_afterevent.value = "nothing"
 			self.session.open(MessageBox, _("Difference between timer begin and end must be equal or greater than %d minutes.\nEnd Action was disabled !") %1, MessageBox.TYPE_INFO, timeout=30)
 
-			
+
 		self.timer.resetRepeated()
 		self.timer.afterEvent = {
 			"nothing": AFTEREVENT.NONE,
@@ -682,4 +699,3 @@ class InstantRecordTimerEntry(TimerEntry):
 
 	def saveTimer(self):
 		self.session.nav.RecordTimer.saveTimer()
-

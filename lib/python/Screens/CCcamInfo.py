@@ -1,7 +1,12 @@
 # -*- coding: UTF-8 -*-
 # CCcam Info by AliAbdul
 from base64 import encodestring
-from os import listdir, remove, rename, system, popen, path
+from time import *
+from types import *
+import sys, commands, gettext, subprocess, threading, sys, traceback, time, datetime
+from os import system, listdir, remove, rename, remove as os_remove, rename as os_rename, popen, getcwd, chdir, path
+
+from Tools.Directories import resolveFilename, SCOPE_ACTIVE_SKIN
 
 from enigma import eListboxPythonMultiContent, eTimer, gFont, loadPNG, RT_HALIGN_RIGHT, getDesktop
 
@@ -24,7 +29,6 @@ from Tools.Directories import fileExists, SCOPE_ACTIVE_SKIN, resolveFilename
 from twisted.internet import reactor
 from twisted.web.client import HTTPClientFactory
 from urlparse import urlparse, urlunparse
-import skin
 
 #TOGGLE_SHOW = InfoBar.toggleShow
 
@@ -32,15 +36,6 @@ VERSION = "v2"
 DATE = "21.11.2014"
 
 #############################################################
-
-###global
-f = 1
-screenwidth = getDesktop(0).size().width()
-if screenwidth and screenwidth == 1920:
-	f = 1.5
-elif screenwidth and screenwidth > 1920:
-	f = 3
-###global
 
 def confPath():
 	search_dirs = [ "/usr", "/var", "/etc" ]
@@ -210,7 +205,7 @@ if path.exists(resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_on.png")):
 	lock_on = loadPNG(resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_on.png"))
 else:
 	lock_on = loadPNG("/usr/share/enigma2/skin_default/icons/lock_on.png")
-	
+
 if path.exists(resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_off.png")):
 	lock_off = loadPNG(resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_off.png"))
 else:
@@ -239,28 +234,33 @@ def getConfigNameAndContent(fileName):
 class CCcamList(MenuList):
 	def __init__(self, list):
 		MenuList.__init__(self, list, False, eListboxPythonMultiContent)
-		self.l.setItemHeight(int(30*f))
-		self.l.setFont(0, gFont("Regular", int(20*f)))
+		self.l.setItemHeight(25)
+		self.l.setFont(0, gFont("Regular", 20))
+		self.l.setFont(1, gFont("Regular", 32))
 
 class CCcamShareList(MenuList):
 	def __init__(self, list):
 		MenuList.__init__(self, list, False, eListboxPythonMultiContent)
-		self.l.setItemHeight(int(60*f))
-		self.l.setFont(0, gFont("Regular", int(18*f)))
+		self.l.setItemHeight(60)
+		self.l.setFont(0, gFont("Regular", 18))
+		self.l.setFont(1, gFont("Regular", 32))
 
 class CCcamConfigList(MenuList):
 	def __init__(self, list):
 		MenuList.__init__(self, list, False, eListboxPythonMultiContent)
-		self.l.setItemHeight(int(30*f))
-		self.l.setFont(0, gFont("Regular", int(20*f)))
+		self.l.setItemHeight(30)
+		self.l.setFont(0, gFont("Regular", 20))
+		self.l.setFont(1, gFont("Regular", 32))
 
 class CCcamShareViewList(MenuList):
 	def __init__(self, list):
 		MenuList.__init__(self, list, False, eListboxPythonMultiContent)
-		self.l.setItemHeight(int(30*f))
-		self.l.setFont(0, gFont("Regular", int(18*f)))
+		self.l.setItemHeight(20)
+		self.l.setFont(0, gFont("Regular", 18))
+		self.l.setFont(1, gFont("Regular", 32))
 
 def CCcamListEntry(name, idx):
+	screenwidth = getDesktop(0).size().width()
 	res = [name]
 	if idx == 10:
 		idx = "red"
@@ -275,47 +275,72 @@ def CCcamListEntry(name, idx):
 	elif idx == 15:
 		idx = "info"
 	if path.exists(resolveFilename(SCOPE_ACTIVE_SKIN, "buttons/key_%s.png" % str(idx))):
-		png = resolveFilename(SCOPE_ACTIVE_SKIN, "buttons/key_%s.png" % str(idx))
-	else:
 		png = "/usr/share/enigma2/skin_default/buttons/key_%s.png" % str(idx)
-	if fileExists(png):
-		x, y, w, h = skin.parameters.get("ChoicelistIcon",(5*f, 0, 35*f, 25*f))
-		res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y), size=(w, h), png=loadPNG(png)))
-	x, y, w, h = skin.parameters.get("ChoicelistName",(45*f, 2*f, 550*f, 25*f))
-	res.append(MultiContentEntryText(pos=(x, y), size=(w, h), font=0, text=name))
+	if screenwidth and screenwidth == 1920:
+		if fileExists(png):
+			res.append(MultiContentEntryPixmapAlphaBlend(pos=(10, 5), size=(67, 48), png=loadPNG(png)))
+		res.append(MultiContentEntryText(pos=(90, 7), size=(900, 50), font=1, text=name))
+	else:
+		if fileExists(png):
+			res.append(MultiContentEntryPixmapAlphaBlend(pos=(0, 0), size=(35, 25), png=loadPNG(png)))
+		res.append(MultiContentEntryText(pos=(40, 3), size=(500, 25), font=0, text=name))
 	return res
 
 def CCcamServerListEntry(name, color):
+	screenwidth = getDesktop(0).size().width()
 	res = [name]
 	if path.exists(resolveFilename(SCOPE_ACTIVE_SKIN, "buttons/key_%s.png" %  color)):
 		png = resolveFilename(SCOPE_ACTIVE_SKIN, "buttons/key_%s.png" %  color)
 	else:
 		png = "/usr/share/enigma2/skin_default/buttons/key_%s.png" % color
-	if fileExists(png):
-		x, y, w, h = skin.parameters.get("ChoicelistIcon",(5*f, 0, 35*f, 25*f))
-		res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y), size=(w, h), png=loadPNG(png)))
-	x, y, w, h = skin.parameters.get("ChoicelistName",(45*f, 2*f, 550*f, 25*f))
-	res.append(MultiContentEntryText(pos=(x, y), size=(w, h), font=0, text=name))
+	if screenwidth and screenwidth == 1920:
+		if fileExists(png):
+			res.append(MultiContentEntryPixmapAlphaBlend(pos=(10, 5), size=(67, 48), png=loadPNG(png)))
+		res.append(MultiContentEntryText(pos=(90, 7), size=(900, 50), font=1, text=name))
+	else:
+		if fileExists(png):
+			res.append(MultiContentEntryPixmapAlphaBlend(pos=(0, 0), size=(35, 25), png=loadPNG(png)))
+		res.append(MultiContentEntryText(pos=(40, 3), size=(500, 25), font=0, text=name))
 	return res
 
 def CCcamShareListEntry(hostname, type, caid, system, uphops, maxdown):
-	res = [(hostname, type, caid, system, uphops, maxdown),
-			MultiContentEntryText(pos=(0, 0), size=(300*f, 25*f), font=0, text=hostname),
-			MultiContentEntryText(pos=(300*f, 0), size=(300*f, 25*f), font=0, text=_("Type: ") + type, flags=RT_HALIGN_RIGHT),
-			MultiContentEntryText(pos=(0, 20*f), size=(300*f, 25*f), font=0, text=_("CaID: ") + caid),
-			MultiContentEntryText(pos=(300*f, 20*f), size=(300*f, 25*f), font=0, text=_("System: ") + system, flags=RT_HALIGN_RIGHT),
-			MultiContentEntryText(pos=(0, 40*f), size=(300*f, 25*f), font=0, text=_("Uphops: ") + uphops),
-			MultiContentEntryText(pos=(300*f, 40*f), size=(300*f, 25*f), font=0, text=_("Maxdown: ") + maxdown, flags=RT_HALIGN_RIGHT)]
-	return res
+	screenwidth = getDesktop(0).size().width()
+	if screenwidth and screenwidth == 1920:
+		res = [(hostname, type, caid, system, uphops, maxdown),
+				MultiContentEntryText(pos=(10, 0), size=(550, 35), font=1, text=hostname),
+				MultiContentEntryText(pos=(650, 0), size=(500, 35), font=1, text=_("Type: ") + type, flags=RT_HALIGN_RIGHT),
+				MultiContentEntryText(pos=(10, 40), size=(250, 35), font=1, text=_("CaID: ") + caid),
+				MultiContentEntryText(pos=(230, 40), size=(250, 35), font=1, text=_("System: ") + system, flags=RT_HALIGN_RIGHT),
+				MultiContentEntryText(pos=(520, 40), size=(250, 35), font=1, text=_("Uphops: ") + uphops, flags=RT_HALIGN_RIGHT),
+				MultiContentEntryText(pos=(900, 40), size=(250, 35), font=1, text=_("Maxdown: ") + maxdown, flags=RT_HALIGN_RIGHT)]
+		return res
+	else:
+		res = [(hostname, type, caid, system, uphops, maxdown),
+				MultiContentEntryText(pos=(0, 0), size=(250, 20), font=0, text=hostname),
+				MultiContentEntryText(pos=(250, 0), size=(250, 20), font=0, text=_("Type: ") + type, flags=RT_HALIGN_RIGHT),
+				MultiContentEntryText(pos=(0, 20), size=(250, 20), font=0, text=_("CaID: ") + caid),
+				MultiContentEntryText(pos=(250, 20), size=(250, 20), font=0, text=_("System: ") + system, flags=RT_HALIGN_RIGHT),
+				MultiContentEntryText(pos=(0, 40), size=(250, 20), font=0, text=_("Uphops: ") + uphops),
+				MultiContentEntryText(pos=(250, 40), size=(250, 20), font=0, text=_("Maxdown: ") + maxdown, flags=RT_HALIGN_RIGHT)]
+		return res
 
 def CCcamShareViewListEntry(caidprovider, providername, numberofcards, numberofreshare):
-	res = [(caidprovider, providername, numberofcards),
-			MultiContentEntryText(pos=(0, 0), size=(500*f, 25*f), font=0, text=providername),
-			MultiContentEntryText(pos=(500*f, 0), size=(50*f, 25*f), font=0, text=numberofcards, flags=RT_HALIGN_RIGHT),
-			MultiContentEntryText(pos=(550*f, 0), size=(50*f, 25*f), font=0, text=numberofreshare, flags=RT_HALIGN_RIGHT)]
-	return res
+	screenwidth = getDesktop(0).size().width()
+	if screenwidth and screenwidth == 1920:
+		res = [(caidprovider, providername, numberofcards),
+				MultiContentEntryText(pos=(10, 5), size=(800, 35), font=1, text=providername),
+				MultiContentEntryText(pos=(1050, 5), size=(50, 35), font=1, text=numberofcards, flags=RT_HALIGN_RIGHT),
+				MultiContentEntryText(pos=(1100, 5), size=(50, 35), font=1, text=numberofreshare, flags=RT_HALIGN_RIGHT)]
+		return res
+	else:
+		res = [(caidprovider, providername, numberofcards),
+				MultiContentEntryText(pos=(0, 0), size=(430, 20), font=0, text=providername),
+				MultiContentEntryText(pos=(430, 0), size=(50, 20), font=0, text=numberofcards, flags=RT_HALIGN_RIGHT),
+				MultiContentEntryText(pos=(480, 0), size=(50, 20), font=0, text=numberofreshare, flags=RT_HALIGN_RIGHT)]
+		return res
 
 def CCcamConfigListEntry(file):
+	screenwidth = getDesktop(0).size().width()
 	res = [file]
 
 	try:
@@ -329,28 +354,31 @@ def CCcamConfigListEntry(file):
 
 	if content == org:
 		png = lock_on
-		x, y, w, h = skin.parameters.get("SelectionListLock",(5*f, 0, 25*f, 25*f))
 	else:
 		png = lock_off
-		x, y, w, h = skin.parameters.get("SelectionListLockOff",(5*f, 0, 25*f, 25*f))
-	res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y), size=(w, h), png=png))
-	x, y, w, h = skin.parameters.get("SelectionListDescr",(45*f, 2*f, 550*f, 25*f))
-	res.append(MultiContentEntryText(pos=(x, y), size=(w, h), font=0, text=name))
+	if screenwidth and screenwidth == 1920:
+		res.append(MultiContentEntryPixmapAlphaBlend(pos=(5, 5), size=(50, 50), png=png))
+		res.append(MultiContentEntryText(pos=(85, 5), size=(800, 35), font=1, text=name))
+	else:
+		res.append(MultiContentEntryPixmapAlphaBlend(pos=(2, 2), size=(25, 25), png=png))
+		res.append(MultiContentEntryText(pos=(35, 2), size=(550, 25), font=0, text=name))
 
 	return res
 
 def CCcamMenuConfigListEntry(name, blacklisted):
+	screenwidth = getDesktop(0).size().width()
 	res = [name]
 
 	if blacklisted:
 		png = lock_off
-		x, y, w, h = skin.parameters.get("SelectionListLockOff",(5*f, 0, 25*f, 25*f))
 	else:
 		png = lock_on
-		x, y, w, h = skin.parameters.get("SelectionListLock",(5*f, 0, 25*f, 25*f))
-	res.append(MultiContentEntryPixmapAlphaBlend(pos=(x, y), size=(w, h), png=png))
-	x, y, w, h = skin.parameters.get("SelectionListDescr",(45*f, 2*f, 550*f, 25*f))
-	res.append(MultiContentEntryText(pos=(x, y), size=(w, h), font=0, text=name))
+	if screenwidth and screenwidth == 1920:
+		res.append(MultiContentEntryPixmapAlphaBlend(pos=(5, 5), size=(50, 50), png=png))
+		res.append(MultiContentEntryText(pos=(85, 5), size=(800, 35), font=1, text=name))
+	else:
+		res.append(MultiContentEntryPixmapAlphaBlend(pos=(2, 2), size=(25, 25), png=png))
+		res.append(MultiContentEntryText(pos=(35, 2), size=(550, 25), font=0, text=name))
 
 	return res
 

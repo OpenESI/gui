@@ -9,6 +9,7 @@
 #include <lib/dvb/subtitle.h>
 #include <lib/dvb/teletext.h>
 #include <lib/dvb/radiotext.h>
+#include <lib/dvb/filepush.h>
 
 class eStaticServiceDVBInformation;
 class eStaticServiceDVBBouquetInformation;
@@ -71,7 +72,7 @@ class eDVBServiceBase: public iFrontendInformation
 {
 protected:
 	static bool tryFallbackTuner(eServiceReferenceDVB &service,
-			bool &is_stream, bool is_pvr, bool simulate);
+			bool &is_stream, bool is_pvr, bool simulate, bool is_recording=false);
 
 	eDVBServicePMTHandler m_service_handler;
 public:
@@ -113,7 +114,7 @@ public:
 	RESULT subtitle(ePtr<iSubtitleOutput> &ptr);
 	RESULT audioDelay(ePtr<iAudioDelay> &ptr);
 	RESULT rdsDecoder(ePtr<iRdsDecoder> &ptr);
-	RESULT keys(ePtr<iServiceKeys> &ptr) { ptr = 0; return -1; }
+	RESULT keys(ePtr<iServiceKeys> &ptr) { ptr = nullptr; return -1; }
 
 		// iStreamedService
 	RESULT streamed(ePtr<iStreamedService> &ptr);

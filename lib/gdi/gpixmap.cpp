@@ -314,7 +314,7 @@ void gPixmap::fill(const gRegion &region, const gColor &color)
 			}
 #endif
 #endif
-		}	else
+		} else
 			eWarning("[gPixmap] couldn't fill %d bpp", surface->bpp);
 	}
 }
@@ -384,7 +384,7 @@ void gPixmap::fill(const gRegion &region, const gRGB &color)
 				while (x--)
 					*dst++=col;
 			}
-		}	else
+		} else
 			eWarning("[gPixmap] couldn't rgbfill %d bpp", surface->bpp);
 	}
 }
@@ -488,7 +488,6 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 				pos = eRect(ePoint(pos.x() + (scale_x - scale_y) * pos.width() / (2 * FIX), pos.y()),
 					eSize(src.size().width() * pos.height() / src.size().height(), pos.height()));
 				scale_x = scale_y;
-
 			}
 			else
 			{
@@ -533,7 +532,7 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 
 	for (unsigned int i=0; i<clip.rects.size(); ++i)
 	{
-//		eDebug("clip rect: %d %d %d %d", clip.rects[i].x(), clip.rects[i].y(), clip.rects[i].width(), clip.rects[i].height());
+//		eDebug("[gPixmap] clip rect: %d %d %d %d", clip.rects[i].x(), clip.rects[i].y(), clip.rects[i].width(), clip.rects[i].height());
 		eRect area = pos; /* pos is the virtual (pre-clipping) area on the dest, which can be larger/smaller than src if scaling is enabled */
 		area&=clip.rects[i];
 		area&=eRect(ePoint(0, 0), size());
@@ -574,7 +573,6 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 					/* Hardware alpha blending is broken on the few
 					 * boxes that support it, so only use it
 					 * when scaling */
-
 					accel = true;
 #else
 					if (flag & blitScale)
@@ -761,8 +759,8 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 				{
 					// no real alphatest yet
 					int width=area.width();
-					unsigned char *s = (unsigned char*)srcptr;
-					unsigned char *d = (unsigned char*)dstptr;
+					uint8_t *s = srcptr;
+					uint8_t *d = dstptr;
 					// use duff's device here!
 					while (width--)
 					{
@@ -802,24 +800,20 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 			{
 				if (flag & blitAlphaTest)
 				{
-					int width=area.width();
-#if defined(__aarch64__)
-					unsigned int *src=(unsigned int*)srcptr;
-					unsigned int *dst=(unsigned int*)dstptr;
-#else
-					unsigned long *src=(unsigned long*)srcptr;
-					unsigned long *dst=(unsigned long*)dstptr;
-#endif
+					int width = area.width();
+					uint32_t *src = srcptr;
+					uint32_t *dst = dstptr;
 					while (width--)
 					{
 						if (!((*src)&0xFF000000))
 						{
-							src++;
-							dst++;
+							++src;
+							++dst;
 						} else
 							*dst++=*src++;
 					}
-				} else if (flag & blitAlphaBlend)
+				}
+				else if (flag & blitAlphaBlend)
 				{
 					int width = area.width();
 					gRGB *src = (gRGB*)srcptr;
@@ -829,7 +823,8 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 						dst->alpha_blend(*src++);
 						++dst;
 					}
-				} else
+				}
+				else
 					memcpy(dstptr, srcptr, area.width()*surface->bypp);
 				srcptr = (uint32_t*)((uint8_t*)srcptr + src.surface->stride);
 				dstptr = (uint32_t*)((uint8_t*)dstptr + surface->stride);
@@ -917,8 +912,8 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 					{
 						if (!((*srcp)&0xFF000000))
 						{
-							srcp++;
-							dstp++;
+							++srcp;
+							++dstp;
 						} else
 						{
 							gRGB icol = *srcp++;
@@ -982,8 +977,9 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 				dstptr+=surface->stride;
 			}
 		}
-		else
-			eWarning("[gPixmap] cannot blit %dbpp from %dbpp", surface->bpp, src.surface->bpp);
+		else {
+			// eWarning("[gPixmap] cannot blit %dbpp from %dbpp", surface->bpp, src.surface->bpp);
+		}
 #ifdef GPIXMAP_DEBUG
 		s.stop();
 		eDebug("[gPixmap] [BLITBENCH] cpu blit (%d bytes) took %u us", srcarea.surface() * src.surface->bypp, s.elapsed_us());

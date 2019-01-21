@@ -27,7 +27,7 @@ from Tools.LoadPixmap import LoadPixmap
 from Tools.Alternatives import CompareWithAlternatives
 from Tools import Notifications
 from enigma import eEPGCache, eListbox, gFont, eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER,\
-	RT_VALIGN_CENTER, RT_WRAP, BT_SCALE, BT_KEEP_ASPECT_RATIO, eSize, eRect, eTimer, getBestPlayableServiceReference, loadPNG
+	RT_VALIGN_CENTER, RT_WRAP, BT_SCALE, BT_KEEP_ASPECT_RATIO, eSize, eRect, eTimer, getBestPlayableServiceReference, loadPNG, eServiceReference
 from GraphMultiEpgSetup import GraphMultiEpgSetup
 from time import localtime, time, strftime
 
@@ -225,18 +225,23 @@ class EPGList(HTMLComponent, GUIComponent):
 				if CompareWithAlternatives(self.list[x][0], serviceref.toString()):
 					return x
 		return 0
-		
+
 	def moveToService(self, serviceref):
 		newIdx = self.getIndexFromService(serviceref)
 		self.setCurrentIndex(newIdx)
 
 	def setCurrentIndex(self, index):
-		if self.instance is not None:
+		if self.instance:
 			self.instance.moveSelectionTo(index)
-	
+
 	def moveTo(self, dir):
-		if self.instance is not None:
+		if self.instance:
 			self.instance.moveSelection(dir)
+
+	def moveToFromEPG(self, dir, epg):
+		self.moveTo(dir==1 and eListbox.moveDown or eListbox.moveUp)
+		if self.cur_service:
+			epg.setService(ServiceReference(self.cur_service[0]))
 
 	def getCurrent(self):
 		if self.cur_service is None:
@@ -511,7 +516,6 @@ class EPGList(HTMLComponent, GUIComponent):
 						res.append(MultiContentEntryPixmapAlphaTest(
 							pos = (left + xpos + ewidth - (i + 1) * 22, top + height - 22), size = (21, 21),
 							png = self.clocks[rec[1][len(rec[1]) - 1 - i]]))
-
 		else:
 			if selected and self.selEvPix:
 				res.append(MultiContentEntryPixmapAlphaTest(
@@ -632,7 +636,7 @@ class EPGList(HTMLComponent, GUIComponent):
 
 	def resetOffset(self):
 		self.offs = 0
-	
+
 class TimelineText(HTMLComponent, GUIComponent):
 	def __init__(self):
 		GUIComponent.__init__(self)
@@ -742,7 +746,7 @@ class GraphMultiEPG(Screen, HelpableScreen):
 	EMPTY = 0
 	ADD_TIMER = 1
 	REMOVE_TIMER = 2
-	
+
 	ZAP = 1
 
 	def __init__(self, session, services, zapFunc=None, bouquetChangeCB=None, bouquetname=""):
@@ -795,7 +799,7 @@ class GraphMultiEPG(Screen, HelpableScreen):
 				"timerAdd":    (self.timerAdd,       _("Add/remove change timer for current event")),
 				"info":        (self.infoKeyPressed, _("Show detailed event info")),
 				"red":         (self.zapTo,          _("Zap to selected channel")),
-				"yellow":      (self.swapMode,       _("Switch between normal mode and list mode")),	
+				"yellow":      (self.swapMode,       _("Switch between normal mode and list mode")),
 				"blue":        (self.enterDateTime,  _("Goto specific data/time")),
 				"menu":        (self.showSetup,      _("Setup menu")),
 				"nextBouquet": (self.nextBouquet,    _("Show bouquet selection menu")),
@@ -928,7 +932,7 @@ class GraphMultiEPG(Screen, HelpableScreen):
 		self["timeline_text"].setDateFormat(config.misc.graph_mepg.servicetitle_mode.value)
 		l.fillMultiEPG(None, self.ask_time)
 		self.moveTimeLines(True)
-		
+
 	def closeScreen(self):
 		self.zapFunc(None, zapback = True)
 		config.misc.graph_mepg.save()
@@ -947,7 +951,7 @@ class GraphMultiEPG(Screen, HelpableScreen):
 	def openSingleServiceEPG(self):
 		ref = self["list"].getCurrent()[1].ref.toString()
 		if ref:
-			self.session.open(EPGSelection, ref)
+			self.session.openWithCallback(self.doRefresh, EPGSelection, ref, self.zapFunc, serviceChangeCB=self["list"].moveToFromEPG)
 
 	def openMultiServiceEPG(self):
 		if self.services:
@@ -1020,7 +1024,7 @@ class GraphMultiEPG(Screen, HelpableScreen):
 		self.session.nav.RecordTimer.removeEntry(timer)
 		self["key_green"].setText(_("Add timer"))
 		self.key_green_choice = self.ADD_TIMER
-	
+
 	def timerAdd(self):
 		cur = self["list"].getCurrent()
 		event = cur[0]
@@ -1066,6 +1070,9 @@ class GraphMultiEPG(Screen, HelpableScreen):
 						elif entry.begin == conflict_end:
 							entry.begin += 30
 							change_time = True
+						elif entry.begin == conflict_begin and (entry.service_ref and entry.service_ref.ref and entry.service_ref.ref.flags & eServiceReference.isGroup):
+							entry.begin += 30
+							change_time = True
 						if change_time:
 							simulTimerList = self.session.nav.RecordTimer.record(entry)
 					if simulTimerList is not None:
@@ -1076,7 +1083,7 @@ class GraphMultiEPG(Screen, HelpableScreen):
 			self["key_green"].setText(_("Add timer"))
 			self.key_green_choice = self.ADD_TIMER
 			print "Timeredit aborted"
-	
+
 	def finishSanityCorrection(self, answer):
 		self.finishedTimerAdd(answer)
 
@@ -1100,13 +1107,13 @@ class GraphMultiEPG(Screen, HelpableScreen):
 		if self.key_red_choice != self.ZAP:
 			self["key_red"].setText(_("Zap"))
 			self.key_red_choice = self.ZAP
-			
+
 		if not event:
 			if self.key_green_choice != self.EMPTY:
 				self["key_green"].setText("")
 				self.key_green_choice = self.EMPTY
 			return
-		
+
 		eventid = event.getEventId()
 		refstr = ':'.join(servicerefref.toString().split(':')[:11])
 		isRecordEvent = False
@@ -1120,7 +1127,7 @@ class GraphMultiEPG(Screen, HelpableScreen):
 		elif not isRecordEvent and self.key_green_choice != self.ADD_TIMER:
 			self["key_green"].setText(_("Add timer"))
 			self.key_green_choice = self.ADD_TIMER
-	
+
 	def moveTimeLines(self, force=False):
 		self.updateTimelineTimer.start((60 - (int(time()) % 60)) * 1000)	#keep syncronised
 		self["timeline_text"].setEntries(self["list"], self["timeline_now"], self.time_lines, force)

@@ -1,5 +1,6 @@
 from boxbranding import getMachineBrand, getMachineName, getBoxType
-from os import system
+
+import enigma
 
 from enigma import eTimer
 
@@ -133,7 +134,7 @@ class NetworkWizard(WizardLanguage, Rc):
 				if interface == self.selectedInterface:
 					if self.originalInterfaceState[interface]["up"] is False:
 						if iNetwork.checkforInterface(interface) is True:
-							system("ifconfig " + interface + " down")
+							enigma.eConsoleAppContainer().execute("ifconfig %s down" % interface)
 
 	def listInterfaces(self):
 		self.checkOldInterfaceState()
@@ -150,7 +151,7 @@ class NetworkWizard(WizardLanguage, Rc):
 			self.NextStep = 'end'
 		elif index == 'eth0':
 			self.NextStep = 'nwconfig'
-		elif index == 'eth1' and getBoxType() == "et10000":
+		elif index == 'eth1':
 			self.NextStep = 'nwconfig'
 		else:
 			self.NextStep = 'asknetworktype'
@@ -297,7 +298,7 @@ class NetworkWizard(WizardLanguage, Rc):
 			self.newAPlist.append(newentry)
 
 		if len(self.newAPlist):
-			if self.wizard[self.currStep].has_key("dynamiclist"):
+			if "dynamiclist" in self.wizard[self.currStep]:
 				currentListEntry = self["list"].getCurrent()
 				if currentListEntry is not None:
 					idx = 0

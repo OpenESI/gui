@@ -2,6 +2,7 @@
 #define __picload_h__
 
 #include <lib/gdi/gpixmap.h>
+#include <lib/gdi/picexif.h>
 #include <lib/base/thread.h>
 #include <lib/python/python.h>
 #include <lib/base/message.h>
@@ -30,10 +31,6 @@ struct Cfilepara
 		palette_size(0),
 		bits(24),
 		id(mid),
-		max_x(0),
-		max_y(0),
-		ox(0),
-		oy(0),
 		picinfo(mfile),
 		callback(true)
 	{
@@ -55,13 +52,11 @@ class ePicLoad: public eMainloop, public eThread, public sigc::trackable, public
 {
 	DECLARE_REF(ePicLoad);
 
-	enum{ F_PNG, F_JPEG, F_BMP, F_GIF};
-
 	void decodePic();
 	void decodeThumb();
-	void resizePic();
 
 	Cfilepara *m_filepara;
+	Cexif *m_exif;
 	bool threadrunning;
 
 	struct PConf
@@ -72,6 +67,7 @@ class ePicLoad: public eMainloop, public eThread, public sigc::trackable, public
 		unsigned int background;
 		bool resizetype;
 		bool usecache;
+		bool auto_orientation;
 		int thumbnailsize;
 		int test;
 		PConf();
@@ -85,7 +81,6 @@ class ePicLoad: public eMainloop, public eThread, public sigc::trackable, public
 			decode_Pic,
 			decode_Thumb,
 			decode_finished,
-			decode_error,
 			quit
 		};
 		Message(int type=0)
@@ -97,6 +92,8 @@ class ePicLoad: public eMainloop, public eThread, public sigc::trackable, public
 	void thread();
 	int startThread(int what, const char *file, int x, int y, bool async=true);
 	void thread_finished();
+	bool getExif(const char *filename, int fileType=F_JPEG, int Thumb=0);
+	int getFileType(const char * file);
 public:
 	void waitFinished();
 	PSignal1<void, const char*> PictureData;
@@ -107,7 +104,7 @@ public:
 	RESULT startDecode(const char *filename, int x=0, int y=0, bool async=true);
 	RESULT getThumbnail(const char *filename, int x=0, int y=0, bool async=true);
 	RESULT setPara(PyObject *val);
-	RESULT setPara(int width, int height, double aspectRatio, int as, bool useCache, int resizeType, const char *bg_str);
+	RESULT setPara(int width, int height, double aspectRatio, int as, bool useCache, int resizeType, const char *bg_str, bool auto_orientation);
 	PyObject *getInfo(const char *filename);
 	SWIG_VOID(int) getData(ePtr<gPixmap> &SWIG_OUTPUT);
 };

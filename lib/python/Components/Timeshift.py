@@ -47,7 +47,7 @@ from Tools.BoundFunction import boundFunction
 from Tools.Directories import pathExists, fileExists, getRecordingFilename, copyfile, resolveFilename, SCOPE_TIMESHIFT, SCOPE_AUTORECORD
 from Tools.TimeShift import CopyTimeshiftJob, MergeTimeshiftJob, CreateAPSCFilesJob
 
-from enigma import eBackgroundFileEraser, eTimer, eServiceCenter, iServiceInformation, iPlayableService, eEPGCache, eServiceReference
+from enigma import eBackgroundFileEraser, eTimer, eServiceCenter, eServiceReference, iServiceInformation, iPlayableService, eEPGCache
 from boxbranding import getBoxType, getBrandOEM
 
 from time import time, localtime, strftime
@@ -186,8 +186,8 @@ class InfoBarTimeshift:
 		# Init Block-Zap Timer
 		self.pts_blockZap_timer = eTimer()
 
-		# Init PTS FileJump-Timer 
-		self.pts_FileJump_timer = eTimer() 
+		# Init PTS FileJump-Timer
+		self.pts_FileJump_timer = eTimer()
 
 		# Record Event Tracker
 		self.session.nav.RecordTimer.on_state_change.append(self.ptsTimerEntryStateChange)
@@ -331,13 +331,13 @@ class InfoBarTimeshift:
 			self.posDiff = 0
 			self.pts_lastposition = 0
 			self.pts_currplaying -= 1
-			self.pts_switchtolive = True 
-			self.ptsSetNextPlaybackFile("") 
-			self.setSeekState(self.SEEK_STATE_PLAY) 
-			self.doSeek(3600 * 24 * 90000) 
+			self.pts_switchtolive = True
+			self.ptsSetNextPlaybackFile("")
+			self.setSeekState(self.SEEK_STATE_PLAY)
+			self.doSeek(3600 * 24 * 90000)
 			self.pts_CheckFileChanged_counter = 1
-			self.pts_CheckFileChanged_timer.start(1000, False) 
-			self.pts_file_changed = False 
+			self.pts_CheckFileChanged_timer.start(1000, False)
+			self.pts_file_changed = False
 
 	def __evInfoChanged(self):
 		if self.service_changed:
@@ -751,7 +751,9 @@ class InfoBarTimeshift:
 					ptsfilename = "%s - %s - %s" % (strftime("%Y%m%d %H%M",localtime(self.pts_starttime)),self.pts_curevent_station,self.pts_curevent_name.replace("\n", ""))
 					try:
 						if config.usage.setup_level.index >= 2:
-							if config.recording.filename_composition.value == "long" and self.pts_curevent_name.replace("\n", "") != self.pts_curevent_description.replace("\n", ""):
+							if config.recording.filename_composition.value == "event" and self.pts_curevent_name.replace("\n", "") != self.pts_curevent_description.replace("\n", ""):
+								ptsfilename = "%s - %s_%s" % (self.pts_curevent_name.replace("\n", ""),self.pts_curevent_station,strftime("%Y%m%d %H%M",localtime(self.pts_starttime)))
+							elif config.recording.filename_composition.value == "long" and self.pts_curevent_name.replace("\n", "") != self.pts_curevent_description.replace("\n", ""):
 								ptsfilename = "%s - %s - %s - %s" % (strftime("%Y%m%d %H%M",localtime(self.pts_starttime)),self.pts_curevent_station,self.pts_curevent_name.replace("\n", ""),self.pts_curevent_description.replace("\n", ""))
 							elif config.recording.filename_composition.value == "short":
 								ptsfilename = "%s - %s" % (strftime("%Y%m%d",localtime(self.pts_starttime)),self.pts_curevent_name.replace("\n", ""))
@@ -788,7 +790,9 @@ class InfoBarTimeshift:
 					ptsfilename = "%s - %s - %s" % (strftime("%Y%m%d %H%M",localtime(int(begintime))),servicename,eventname)
 					try:
 						if config.usage.setup_level.index >= 2:
-							if config.recording.filename_composition.value == "long" and eventname != description:
+							if config.recording.filename_composition.value == "event" and eventname != description:
+								ptsfilename = "%s - %s_%s" % (eventname,self.pts_curevent_station,strftime("%Y%m%d %H%M",localtime(int(begintime))))
+							elif config.recording.filename_composition.value == "long" and eventname != description:
 								ptsfilename = "%s - %s - %s - %s" % (strftime("%Y%m%d %H%M",localtime(int(begintime))),servicename,eventname,description)
 							elif config.recording.filename_composition.value == "short":
 								ptsfilename = "%s - %s" % (strftime("%Y%m%d",localtime(int(begintime))),eventname)
@@ -952,7 +956,7 @@ class InfoBarTimeshift:
 				self.stopTimeshiftAskUserCallback(True)
 				self.restartTimeshift()
 			elif answer == "nolivetv":
-				if self.pts_lastposition: 
+				if self.pts_lastposition:
 					self.setSeekState(self.SEEK_STATE_PLAY)
 					self.doSeek(self.pts_lastposition)
 
@@ -965,7 +969,7 @@ class InfoBarTimeshift:
 	def ptsEventCleanTimerSTOP(self, justStop = False):
 		if justStop is False:
 			self.pts_eventcount = 0
-		if self.pts_cleanEvent_timer.isActive(): 
+		if self.pts_cleanEvent_timer.isActive():
 			self.pts_cleanEvent_timer.stop()
 			print "[TIMESHIFT] - 'cleanEvent_timer' is stopped"
 
@@ -981,9 +985,12 @@ class InfoBarTimeshift:
 		self.ptsCleanTimeshiftFolder(justZapped = False)
 
 	def ptsCleanTimeshiftFolder(self, justZapped = True):
-		if self.ptsCheckTimeshiftPath() is False or self.session.screen["Standby"].boolean is True:
-			self.ptsEventCleanTimerSTOP()
-			return
+		try:
+			if self.ptsCheckTimeshiftPath() is False or self.session.screen["Standby"].boolean is True:
+				self.ptsEventCleanTimerSTOP()
+				return
+		except:
+			pass
 
 		freespace = int(config.timeshift.timeshiftCheckFreeSpace.value)
 		timeshiftEnabled = self.timeshiftEnabled()
@@ -1067,7 +1074,7 @@ class InfoBarTimeshift:
 							filesize += os.path.getsize("%s%s"  % (config.usage.timeshift_path.value,filename))
 							self.BgFileEraser.erase("%s%s" % (config.usage.timeshift_path.value,filename))
 
-		if filecounter == 0: 
+		if filecounter == 0:
 			self.ptsEventCleanTimerSTOP()
 		else:
 			if timeshiftEnabled and not isSeekable:
@@ -1166,7 +1173,7 @@ class InfoBarTimeshift:
 					metafile.write("%s\n%s\n%s\n%i\n" % (self.pts_curevent_servicerefname,self.pts_curevent_name.replace("\n", ""),self.pts_curevent_description.replace("\n", ""),int(self.pts_starttime)))
 					metafile.close()
 				except Exception, errormsg:
-					Notifications.AddNotification(MessageBox, _("Creating Hardlink to Timeshift file failed!")+"\n"+_("The Filesystem on your Timeshift-Device does not support hardlinks.\nMake sure it is formatted in EXT2, EXT3 or EXT4!")+"\n\n%s" % errormsg, MessageBox.TYPE_ERROR, timeout=30)
+					Notifications.AddNotification(MessageBox, _("Creating Hardlink to Timeshift file failed!")+"\n"+_("The Filesystem on your Timeshift-Device does not support hardlinks.\nMake sure it is formatted in EXT2 or EXT3!")+"\n\n%s" % errormsg, MessageBox.TYPE_ERROR, timeout=30)
 
 				# Create EIT File
 				self.ptsCreateEITFile("%spts_livebuffer_%s" % (config.usage.timeshift_path.value,self.pts_eventcount))
@@ -1277,7 +1284,7 @@ class InfoBarTimeshift:
 	def ptsCreateEITFile(self, filename):
 		if self.pts_curevent_eventid is not None:
 			try:
-				serviceref = ServiceReference(self.session.nav.getCurrentlyPlayingServiceOrGroup()).ref.toString()
+				serviceref = ServiceReference(self.session.nav.getCurrentlyPlayingServiceOrGroup()).ref
 				eEPGCache.getInstance().saveEventToFile(filename+".eit", serviceref, self.pts_curevent_eventid, -1, -1)
 			except Exception, errormsg:
 				print "[TIMESHIFT] - %s" % errormsg

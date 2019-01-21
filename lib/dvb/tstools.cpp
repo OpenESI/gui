@@ -95,7 +95,7 @@ void eDVBTSTools::setSource(ePtr<iTsSource> &source, const char *stream_info_fil
 	m_source = source;
 	if (stream_info_filename)
 	{
-		eDebug("[eDVBTSTools] setSource loading streaminfo for %s", stream_info_filename);
+		eDebug("loading streaminfo for %s", stream_info_filename);
 		m_streaminfo.load(stream_info_filename);
 	}
 	m_samples_taken = 0;
@@ -124,7 +124,7 @@ int eDVBTSTools::getPTS(off_t &offset, pts_t &pts, int fixed)
 						// obsolete data that happens to have a '1' there
 						continue;
 					}
-					eDebug("[eDVBTSTools] getPTS got it from sc file offset=%llu pts=%llu", local_offset, pts);
+					eDebug("[eDVBTSTools] getPTS got it from sc file offset=%jd pts=%llu", (intmax_t)local_offset, pts);
 					if (fixed && fixupPTS(local_offset, pts))
 					{
 						eDebug("[eDVBTSTools]    But failed to fixup!");
@@ -135,11 +135,11 @@ int eDVBTSTools::getPTS(off_t &offset, pts_t &pts, int fixed)
 				}
 				else
 				{
-					eDebug("[eDVBTSTools] getPTS No PTS, try next");
+					eDebug("No PTS, try next");
 				}
 				if (m_streaminfo.getStructureEntryNext(local_offset, data, 1) != 0)
 				{
-					eDebug("[eDVBTSTools] getPTS Cannot find next structure entry");
+					eDebug("Cannot find next structure entry");
 					break;
 				}
 			}
@@ -159,7 +159,7 @@ int eDVBTSTools::getPTS(off_t &offset, pts_t &pts, int fixed)
 		unsigned char *packet = &buffer[m_packet_size - 188];
 		if (m_source->read(offset, buffer, m_packet_size) != m_packet_size)
 		{
-			eDebug("[eDVBTSTools] getPTS read error");
+			eDebug("read error");
 			return -1;
 		}
 		left -= m_packet_size;
@@ -170,15 +170,15 @@ int eDVBTSTools::getPTS(off_t &offset, pts_t &pts, int fixed)
 			const unsigned char* match = (const unsigned char*)memchr(packet+1, 0x47, 188-1);
 			if (match != NULL)
 			{
-				eDebug("[eDVBTSTools] getPTS resync %d", match - packet);
+				eDebug("[eDVBTSTools] getPTS resync %ld", match - packet);
 				offset += (match - packet) - 188;
 			}
 			else
 			{
-				eDebug("[eDVBTSTools] getPTS resync failed");
+				eDebug("resync failed");
 				if (resync_failed_counter == 0)
 				{
-					eDebug("[eDVBTSTools] getPTS Too many resync failures, probably not a valid stream");
+					eDebug("Too many resync failures, probably not a valid stream");
 					return -1;
 				}
 				--resync_failed_counter;
@@ -208,7 +208,8 @@ int eDVBTSTools::getPTS(off_t &offset, pts_t &pts, int fixed)
 					pts |= ((unsigned long long)(packet[ 9]&0xFF)) << 1;
 					pts |= ((unsigned long long)(packet[10]&0x80)) >> 7;
 					offset -= 188;
-					eDebug("[eDVBTSTools] getPTS PCR %16llx found at %lld pid %02x (%02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x)", pts, offset, pid, packet[0], packet[1], packet[2], packet[3], packet[4], packet[5], packet[6], packet[7], packet[8], packet[9], packet[10]);
+					eDebug("[eDVBTSTools] getPTS PCR %16llx found at %jd pid %02x (%02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x)",
+						pts, (intmax_t)offset, pid, packet[0], packet[1], packet[2], packet[3], packet[4], packet[5], packet[6], packet[7], packet[8], packet[9], packet[10]);
 					if (fixed && fixupPTS(offset, pts))
 						return -1;
 					return 0;
@@ -278,7 +279,7 @@ int eDVBTSTools::getPTS(off_t &offset, pts_t &pts, int fixed)
 						case 0x72: // DTS - HD
 							break;
 						default:
-							eDebug("[eDVBTSTools] getPTS skip unknown stream_id_extension %02x\n", payload[9+offs]);
+							eDebug("skip unknwn stream_id_extension %02x\n", payload[9+offs]);
 							continue;
 						}
 					}
@@ -306,7 +307,7 @@ int eDVBTSTools::getPTS(off_t &offset, pts_t &pts, int fixed)
 			pts |= ((unsigned long long)(payload[13]&0xFE)) >> 1;
 			offset -= 188;
 
-			eDebug("[eDVBTSTools] getPTS PTS %16llx found at %lld pid %02x stream: %02x", pts, offset, pid, payload[3]);
+			eDebug("[eDVBTSTools] getPTS PTS %16llx found at %jd pid %02x stream: %02x", pts, (intmax_t)offset, pid, payload[3]);
 
 				/* convert to zero-based */
 			if (fixed && fixupPTS(offset, pts))
@@ -330,7 +331,7 @@ int eDVBTSTools::fixupPTS(const off_t &offset, pts_t &now)
 		calcBegin();
 		if (!m_begin_valid)
 		{
-//			eDebug("[eDVBTSTools] fixupPTS begin not valid, can't fixup");
+			eDebug("eDVBTSTools::fixupPTS begin not valid, can't fixup");
 			return -1;
 		}
 
@@ -347,7 +348,7 @@ int eDVBTSTools::fixupPTS(const off_t &offset, pts_t &now)
 			now -= pos;
 		return 0;
 	}
-	eDebug("[eDVBTSTools] fixupPTS failed!");
+	eDebug("eDVBTSTools::fixupPTS failed!");
 	return -1;
 }
 
@@ -406,13 +407,13 @@ int eDVBTSTools::getOffset(off_t &offset, pts_t &pts, int marg)
 
 				if (offset_diff < 0)
 				{
-					eDebug("[eDVBTSTools] getOffset something went wrong when taking samples.");
+					eDebug("something went wrong when taking samples.");
 					m_samples.clear();
 					takeSamples();
 					continue;
 				}
 
-				eDebug("[eDVBTSTools] getOffset using: %llu:%llu -> %llu:%llu", l->first, u->first, l->second, u->second);
+				eDebug("[eDVBTSTools] getOffset using: %lld:%lld -> %ld:%ld", l->first, u->first, l->second, u->second);
 
 				int bitrate;
 
@@ -445,14 +446,14 @@ int eDVBTSTools::getOffset(off_t &offset, pts_t &pts, int marg)
 				{
 					int diff = (p - pts) / 90;
 
-					eDebug("[eDVBTSTools] getOffset calculated diff %d ms", diff);
+					eDebug("calculated diff %d ms", diff);
 					if (abs(diff) > 300)
 					{
-						eDebug("[eDVBTSTools] getOffset diff to big, refining");
+						eDebug("diff to big, refining");
 						continue;
 					}
 				} else
-					eDebug("[eDVBTSTools] getOffset no sample taken, refinement not possible.");
+					eDebug("no sample taken, refinement not possible.");
 
 				break;
 			}
@@ -462,14 +463,14 @@ int eDVBTSTools::getOffset(off_t &offset, pts_t &pts, int marg)
 			if (p != -1)
 			{
 				pts = p;
-				eDebug("[eDVBTSTools] getOffset aborting. Taking %llu as offset for %lld", offset, pts);
+				eDebug("[eDVBTSTools] getOffset aborting. Taking %jd as offset for %lld", (intmax_t)offset, pts);
 				return 0;
 			}
 		}
 
 		int bitrate = calcBitrate();
 		offset = pts * (pts_t)bitrate / 8ULL / 90000ULL;
-		eDebug("[eDVBTSTools] getOffset fallback, bitrate=%d, results in %016llx", bitrate, offset);
+		eDebug("[eDVBTSTools] getOffset fallback, bitrate=%d, results in %016jx", bitrate, (intmax_t)offset);
 		offset -= offset % m_packet_size;
 		return 0;
 	}
@@ -494,8 +495,8 @@ void eDVBTSTools::calcBegin()
 			pts_t pts = m_pts_begin;
 			if (m_streaminfo.fixupPTS(begin, pts) == 0)
 			{
-				eDebug("[eDVBTSTools] calcBegin [@ML] m_streaminfo.getLastFrame returned %llu, %llu (%us), fixup to: %llu, %llu (%us)",
-				       m_offset_begin, m_pts_begin, (unsigned int)(m_pts_begin/90000), begin, pts, (unsigned int)(pts/90000));
+				eDebug("[eDVBTSTools] calcBegin [@ML] m_streaminfo.getLastFrame returned %jd, %jd (%us), fixup to: %jd, %llu (%us)",
+				       (intmax_t)m_offset_begin, (intmax_t)m_pts_begin, (unsigned int)(m_pts_begin/90000), (intmax_t)begin, pts, (unsigned int)(pts/90000));
 			}
 			m_begin_valid = 1;
 		}
@@ -568,7 +569,7 @@ void eDVBTSTools::calcEnd()
 		}
 		else
 		{
-//			eDebug("[eDVBTSTools] calcEnd [@ML] m_streaminfo.getLastFrame failed, fallback");
+			eDebug("[eDVBTSTools] calcEnd [@ML] m_streaminfo.getLastFrame failed, fallback");
 			while (!(m_end_valid || m_futile))
 			{
 				if (!--maxiter)
@@ -651,8 +652,8 @@ void eDVBTSTools::takeSamples()
 
 	bytes_per_sample -= bytes_per_sample % m_packet_size;
 
-	eDebug("[eDVBTSTools] takeSamples step %lld, pts begin %llu, pts end %llu, offs begin %lld, offs end %lld:",
-		bytes_per_sample, m_pts_begin, m_pts_end, m_offset_begin, m_offset_end);
+	eDebug("[eDVBTSTools] takeSamples step %jd, pts begin %llu, pts end %llu, offs begin %jd, offs end %jd:",
+		(intmax_t)bytes_per_sample, m_pts_begin, m_pts_end, (intmax_t)m_offset_begin, (intmax_t)m_offset_end);
 
 	for (off_t offset = m_offset_begin; offset < m_offset_end;)
 	{
@@ -688,14 +689,14 @@ int eDVBTSTools::takeSample(off_t off, pts_t &p)
 			{
 				if ((l->second > off) || (u->second < off))
 				{
-					eDebug("[eDVBTSTools] takeSample ignoring sample %lld %lld %lld (%llu %llu %llu)",
-						l->second, off, u->second, l->first, p, u->first);
+					eDebug("[eDVBTSTools] takeSample ignoring sample %ld %jd %ld (%llu %llu %llu)",
+						l->second, (intmax_t)off, u->second, l->first, p, u->first);
 					return 1;
 				}
 			}
 		}
 
-		eDebug("[eDVBTSTools] takeSample adding sample %lld: pts %llu -> pos %lld (diff %lld bytes)", offset_org, p, off, off-offset_org);
+		eDebug("[eDVBTSTools] takeSample adding sample %jd: pts %llu -> pos %jd (diff %jd bytes)", (intmax_t)offset_org, p, (intmax_t)off, (intmax_t)(off-offset_org));
 		m_samples[p] = off;
 		return 0;
 	}
@@ -786,66 +787,111 @@ int eDVBTSTools::findPMT(eDVBPMTParser::program &program)
 	return -1;
 }
 
+/* Changed so that findFrame *always* gets to the previous/next
+	GOP before returning a result.
+	So:
+	forwards: find the next entry, then go on until an I-frame.
+	backwards  find the next entry, then go back to second I-frame:
+	BUT - we always ignore the first frame we reach as:
+		Going backwards can get stuck if there is a GOP with just an I-frame
+		Going forwards we can be asked to start on a start code (non I-frame)
+		which means we keep going back to the same I-frame (with nr_frames==1
+		we do exit the findNextPicture loop eventually, but try to avoid this).
+		These cases have only been seen in mpegs (the forward one can
+		only happen there) but using the same test in h.264 does no harm.
+
+	Return the number of video-frames passed over in the process.
+*/
+
 int eDVBTSTools::findFrame(off_t &_offset, size_t &len, int &direction, int frame_types)
 {
-//	eDebug("[eDVBTSTools] findFrame trying to find iFrame at %llu", offset);
+//	eDebug("trying to find iFrame at %llu", offset);
 	if (!m_streaminfo.hasStructure())
 	{
-//		eDebug("[eDVBTSTools] findFrame can't get next iframe without streaminfo");
+//		eDebug("can't get next iframe without streaminfo");
 		return -1;
 	}
 
 	off_t offset = _offset;
 	int nr_frames = 0;
 	bool is_mpeg2 = false;
-
-		/* let's find the iframe before the given offset */
-	if (direction < 0)
-		offset--;
-
 	unsigned long long longdata;
+
+// Prime the getStructureEntryXXX cache setting
 	if (m_streaminfo.getStructureEntryFirst(offset, longdata) != 0)
 	{
 		eDebug("[eDVBTSTools] findFramee getStructureEntryFirst failed");
 		return -1;
 	}
-	if (direction == 0)
-	{
-		// Special case, move an extra frame ahead
+// Make sure that we are actually positioned not-before where we were
+// asked to start
+	do {
 		if (m_streaminfo.getStructureEntryNext(offset, longdata, 1) != 0)
 			return -1;
-		direction = 1;
+		unsigned int data = (unsigned int)longdata; // only the lower bits are interesting
+		if (((data & 0xFF) == 0x0009) || ((data & 0xFF) == 0x00) || ((data & 0x7E) == 0x0046)) /* H.264 UAD or H.265 UAD or MPEG2 start code */
+			nr_frames++;
+	} while(offset <= _offset);
+
+	int frame_step, Iframes_to_find;
+	bool frame1_skipped = false;
+	if (direction < 0)      // Going backwards
+	{
+		frame_step = -1;
+		Iframes_to_find = 2;
+	}
+	else
+	{
+		frame_step = 1;
+		Iframes_to_find = 1;
 	}
 	while (1)
 	{
+		int res;
+		res = m_streaminfo.getStructureEntryNext(offset, longdata, frame_step);
+		if (res != 0) return -1;
+
 		unsigned int data = (unsigned int)longdata; // only the lower bits are interesting
-			/* data is usually the start code in the lower 8 bit, and the next byte <<8. we extract the picture type from there */
-			/* we know that we aren't recording startcode 0x09 for mpeg2, so this is safe */
-			/* TODO: check frame_types */
-		// is_frame
-		if (((data & 0xFF) == 0x0009) || ((data & 0xFF) == 0x00) || ((data & 0x7E) == 0x0046)) /* H.264 UAD or H.265 UAD or MPEG2 start code */
+		data = (unsigned int)longdata; // only the lower bits are interesting
+/* data is usually the start code in the lower 8 bit, and the next byte <<8. we extract the picture type from there */
+/* we know that we aren't recording startcode 0x09 for mpeg2, so this is safe */
+/* TODO: check frame_types */
+// H.264 and H.265 data is stored similarly in the ts.sc file - MPEG2 differs
+		if ((data & 0xFF) == 0x09 or (data & 0x7E) == 0x46) /* H.264/H.265 UAD */
 		{
-			++nr_frames;
-			if ((data & 0xE0FF) == 0x0009)		/* H.264 NAL unit access delimiter with I-frame*/
+			nr_frames += frame_step;
+			if ((data & 0xE000) == 0x0000)           /* H.264/5 I-frame */
 			{
-				break;
+				--Iframes_to_find;
+				if ((Iframes_to_find <= 0) and frame1_skipped) break;
+				frame1_skipped = true;               /* Now seen */
 			}
-			if ((data & 0xE07E) == 0x0046) 		/* H.265 NAL unit access delimiter with I-frame*/
+			else if ((data & 0xE000) == 0x0200       /* H.264/5 P-frame */
+				 or (data & 0xE000) == 0x0400)       /* H.264/5 B-frame */
 			{
-				break;
-			}
-			if ((data & 0x3800FF) == 0x080000)	/* MPEG2 picture start code with I-frame */
-			{
-				is_mpeg2 = true;
-				break;
+				frame1_skipped = true;               /* Now seen */
 			}
 		}
-		if (m_streaminfo.getStructureEntryNext(offset, longdata, direction) != 0)
-			return -1;
+		else if ((data & 0xFF) == 0x00)              /* MPEG2 start code */
+		{
+			nr_frames += frame_step;
+			if ((data & 0x380000) == 0x080000)       /* MPEG2 I-frame */
+			{
+				is_mpeg2 = true;
+				--Iframes_to_find;
+				if ((Iframes_to_find <= 0) and frame1_skipped) break;
+				frame1_skipped = true;               /* Now seen */
+			}
+			else if ((data & 0x380000) == 0x100000   /* MPEG2 P-frame */
+				 or (data & 0x380000) == 0x180000)   /* MPEG2 B-frame */
+			{
+				frame1_skipped = true;               /* Now seen */
+			}
+		}
 	}
 	off_t start = offset;
 
-	/* let's find the next frame after the given offset */
+/* Let's find the next frame after the given offset */
 	unsigned int data;
 	do
 	{
@@ -856,11 +902,19 @@ int eDVBTSTools::findFrame(off_t &_offset, size_t &len, int &direction, int fram
 		}
 		data = ((unsigned int)longdata);
 	}
-	while (((data & 0xff) != 0x09) && ((data & 0xff) != 0x00) && ((data & 0x7E) != 0x46)); /* next frame */
+	while (((data & 0xFF) != 0x09) && ((data & 0xFF) != 0x00) && ((data & 0x7E) != 0x46)); /* next frame */
 
 	if (is_mpeg2)
 	{
-		// Seek back to sequence start (appears to be needed for e.g. a few TCM streams)
+// First we have to get back to where we were when we set start,
+// getStructureEntryNext has a private variable to remember where it was at end
+// of the last call, and getStructureEntryFirst will reset it
+		if (m_streaminfo.getStructureEntryFirst(start, longdata) != 0)
+		{
+			eDebug("[eDVBTSTools] findFrame getStructureEntryFirst for is_mpeg2 failed");
+			return -1;
+		}
+// NOW seek back to sequence start (appears to be needed for e.g. a few TCM streams)
 		while (nr_frames)
 		{
 			if (m_streaminfo.getStructureEntryNext(start, longdata, -1))
@@ -870,72 +924,69 @@ int eDVBTSTools::findFrame(off_t &_offset, size_t &len, int &direction, int fram
 			}
 			if ((((unsigned int)longdata) & 0xFF) == 0xB3) /* sequence start or previous frame */
 				break;
-			--nr_frames;
+			if ((((unsigned int)longdata) & 0xFF) == 0x00) /* We've stepped over a frame... */
+				nr_frames -= frame_step;
 		}
 	}
 
-	/* make sure we've ended up in the right direction, ignore the result if we didn't */
+/* make sure we've ended up in the right direction, ignore the result if we didn't */
 	if ((direction >= 0 && start < _offset) || (direction < 0 && start > _offset)) return -1;
 
-	len = offset - start;
-	_offset = start;
-	if (direction < 0)
-		direction = -nr_frames;
-	else
-		direction = nr_frames;
-//	eDebug("[eDVBTSTools] findFrame result: offset=%llu, len: %ld", offset, (int)len);
+/* Set the data for parameters passed by reference */
+	_offset = start;            // Start of I-frame header (*not* packet-aligned)
+	len = offset - start;       // length of file read to ensure we get to end-of-frame
+	direction = nr_frames;      // Frames skipped (-ve if backwards).
+
+//	eDebug("result: offset=%llu, len: %ld", offset, (int)len);
 	return 0;
 }
 
 int eDVBTSTools::findNextPicture(off_t &offset, size_t &len, int &distance, int frame_types)
 {
-	int nr_frames, direction;
 //	eDebug("[eDVBTSTools] findNextPicture trying to move %d frames at %llu", distance, offset);
 
-	frame_types = frametypeI; /* TODO: intelligent "allow IP frames when not crossing an I-Frame */
+/* This code (and findFrame) only looks for an I-Frame
+	TODO: intelligent "allow IP frames when not crossing an I-Frame"
+*/
+	frame_types = frametypeI;
 
 	off_t new_offset = offset;
 	size_t new_len = len;
-	int first = 1;
 
+	int direction;
 	if (distance > 0) {
-		direction = 0;
-                nr_frames = 0;
-        } else {
+		direction = 1;
+	} else {
 		direction = -1;
-                nr_frames = -1;
-		distance = -distance+1;
-        }
-	while (distance > 0)
+		distance = -distance;
+	}
+	int nr_frames = 0;
+	do  // Must pass through once...we might get called with distance==0, but mustn't return with nr_frames==0
 	{
-		int dir = direction;
+		int dir = direction;    // Gets updated with actual move length
 		if (findFrame(new_offset, new_len, dir, frame_types))
 		{
 //			eDebug("[eDVBTSTools] findNextPicture findFrame failed!\n");
 			return -1;
 		}
 
-		distance -= abs(dir);
+		distance -= abs(dir);   // How much still to go
 
 //		eDebug("[eDVBTSTools] findNextPicture we moved %d, %d to go frames (now at %llu)", dir, distance, new_offset);
 
-		if (distance >= 0 || direction == 0)
-		{
-			first = 0;
-			offset = new_offset;
-			len = new_len;
-			nr_frames += abs(dir);
-		}
-		else if (first)
-		{
-			first = 0;
-			offset = new_offset;
-			len = new_len;
-			nr_frames += abs(dir) + distance; // never jump forward during rewind
-		}
-	}
+// If we return nr_frames as 0 then the process stops oddly, which we *don't* want,
+// so *always* count the first step. Apart from that we take the result which
+// doesn't take us too far.
 
-	distance = (direction < 0) ? -nr_frames : nr_frames;
+		if ((distance >= 0) or (nr_frames == 0))
+		{
+			offset = new_offset;
+			len = new_len;
+			nr_frames += dir;   // +ve (forward) or -ve (backward)
+		}
+	} while (distance > 0);
+
+	distance = nr_frames;
 //	eDebug("[eDVBTSTools] findNextPicture in total, we moved %d frames", nr_frames);
 
 	return 0;

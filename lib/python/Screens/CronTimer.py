@@ -46,7 +46,6 @@ class CronTimers(Screen):
 			self["list"].onSelectionChanged.append(self.selectionChanged)
 		self.service_name = 'cronie'
 		self.InstallCheck()
-		
 
 	def InstallCheck(self):
 		self.Console.ePopen('/usr/bin/opkg list_installed ' + self.service_name, self.checkNetworkState)
@@ -282,8 +281,6 @@ class CronTimersConfig(Screen, ConfigListScreen):
 		self["VKeyIcon"] = Boolean(False)
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
-		self['footnote'] = Label()
-		self['description'] = Label()
 		self.createSetup()
 
 	def createSetup(self):

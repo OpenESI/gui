@@ -11,9 +11,9 @@ class ConfigList(HTMLComponent, GUIComponent, object):
 	def __init__(self, list, session = None):
 		GUIComponent.__init__(self)
 		self.l = eListboxPythonConfigContent()
-		seperation, = skin.parameters.get("ConfigListSeperator", (350, ))
+		seperation = skin.parameters.get("ConfigListSeperator", 350)
 		self.l.setSeperation(seperation)
-		height, space = skin.parameters.get("ConfigListSlider",(17, 0))
+		height, space = skin.parameters.get("ConfigListSlider",(14, 1))
 		self.l.setSlider(height, space)
 		self.timer = eTimer()
 		self.list = list
@@ -69,9 +69,18 @@ class ConfigList(HTMLComponent, GUIComponent, object):
 	GUI_WIDGET = eListbox
 
 	def selectionChanged(self):
-		if isinstance(self.current,tuple) and len(self.current) >= 2:
-			self.current[1].onDeselect(self.session)
+# Only run onDeselect/onSelect if self.current != self.getCurrent()
+# i.e. if the selection has *actually* changed...
+# This means that Notifiers with immediate_feedback = False actually
+# do only get called once at the end of an item change, not for every
+# step along the way.
+#
+		orig_current = self.current;
 		self.current = self.getCurrent()
+		if (orig_current == self.current):
+			return
+		if isinstance(orig_current,tuple) and len(orig_current) >= 2:
+			orig_current[1].onDeselect(self.session)
 		if isinstance(self.current,tuple) and len(self.current) >= 2:
 			self.current[1].onSelect(self.session)
 		else:
@@ -108,11 +117,10 @@ class ConfigList(HTMLComponent, GUIComponent, object):
 		self.handleKey(KEY_TIMEOUT)
 
 	def isChanged(self):
-		is_changed = False
 		for x in self.list:
-			is_changed |= x[1].isChanged()
-
-		return is_changed
+			if x[1].isChanged():
+				return True
+		return False
 
 	def pageUp(self):
 		if self.instance is not None:
@@ -203,24 +211,24 @@ class ConfigListScreen:
 		if self["config"].getCurrent() is not None:
 			try:
 				if isinstance(self["config"].getCurrent()[1], ConfigText) or isinstance(self["config"].getCurrent()[1], ConfigPassword):
-					if self.has_key("VKeyIcon"):
+					if "VKeyIcon" in self:
 						self["VirtualKB"].setEnabled(True)
 						self["VKeyIcon"].boolean = True
-					if self.has_key("HelpWindow"):
+					if "HelpWindow" in self:
 						if self["config"].getCurrent()[1].help_window.instance is not None:
 							helpwindowpos = self["HelpWindow"].getPosition()
 							from enigma import ePoint
 							self["config"].getCurrent()[1].help_window.instance.move(ePoint(helpwindowpos[0],helpwindowpos[1]))
 				else:
-					if self.has_key("VKeyIcon"):
+					if "VKeyIcon" in self:
 						self["VirtualKB"].setEnabled(False)
 						self["VKeyIcon"].boolean = False
 			except:
-				if self.has_key("VKeyIcon"):
+				if "VKeyIcon" in self:
 					self["VirtualKB"].setEnabled(False)
 					self["VKeyIcon"].boolean = False
 		else:
-			if self.has_key("VKeyIcon"):
+			if "VKeyIcon" in self:
 				self["VirtualKB"].setEnabled(False)
 				self["VKeyIcon"].boolean = False
 
@@ -298,12 +306,12 @@ class ConfigListScreen:
 		restartgui = False
 		for x in self["config"].list:
 			if x[1].isChanged():
-				if x[0] == _('Show on Display'): 
+				if x[0] == _('Show on Display'):
 					restartgui = True
 			x[1].save()
-		configfile.save()	
+		configfile.save()
 		self.doRestartGui(restartgui)
-			
+
 	def doRestartGui(self, restart):
 		if restart:
 			self.session.openWithCallback(self.ExecuteRestart, MessageBox, _("Restart GUI now?"), MessageBox.TYPE_YESNO)
@@ -344,6 +352,6 @@ class ConfigListScreen:
 
 	def keyCancel(self):
 		self.closeMenuList()
-	
+
 	def closeRecursive(self):
 		self.closeMenuList(True)

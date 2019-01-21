@@ -10,12 +10,11 @@ from Screens.MessageBox import MessageBox
 from Plugins.Plugin import PluginDescriptor
 from enigma import *
 from downloader import DownloadSetting, ConverDate
-from Components.NimManager import nimmanager
 from settinglist import *
 from restore import *
 from history import *
 import os
-import skin
+
 
 config.pud = ConfigSubsection()
 config.pud.autocheck = ConfigYesNo(default=False)
@@ -32,22 +31,22 @@ class MenuListSetting(MenuList):
 
     def __init__(self, list):
         MenuList.__init__(self, list, True, eListboxPythonMultiContent)
-        font, size = skin.parameters.get("ProgrammlistenUpdaterListFont", ('Regular',25))
-        self.l.setFont(0, gFont(font, size))
+        self.l.setFont(0, gFont('Regular', 25))
+        self.l.setItemHeight(45)
 
 class Programmlisten_Updater(Screen,ConfigListScreen):
 
     skin =  """
-        <screen name="Programmlisten_Updater" position="center,center" size="710,500">
+        <screen name="Programmlisten_Updater" position="center,center" size="600,470">
             <ePixmap pixmap="skin_default/buttons/red.png" position="5,0" size="140,40" alphatest="on" />
             <ePixmap pixmap="skin_default/buttons/green.png" position="155,0" size="140,40" alphatest="on" />
             <ePixmap pixmap="skin_default/buttons/yellow.png" position="305,0" size="140,40" alphatest="on" />
             <widget source="key_red" render="Label" position="5,0" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" foregroundColor="#ffffff" transparent="1" />
             <widget source="key_green" render="Label" position="155,0" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" foregroundColor="#ffffff" transparent="1" />
             <widget source="key_yellow" render="Label" position="305,0" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" foregroundColor="#ffffff" transparent="1" />
-            <widget name="MenuListSetting" position="25,70" size="660,315" itemHeight="45" scrollbarMode="showOnDemand" />
-            <widget name="description" position="25,420" size="660,60" font="Regular;22" halign="center" valign="center" />
-            <widget name="update" position="440,5" size="200,25" font="Regular;22" halign="center" valign="center" />
+            <widget name="MenuListSetting" position="25,70" size="560,350" scrollbarMode="showOnDemand" />
+            <widget name="description" position="20,430" size="540,25" font="Regular;22" halign="center" valign="center" />
+            <widget name="update" position="380,5" size="200,25" font="Regular;22" halign="center" valign="center" />
         </screen>
         """
 
@@ -57,7 +56,7 @@ class Programmlisten_Updater(Screen,ConfigListScreen):
         self["description"] = Label("description")
         self['MenuListSetting'] = MenuListSetting([])
         self.skinName = "Programmlisten_Updater"
-        self.setup_title = _("Programmlisten from DXAndy")
+        self.setup_title = _("Programmlisten-Updater from DXAndy")
         self.setTitle(self.setup_title)
         self["description"] = Label(_("Current installed") + ":\n" + "n/a")
         self["update"] = Label(_("disabled"))
@@ -102,15 +101,15 @@ class Programmlisten_Updater(Screen,ConfigListScreen):
         else:
             if config.pud.just_update.value:
                 self['update'].setText(_("enabled"))
-                config.pud.just_update.value = False               
+                config.pud.just_update.value = False
             else:
                 self['update'].setText(_("update"))
-                config.pud.just_update.value = True 
+                config.pud.just_update.value = True
             if config.pud.lastdate.value == '':
                 self.session.open(MessageBox, _('No Settings loaded !!\n\nPlease install first a settinglist'), MessageBox.TYPE_INFO, timeout=15)
             config.pud.autocheck.value = True
             iTimerClass.TimerSetting()
-        
+
         config.pud.save()
 
     def keyOk(self):
@@ -122,7 +121,7 @@ class Programmlisten_Updater(Screen,ConfigListScreen):
     def CBselect(self, req):
         if req:
             iTimerClass.startDownload(self.name, self.link, self.date)
-        
+
 
     def Info(self):
         if not os.path.exists(Directory + '/Settings/enigma2'):
@@ -142,19 +141,15 @@ class Programmlisten_Updater(Screen,ConfigListScreen):
 
     def ListEntryMenuSettings(self, name, date, link, name1, date1):
         res = [(name, date, link, name1, date1)]
-        try:
-            x, y, w1, w2, h = skin.parameters.get("ProgrammlistenUpdaterList", (15,7,420,210,40))
-        except ValueError:
-            x, y, w1, w2, h = (15,7,420,210,40)
-        res.append(MultiContentEntryText(pos=(x, y), size=(w1, h), font=0, text=name, flags=RT_HALIGN_LEFT))
-        res.append(MultiContentEntryText(pos=(x+w1, y), size=(w2, h), font=0, color=16777215, text=date1, flags=RT_HALIGN_RIGHT))
+        res.append(MultiContentEntryText(pos=(15, 7), size=(435, 40), font=0, text=name, flags=RT_HALIGN_LEFT))
+        res.append(MultiContentEntryText(pos=(420, 7), size=(210, 40), font=0, text=date1, color=16777215, flags=RT_HALIGN_LEFT))
         res.append(MultiContentEntryText(pos=(0, 0), size=(0, 0), font=0, text=link, flags=RT_HALIGN_LEFT))
         res.append(MultiContentEntryText(pos=(0, 0), size=(0, 0), font=0, text=name1, flags=RT_HALIGN_LEFT))
         res.append(MultiContentEntryText(pos=(0, 0), size=(0, 0), font=0, text=date, flags=RT_HALIGN_LEFT))
         return res
 
     def SettingsMenu(self):
-        self.listB = []        
+        self.listB = []
         for date, name, link in self.List:
             self.listB.append(self.ListEntryMenuSettings(str(name.title()), str(date), str(link), str(name), ConverDate(str(date))))
         if not self.listB:
@@ -178,10 +173,7 @@ def Main(session, **kwargs):
     session.open(Programmlisten_Updater)
 
 def Plugins(**kwargs):
-    if nimmanager.hasNimType("DVB-S"):
-        return [
-            PluginDescriptor(name="Programmlisten-Updater V" + Version, description=_("Programmlisten-Updater from DXAndy"), icon="plugin.png", where=PluginDescriptor.WHERE_PLUGINMENU, fnc=Main),
-            PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=SessionStart),
-            PluginDescriptor(where=PluginDescriptor.WHERE_AUTOSTART, fnc=AutoStart)]
-    else:
-        return []
+    return [
+    PluginDescriptor(name="Programmlisten-Updater V" + Version, description=_("Programmlisten-Updater from DXAndy"), icon="plugin.png", where=PluginDescriptor.WHERE_PLUGINMENU, fnc=Main),
+    PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=SessionStart),
+    PluginDescriptor(where=PluginDescriptor.WHERE_AUTOSTART, fnc=AutoStart)]

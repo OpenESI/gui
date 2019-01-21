@@ -8,21 +8,16 @@ from Components.ActionMap import ActionMap
 from Components.Pixmap import Pixmap
 from Components.Sources.Boolean import Boolean
 
+config.mediaplayer.repeat = ConfigYesNo(default=False)
+config.mediaplayer.savePlaylistOnExit = ConfigYesNo(default=True)
+config.mediaplayer.saveDirOnExit = ConfigYesNo(default=False)
+config.mediaplayer.defaultDir = ConfigDirectory()
+config.mediaplayer.sortPlaylists = ConfigYesNo(default=False)
+config.mediaplayer.alwaysHideInfoBar = ConfigYesNo(default=True)
+config.mediaplayer.onMainMenu = ConfigYesNo(default=False)
 
-def Load_defaults():
-	config.mediaplayer = ConfigSubsection()
-	config.mediaplayer.repeat = ConfigYesNo(default=False)
-	config.mediaplayer.savePlaylistOnExit = ConfigYesNo(default=True)
-	config.mediaplayer.saveDirOnExit = ConfigYesNo(default=False)
-	config.mediaplayer.defaultDir = ConfigDirectory()
-	config.mediaplayer.sortPlaylists = ConfigYesNo(default=False)
-	config.mediaplayer.alwaysHideInfoBar = ConfigYesNo(default=True)
-	config.mediaplayer.onMainMenu = ConfigYesNo(default=False)
-
-	config.mediaplayer.useAlternateUserAgent = NoSave(ConfigYesNo(default = False))
-	config.mediaplayer.alternateUserAgent = NoSave(ConfigText(default = "Enigma2 HbbTV/1.1.1 (+PVR+RTSP+DL;openATV;;;)"))
-
-Load_defaults()
+config.mediaplayer.useAlternateUserAgent = NoSave(ConfigYesNo(default = False))
+config.mediaplayer.alternateUserAgent = NoSave(ConfigText(default = "Enigma2 HbbTV/1.1.1 (+PVR+RTP+RTSP+RTMP+DL;OpenESI;;;;;)"))
 
 class DirectoryBrowser(Screen, HelpableScreen):
 

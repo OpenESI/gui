@@ -1,3 +1,4 @@
+import enigma, os, sys, types
 from os import system, path as os_path
 from string import maketrans, strip
 
@@ -6,6 +7,7 @@ from enigma import eConsoleAppContainer
 from Components.config import config, ConfigYesNo, NoSave, ConfigSubsection, ConfigText, ConfigSelection, ConfigPassword
 from Components.Console import Console
 from Components.Network import iNetwork
+from re import compile as re_compile, search as re_search, escape as re_escape
 from pythonwifi.iwlibs import getNICnames, Wireless, Iwfreq, getWNICnames
 from pythonwifi import flags as wififlags
 
@@ -60,7 +62,7 @@ class Wlan:
 		if self.oldInterfaceState is False:
 			if iNetwork.getAdapterAttribute(self.iface, "up") is False:
 				iNetwork.setAdapterAttribute(self.iface, "up", True)
-				system("ifconfig "+self.iface+" up")
+				enigma.eConsoleAppContainer().execute("ifconfig %s up" % self.iface)
 				driver = iNetwork.detectWlanModule(self.iface)
 				if driver in ('brcm-wl', ):
 					system("wl up")
@@ -125,7 +127,7 @@ class Wlan:
 		if self.oldInterfaceState is not None:
 			if self.oldInterfaceState is False:
 				iNetwork.setAdapterAttribute(self.iface, "up", False)
-				system("ifconfig "+self.iface+" down")
+				enigma.eConsoleAppContainer().execute("ifconfig %s down" % self.iface)
 				driver = iNetwork.detectWlanModule(self.iface)
 				if driver in ('brcm-wl', ):
 					system("wl down")
@@ -305,7 +307,7 @@ class wpaSupplicant:
 
 	def loadConfig(self,iface):
 		configfile = getWlanConfigName(iface)
-		if not os_path.exists(configfile):
+		if not os.path.exists(configfile):
 			configfile = '/etc/wpa_supplicant.conf'
 		try:
 			#parse the wpasupplicant configfile
@@ -410,6 +412,7 @@ class Status:
 		data = { 'essid': False, 'frequency': False, 'accesspoint': False, 'bitrate': False, 'encryption': False, 'quality': False, 'signal': False }
 		for line in result.splitlines():
 			line = line.strip()
+			# print "[Wlan.py] line -->",line
 			if "ESSID" in line:
 				if "off/any" in line:
 					ssid = "off"
@@ -434,6 +437,8 @@ class Status:
 			if "Bit Rate" in line:
 				if "kb" in line:
 					br = line[line.index('Bit Rate')+9 :line.index(' kb/s')]
+				elif "Gb" in line:
+					br = line[line.index('Bit Rate')+9 :line.index(' Gb/s')]
 				else:
 					br = line[line.index('Bit Rate')+9 :line.index(' Mb/s')]
 				if br is not None:
@@ -486,9 +491,8 @@ class Status:
 
 	def getAdapterAttribute(self, iface, attribute):
 		self.iface = iface
-		if self.wlaniface.has_key(self.iface):
-			if self.wlaniface[self.iface].has_key(attribute):
-				return self.wlaniface[self.iface][attribute]
+		if self.iface in self.wlaniface and attribute in self.wlaniface[self.iface]:
+			return self.wlaniface[self.iface][attribute]
 		return None
 
 iStatus = Status()

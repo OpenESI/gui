@@ -64,10 +64,10 @@ class OnlineUpdateCheckPoller:
 					currentTimeoutDefault = socket.getdefaulttimeout()
 					socket.setdefaulttimeout(3)
 					config.softwareupdate.updatefound.setValue(True)
-					status = urlopen('http://www.openvix.co.uk/feeds/status').read()
-					if '404 Not Found' in status:
-						status = '1'
-					config.softwareupdate.updateisunstable.setValue(status)
+					try:
+						config.softwareupdate.updateisunstable.setValue(urlopen("http://odisealinux.com/feeds/" + getImageVersion() + "/status").read())
+					except:
+						config.softwareupdate.updateisunstable.setValue(1)
 					socket.setdefaulttimeout(currentTimeoutDefault)
 				else:
 					config.softwareupdate.updatefound.setValue(False)

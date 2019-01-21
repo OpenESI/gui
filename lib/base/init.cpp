@@ -60,12 +60,12 @@ void eInit::setRunlevel(int nrl)
 		for (std::list<std::pair<int,eAutoInit*> >::iterator i(cl->begin()); i!=cl->end(); ++i)
 			if ((*i).first == rl)
 			{
-				eDebug("[eInit] - (%d) %s", rl, (*i).second->getDescription());
+				eDebug("- (%d) %s", rl, (*i).second->getDescription());
 				(*i).second->closeNow();
 			}
 		rl--;
 	}
-	eDebug("[eInit] reached rl %d", rl);
+	eDebug("reached rl %d", rl);
 }
 
 void eInit::pauseInit()

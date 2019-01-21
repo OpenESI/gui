@@ -12,16 +12,19 @@ def getFPVersion():
 			file = open("/proc/stb/info/micomver", "r")
 			ret = file.readline().strip()
 			file.close()
-		elif getBoxType() in ('dm7080','dm820','dm520','dm525','dm900','dm920'):
+		elif getBoxType() in ('dm7080','dm820','dm520','dm525','dm900'):
 			ret = open("/proc/stb/fp/version", "r").read()
-		else:	
+		else:
 			ret = long(open("/proc/stb/fp/version", "r").read())
 	except IOError:
 		try:
 			fp = open("/dev/dbox/fp0")
 			ret = ioctl(fp.fileno(),0)
 		except IOError:
-			print "getFPVersion failed!"
+			try:
+				ret = open("/sys/firmware/devicetree/base/bolt/tag", "r").read().rstrip("\0")
+			except:
+				print "getFPVersion failed!"
 	return ret
 
 def setFPWakeuptime(wutime):
@@ -46,7 +49,7 @@ def setRTCoffset():
 		print "setRTCoffset failed!"
 
 def setRTCtime(wutime):
-        if path.exists("/proc/stb/fp/rtc_offset"):
+	if path.exists("/proc/stb/fp/rtc_offset"):
 		setRTCoffset()
 	try:
 		f = open("/proc/stb/fp/rtc", "w")

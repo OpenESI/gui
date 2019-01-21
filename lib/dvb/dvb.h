@@ -6,13 +6,13 @@
 #include <lib/base/ebase.h>
 #include <lib/base/elock.h>
 #include <lib/dvb/idvb.h>
+#include <lib/dvb/fbc.h>
 #include <lib/dvb/demux.h>
 #include <lib/dvb/frontend.h>
 #include <lib/dvb/tstools.h>
 #include <lib/dvb/esection.h>
 #include "filepush.h"
 #include <connection.h>
-#include <lib/dvb/fbc.h>
 
 #include <dvbsi++/service_description_section.h>
 
@@ -162,10 +162,6 @@ class eDVBResourceManager: public iObject, public sigc::trackable
 	DECLARE_REF(eDVBResourceManager);
 	int avail, busy;
 
-	enum { DM7025, DM800, DM500HD, DM800SE, DM8000, DM7020HD, DM7080, DM820, DM520, DM525, DM900, DM920, GIGABLUE, DM500HDV2, DM800SEV2, WETEKPLAY, WETEKPLAY2, WETEKHUB};
-
-	int m_boxtype;
-
 	eSmartPtrList<iDVBAdapter> m_adapter;
 	eSmartPtrList<eDVBRegisteredDemux> m_demux;
 	eSmartPtrList<eDVBRegisteredFrontend> m_frontend, m_simulate_frontend;
@@ -228,7 +224,6 @@ public:
 	int canAllocateChannel(const eDVBChannelID &channelid, const eDVBChannelID &ignore, int &system, bool simulate=false);
 
 		/* allocate channel... */
-	bool frontendPreferenceAllowsChannelUse(const eDVBChannelID &channelid, eUsePtr<iDVBChannel> channel, bool simulate);
 	RESULT allocateChannel(const eDVBChannelID &channelid, eUsePtr<iDVBChannel> &channel, bool simulate=false);
 	RESULT allocatePVRChannel(const eDVBChannelID &channelid, eUsePtr<iDVBPVRChannel> &channel);
 	static RESULT getInstance(ePtr<eDVBResourceManager> &);
@@ -237,10 +232,9 @@ public:
 			   the frontend must be tuned lateron. there is no guarante
 			   that tuning will succeed - it just means that if this frontend
 			   can't tune, no other frontend could do it.
-
 			   there might be a priority given to certain frontend/chid
 			   combinations. this will be evaluated here. */
-	RESULT allocateFrontend(ePtr<eDVBAllocatedFrontend> &fe, ePtr<iDVBFrontendParameters> &feparm, bool simulate=false, bool returnScoreOnly=false);
+	RESULT allocateFrontend(ePtr<eDVBAllocatedFrontend> &fe, ePtr<iDVBFrontendParameters> &feparm, bool simulate=false);
 
 	RESULT allocateFrontendByIndex(ePtr<eDVBAllocatedFrontend> &fe, int slot_index);
 			/* allocate a demux able to filter on the selected frontend. */
@@ -256,6 +250,7 @@ public:
 	bool frontendIsCompatible(int index, const char *type);
 	bool frontendIsMultistream(int index);
 	std::string getFrontendCapabilities(int index);
+	std::string getFrontendDeliverySystem(int index);
 	void setFrontendType(int index, const char *type, bool append=false);
 	int getFrontendType(int index);
 };
@@ -327,6 +322,7 @@ private:
 	sigc::signal2<void,iDVBChannel*,int> m_event;
 	int m_state;
 	ePtr<iTsSource> m_source;
+	std::string m_streaminfo_file;
 
 			/* for channel list */
 	ePtr<eDVBResourceManager> m_mgr;

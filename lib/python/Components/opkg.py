@@ -1,14 +1,10 @@
 import os
-from boxbranding import getImageVersion
 
 def enumFeeds():
 	for fn in os.listdir('/etc/opkg'):
 		if fn.endswith('-feed.conf'):
-			file = open(os.path.join('/etc/opkg', fn))
-			feedfile = file.readlines()
-			file.close()
 			try:
-				for feed in feedfile:
+				for feed in open(os.path.join('/etc/opkg', fn)):
 					yield feed.split()[1]
 			except IndexError:
 				pass
@@ -56,8 +52,6 @@ def listsDirPath():
 				line = line.split(' ', 2)
 				if len(line) > 2 and line[1] == ('lists_dir'):
 					return line[2].strip()
-			elif line.startswith('lists_dir'):
-				return line.replace('\n','').split(' ')[2]
 	except Exception, ex:
 		print "[opkg]", ex
 	return '/var/lib/opkg/lists'

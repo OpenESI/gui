@@ -43,8 +43,6 @@
 #include <lib/base/eerroroutput.h>
 ePtr<eErrorOutput> m_erroroutput;
 
-bool verbose = false;
-
 #ifdef OBJECT_DEBUG
 int object_total_remaining;
 
@@ -193,7 +191,7 @@ static const std::string getConfigCurrentSpinner(const std::string &key)
 	// if value is empty, means no config.skin.primary_skin exist in settings file, so return just default spinner ( /usr/share/enigma2/spinner )
 	if (value.empty()) 
 		return value;
-	
+
 	 //  if value is NOT empty, means config.skin.primary_skin exist in settings file, so return SCOPE_CURRENT_SKIN + "/spinner" ( /usr/share/enigma2/MYSKIN/spinner ) BUT check if /usr/share/enigma2/MYSKIN/spinner/wait1.png exist
 	std::string png_location = "/usr/share/enigma2/" + value + "/wait1.png";
 	std::ifstream png(png_location.c_str());
@@ -261,6 +259,7 @@ void catchTermSignal()
 
 int main(int argc, char **argv)
 {
+
 #ifdef MEMLEAK_CHECK
 	atexit(DumpUnfreed);
 #endif
@@ -268,6 +267,8 @@ int main(int argc, char **argv)
 #ifdef OBJECT_DEBUG
 	atexit(object_dump);
 #endif
+
+	unsetenv("LD_PRELOAD");
 
 	gst_init(&argc, &argv);
 
@@ -277,11 +278,6 @@ int main(int argc, char **argv)
 		{
 			logOutputColors = 0;
 		}
-
-		if (!(strcmp(argv[i], "--verbose")))
-		{
-			verbose = true;
-		}
 	}
 
 	m_erroroutput = new eErrorOutput();
@@ -289,8 +285,8 @@ int main(int argc, char **argv)
 
 	// set pythonpath if unset
 	setenv("PYTHONPATH", eEnv::resolve("${libdir}/enigma2/python").c_str(), 0);
-	printf("PYTHONPATH: %s\n", getenv("PYTHONPATH"));
-	printf("DVB_API_VERSION %d DVB_API_VERSION_MINOR %d\n", DVB_API_VERSION, DVB_API_VERSION_MINOR);
+	printf("[Enigma2] PYTHONPATH: %s\n", getenv("PYTHONPATH"));
+	printf("[Enigma2] DVB_API_VERSION %d DVB_API_VERSION_MINOR %d\n", DVB_API_VERSION, DVB_API_VERSION_MINOR);
 
 	ePython python;
 	eMain main;
@@ -321,7 +317,7 @@ int main(int argc, char **argv)
 
 /*	if (double_buffer)
 	{
-		eDebug("[MAIN]  - double buffering found, enable buffered graphics mode.");
+		eDebug(" - double buffering found, enable buffered graphics mode.");
 		dsk.setCompositionMode(eWidgetDesktop::cmBuffered);
 	} */
 
@@ -340,7 +336,7 @@ int main(int argc, char **argv)
 
 	std::string active_skin = getConfigCurrentSpinner("config.skin.primary_skin");
 
-	eDebug("[MAIN] Loading spinners...");
+	eDebug("Loading spinners...");
 
 	{
 		int i = 0;
@@ -369,22 +365,22 @@ int main(int argc, char **argv)
 					}
 				}
 				else
-					eDebug("[MAIN] found %d spinner!", i);
+					eDebug("found %d spinner!", i);
 				break;
 			}
 			i++;
 		}
 		if (i)
-			my_dc->setSpinner(eRect(ePoint(25, 25), wait[0]->size()), wait, i);
+			my_dc->setSpinner(eRect(ePoint(100, 100), wait[0]->size()), wait, i);
 		else
-			my_dc->setSpinner(eRect(25, 25, 0, 0), wait, 1);
+			my_dc->setSpinner(eRect(100, 100, 0, 0), wait, 1);
 	}
 
 	gRC::getInstance()->setSpinnerDC(my_dc);
 
 	eRCInput::getInstance()->keyEvent.connect(sigc::ptr_fun(&keyEvent));
 
-	eDebug("[MAIN] executing main\n");
+	printf("executing main\n");
 
 	bsodCatchSignals();
 	catchTermSignal();
@@ -402,7 +398,7 @@ int main(int argc, char **argv)
 
 	if (exit_code == 5) /* python crash */
 	{
-		eDebug("[MAIN] (exit code 5)");
+		eDebug("(exit code 5)");
 		bsodFatal(0);
 	}
 

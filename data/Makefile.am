@@ -3,7 +3,6 @@ SUBDIRS = fonts keymaps
 dist_pkgdata_DATA = \
 	encoding.conf \
 	keymap.xml \
-	keytranslation.xml \
 	keymap.ntr \
 	keymap.u80 \
 	menu.xml \
@@ -16,6 +15,7 @@ dist_pkgdata_DATA = \
 	videowizard.xml \
 	freesat.t1 \
 	freesat.t2 \
+	timezone.xml \
 	unicable.xml \
 	hd-testcard.mvi \
 	distro-logo.png
@@ -49,10 +49,6 @@ if HAVE_COLORLCD220
 SUBDIRS += display220
 endif
 
-if HAVE_COLORLCD390
-SUBDIRS += display390
-endif
-
 if HAVE_COLORLCD400
 SUBDIRS += display400
 endif
@@ -63,10 +59,6 @@ endif
 
 if HAVE_COLORLCD720
 SUBDIRS += display720
-endif
-
-if HAVE_COLORLCD800
-SUBDIRS += display800
 endif
 
 if HAVE_BWLCD255

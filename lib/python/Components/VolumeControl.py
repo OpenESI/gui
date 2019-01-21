@@ -39,7 +39,6 @@ class VolumeControl:
 		self.volumeDialog.setValue(vol)
 		self.volctrl = eDVBVolumecontrol.getInstance()
 		self.volctrl.setVolume(vol, vol)
-		self.last_vol = vol
 
 	def volSave(self):
 		if self.volctrl.isMuted():
@@ -59,7 +58,7 @@ class VolumeControl:
 			if step > 3: step = 3
 		elif vol < 30:
 			if step > 4: step = 4
-		self.setVolume(vol+step)
+		self.setVolume(int(vol) + int(step))
 
 	def volDown(self):
 		vol = self.volctrl.getVolume()
@@ -72,14 +71,14 @@ class VolumeControl:
 			if step > 3: step = 3
 		elif vol <= 30:
 			if step > 4: step = 4
-		self.setVolume(vol-step)
+		self.setVolume(int(vol) - int(step))
 
 	def stepVolume(self):
 		if self.stepVolTimer.isActive():
-			step = config.av.volume_stepsize_fastmode.value
+			step = config.usage.volume_step_fast.value
 		else:
 			self.getInputConfig()
-			step = config.av.volume_stepsize.value
+			step = config.usage.volume_step_slow.value
 		self.stepVolTimer.start(self.repeat,True)
 		return step
 
@@ -114,7 +113,6 @@ class VolumeControl:
 		self.volctrl.setVolume(newvol, newvol)
 		is_muted = self.volctrl.isMuted()
 		vol = self.volctrl.getVolume()
-		self.last_vol = vol
 		self.volumeDialog.show()
 		if is_muted:
 			self.volMute() # unmute
@@ -129,14 +127,7 @@ class VolumeControl:
 
 	def volHide(self):
 		self.volumeDialog.hide()
-		#//set volume on if muted and volume is changed in webif
-		vol = self.volctrl.getVolume()
-		if self.volctrl.isMuted() and self.last_vol != vol:
-			self.volctrl.volumeUnMute()
-		self.last_vol = vol
-		#//
-		if not self.volctrl.isMuted() or config.av.volume_hide_mute.value:
-			self.muteDialog.hide()
+		self.muteDialog.hide()
 
 	def showMute(self):
 		if self.volctrl.isMuted():
@@ -150,7 +141,10 @@ class VolumeControl:
 			if self.volctrl.isMuted():
 				if showMuteSymbol:
 					self.showMute()
+					self.volumeDialog.hide()
 				self.volumeDialog.setValue(0)
 			else:
 				self.muteDialog.hide()
 				self.volumeDialog.setValue(vol)
+				self.volumeDialog.show()
+				self.hideVolTimer.start(3000, True)

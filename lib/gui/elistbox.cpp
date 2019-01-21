@@ -587,11 +587,6 @@ void eListbox::setTextOffset(const ePoint &textoffset)
 	m_style.m_text_offset = textoffset;
 }
 
-void eListbox::setUseVTIWorkaround(void)
-{
-	m_style.m_use_vti_workaround = 1;
-}
-
 void eListbox::setBackgroundColor(gRGB &col)
 {
 	m_style.m_background_color = col;
@@ -637,7 +632,6 @@ void eListbox::setScrollbarSliderBorderWidth(int size)
 void eListbox::setScrollbarWidth(int size)
 {
 	m_scrollbar_width = size;
-
 }
 
 void eListbox::setBackgroundPicture(ePtr<gPixmap> &pm)

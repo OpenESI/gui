@@ -29,7 +29,8 @@ class CurrentService(PerServiceBase, Source):
 	@cached
 	def getCurrentService(self):
 		return self.navcore.getCurrentService()
-	
+
+	@cached
 	def getCurrentServiceReference(self):
 		return self.navcore.getCurrentlyPlayingServiceReference()
 
@@ -46,4 +47,3 @@ class CurrentService(PerServiceBase, Source):
 	def destroy(self):
 		PerServiceBase.destroy(self)
 		Source.destroy(self)
-

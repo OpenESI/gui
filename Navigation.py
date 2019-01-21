@@ -1,18 +1,24 @@
 from os import path
-from enigma import eServiceCenter, eServiceReference, eTimer, pNavigation, getBestPlayableServiceReference, iPlayableService
+from time import time, ctime, localtime
+from sys import maxint
+
+from enigma import eServiceCenter, eServiceReference, eTimer, pNavigation, getBestPlayableServiceReference, iPlayableService, eStreamServer, eActionMap, setPreferredTuner
+
 from Components.ParentalControl import parentalControl
-from Components.config import config
+from Components.config import config, configfile
+from Components.SystemInfo import SystemInfo
 from Components.PluginComponent import plugins
 from Plugins.Plugin import PluginDescriptor
 from Tools.BoundFunction import boundFunction
 from Tools.StbHardware import getFPWasTimerWakeup
-from time import time, ctime
+from Tools import Notifications
 import RecordTimer
 import PowerTimer
 import Screens.Standby
 import NavigationInstance
 import ServiceReference
 from Screens.InfoBar import InfoBar, MoviePlayer
+from Components.Sources.StreamService import StreamServiceList
 from boxbranding import getBoxType, getBrandOEM, getMachineBuild
 
 # TODO: remove pNavgation, eNavigation and rewrite this stuff in python.
@@ -36,9 +42,6 @@ class Navigation:
 		self.currentlyPlayingServiceOrGroup = None
 		self.currentlyPlayingService = None
 
-		Screens.Standby.TVstate()
-		self.skipWakeup = False
-
 		self.RecordTimer = None
 		self.isRecordTimerImageStandard = False
 		for p in plugins.getPlugins(PluginDescriptor.WHERE_RECORDTIMER):
@@ -54,6 +57,11 @@ class Navigation:
 		self.__wasTimerWakeup = False
 		self.__wasRecTimerWakeup = False
 		self.__wasPowerTimerWakeup = False
+		self.__isRestartUI = config.misc.RestartUI.value
+		if config.misc.RestartUI.value:
+			config.misc.RestartUI.value = False
+			config.misc.RestartUI.save()
+			configfile.save()
 
 		#wakeup data
 		now = time()
@@ -66,7 +74,6 @@ class Navigation:
 		self.syncCount = 0
 		hasFakeTime = (now <= 31536000 or now - self.lastshutdowntime <= 120) and self.getstandby < 2 #set hasFakeTime only if lower than values and was last shutdown to deep standby
 		wasTimerWakeup, wasTimerWakeup_failure = getFPWasTimerWakeup(True)
-		#TODO: verify wakeup-state for boxes where only after shutdown removed the wakeup-state (for boxes where "/proc/stb/fp/was_timer_wakeup" is not writable (clearFPWasTimerWakeup() in StbHardware.py has no effect -> after x hours and restart/reboot is wasTimerWakeup = True)
 
 		if 0: #debug
 			print "#"*100
@@ -75,6 +82,7 @@ class Navigation:
 			print "[NAVIGATION] wakeuptyp: %s, getstandby: %s, forcerecord: %s" %({0:"record-timer",1:"zap-timer",2:"power-timer",3:"plugin-timer"}[self.wakeuptyp],{0:"no standby",1:"standby",2:"no standby (box was not in deepstandby)"}[self.getstandby],self.forcerecord)
 			print "#"*100
 
+		#TODO: verify wakeup-state for boxes where only after shutdown removed the wakeup-state (for boxes where "/proc/stb/fp/was_timer_wakeup" is not writable (clearFPWasTimerWakeup() in StbHardware.py has no effect -> after x hours and restart/reboot is wasTimerWakeup = True)
 		print "="*100
 		print "[NAVIGATION] was timer wakeup = %s" %wasTimerWakeup
 		print "[NAVIGATION] current time is %s -> it's fake-time suspected: %s" %(ctime(now),hasFakeTime)
@@ -118,8 +126,6 @@ class Navigation:
 				return
 
 		if hasFakeTime and self.wakeuptime > 0: # check for NTP-time sync, if no sync, wait for transponder time
-			if Screens.Standby.TVinStandby.getTVstandby('waitfortimesync') and not wasTimerWakeup:
-				Screens.Standby.TVinStandby.setTVstate('power')
 			self.savedOldTime = now
 			self.timesynctimer = eTimer()
 			self.timesynctimer.callback.append(self.TimeSynctimer)
@@ -129,6 +135,9 @@ class Navigation:
 		else:
 			self.wakeupCheck(False)
 
+	def isRestartUI(self):
+		return self.__isRestartUI
+
 	def wakeupCheck(self, runCheck = True):
 		now = time()
 		stbytimer = 15 # original was 15
@@ -136,7 +145,8 @@ class Navigation:
 		if runCheck and ((self.__wasTimerWakeup or config.workaround.deeprecord.value) and now >= self.wakeupwindow_minus and now <= self.wakeupwindow_plus):
 			if self.syncCount > 0:
 				stbytimer = stbytimer - (self.syncCount * 5)
-				if stbytimer < 0: stbytimer = 0
+				if stbytimer < 0:
+					stbytimer = 0
 				if not self.__wasTimerWakeup:
 					self.__wasTimerWakeup = True
 					print "-"*100
@@ -167,14 +177,9 @@ class Navigation:
 				if not self.forcerecord:
 					print "[NAVIGATION] timer starts at %s" % ctime(self.timertime)
 			#check for standby
-			cec =  ((self.wakeuptyp == 0 and (Screens.Standby.TVinStandby.getTVstandby('zapandrecordtimer'))) or 
-					(self.wakeuptyp == 1 and (Screens.Standby.TVinStandby.getTVstandby('zaptimer'))) or
-					(self.wakeuptyp == 2 and (Screens.Standby.TVinStandby.getTVstandby('wakeuppowertimer'))))
-			if self.getstandby != 1 and ((self.wakeuptyp < 3 and self.timertime - now > 60 + stbytimer) or cec):
+			if not self.getstandby and ((self.wakeuptyp < 3 and self.timertime - now > 60 + stbytimer) or (not config.recording.switchTVon.value and self.wakeuptyp == 0)):
 				self.getstandby = 1
-				txt = ""
-				if cec: txt = "... or special hdmi-cec settings"
-				print "[NAVIGATION] more than 60 seconds to wakeup%s - go in standby now" %txt
+				print "[NAVIGATION] more than 60 seconds to wakeup or not TV turn on - go in standby"
 			print "="*100
 			#go in standby
 			if self.getstandby == 1:
@@ -202,7 +207,7 @@ class Navigation:
 			self.getstandby = 0
 
 		#workaround for normal operation if no time sync after e2 start - box is in standby
-		if self.getstandby != 1 and not self.skipWakeup:
+		if self.getstandby != 1:
 			self.gotopower()
 
 	def wasTimerWakeup(self):
@@ -232,8 +237,6 @@ class Navigation:
 		self.wakeupCheck()
 
 	def gotopower(self):
-		if not Screens.Standby.TVinStandby.getTVstate('on'):
-			Screens.Standby.TVinStandby.setTVstate('power')
 		if Screens.Standby.inStandby:
 			print '[NAVIGATION] now entering normal operation'
 			Screens.Standby.inStandby.Power()
@@ -255,7 +258,10 @@ class Navigation:
 	def dispatchRecordEvent(self, rec_service, event):
 #		print "record_event", rec_service, event
 		for x in self.record_event:
-			x(rec_service, event)
+			try:
+				x(rec_service, event)
+			except:
+				pass
 
 	def playService(self, ref, checkParentalControl=True, forceRestart=False, adjust=True):
 		oldref = self.currentlyPlayingServiceOrGroup
@@ -297,8 +303,13 @@ class Navigation:
 				if not playref:
 					alternativeref = getBestPlayableServiceReference(ref, eServiceReference(), True)
 					self.stopService()
-					if alternativeref and self.pnav and self.pnav.playService(alternativeref):
-						print "Failed to start", alternativeref
+					if alternativeref and self.pnav:
+						self.currentlyPlayingServiceReference = alternativeref
+						self.currentlyPlayingServiceOrGroup = ref
+						if self.pnav.playService(alternativeref):
+							print "Failed to start", alternativeref
+							self.currentlyPlayingServiceReference = None
+							self.currentlyPlayingServiceOrGroup = None
 					return 0
 				elif checkParentalControl and not parentalControl.isServicePlayable(playref, boundFunction(self.playService, checkParentalControl = False)):
 					if self.currentlyPlayingServiceOrGroup and InfoBarInstance and InfoBarInstance.servicelist.servicelist.setCurrent(self.currentlyPlayingServiceOrGroup, adjust):
@@ -312,10 +323,40 @@ class Navigation:
 				self.currentlyPlayingServiceOrGroup = ref
 				if InfoBarInstance and InfoBarInstance.servicelist.servicelist.setCurrent(ref, adjust):
 					self.currentlyPlayingServiceOrGroup = InfoBarInstance.servicelist.servicelist.getCurrent()
+				setPriorityFrontend = False
+				if SystemInfo["DVB-T_priority_tuner_available"] or SystemInfo["DVB-C_priority_tuner_available"] or SystemInfo["DVB-S_priority_tuner_available"] or SystemInfo["ATSC_priority_tuner_available"]:
+					str_service = playref.toString()
+					if '%3a//' not in str_service and not str_service.rsplit(":", 1)[1].startswith("/"):
+						type_service = playref.getUnsignedData(4) >> 16
+						if type_service == 0xEEEE:
+							if SystemInfo["DVB-T_priority_tuner_available"] and config.usage.frontend_priority_dvbt.value != "-2":
+								if config.usage.frontend_priority_dvbt.value != config.usage.frontend_priority.value:
+									setPreferredTuner(int(config.usage.frontend_priority_dvbt.value))
+									setPriorityFrontend = True
+							if SystemInfo["ATSC_priority_tuner_available"] and config.usage.frontend_priority_atsc.value != "-2":
+								if config.usage.frontend_priority_atsc.value != config.usage.frontend_priority.value:
+									setPreferredTuner(int(config.usage.frontend_priority_atsc.value))
+									setPriorityFrontend = True
+						elif type_service == 0xFFFF:
+							if SystemInfo["DVB-C_priority_tuner_available"] and config.usage.frontend_priority_dvbc.value != "-2":
+								if config.usage.frontend_priority_dvbc.value != config.usage.frontend_priority.value:
+									setPreferredTuner(int(config.usage.frontend_priority_dvbc.value))
+									setPriorityFrontend = True
+							if SystemInfo["ATSC_priority_tuner_available"] and config.usage.frontend_priority_atsc.value != "-2":
+								if config.usage.frontend_priority_atsc.value != config.usage.frontend_priority.value:
+									setPreferredTuner(int(config.usage.frontend_priority_atsc.value))
+									setPriorityFrontend = True
+						else:
+							if SystemInfo["DVB-S_priority_tuner_available"] and config.usage.frontend_priority_dvbs.value != "-2":
+								if config.usage.frontend_priority_dvbs.value != config.usage.frontend_priority.value:
+									setPreferredTuner(int(config.usage.frontend_priority_dvbs.value))
+									setPriorityFrontend = True
 				if self.pnav.playService(playref):
 					print "Failed to start", playref
 					self.currentlyPlayingServiceReference = None
 					self.currentlyPlayingServiceOrGroup = None
+				if setPriorityFrontend:
+					setPreferredTuner(int(config.usage.frontend_priority.value))
 				return 0
 		elif oldref and InfoBarInstance and InfoBarInstance.servicelist.servicelist.setCurrent(oldref, adjust):
 			self.currentlyPlayingServiceOrGroup = InfoBarInstance.servicelist.servicelist.getCurrent()
@@ -352,7 +393,12 @@ class Navigation:
 		return ret
 
 	def getRecordings(self, simulate=False, type=pNavigation.isAnyRecording):
-		return self.pnav and self.pnav.getRecordings(simulate, type)
+		recs = self.pnav and self.pnav.getRecordings(simulate, type)
+		if not simulate and StreamServiceList:
+			for rec in recs[:]:
+				if rec.__deref__() in StreamServiceList:
+					recs.remove(rec)
+		return recs
 
 	def getRecordingsServices(self, type=pNavigation.isAnyRecording):
 		return self.pnav and self.pnav.getRecordingsServices(type)
@@ -421,3 +467,6 @@ class Navigation:
 
 	def stopUserServices(self):
 		self.stopService()
+
+	def getClientsStreaming(self):
+		return eStreamServer.getInstance() and eStreamServer.getInstance().getConnectedClients()

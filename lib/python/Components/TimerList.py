@@ -4,7 +4,8 @@ from skin import parseFont
 
 from Tools.FuzzyDate import FuzzyTime
 
-from enigma import eListboxPythonMultiContent, eListbox, gFont, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, RT_VALIGN_TOP, RT_VALIGN_BOTTOM
+from enigma import eListboxPythonMultiContent, eListbox, gFont, getBestPlayableServiceReference, eServiceReference, \
+	RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, RT_VALIGN_TOP, RT_VALIGN_BOTTOM
 from Tools.Alternatives import GetWithAlternative
 from Tools.LoadPixmap import LoadPixmap
 from Tools.TextBoundary import getTextBoundarySize
@@ -14,8 +15,8 @@ from Tools.Directories import resolveFilename, SCOPE_ACTIVE_SKIN
 
 class TimerList(HTMLComponent, GUIComponent, object):
 #
-#  | <Name of the Timer>    <Service> |
-#  | <state>  <orb.pos>  <start, end> |
+#  | <Name of the Timer>     <Service>  <orb.pos>|
+#  | <state>  <start, end>  |
 #
 	def buildTimerEntry(self, timer, processed):
 		height = self.l.getItemSize().height()
@@ -40,14 +41,7 @@ class TimerList(HTMLComponent, GUIComponent, object):
 				if flags & 1 == 1:
 					repeatedtext.append(days[x])
 				flags >>= 1
-			if repeatedtext == [_("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat"), _("Sun")]:
-				repeatedtext = _('Everyday')
-			elif repeatedtext == [_("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri")]:
-				repeatedtext = _('Weekday')
-			elif repeatedtext == [_("Sat"), _("Sun")]:
-				repeatedtext = _('Weekend')
-			else:
-					repeatedtext = ", ".join(repeatedtext)
+			repeatedtext = ", ".join(repeatedtext)
 			if self.iconRepeat:
 				res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, self.iconMargin / 2, self.rowSplit + (self.itemHeight - self.rowSplit - self.iconHeight) / 2, self.iconWidth, self.iconHeight, self.iconRepeat))
 		else:
@@ -59,9 +53,8 @@ class TimerList(HTMLComponent, GUIComponent, object):
 				text = repeatedtext + ((" %s (" + _("ZAP") + ")") % (begin[1]))
 		else:
 			text = repeatedtext + ((" %s ... %s (%d " + _("mins") + ")") % (begin[1], FuzzyTime(timer.end)[1], (timer.end - timer.begin) / 60))
-
 		icon = None
-		if not processed:
+		if not processed and (not timer.disabled or (timer.repeated and timer.isRunning() and not timer.justplay)):
 			if timer.state == TimerEntry.StateWaiting:
 				state = _("waiting")
 				if timer.isAutoTimer:
@@ -96,7 +89,7 @@ class TimerList(HTMLComponent, GUIComponent, object):
 
 		icon and res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, self.iconMargin / 2, (self.rowSplit - self.iconHeight) / 2, self.iconWidth, self.iconHeight, icon))
 
-		orbpos = self.getOrbitalPos(timer.service_ref)
+		orbpos = self.getOrbitalPos(timer.service_ref, timer.state)
 		orbposWidth = getTextBoundarySize(self.instance, self.font, self.l.getItemSize(), orbpos).width()
 		res.append((eListboxPythonMultiContent.TYPE_TEXT, self.satPosLeft, self.rowSplit, orbposWidth, self.itemHeight - self.rowSplit, 1, RT_HALIGN_LEFT|RT_VALIGN_TOP, orbpos))
 		res.append((eListboxPythonMultiContent.TYPE_TEXT, self.iconWidth + self.iconMargin, self.rowSplit, self.satPosLeft - self.iconWidth - self.iconMargin, self.itemHeight - self.rowSplit, 1, RT_HALIGN_LEFT|RT_VALIGN_TOP, state))
@@ -188,22 +181,32 @@ class TimerList(HTMLComponent, GUIComponent, object):
 	def entryRemoved(self, idx):
 		self.l.entryRemoved(idx)
 
-	def getOrbitalPos(self, ref):
+	def getOrbitalPos(self, ref, state):
 		refstr = None
+		alternative = ''
 		if hasattr(ref, 'sref'):
 			refstr = str(ref.sref)
 		else:
 			refstr = str(ref)
-		refstr = refstr and GetWithAlternative(refstr)
+		if refstr and refstr.startswith('1:134:'):
+			alternative = " (A)"
+			if state in (1, 2) and not hasattr(ref, 'sref'):
+				current_ref = getBestPlayableServiceReference(ref.ref, eServiceReference())
+				if not current_ref:
+					return "N/A" + alternative
+				else:
+					refstr = current_ref.toString()
+			else:
+				refstr = GetWithAlternative(refstr)
 		if '%3a//' in refstr:
-			return "%s" % _("Stream")
+			return "%s" % _("Stream") + alternative
 		op = int(refstr.split(':', 10)[6][:-4] or "0",16)
 		if op == 0xeeee:
-			return "%s" % _("DVB-T")
+			return "%s" % _("DVB-T") + alternative
 		if op == 0xffff:
-			return "%s" % _("DVB-C")
+			return "%s" % _("DVB-C") + alternative
 		direction = 'E'
 		if op > 1800:
 			op = 3600 - op
 			direction = 'W'
-		return ("%d.%d\xc2\xb0%s") % (op // 10, op % 10, direction)
+		return ("%d.%d\xc2\xb0%s") % (op // 10, op % 10, direction) + alternative

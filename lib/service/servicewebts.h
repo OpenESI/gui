@@ -16,7 +16,7 @@
 #define VIDEO_STREAM_E   0xEF
 
 #define TS_SIZE          188
-#define IN_SIZE		 65424
+#define IN_SIZE          65424
 
 #define PID_MASK_HI      0x1F
 
@@ -68,7 +68,6 @@ public:
 	void addAudio(int pid, std::string lang, std::string desc, int type);
 };
 
-
 class eStreamThreadWeb;
 class eServiceWebTS: public iPlayableService, public iPauseableService,
 	public iServiceInformation, public iSeekableService,
@@ -92,22 +91,21 @@ public:
 	RESULT setFastForward(int ratio) { return -1; };
 	RESULT audioChannel(ePtr<iAudioChannelSelection> &ptr) { ptr = this; return 0; };
 	RESULT audioTracks(ePtr<iAudioTrackSelection> &ptr) { ptr = this; return 0; };
-	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr) { ptr = 0; return -1; };
-	RESULT subServices(ePtr<iSubserviceList> &ptr) { ptr = 0; return -1; };
-	RESULT timeshift(ePtr<iTimeshiftService> &ptr) { ptr = 0; return -1; };
-	RESULT cueSheet(ePtr<iCueSheet> &ptr) { ptr = 0; return -1; };
+	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr) { ptr = nullptr; return -1; };
+	RESULT subServices(ePtr<iSubserviceList> &ptr) { ptr = nullptr; return -1; };
+	RESULT timeshift(ePtr<iTimeshiftService> &ptr) { ptr = nullptr; return -1; };
+	RESULT cueSheet(ePtr<iCueSheet> &ptr) { ptr = nullptr; return -1; };
 	void setQpipMode(bool value, bool audio) { }
-	RESULT subtitle(ePtr<iSubtitleOutput> &ptr) { ptr = 0; return -1; };
-	RESULT audioDelay(ePtr<iAudioDelay> &ptr) { ptr = 0; return -1; };
-	RESULT rdsDecoder(ePtr<iRdsDecoder> &ptr) { ptr = 0; return -1; };
-	RESULT stream(ePtr<iStreamableService> &ptr) { ptr = 0; return -1; };
-	RESULT streamed(ePtr<iStreamedService> &ptr) { ptr = 0; return -1; };
-	RESULT keys(ePtr<iServiceKeys> &ptr) { ptr = 0; return -1; };
+	RESULT subtitle(ePtr<iSubtitleOutput> &ptr) { ptr = nullptr; return -1; };
+	RESULT audioDelay(ePtr<iAudioDelay> &ptr) { ptr = nullptr; return -1; };
+	RESULT rdsDecoder(ePtr<iRdsDecoder> &ptr) { ptr = nullptr; return -1; };
+	RESULT stream(ePtr<iStreamableService> &ptr) { ptr = nullptr; return -1; };
+	RESULT streamed(ePtr<iStreamedService> &ptr) { ptr = nullptr; return -1; };
+	RESULT keys(ePtr<iServiceKeys> &ptr) { ptr = nullptr; return -1; };
 
 	// iPausableService
 	RESULT pause();
 	RESULT unpause();
-
 
 	// iSeekableService
 	RESULT getLength(pts_t &SWIG_OUTPUT);

@@ -49,7 +49,6 @@ void eSlider::setForegroundColor(const gRGB &color)
 	invalidate();
 }
 
-
 void eSlider::setSliderBorderWidth(int pixel)
 {
 	m_sliderborder_width=pixel;
@@ -133,7 +132,6 @@ int eSlider::event(int event, void *data, void *data2)
 			painter.blit(m_pixmap, ePoint(0, 0), m_currently_filled.extends, isTransparent() ? gPainter::BT_ALPHATEST : 0);
 
 // border
-
 		if (m_have_sliderborder_color)
 			painter.setForegroundColor(m_sliderborder_color);
 		else if (m_have_border_color)
@@ -168,7 +166,7 @@ int eSlider::event(int event, void *data, void *data2)
 				start_pix = pixsize - num_pix - start_pix;
 		}
 
-		if  (start_pix < 0)
+		if (start_pix < 0)
 		{
 			num_pix += start_pix;
 			start_pix = 0;

@@ -15,7 +15,7 @@
 #include <lib/base/cfile.h>
 #endif
 
-#if defined(CONFIG_ION) || defined(CONFIG_HISILICON_FB)
+#ifdef CONFIG_ION
 #include <lib/gdi/grc.h>
 
 extern void bcm_accel_blit(
@@ -26,16 +26,12 @@ extern void bcm_accel_blit(
 		int pal_addr, int flags);
 #endif
 
-#ifdef HAVE_HISILICON_ACCEL
-extern void  dinobot_accel_register(void *p1,void *p2);
-extern void  dinibot_accel_notify(void);
-#endif
 gFBDC::gFBDC()
 {
 	fb=new fbClass;
 #ifndef CONFIG_ION
 	if (!fb->Available())
-		eFatal("[gFBDC] no framebuffer available");
+		eFatal("no framebuffer available");
 #endif
 
 	int xres;
@@ -155,7 +151,7 @@ void gFBDC::exec(const gOpcode *o)
 			gettimeofday(&now, 0);
 
 			int diff = (now.tv_sec - l.tv_sec) * 1000 + (now.tv_usec - l.tv_usec) / 1000;
-			eDebug("[gFBDC] %d ms latency (%d fps)", diff, t * 1000 / (diff ? diff : 1));
+			eDebug("%d ms latency (%d fps)", diff, t * 1000 / (diff ? diff : 1));
 			l = now;
 			t = 0;
 		}
@@ -198,20 +194,6 @@ void gFBDC::exec(const gOpcode *o)
 				0, 0, surface.x, surface.y,
 				0, 0);
 		}
-#endif
-#if defined(CONFIG_HISILICON_FB)
-		if(islocked()==0)
-		{
-			bcm_accel_blit(
-				surface.data_phys, surface.x, surface.y, surface.stride, 0,
-				surface_back.data_phys, surface_back.x, surface_back.y, surface_back.stride,
-				0, 0, surface.x, surface.y,
-				0, 0, surface.x, surface.y,
-				0, 0);
-		}
-#endif
-#ifdef HAVE_HISILICON_ACCEL
-		dinibot_accel_notify();
 #endif
 		break;
 	case gOpcode::sendShow:
@@ -286,11 +268,7 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 		return;
 	}
 #else
-	if (m_pixmap && (surface.x == xres) && (surface.y == yres) && (surface.bpp == bpp)
-	#if defined(CONFIG_HISILICON_FB)
-		&& islocked()==0
-	#endif
-		)
+	if (m_pixmap && (surface.x == xres) && (surface.y == yres) && (surface.bpp == bpp))
 		return;
 #endif
 #ifndef CONFIG_ION
@@ -339,14 +317,11 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 
 #ifndef CONFIG_ION
 	/* accel is already set in fb.cpp */
-	eDebug("[gFBDC] %dkB available for acceleration surfaces.", (fb->Available() - fb_size)/1024);
+	eDebug("%dkB available for acceleration surfaces.", (fb->Available() - fb_size)/1024);
 	if (gAccel::getInstance())
 		gAccel::getInstance()->setAccelMemorySpace(fb->lfb + fb_size, surface.data_phys + fb_size, fb->Available() - fb_size);
 #endif
 
-#ifdef HAVE_HISILICON_ACCEL
-	dinobot_accel_register(&surface,&surface_back);
-#endif
 	if (!surface.clut.data)
 	{
 		surface.clut.colors = 256;
@@ -355,15 +330,6 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 	}
 
 	surface_back.clut = surface.clut;
-
-#if defined(CONFIG_HISILICON_FB)
-	if(islocked()==0)
-	{
-		gUnmanagedSurface s(surface);
-		surface = surface_back;
-		surface_back = s;
-	}
-#endif
 
 	m_pixmap = new gPixmap(&surface);
 

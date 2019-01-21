@@ -23,7 +23,7 @@
 static int VPID = 0;
 static int PID_SET = 0;
 static int APID = 0;
-static int H264=0;
+static int H264 = 0;
 
 eServiceFactoryWebTS::eServiceFactoryWebTS()
 {
@@ -59,13 +59,13 @@ RESULT eServiceFactoryWebTS::play(const eServiceReference &ref, ePtr<iPlayableSe
 
 RESULT eServiceFactoryWebTS::record(const eServiceReference &ref, ePtr<iRecordableService> &ptr)
 {
-	ptr=0;
+	ptr = 0;
 	return -1;
 }
 
 RESULT eServiceFactoryWebTS::list(const eServiceReference &, ePtr<iListableService> &ptr)
 {
-	ptr=0;
+	ptr = 0;
 	return -1;
 }
 
@@ -77,7 +77,7 @@ RESULT eServiceFactoryWebTS::info(const eServiceReference &ref, ePtr<iStaticServ
 
 RESULT eServiceFactoryWebTS::offlineOperations(const eServiceReference &, ePtr<iServiceOfflineOperations> &ptr)
 {
-	ptr = 0;
+	ptr = nullptr;
 	return -1;
 }
 
@@ -254,7 +254,7 @@ int eServiceWebTS::openHttpConnection(std::string url)
 
 	if (connect(fd, (sockaddr*)&addr, sizeof(addr)) == -1) {
 		std::string msg = "connect failed for: " + url;
-		eDebug(msg.c_str());
+		eDebug("[eServiceWebTS] %s", msg.c_str());
 		return -1;
 	}
 
