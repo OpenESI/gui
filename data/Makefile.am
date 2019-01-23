@@ -22,12 +22,6 @@ dist_pkgdata_DATA = \
 
 
 if HAVE_TEXTLCD
-if HAVE_7SEGMENT
-SUBDIRS += 7segment
-else
-if SPARK
-SUBDIRS += displaydualtext
-else
 SUBDIRS += displaytext
 endif
 
@@ -56,31 +50,23 @@ SUBDIRS += display390
 endif
 
 if HAVE_COLORLCD400
+if GB7252
+SUBDIRS += display400gb4k
+else
 SUBDIRS += display400
 endif
-
-if HAVE_COLORLCD480
-SUBDIRS += display480
 endif
 
 if HAVE_COLORLCD720
 SUBDIRS += display720
 endif
 
-if HAVE_COLORLCD800
-SUBDIRS += display800
-endif
-
 if HAVE_BWLCD255
-SUBDIRS += vfd255
+SUBDIRS += display255
 endif
 
 if HAVE_BWLCD140
-SUBDIRS += vfd140
-endif
-
-if HAVE_BWLCD128
-SUBDIRS += vfd128
+SUBDIRS += display140
 endif
 
 if HAVE_GRAUTEC8000
@@ -91,3 +77,6 @@ if HAVE_GRAUTEC70X0
 SUBDIRS += grautec70x0
 endif
 
+if HAVE_7SEGMENT
+SUBDIRS += 7segment
+endif
