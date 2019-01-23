@@ -14,7 +14,7 @@ from Tools.Profile import profile, profile_final
 profile("PYTHON_START")
 
 import Tools.RedirectOutput
-from boxbranding import getBoxType, getBrandOEM getImageType, getImageVersion, getImageBuild, getMachineBuild
+from boxbranding import getBoxType, getBrandOEM, getImageType, getImageVersion, getImageBuild, getMachineBuild
 print "----------------------------"
 print "[Image Type] %s" % getImageType()
 print "[Image Version] %s" % getImageVersion()
