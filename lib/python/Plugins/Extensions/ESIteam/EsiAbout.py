@@ -30,7 +30,7 @@ from Tools.StbHardware import getFPVersion
 from Tools.LoadPixmap import LoadPixmap
 from ServiceReference import ServiceReference
 from enigma import eLabel, iServiceInformation, eTimer, eConsoleAppContainer, getEnigmaVersionString, RT_HALIGN_LEFT, eListboxPythonMultiContent, gFont, getDesktop, eSize, ePoint
-from boxbranding import getBoxType, getImageCodeName, getMachineBuild, getMachineBrand, getMachineName, getImageVersion, getImageBuild, getDriverDate
+from boxbranding import getBoxType, getMachineBuild, getMachineBrand, getMachineName, getImageVersion, getImageBuild, getDriverDate
 from time import *
 from types import *
 import sys, socket, commands, re, new, os, gettext, _enigma, enigma, subprocess, threading, traceback, time, datetime
@@ -157,7 +157,6 @@ class EsisysInfo(Screen):
 		self.text += "\nSOFTWARE\n"
 		openESI = "OpenESI "
 		self.text += "Firmware:\t %s" % openESI + str(about.getImageVersion()) + "\n"
-		self.text += _("CodeName:\t %s") % str(getImageCodeName()) + "\n"
 		self.text += "Kernel: \t " + about.getKernelVersionString() + "\n"
 		self.text += _("DVB drivers:\t %s") % str(about.getDriverInstalledDate()) + "\n"
 		self.text += _("Last update:\t %s") % MyDateConverter(str(getEnigmaVersionString())) + "\n"
