@@ -30,18 +30,20 @@ SUBDIRS += displaydualtext
 else
 SUBDIRS += displaytext
 endif
-endif
-endif
-
-if HAVE_COLORLCD3
-SUBDIRS += display128dm
-endif
 
 if HAVE_COLORLCD2
 SUBDIRS += display96
 endif
 
 if HAVE_COLORLCD1
+SUBDIRS += display128
+endif
+
+if HAVE_COLORLCD3
+SUBDIRS += display128dm
+endif
+
+if HAVE_BWLCD128
 SUBDIRS += display128
 endif
 

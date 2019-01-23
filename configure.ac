@@ -1,4 +1,4 @@
-AC_INIT([enigma2],[6.0],[http://www.openesi.eu])
+AC_INIT([enigma2],[8.5],[http://www.openesi.eu])
 AM_INIT_AUTOMAKE([dist-bzip2 no-define tar-pax -Wno-portability])
 AC_CONFIG_HEADERS([enigma2_config.h])
 
@@ -839,6 +839,7 @@ data/displaydualtext/Makefile
 data/display96/Makefile
 data/display128/Makefile
 data/display128dm/Makefile
+data/display140/Makefile
 data/display220/Makefile
 data/display390/Makefile
 data/display400/Makefile
