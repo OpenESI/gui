@@ -837,7 +837,6 @@ Makefile
 data/Makefile
 data/defaults/Makefile
 data/fonts/Makefile
-data/extensions/Makefile
 data/keymaps/Makefile
 data/7segment/Makefile
 data/displaytext/Makefile
