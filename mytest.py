@@ -27,17 +27,6 @@ import eBaseImpl
 enigma.eTimer = eBaseImpl.eTimer
 enigma.eSocketNotifier = eBaseImpl.eSocketNotifier
 enigma.eConsoleAppContainer = eConsoleImpl.eConsoleAppContainer
-
-print "Init Import modules for test"
-from enigma import eTimer
-
-from Screens.MessageBox import MessageBox
-from Screens.Screen import Screen
-from Components.config import config, configfile, ConfigSubsection, getConfigListEntry, ConfigSelectionNumber, ConfigSelection, ConfigSlider, ConfigYesNo, NoSave, ConfigNumber, ConfigText
-from Components.ConfigList import ConfigListScreen
-from Tools.Directories import fileExists
-print "End Import modules for test"
-
 boxtype = getBoxType()
 
 #if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal/plugin.pyo") and boxtype in ('dm7080','dm820','dm520','dm525','dm900'):
