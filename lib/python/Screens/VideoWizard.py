@@ -1,3 +1,4 @@
+from boxbranding import getBoxType, getMachineName
 from Screens.Wizard import WizardSummary
 from Screens.WizardLanguage import WizardLanguage
 from Screens.Rc import Rc
@@ -6,25 +7,20 @@ from Screens.Screen import Screen
 
 from Components.Pixmap import Pixmap
 from Components.config import config, ConfigBoolean, configfile
-from Components.SystemInfo import SystemInfo
 
 from Tools.Directories import resolveFilename, SCOPE_SKIN, SCOPE_ACTIVE_SKIN
 from Tools.HardwareInfo import HardwareInfo
 
-
 config.misc.showtestcard = ConfigBoolean(default = False)
+
+boxtype = getBoxType()
 
 has_rca = False
 has_dvi = False
-has_jack = False
-has_scart = False
-
-
-has_rca = SystemInfo["HaveRCA"]
-has_dvi = SystemInfo["HaveDVI"]
-has_jack = SystemInfo["HaveAVJACK"]
-has_scart = SystemInfo["HAVESCART"]
-
+if boxtype in ('mediabox4k','dinobot4k','dinobot4kse','lunix','purehdse','lunix34k','zgemmah6','vipert2c','vipercombo','vipercombohdd','evoslimse','evoslimt2c','zgemmah4','spycat4kcombo','spycat4k','valalinux','formuler4ip','formuler3ip','formuler1tc','tm4ksuper','galaxy4k','zgemmah52splus','zgemmah2splus','zgemmah7','zgemmah32tc','zgemmah52tc','alphatriple','tmtwin4k','tmnanom3','tiviarmin','mbmicrov2', 'vimastec1500', 'revo4k','force3uhdplus','force3uhd','force2nano','zgemmah5ac', 'zgemmah3ac','bre2zet2c', 'e4hdcombo', 'ultrabox', 'osmega', 'tmnano3t', 'novacombo', 'novatwin', 'megaforce2', 'purehd', 'mutant11', 'sf128', 'sf138', 'xpeedlxpro', 'mbtwinplus', 'mutant51', 'ax51', 'formuler4', 'formuler4turbo', 'zgemmah5', 'zgemmah52s', 'sf98', 'evoslim', 'zgemmaslc', '9900lx', '9910lx', '9911lx', 'et7x00mini', 'tmnanosem2', 'tmnanosem2plus', 'evomini', 'evominiplus', 'zgemmahs', 'zgemmah2s', 'zgemmah2h', 't2cable', 'osmini', 'osminiplus', 'xpeedlxcs2', 'xpeedlxcc', 'odin2hybrid', 'odinplus', 'mutant500c', 'mutant530c', 'e4hd', 'e4hdhybrid' , 'mbmicro', 'beyonwizt2', 'fegasusx3', 'fegasusx5s', 'fegasusx5t', 'twinboxlcd', 'singleboxlcd', 'twinboxlcdci', 'twinboxlcdci5', 'sf3038', 'spycat', 'zgemmash1', 'zgemmash2', 'zgemmas2s', 'zgemmass' , 'formuler3', 'enibox', 'mago', 'sf108', 'x1plus', 'x2plus', 'atemio6000', 'atemio6100', 'atemio6200', 'mbminiplus', 'vp7358ci', 'xcombo', 'gbquad', 'gbquadplus', 'et5x00', 'et6000', 'et7000', 'et7100', 'et7500', 'et8500', 'et8500s', 'classm', 'axodin', 'axodinc', 'genius', 'evo', 'galaxym6', 'geniuse3hd', 'evoe3hd', 'axase3', 'axase3c', 'starsatlx', 'mixosf7', 'mixoslumi', 'tmnano', 'azboxme',  'azboxminime', 'optimussos1',  'optimussos2', 'gb800seplus', 'gb800ueplus', 'gbultrase', 'gbultraue', 'gbultraueh', 'sezam1000hd', 'ixussone', 'ixusszero', 'enfinity', 'marvel1', 'bre2ze', 'force1', 'force1plus', 'worldvisionf1', 'optimussos1plus',  'optimussos2plus',  'optimussos3plus', 'formuler1', 'tmnano2super', 'vusolose', 'vuzero', 'tyrant'):
+	has_rca = True
+if boxtype == 'dm8000' or boxtype == 'dm800':
+	has_dvi = True
 
 class VideoWizardSummary(WizardSummary):
 	skin = (
@@ -108,10 +104,8 @@ class VideoWizard(WizardLanguage, Rc):
 				descr = port
 				if descr == 'HDMI' and has_dvi:
 					descr = 'DVI'
-				if descr == 'Scart' and has_rca and not has_scart:
+				if descr == 'Scart' and has_rca:
 					descr = 'RCA'
-				if descr == 'Scart' and has_jack and not has_scart:
-					descr = 'Jack'
 				if port != "DVI-PC":
 					list.append((descr,port))
 		list.sort(key = lambda x: x[0])
@@ -133,9 +127,7 @@ class VideoWizard(WizardLanguage, Rc):
 			if picname == 'HDMI' and has_dvi:
 				picname = "DVI"
 			if picname == 'Scart' and has_rca:
-				picname = "RCA"
-			if picname == 'Scart' and has_jack:
-				picname = "JACK"
+				picname = "RCA"	
 			self["portpic"].instance.setPixmapFromFile(resolveFilename(SCOPE_ACTIVE_SKIN, "icons/" + picname + ".png"))
 
 	def inputSelect(self, port):
@@ -183,8 +175,6 @@ class VideoWizard(WizardLanguage, Rc):
 			print mode
 			if mode[0] == querymode:
 				for rate in mode[1]:
-					if rate in ("auto") and not SystemInfo["have24hz"]:
-						continue
 					if self.port == "DVI-PC":
 						print "rate:", rate
 						if rate == "640x480":

@@ -46,14 +46,14 @@ from Screens.TimerEntry import TimerEntry as TimerEntry
 from Tools import Directories, Notifications
 from Tools.Directories import pathExists, fileExists, getRecordingFilename, copyfile, moveFiles, resolveFilename, SCOPE_TIMESHIFT, SCOPE_CURRENT_SKIN
 from Tools.KeyBindings import getKeyDescription
-from enigma import eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, iPlayableService, eServiceReference, eEPGCache, eActionMap, eDVBVolumecontrol, getDesktop, quitMainloop, eDVBDB
+from enigma import eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, iPlayableService, eServiceReference, eEPGCache, eActionMap, eDVBVolumecontrol, getDesktop, quitMainloop
 from boxbranding import getBoxType, getMachineProcModel, getMachineBuild, getMachineBrand, getMachineName
 
 from time import time, localtime, strftime
 from bisect import insort
+from sys import maxint
 from keyids import KEYIDS
 from datetime import datetime
-from sys import maxint
 
 import os, cPickle
 
@@ -289,11 +289,6 @@ class InfoBarScreenSaver:
 			self.ScreenSaverTimerStart()
 			eActionMap.getInstance().unbindAction('', self.keypressScreenSaver)
 
-class HideVBILine(Screen):
-	skin = """<screen position="0,0" size="%s,%s" backgroundColor="#000000" flags="wfNoBorder"/>""" % (getDesktop(0).size().width() * 2/3, getDesktop(0).size().height() / 360)
-	def __init__(self, session):
-		Screen.__init__(self, session)
-
 class SecondInfoBar(Screen):
 	ADD_TIMER = 0
 	REMOVE_TIMER = 1
@@ -507,10 +502,7 @@ class SecondInfoBar(Screen):
 			description += '\n'
 		elif description and not extended:
 			extended = description
-		if description == extended:
-			text = description
-		else:
-			text = description + extended
+		text = description + extended
 		self.setTitle(event.getEventName())
 		self["epg_description"].setText(text)
 		self["FullDescription"].setText(extended)
@@ -544,7 +536,6 @@ class InfoBarShowHide(InfoBarScreenSaver):
 	STATE_HIDING = 1
 	STATE_SHOWING = 2
 	STATE_SHOWN = 3
-	FLAG_CENTER_DVB_SUBS = 2048
 	skipToggleShow = False
 
 	def __init__(self):
@@ -573,9 +564,6 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		self.onShow.append(self.__onShow)
 		self.onHide.append(self.__onHide)
 
-		self.hideVBILineScreen = self.session.instantiateDialog(HideVBILine)
-		self.hideVBILineScreen.show()
-
 		self.onShowHideNotifiers = []
 
 		self.standardInfoBar = False
@@ -585,10 +573,6 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		if isStandardInfoBar(self):
 			self.SwitchSecondInfoBarScreen()
 		self.onLayoutFinish.append(self.__layoutFinished)
-		self.onExecBegin.append(self.__onExecBegin)
-
-	def __onExecBegin(self):
-		self.showHideVBI()
 
 	def __layoutFinished(self):
 		if self.secondInfoBarScreen:
@@ -596,7 +580,6 @@ class InfoBarShowHide(InfoBarScreenSaver):
 			self.standardInfoBar = True
 		self.secondInfoBarWasShown = False
 		self.EventViewIsShown = False
-		self.hideVBILineScreen.hide()
 		try:
 			if self.pvrStateDialog:
 				pass
@@ -697,10 +680,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		else:
 			self.hide()
 			if hasattr(self, "pvrStateDialog"):
-				try:
-					self.pvrStateDialog.hide()
-				except:
-					pass
+				self.pvrStateDialog.hide()
 
 	def hidePipOnExitCallback(self, answer):
 		if answer:
@@ -718,7 +698,6 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		if self.execing:
 			if config.usage.show_infobar_on_zap.value:
 				self.doShow()
-		self.showHideVBI()
 
 	def startHideTimer(self):
 		if self.__state == self.STATE_SHOWN and not self.__locked:
@@ -975,27 +954,6 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		else:
 			self.session.open(MessageBox, _("The Cool TV Guide plugin is not installed!\nPlease install it."), type = MessageBox.TYPE_INFO,timeout = 10 )
 
-	def checkHideVBI(self):
-		service = self.session.nav.getCurrentlyPlayingServiceReference()
-		servicepath = service and service.getPath()
-		if servicepath and servicepath.startswith("/"):
-			if service.toString().startswith("1:"):
-				info = eServiceCenter.getInstance().info(service)
-				service = info and info.getInfoString(service, iServiceInformation.sServiceref)
-				FLAG_HIDE_VBI = 512
-				return service and eDVBDB.getInstance().getFlag(eServiceReference(service)) & FLAG_HIDE_VBI and True
-			else:
-				return ".hidvbi." in servicepath.lower()
-		service = self.session.nav.getCurrentService()
-		info = service and service.info()
-		return info and info.getInfo(iServiceInformation.sHideVBI)
-
-	def showHideVBI(self):
-		if self.checkHideVBI():
-			self.hideVBILineScreen.show()
-		else:
-			self.hideVBILineScreen.hide()
-
 class BufferIndicator(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
@@ -1058,8 +1016,8 @@ class NumberZap(Screen):
 			self["servicename"].setText(ServiceReference(self.service).getServiceName())
 
 	def keyNumberGlobal(self, number):
-		if config.usage.numzaptimeoutmode.value != "off":
-			if config.usage.numzaptimeoutmode.value == "standard":
+		if config.usage.numzaptimeoutmode.value is not "off":
+			if config.usage.numzaptimeoutmode.value is "standard":
 				self.Timer.start(1000, True)
 			else:
 				self.Timer.start(config.usage.numzaptimeout2.value, True)
@@ -1075,9 +1033,7 @@ class NumberZap(Screen):
 			self.showPicon()
 
 		if len(self.numberString) >= int(config.usage.maxchannelnumlen.value):
-			if self.Timer.isActive():
-				self.Timer.stop()
-			self.Timer.start(100, True)
+			self.keyOK()
 
 	def showPicon(self):
 		self["Service"].newService(self.service)
@@ -1126,10 +1082,8 @@ class NumberZap(Screen):
 
 		self.Timer = eTimer()
 		self.Timer.callback.append(self.keyOK)
-		if config.usage.maxchannelnumlen.value == "1":
-			self.Timer.start(100, True)
-		elif config.usage.numzaptimeoutmode.value != "off":
-			if config.usage.numzaptimeoutmode.value == "standard":
+		if config.usage.numzaptimeoutmode.value is not "off":
+			if config.usage.numzaptimeoutmode.value is "standard":
 				self.Timer.start(3000, True)
 			else:
 				self.Timer.start(config.usage.numzaptimeout1.value, True)
@@ -1585,7 +1539,6 @@ class InfoBarMenu:
 				"showNetworkSetup": (self.showNetworkMounts, _("Show network mounts ...")),
 				"showSystemSetup": (self.showSystemMenu, _("Show network mounts ...")),
 				"showRFmod": (self.showRFSetup, _("Show RFmod setup...")),
-				"showHDMIRecord": (self.showHDMiRecordSetup, _("Show HDMIRecord setup...")),
 				"toggleAspectRatio": (self.toggleAspectRatio, _("Toggle aspect ratio...")),
 			})
 		self.session.infobar = None
@@ -1613,7 +1566,7 @@ class InfoBarMenu:
 		else:
 			config.av.aspect.value = "auto"
 		config.av.aspect.save()
-		self.session.open(MessageBox, _("AV aspect is %s.") % ASPECT_MSG[config.av.aspect.value], MessageBox.TYPE_INFO, timeout=5)
+		self.session.open(MessageBox, _("AV aspect is %s." % ASPECT_MSG[config.av.aspect.value]), MessageBox.TYPE_INFO, timeout=5)
 
 	def showSystemMenu(self):
 		menulist = mdom.getroot().findall('menu')
@@ -1644,17 +1597,13 @@ class InfoBarMenu:
 		if SystemInfo["RfModulator"]:
 			self.session.openWithCallback(self.mainMenuClosed, Setup, 'RFmod')
 
-	def showHDMiRecordSetup(self):
-		if SystemInfo["HDMIin"]:
-			self.session.openWithCallback(self.mainMenuClosed, Setup, 'HDMIRecord')
-
 	def mainMenuClosed(self, *val):
 		self.session.infobar = None
 
 class InfoBarSimpleEventView:
 	""" Opens the Eventview for now/next """
 	def __init__(self):
-		self["EventViewActions"] = HelpableActionMap(self, "InfobarEPGActions",
+		self["EPGActions"] = HelpableActionMap(self, "InfobarEPGActions",
 			{
 				"showEventInfo": (self.openEventView, _("show event details")),
 				"InfoPressed": (self.openEventView, _("show event details")),
@@ -1935,7 +1884,7 @@ class InfoBarEPG:
 	def openBouquetEPG(self, bouquet = None, bouquets = None):
 		if bouquet:
 			self.StartBouquet = bouquet
-		self.dlg_stack.append(self.session.openWithCallback(self.closed, EPGSelection, None, zapFunc=self.zapToService, EPGtype=self.EPGtype, StartBouquet=self.StartBouquet, StartRef=self.StartRef, bouquets = bouquets))
+		self.dlg_stack.append(self.session.openWithCallback(self.closed, EPGSelection, zapFunc=self.zapToService, EPGtype=self.EPGtype, StartBouquet=self.StartBouquet, StartRef=self.StartRef, bouquets = bouquets))
 
 	def closed(self, ret=False):
 		if not self.dlg_stack:
@@ -2806,16 +2755,6 @@ class InfoBarSeek:
 		else:
 			self.session.openWithCallback(self.rwdSeekTo, MinuteInput)
 
-	def seekFwdVod(self, fwd=True):
-		seekable = self.getSeek()
-		if seekable is None:
-			return
-		else:
-			if config.seek.baractivation.value == "leftright":
-				self.session.open(Seekbar, fwd)
-			else:
-				self.session.openWithCallback(self.fwdSeekTo, MinuteInput)
-
 	def seekFwdSeekbar(self, fwd=True):
 		if not config.seek.baractivation.value == "leftright":
 			self.session.open(Seekbar, fwd)
@@ -3139,7 +3078,7 @@ class InfoBarExtensions:
 		return _("Restart Network")
 
 	def getRestartNetwork(self):
-		return [((boundFunction(self.getRestartNetworkname), boundFunction(self.openRestartNetwork), lambda: True), None)]
+			return [((boundFunction(self.getRestartNetworkname), boundFunction(self.openRestartNetwork), lambda: True), None)]
 
 	def get3DSetupname(self):
 		return _("OSD 3D Setup")
@@ -3401,10 +3340,7 @@ class InfoBarPlugins:
 		if isinstance(self, InfoBarChannelSelection):
 			plugin(session = self.session, servicelist = self.servicelist)
 		else:
-			try:
-				plugin(session = self.session)
-			except Exception, err:
-				print '[InfoBarGenerics] Error: ', err
+			plugin(session = self.session)
 
 from Components.Task import job_manager
 class InfoBarJobman:
@@ -3505,7 +3441,6 @@ class InfoBarPiP:
 				del self.session.pip
 				if SystemInfo["LCDMiniTV"]:
 					if config.lcd.modepip.value >= "1":
-						print '[LCDMiniTV] disable PIP'
 						f = open("/proc/stb/lcd/mode", "w")
 						f.write(config.lcd.modeminitv.value)
 						f.close()
@@ -3525,10 +3460,10 @@ class InfoBarPiP:
 				if self.session.pip.playService(newservice):
 					self.session.pipshown = True
 					self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
-					if SystemInfo["LCDMiniTVPiP"] and int(config.lcd.modepip.value) >= 1:
+					if SystemInfo["LCDMiniTVPiP"] and int(config.lcd.minitvpipmode.value) >= 1:
 						print '[LCDMiniTV] enable PIP'
 						f = open("/proc/stb/lcd/mode", "w")
-						f.write(config.lcd.modepip.value)
+						f.write(config.lcd.minitvpipmode.value)
 						f.close()
 						f = open("/proc/stb/vmpeg/1/dst_width", "w")
 						f.write("0")
@@ -3544,7 +3479,7 @@ class InfoBarPiP:
 					if self.session.pip.playService(newservice):
 						self.session.pipshown = True
 						self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
-						if SystemInfo["LCDMiniTVPiP"] and int(config.lcd.modepip.value) >= 1:
+						if SystemInfo["LCDMiniTVPiP"] and int(config.lcd.minitvpipmode.value) >= 1:
 							print '[LCDMiniTV] enable PIP'
 							f = open("/proc/stb/lcd/mode", "w")
 							f.write(config.lcd.modepip.value)
@@ -3644,8 +3579,6 @@ class InfoBarESIpanel:
 		if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/WebkitHbbTV/plugin.pyo"):
 			isHBBTV = True
 		if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/QtHbbtv/plugin.pyo"):
-			isHBBTV = True
-		if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/Hbbtv/plugin.pyo"):
 			isHBBTV = True
 
 		if isWEBBROWSER or isHBBTV:
@@ -3943,9 +3876,6 @@ class InfoBarInstantRecord:
 #		print "stopping recording after", int(value), "minutes."
 		entry = self.recording[self.selectedEntry]
 		if value is not None:
-			value = value.replace(" ", "")
-			if value == "":
-				value = "0"
 			if int(value) != 0:
 				entry.autoincrease = False
 			entry.end = int(time()) + 60 * int(value)
@@ -4906,19 +4836,6 @@ class InfoBarSubtitleSupport(object):
 		else:
 			return 0
 
-	def doCenterDVBSubs(self):
-		service = self.session.nav.getCurrentlyPlayingServiceReference()
-		servicepath = service and service.getPath()
-		if servicepath and servicepath.startswith("/"):
-			if service.toString().startswith("1:"):
-				info = eServiceCenter.getInstance().info(service)
-				service = info and info.getInfoString(service, iServiceInformation.sServiceref)
-				config.subtitles.dvb_subtitles_centered.value = service and eDVBDB.getInstance().getFlag(eServiceReference(service)) & self.FLAG_CENTER_DVB_SUBS and True
-				return
-		service = self.session.nav.getCurrentService()
-		info = service and service.info()
-		config.subtitles.dvb_subtitles_centered.value = info and info.getInfo(iServiceInformation.sCenterDVBSubs) and True
-
 	def subtitleEsiMenu(self):
 		service = self.session.nav.getCurrentService()
 		subtitle = service and service.subtitle()
@@ -4940,7 +4857,6 @@ class InfoBarSubtitleSupport(object):
 			cachedsubtitle = subtitle.getCachedSubtitle()
 			if cachedsubtitle:
 				self.enableSubtitle(cachedsubtitle)
-				self.doCenterDVBSubs()
 
 	def enableSubtitle(self, selectedSubtitle):
 		subtitle = self.getCurrentServiceSubtitle()
@@ -4948,7 +4864,6 @@ class InfoBarSubtitleSupport(object):
 		if subtitle and self.selected_subtitle:
 			subtitle.enableSubtitles(self.subtitle_window.instance, self.selected_subtitle)
 			self.subtitle_window.show()
-			self.doCenterDVBSubs()
 		else:
 			if subtitle:
 				subtitle.disableSubtitles(self.subtitle_window.instance)
@@ -5050,7 +4965,7 @@ class InfoBarHdmi:
 		self.hdmi_enabled_full = False
 		self.hdmi_enabled_pip = False
 
-		if SystemInfo["HDMIin"]:
+		if getMachineBuild() in ('inihdp', 'hd2400', 'dm7080', 'dm820', 'dm900', 'dm920', 'gb7252', 'vuultimo4k', 'vuuno4kse','et13000','sf5008') or getBoxType() in ('spycat4k','spycat4kcombo'):
 			if not self.hdmi_enabled_full:
 				self.addExtension((self.getHDMIInFullScreen, self.HDMIInFull, lambda: True), "blue")
 			if not self.hdmi_enabled_pip:
@@ -5286,58 +5201,4 @@ class InfoBarOpenOnTopHelper:
 				self.session.open(session, option)
 		except Exception, e:
 			print "[openInfoBarSession] Exception:", e
-
-#########################################################################################
-# handle bsod (python crashes) and show information after crash                         #
-#########################################################################################
-
-from enigma import getBsodCounter, resetBsodCounter
-class InfoBarHandleBsod:
-	def __init__(self):
-		self.lastBsod = 0
-		self.infoBsodIsShown = False
-		self.lastestBsodWarning = False
-		self.checkBsodTimer = eTimer()
-		self.checkBsodTimer.callback.append(self.checkBsodCallback)
-		self.checkBsodTimer.start(1000, True)
-		config.crash.bsodpython_ready.setValue(True)
-
-	def checkBsodCallback(self):
-		self.checkBsodTimer.start(1000, True)
-		if Screens.Standby.inStandby or self.infoBsodIsShown:
-			return
-		bsodcnt = getBsodCounter()
-		if config.crash.bsodpython.value and self.lastBsod < bsodcnt:
-			maxbs = int(config.crash.bsodmax.value) or 100
-			writelog = bsodcnt == 1 or not bsodcnt > int(config.crash.bsodhide.value) or bsodcnt >= maxbs
-			txt = _("Your Receiver has a Software problem detected. Since the last reboot it has occured %d times.\n") %bsodcnt
-			txt += _("(Attention: There will be a restart after %d crashes.)") %maxbs
-			if writelog:
-				txt += "\n" + "-"*80 + "\n"
-				txt += _("A crashlog was %s created in '%s'") %((_('not'),'')[int(writelog)], config.crash.debug_path.value)
-			#if not writelog:
-			#	txt += "\n" + "-"*80 + "\n"
-			#	txt += _("(It is set that '%s' crash logs are displayed and written.\nInfo: It will always write the first, last but one and lastest crash log.)") % str(int(config.crash.bsodhide.value) or _('never'))
-			if bsodcnt >= maxbs:
-				txt += "\n" + "-"*80 + "\n"
-				txt += _("Warning: This is the last crash before an automatic restart is performed.\n")
-				txt += _("Should the crash counter be reset to prevent a restart?")
-				self.lastestBsodWarning = True
-			try:
-				self.session.openWithCallback(self.infoBsodCallback, MessageBox, txt, type=MessageBox.TYPE_ERROR, default = False, close_on_any_key=not self.lastestBsodWarning, showYESNO = self.lastestBsodWarning)
-				self.infoBsodIsShown = True
-			except Exception, e:
-				#print "[InfoBarHandleBsod] Exception:", e
-				self.checkBsodTimer.stop()
-				self.checkBsodTimer.start(5000, True)
-				self.infoBsodCallback(False)
-				raise
-		self.lastBsod = bsodcnt
-
-	def infoBsodCallback(self, ret):
-		if ret and self.lastestBsodWarning:
-			resetBsodCounter()
-		self.infoBsodIsShown = False
-		self.lastestBsodWarning = False
-
 #########################################################################################

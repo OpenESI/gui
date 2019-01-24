@@ -25,7 +25,7 @@ from Screens.InfoBarGenerics import InfoBarShowHide, \
 	InfoBarSubserviceSelection, InfoBarShowMovies, \
 	InfoBarServiceNotifications, InfoBarPVRState, InfoBarCueSheetSupport, InfoBarSimpleEventView, InfoBarBuffer, \
 	InfoBarSummarySupport, InfoBarMoviePlayerSummarySupport, InfoBarTimeshiftState, InfoBarTeletextPlugin, InfoBarExtensions, \
-	InfoBarSubtitleSupport, InfoBarPiP, InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarZoom, InfoBarSleepTimer, InfoBarOpenOnTopHelper, InfoBarHandleBsod, \
+	InfoBarSubtitleSupport, InfoBarPiP, InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarZoom, InfoBarSleepTimer, InfoBarOpenOnTopHelper, \
 	InfoBarHdmi, setResumePoint, delResumePoint
 from Screens.ButtonSetup import InfoBarButtonSetup
 
@@ -44,7 +44,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 	HelpableScreen, InfoBarAdditionalInfo, InfoBarNotifications, InfoBarDish, InfoBarUnhandledKey, InfoBarLongKeyDetection,
 	InfoBarSubserviceSelection, InfoBarTimeshift, InfoBarSeek, InfoBarCueSheetSupport, InfoBarBuffer,
 	InfoBarSummarySupport, InfoBarTimeshiftState, InfoBarTeletextPlugin, InfoBarExtensions,
-	InfoBarPiP, InfoBarPlugins, InfoBarSubtitleSupport, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarZoom, InfoBarSleepTimer, InfoBarOpenOnTopHelper, InfoBarHandleBsod, 
+	InfoBarPiP, InfoBarPlugins, InfoBarSubtitleSupport, InfoBarServiceErrorPopupSupport, InfoBarJobman, InfoBarZoom, InfoBarSleepTimer, InfoBarOpenOnTopHelper,
 	InfoBarHdmi, InfoBarButtonSetup, Screen):
 
 	ALLOW_SUSPEND = True
@@ -75,11 +75,9 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				'HarddiskSetup': (self.HarddiskSetup, _('Select HDD')),	
 				"showWWW": (self.showPORTAL, _("Open MediaPortal...")),
 				"showSetup": (self.showSetup, _("Show setup...")),
-				"showInformation": (self.showInformation, _("Show Information...")),
 				"showFormat": (self.showFormat, _("Show Format Setup...")),
 				"showPluginBrowser": (self.showPluginBrowser, _("Show the plugins...")),
 				"showBoxPortal": (self.showBoxPortal, _("Show Box Portal...")),
-				"openSimpleUnmount": (self.openSimpleUnmount, _("Simple umounter mass storage device.")),
 			}, prio=2)
 
 		self["key_red"] = Label()
@@ -96,7 +94,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				InfoBarInstantRecord, InfoBarAudioSelection, InfoBarRedButton, InfoBarTimerButton, InfoBarUnhandledKey, InfoBarLongKeyDetection, InfoBarESIpanel, InfoBarResolutionSelection, InfoBarVmodeButton, \
 				InfoBarAdditionalInfo, InfoBarNotifications, InfoBarDish, InfoBarSubserviceSelection, InfoBarAspectSelection, InfoBarBuffer, \
 				InfoBarTimeshift, InfoBarSeek, InfoBarCueSheetSupport, InfoBarSummarySupport, InfoBarTimeshiftState, \
-				InfoBarTeletextPlugin, InfoBarExtensions, InfoBarPiP, InfoBarSubtitleSupport, InfoBarJobman, InfoBarZoom, InfoBarSleepTimer, InfoBarOpenOnTopHelper, InfoBarHandleBsod, \
+				InfoBarTeletextPlugin, InfoBarExtensions, InfoBarPiP, InfoBarSubtitleSupport, InfoBarJobman, InfoBarZoom, InfoBarSleepTimer, InfoBarOpenOnTopHelper, \
 				InfoBarHdmi, InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarButtonSetup:
 			x.__init__(self)
 
@@ -312,15 +310,6 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		except Exception, e:
 			self.session.open(MessageBox, _("The IMDb plugin is not installed!\nPlease install it."), type = MessageBox.TYPE_INFO,timeout = 10 )
 
-	def openSimpleUnmount(self):
-		try:
-			for plugin in plugins.getPlugins([PluginDescriptor.WHERE_PLUGINMENU ,PluginDescriptor.WHERE_EXTENSIONSMENU, PluginDescriptor.WHERE_EVENTINFO]):
-				if plugin.name == _("SimpleUmount"):
-					self.runPlugin(plugin)
-					break
-		except Exception, e:
-			self.session.open(MessageBox, _("The SimpleUmount plugin is not installed!\nPlease install it."), type = MessageBox.TYPE_INFO,timeout = 10 )
-
 	def ZoomInOut(self):
 		zoomval = 0
 		if self.zoomrate > 3:
@@ -370,18 +359,6 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 			if y is not None:
 				id = y.get("val")
 				if id and id == "setup":
-					self.session.infobar = self
-					self.session.open(MainMenu, x)
-					return
-
-	def showInformation(self):
-		from Screens.Menu import MainMenu, mdom
-		root = mdom.getroot()
-		for x in root.findall("menu"):
-			y = x.find("id")
-			if y is not None:
-				id = y.get("val")
-				if id and id == "information":
 					self.session.infobar = self
 					self.session.open(MainMenu, x)
 					return

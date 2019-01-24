@@ -23,14 +23,14 @@ SUBDIRS += QuadPip
 endif
 
 if VUUNO4KSE
-SUBDIRS += MiniTV QuadPip
+SUBDIRS += QuadPip
 endif
 
 if S8100
 SUBDIRS += MiniTV
 endif
 
-if HAVE_KODI
+if HAVE_WETEK_XBMC
 SUBDIRS +=  StartKodi
 endif
 

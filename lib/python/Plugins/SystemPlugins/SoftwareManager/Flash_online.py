@@ -1,7 +1,6 @@
 from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
 from Components.Button import Button
 from Components.config import config
-
 from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Components.MenuList import MenuList
@@ -20,8 +19,6 @@ from Screens.HelpMenu import HelpableScreen
 from Screens.TaskView import JobView
 from Tools.Downloader import downloadWithProgress
 from enigma import fbClass
-import urllib
-from urllib2 import Request, urlopen, URLError, HTTPError
 import urllib2
 import os
 import shutil
@@ -40,7 +37,8 @@ MTDROOTFS = getMachineMtdRoot()
 images = []
 global imagesCounter
 imagesCounter = 0
-images.append(["ESI 8.5", "http://www.openesi.eu/images"])
+images.append(["ESI 5.5", "http://www.openesi.eu/images"])
+
 imagePath = '/media/hdd/images'
 flashPath = '/media/hdd/images/flash'
 flashTmp = '/media/hdd/images/tmp'
@@ -80,19 +78,17 @@ class FlashOnline(Screen):
 			self.devrootfs = "/dev/mmcblk1p3"
 		self.multi = 1
 		self.list = self.list_files("/boot")
-		self.MTDKERNEL = getMachineMtdKernel()
-		self.MTDROOTFS = getMachineMtdRoot()
 
 		Screen.setTitle(self, _("Flash_OnLine-ESI"))
 		if SystemInfo["HaveMultiBoot"]:
-			self["key_blue"] = Button(_("STARTUP"))
+			self["key_blue"] = Button(_("Multiboot Select"))
 		else:
 			self["key_blue"] = Button(_(" "))
 		self["key_green"] = Button(_("Online"))
 		self["key_red"] = Button(_("Exit"))
 		self["key_yellow"] = Button(_("Local"))
 		self["info-local"] = Label(_("Local = Flash a image from local path /hdd/images"))
-		self["info-online"] = Label(_("Online = Download a image and flash it"))
+		self["info-online"] = Label(_("Online = Download an image and then install"))
 
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"],
 		{
@@ -167,42 +163,15 @@ class FlashOnline(Screen):
 				self.multi = self.read_startup("/boot/" + self.list[self.selection]).split(".",1)[1].split(" ",1)[0]
 				self.multi = self.multi[-1:]
 			print "[Flash ESI-Online] MULTI:",self.multi
-			self.devrootfs = self.find_rootfs_dev(self.list[self.selection])
+			if getMachineBuild() in ("hd51","vs1500","h7"):
+				cmdline = self.read_startup("/boot/" + self.list[self.selection]).split("=",3)[3].split(" ",1)[0]
+			elif getMachineBuild() in ("8100s"):
+				cmdline = self.read_startup("/boot/" + self.list[self.selection]).split("=",4)[4].split(" ",1)[0]
+			else:
+				cmdline = self.read_startup("/boot/" + self.list[self.selection]).split("=",1)[1].split(" ",1)[0]
+			self.devrootfs = cmdline
 			print "[Flash ESI-Online] MULTI rootfs ", self.devrootfs
 
-			self.read_current_multiboot()
-
-	def read_current_multiboot(self):
-		if getMachineBuild() in ("hd51","vs1500","h7"):
-			if self.list[self.selection] == "Recovery":
-				cmdline = self.read_startup("/boot/STARTUP").split("=",3)[3].split(" ",1)[0]
-			else:
-				cmdline = self.read_startup("/boot/" + self.list[self.selection]).split("=",3)[3].split(" ",1)[0]
-		elif getMachineBuild() in ("8100s"):
-			if self.list[self.selection] == "Recovery":
-				cmdline = self.read_startup("/boot/STARTUP").split("=",4)[4].split(" ",1)[0]
-			else:
-				cmdline = self.read_startup("/boot/" + self.list[self.selection]).split("=",4)[4].split(" ",1)[0]
-		elif getMachineBuild() in ("cc1","sf8008","sf8008s","sf8008t","ustym4kpro"):
-			if self.list[self.selection] == "Recovery":
-				cmdline = self.read_startup("/boot/STARTUP").split("=",1)[1].split(" ",1)[0]
-			else:
-				cmdline = self.read_startup("/boot/" + self.list[self.selection]).split("=",1)[1].split(" ",1)[0]
-		elif getMachineBuild() in ("osmio4k"):
-			if self.list[self.selection] == "Recovery":
-				cmdline = self.read_startup("/boot/STARTUP").split("=",1)[1].split(" ",1)[0]
-			else:
-				cmdline = self.read_startup("/boot/" + self.list[self.selection]).split("=",1)[1].split(" ",1)[0]
-		else:
-			if self.list[self.selection] == "Recovery":
-				cmdline = self.read_startup("/boot/cmdline.txt").split("=",1)[1].split(" ",1)[0]
-			else:
-				cmdline = self.read_startup("/boot/" + self.list[self.selection]).split("=",1)[1].split(" ",1)[0]
-		cmdline = cmdline.lstrip("/dev/")
-		self.MTDROOTFS = cmdline
-		self.MTDKERNEL = cmdline[:-1] + str(int(cmdline[-1:]) -1)
-		print "[Flash ESI-Online] kernel device: ",self.MTDKERNEL
-		print "[Flash ESI-Online] rootfsdevice: ",self.MTDROOTFS
 	def read_startup(self, FILE):
 		file = FILE
 		with open(file, 'r') as myfile:
@@ -210,21 +179,40 @@ class FlashOnline(Screen):
 		myfile.close()
 		return data
 
-	def find_rootfs_dev(self, file):
-		startup_content = self.read_startup("/boot/" + file)
-		return startup_content[startup_content.find("root=")+5:].split()[0]
 	def list_files(self, PATH):
 		files = []
 		if SystemInfo["HaveMultiBoot"]:
 			path = PATH
-			if getMachineBuild() in ("ustym4kpro","hd51","vs1500","h7","8100s","gb7252","cc1","sf8008","sf8008s","sf8008t","osmio4k","ustym4kpro"):
+			if getMachineBuild() in ("hd51","vs1500","h7"):
 				for name in os.listdir(path):
 					if name != 'bootname' and os.path.isfile(os.path.join(path, name)):
 						try:
-							cmdline = self.find_rootfs_dev(name)
+							cmdline = self.read_startup("/boot/" + name).split("=",3)[3].split(" ",1)[0]
 						except IndexError:
 							continue
-						cmdline_startup = self.find_rootfs_dev("STARTUP")
+						cmdline_startup = self.read_startup("/boot/STARTUP").split("=",3)[3].split(" ",1)[0]
+						if (cmdline != cmdline_startup) and (name != "STARTUP"):
+							files.append(name)
+				files.insert(0,"STARTUP")
+			elif getMachineBuild() in ("8100s"):
+				for name in os.listdir(path):
+					if name != 'bootname' and os.path.isfile(os.path.join(path, name)):
+						try:
+							cmdline = self.read_startup("/boot/" + name).split("=",4)[4].split(" ",1)[0]
+						except IndexError:
+							continue
+						cmdline_startup = self.read_startup("/boot/STARTUP").split("=",4)[4].split(" ",1)[0]
+						if (cmdline != cmdline_startup) and (name != "STARTUP"):
+							files.append(name)
+				files.insert(0,"STARTUP")
+			elif getMachineBuild() in ("gb7252"):
+				for name in os.listdir(path):
+					if name != 'bootname' and os.path.isfile(os.path.join(path, name)):
+						try:
+							cmdline = self.read_startup("/boot/" + name).split("=",1)[1].split(" ",1)[0]
+						except IndexError:
+							continue
+						cmdline_startup = self.read_startup("/boot/STARTUP").split("=",1)[1].split(" ",1)[0]
 						if (cmdline != cmdline_startup) and (name != "STARTUP"):
 							files.append(name)
 				files.insert(0,"STARTUP")
@@ -256,7 +244,8 @@ class doFlashImage(Screen):
 		<widget name="key_blue" position="420,460" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />
 		<widget name="imageList" position="10,10" zPosition="1" size="680,450" font="Regular;20" scrollbarMode="showOnDemand" transparent="1" />
 	</screen>"""
-	def __init__(self, session, online, list=None, multi=None, devrootfs=None, mtdkernel=None, mtdrootfs=None ):
+
+	def __init__(self, session, online, list=None, multi=None, devrootfs=None ):
 		Screen.__init__(self, session)
 		self.session = session
 
@@ -273,8 +262,6 @@ class doFlashImage(Screen):
 		self.List = list
 		self.multi=multi
 		self.devrootfs=devrootfs
-		self.MTDKERNEL = mtdkernel
-		self.MTDROOTFS = mtdrootfs
 		self.imagePath = imagePath
 		self.feedurl = images[self.imagesCounter][1]
 		self["imageList"] = MenuList(self.imagelist)
@@ -334,10 +321,12 @@ class doFlashImage(Screen):
 			box = "miraclebox-twin"
 		elif box == "xp1000" and machinename.lower() == "sf8 hd":
 			box = "sf8"
-		elif box.startswith('et') and not box in ('et8000', 'et8500', 'et8500s', 'et10000'):
+		elif box.startswith('et') and not box in ('et8000', 'et8500', 'et10000'):
 			box = box[0:3] + 'x00'
 		elif box == "odinm9":
 			box = 'maram9'
+		elif box == "dm525":
+			box = 'dm520'
 		return box
 
 	def getSel(self):
@@ -372,7 +361,6 @@ class doFlashImage(Screen):
 	def startInstallOnline(self, ret = None):
 		box = self.box()
 		brand = getMachineBrand()
-		box = getBoxType()
 		self.hide()
 		if self.Online:
 			if self.imagesCounter == 0:
@@ -498,8 +486,13 @@ class doFlashImage(Screen):
 			self.show()
 
 	def unzip_image(self, filename, path):
-		print "Unzip %s to %s" %(filename,path)
-		self.session.openWithCallback(self.cmdFinished, Console, title = _("Unzipping files, Please wait ..."), cmdlist = ['unzip ' + filename + ' -o -d ' + path, "sleep 3"], closeOnSuccess = True)
+		if getBoxType() in "dm7080" "dm820" "dm520" "dm525":
+			print "Untaring %s to %s" %(filename,path)
+			os.system('mkdir /dbackup.new')
+			self.session.openWithCallback(self.cmdFinished, Console, title = _("Untaring files, Please wait ..."), cmdlist = ['tar -xJf ' + filename + ' -C ' + '/dbackup.new', "sleep 3"], closeOnSuccess = True)
+		else:
+			print "Unzip %s to %s" %(filename,path)
+			self.session.openWithCallback(self.cmdFinished, Console, title = _("Unzipping files, Please wait ..."), cmdlist = ['unzip ' + filename + ' -o -d ' + path, "sleep 3"], closeOnSuccess = True)
 
 	def cmdFinished(self):
 		self.prepair_flashtmp(flashPath)
@@ -508,20 +501,14 @@ class doFlashImage(Screen):
 	def Start_Flashing(self):
 		print "Start Flashing"
 		cmdlist = []
-		os.system('rm /sbin/init;ln -sfn /sbin/init.sysvinit /sbin/init')
 		if os.path.exists(ofgwritePath):
 			text = _("Flashing: ")
 			if self.simulate:
 				text += _("Simulate (no write)")
 				if SystemInfo["HaveMultiBoot"]:
-					if getMachineBuild() in ("cc1","sf8008","sf8008s","sf8008t","ustym4kpro"):
-						cmdlist.append("%s -r%s -k%s %s > /dev/null 2>&1" % (ofgwritePath, self.MTDROOTFS, self.MTDKERNEL, flashTmp))
-					else:
-						cmdlist.append("%s -n -r -k -m%s %s > /dev/null 2>&1" % (ofgwritePath, self.multi, flashTmp))
-				elif getMachineBuild() in ("h9combo","u51","u52","u53","u54","u5","u5pvr","cc1","sf8008","sf8008s","sf8008t","ustym4kpro","hd60","hd61","v8plus","multibox"):
+					cmdlist.append("%s -n -r -k -m%s %s > /dev/null 2>&1" % (ofgwritePath, self.multi, flashTmp))
+				elif getMachineBuild() in ("u5"):
 					cmdlist.append("%s -n -r%s -k%s %s > /dev/null 2>&1" % (ofgwritePath, MTDROOTFS, MTDKERNEL, flashTmp))
-				elif getMachineBuild() in ("h9","i55plus","u55"):
-					cmdlist.append("%s -n -f -r -k %s > /dev/null 2>&1" % (ofgwritePath, flashTmp))
 				else:
 					cmdlist.append("%s -n -r -k %s > /dev/null 2>&1" % (ofgwritePath, flashTmp))
 				self.close()
@@ -533,14 +520,12 @@ class doFlashImage(Screen):
 				if SystemInfo["HaveMultiBoot"]:
 					if self.List not in ("STARTUP","cmdline.txt"):
 						os.system('mkfs.ext4 -F ' + self.devrootfs)
-					if getMachineBuild() in ("cc1","sf8008","sf8008s","sf8008t","ustym4kpro"):
-						cmdlist.append("%s -r%s -k%s %s > /dev/null 2>&1" % (ofgwritePath, self.MTDROOTFS, self.MTDKERNEL, flashTmp))
-					else:
-						cmdlist.append("%s -r -k -m%s %s > /dev/null 2>&1" % (ofgwritePath, self.multi, flashTmp))
-				elif getMachineBuild() in ("h9combo","u51","u52","u53","u54","u5","u5pvr","cc1","sf8008","sf8008s","ustym4kpro","hd60","hd61","v8plus","multibox"):
+					cmdlist.append("%s -r -k -m%s %s > /dev/null 2>&1" % (ofgwritePath, self.multi, flashTmp))
+					if self.List not in ("STARTUP","cmdline.txt"):
+						cmdlist.append("umount -fl /oldroot_bind")
+						cmdlist.append("umount -fl /newroot")
+				elif getMachineBuild() in ("u5"):
 					cmdlist.append("%s -r%s -k%s %s > /dev/null 2>&1" % (ofgwritePath, MTDROOTFS, MTDKERNEL, flashTmp))
-				elif getMachineBuild() in ("h9","i55plus","u55"):
-					cmdlist.append("%s -f -r -k %s > /dev/null 2>&1" % (ofgwritePath, flashTmp))
 				else:
 					cmdlist.append("%s -r -k %s > /dev/null 2>&1" % (ofgwritePath, flashTmp))
 				message = "echo -e '\n"
@@ -571,7 +556,6 @@ class doFlashImage(Screen):
 			os.mkdir(flashTmp)
 		kernel = True
 		rootfs = True
-		
 		for path, subdirs, files in os.walk(tmpPath):
 			for name in files:
 				if name.find('kernel') > -1 and name.endswith('.bin') and kernel:
@@ -579,7 +563,7 @@ class doFlashImage(Screen):
 					dest = flashTmp + '/%s' %KERNELBIN
 					shutil.copyfile(binfile, dest)
 					kernel = False
-				elif name.find('root') > -1 and (name.endswith('.bin') or name.endswith('.ubi') or name.endswith('.jffs2') or name.endswith('.bz2')) and rootfs:
+				elif name.find('root') > -1 and (name.endswith('.bin') or name.endswith('.jffs2') or name.endswith('.bz2')) and rootfs:
 					binfile = os.path.join(path, name)
 					dest = flashTmp + '/%s' %ROOTFSBIN
 					shutil.copyfile(binfile, dest)
@@ -594,7 +578,6 @@ class doFlashImage(Screen):
 					dest = flashTmp + '/e2jffs2.img'
 					shutil.copyfile(binfile, dest)
 					rootfs = False
-					
 	def yellow(self):
 		if not self.Online:
 			self.session.openWithCallback(self.DeviceBrowserClosed, DeviceBrowser, None, matchingPattern="^.*\.(zip|bin|jffs2|img)", showDirectories=True, showMountpoints=True, inhibitMounts=["/autofs/sr0/"])
@@ -628,7 +611,7 @@ class doFlashImage(Screen):
 			os.mkdir(flashTmp)
 			if binorzip == 0:
 				for files in os.listdir(self.imagePath):
-					if files.endswith(".ubi") or files.endswith(".bin") or files.endswith('.jffs2') or files.endswith('.img'):
+					if files.endswith(".bin") or files.endswith('.jffs2') or files.endswith('.img'):
 						self.prepair_flashtmp(strPath)
 						break
 				self.Start_Flashing()
@@ -636,17 +619,15 @@ class doFlashImage(Screen):
 				self.unzip_image(strPath + '/' + filename, flashPath)
 			else:
 				self.layoutFinished()
-	
 		else:
 			self.imagePath = imagePath
 
 	def layoutFinished(self):
 		box = self.box()
 		brand = getMachineBrand()
-		box = getBoxType()
 		self.imagelist = []
 		if self.Online:
-			self["key_yellow"].setText("Backup&Flash")
+			self["key_yellow"].setText("")
 			self.feedurl = images[self.imagesCounter][1]
 			self["key_blue"].setText(images[self.imagesCounter][0])
 			if self.imagesCounter == 0:
@@ -686,10 +667,12 @@ class doFlashImage(Screen):
 			for name in os.listdir(self.imagePath):
 				if name.endswith(".zip") or name.endswith(".xz"): # and name.find(box) > 1:
 					self.imagelist.append(name)
+#				if name.find(box):
+#					self.imagelist.append(name)
 			self.imagelist.sort()
 			if os.path.exists(flashTmp):
 				for file in os.listdir(flashTmp):
-					if file.find(".bin")> -1 or file.find(".ubi")> -1:
+					if file.find(".bin") > -1:
 						self.imagelist.insert( 0, str(flashTmp))
 						break
 
@@ -703,7 +686,7 @@ class doFlashImage(Screen):
 
 class ImageDownloadJob(Job):
 	def __init__(self, url, filename, file):
-		Job.__init__(self, _("Downloading %s") %file)
+		Job.__init__(self, _("Downloading %s" %file))
 		ImageDownloadTask(self, url, filename)
 
 class DownloaderPostcondition(Condition):
@@ -742,7 +725,7 @@ class ImageDownloadTask(Task):
 	def download_progress(self, recvbytes, totalbytes):
 		if ( recvbytes - self.last_recvbytes  ) > 100000: # anti-flicker
 			self.progress = int(100*(float(recvbytes)/float(totalbytes)))
-			self.name = _("Downloading") + ' ' + _("%d of %d kBytes") % (recvbytes/1024, totalbytes/1024)
+			self.name = _("Downloading") + ' ' + "%d of %d kBytes" % (recvbytes/1024, totalbytes/1024)
 			self.last_recvbytes = recvbytes
 
 	def download_failed(self, failure_instance=None, error_message=""):
@@ -818,7 +801,7 @@ class DeviceBrowser(Screen, HelpableScreen):
 	def use(self):
 		print "[use]", self["filelist"].getCurrentDirectory(), self["filelist"].getFilename()
 		if self["filelist"].getFilename() is not None and self["filelist"].getCurrentDirectory() is not None:
-			if self["filelist"].getFilename().endswith(".bin") or self["filelist"].getFilename().endswith(".ubi") or self["filelist"].getFilename().endswith(".jffs2"):
+			if self["filelist"].getFilename().endswith(".bin") or self["filelist"].getFilename().endswith(".jffs2"):
 				self.close(self["filelist"].getCurrentDirectory(), self["filelist"].getFilename(), 0)
 			elif self["filelist"].getFilename().endswith(".zip"):
 				self.close(self["filelist"].getCurrentDirectory(), self["filelist"].getFilename(), 1)

@@ -44,7 +44,7 @@ class JobView(InfoBarNotifications, Screen, ConfigListScreen):
 			"green": self.ok,
 			"red": self.abort,
 			"blue": self.background,
-			"cancel": self.abort,
+			"cancel": self.ok,
 			"ok": self.ok,
 		}, -2)
 
