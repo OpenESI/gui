@@ -23,6 +23,12 @@
 
 #include <sys/time.h>
 
+#if HAVE_ALIEN5
+extern "C" {
+#include <codec.h>
+}
+#endif
+
 #define HTTP_TIMEOUT 10
 
 /*
@@ -594,6 +600,11 @@ eServiceMP3::eServiceMP3(eServiceReference ref):
 		m_sourceinfo.containertype = ctMP4;
 		m_sourceinfo.audiotype = atAAC;
 	}
+	else if ( strcasecmp(ext, ".dra") == 0 )
+	{
+		m_sourceinfo.containertype = ctDRA;
+		m_sourceinfo.audiotype = atDRA;
+	}
 	else if ( strcasecmp(ext, ".m3u8") == 0 )
 		m_sourceinfo.is_hls = TRUE;
 	else if ( strcasecmp(ext, ".mp3") == 0 )
@@ -722,6 +733,9 @@ eServiceMP3::eServiceMP3(eServiceReference ref):
 			g_object_set(dvb_videosink, "e2-async", FALSE, NULL);
 			g_object_set(m_gst_playbin, "video-sink", dvb_videosink, NULL);
 		}
+#if HAVE_ALIEN5
+		aml_set_mediaplay_source((void *)m_gst_playbin,(int)m_sourceinfo.is_audio);
+#endif
 		/*
 		 * avoid video conversion, let the dvbmediasink handle that using native video flag
 		 * volume control is done by hardware, do not use soft volume flag
@@ -1318,7 +1332,7 @@ RESULT eServiceMP3::seekRelative(int direction, pts_t to)
 		return -1;
 
 	//eDebug("[eServiceMP3]  seekRelative direction %d, pts_t to %" G_GINT64_FORMAT, direction, (gint64)to);
-	gint64 ppos = 0;
+	pts_t ppos = 0;
 #if GST_VERSION_MAJOR >= 1
 	//m_seeking_or_paused = true;
 	if (direction > 0)

@@ -1,4 +1,4 @@
-﻿from Screens.Screen import Screen
+from Screens.Screen import Screen
 from Components.GUIComponent import GUIComponent
 from Components.VariableText import VariableText
 from Components.ActionMap import ActionMap
@@ -11,7 +11,7 @@ from Components.config import config, configfile
 from Components.FileList import MultiFileSelectList
 from Screens.MessageBox import MessageBox
 from os import path, remove, walk, stat, rmdir
-from time import time
+from time import time, ctime
 from datetime import datetime
 from enigma import eTimer, eBackgroundFileEraser, eLabel, getDesktop, gFont, fontRenderClass
 from Tools.TextBoundary import getTextBoundarySize
@@ -149,12 +149,15 @@ class LogManagerPoller:
 						try:
 							fn = path.join(root, name)
 							st = stat(fn)
-							if st.st_ctime < ctimeLimit:
-								print "[LogManager] " + str(fn) + ": Too old:", name, st.st_ctime
+							#print "Logname: %s" % fn
+							#print "Last created: %s" % ctime(st.st_ctime)
+							#print "Last modified: %s" % ctime(st.st_mtime)
+							if st.st_mtime < ctimeLimit:
+								print "[LogManager] " + str(fn) + ": Too old:", ctime(st.st_mtime)
 								eBackgroundFileEraser.getInstance().erase(fn)
 								bytesToRemove -= st.st_size
 							else:
-								candidates.append((st.st_ctime, fn, st.st_size))
+								candidates.append((st.st_mtime, fn, st.st_size))
 								size += st.st_size
 						except Exception, e:
 							print "[LogManager] Failed to stat %s:"% name, e
@@ -456,7 +459,7 @@ class LogManager(Screen):
 
 			# Send the email via our own SMTP server.
 			wos_user = 'crashlogs@dummy.org'
-			wos_pwd = base64.b64decode('NTQ2NTYxNkQ2RjcwNjU2RTY1NzM2OQ==')
+			wos_pwd = base64.b64decode('NDJJWnojMEpldUxX')
 
 			try:
 				print "connecting to server: mail.dummy.org"
