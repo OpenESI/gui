@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# date: 3.01.2019  14:25:12
+# date: 30.08.2014  13:39:12
 #
 
 LANG_TEXT = {
@@ -135,7 +135,6 @@ LANG_TEXT = {
 	 "T3": "Hætta við",
 	 "T4": "Vista",
 },
-
 "ku_KU": {
 	 "T1": "Please use the UP and DOWN keys to select your language. Afterwards press the OK button.",
 	 "T2": "Language selection",

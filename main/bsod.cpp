@@ -23,7 +23,7 @@
 
 static const char *crash_emailaddr =
 #ifndef CRASH_EMAILADDR
-	"openESI forum";
+	"the openESI forum";
 #else
 	CRASH_EMAILADDR;
 #endif
