@@ -331,8 +331,8 @@
 		<panel name="SummaryClockPanel" />
 	</screen>
 	
-<!-- ESIteam -->
-	<screen name="ESIteam_summary" position="0,0" size="720,576">
+<!-- Infopanel -->
+	<screen name="Infopanel_summary" position="0,0" size="720,576">
 		<widget source="parent.Title" render="Label" position="15,20" foregroundColor="#e5b243" size="670,120" font="FdLcD;70" halign="center" valign="top" />
 		<widget source="parent.summary_description" render="Label" position="10,20" size="670,376" font="FdLcD;70" halign="center" valign="center"  />
 		<panel name="SummaryClockPanel" />

@@ -38,7 +38,7 @@
 		</widget>
 	</screen>
 <!-- Tuner Panel -->	
-	<screen name="MeinTunerESIteam">
+	<screen name="MeinTunerInfoPanel">
 		<widget source="session.FrontendInfo" render="FixedLabel" position="0,214" size="24,24" text="A" foregroundColor="#04B404" font="FdLcD;24" zPosition="1" transparent="1" halign="center" >
 			<convert type="FrontendInfo">NUMBER</convert>
 			<convert type="ValueRange">0,0</convert>
@@ -126,7 +126,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>
 <!-- Movieplayer auch MediaPortal-->
 	<screen name="InfoBarMoviePlayerSummary" position="0,0" size="390,240">
@@ -143,7 +143,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>
 
 	<screen name="MovieContextMenuSummary" position="0,0" size="390,240">
@@ -178,7 +178,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>		
 <!-- channelselection -->
 	<screen name="ChannelSelection_summary" position="0,0" size="390,240">
@@ -240,13 +240,13 @@
 		<eLabel position="0,87" size="390,1" backgroundColor="white" />
 		<widget source="parent.summary_description" render="Label" position="0,88" size="390,152" zPosition="1" font="FdLcD;35" halign="center" valign="center" />
 	</screen>
-<!-- AeonFHD_MOD-Menu -->
+<!-- Metrix-Menu -->
 	<screen name="MainSettingsView_summary" position="0,0" size="390,240">
 		<widget source="parent.titleText" render="Label" position="0,0" size="390,178" font="FdLcD;35" foregroundColor="#87CEFA" halign="center" valign="center" />
 		<panel name="SummaryClockPanel" />
 	</screen>
-<!-- ESIteam -->
-	<screen name="ESIteam_summary" position="0,0" size="390,240">
+<!-- Infopanel -->
+	<screen name="Infopanel_summary" position="0,0" size="390,240">
 		<widget source="parent.Title" render="Label" position="0,0" size="390,85" font="FdLcD;38" foregroundColor="#87CEFA" halign="center" valign="center" />
 		<eLabel position="0,87" size="390,1" backgroundColor="white" />
 		<widget source="parent.summary_description" render="Label" position="0,88" size="390,152" zPosition="1" font="FdLcD;35" halign="center" valign="center" />
@@ -307,7 +307,7 @@
 			<convert type="ClockToText">Format:%d.%m.%Y</convert>
 		</widget>
 		<panel name="MeinRecordingPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>
 <!-- Plugin browser -->
 	<screen name="PluginBrowserSummary" position="fill">
@@ -543,7 +543,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>
 	<screen name="MovieMenu_summary" position="0,0" size="390,240">
 		<widget source="parent.menu" render="Label" position="0,0," size="390,178" font="FdLcD;41" foregroundColor="#87CEFA" halign="center" valign="center">
@@ -570,6 +570,6 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>
 </skin>
