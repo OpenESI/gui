@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--  Skin: LCD from Magic by MiLo -->
 <!-- Skin is for et8500 LCD/TFT without panel widgets -->
-<!-- mod by madie for OpenATV -->
 
 <skin>
 	<windowstyle id="1" type="skinned">
@@ -481,8 +480,8 @@
 		<panel name="SummaryClockPanel" />
 	</screen>
 	
-<!-- Infopanel -->
-	<screen name="Infopanel_summary" position="0,0" size="720,576">
+<!-- ESIteam -->
+	<screen name="ESIteam_summary" position="0,0" size="720,576">
 		<widget source="parent.summary_description" render="Label" position="10,20" size="670,376" font="FdLcD;70" halign="center" valign="center" foregroundColor="#e5b243" />
 		<panel name="SummaryClockPanel" />
 	</screen>
