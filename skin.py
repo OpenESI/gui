@@ -22,7 +22,6 @@ if not os.path.exists("/usr/share/enigma2/skin_text.xml"):
 
 colorNames = {}
 colorNamesHuman = {}
-switchPixmap = {}
 # Predefined fonts, typically used in built-in screens and for components like
 # the movie list and so.
 fonts = {
@@ -81,7 +80,7 @@ def addSkin(name, scope = SCOPE_SKIN):
 def get_modular_files(name, scope = SCOPE_SKIN):
 	dirname = resolveFilename(scope, name + 'mySkin/')
 	file_list = []
-	if fileExists(dirname):
+	if fileExists(dirname) and config.skin.primary_skin.value != DEFAULT_SKIN:
 		skin_files = (os.listdir(dirname))
 		if len(skin_files):
 			for f in skin_files:
@@ -147,7 +146,9 @@ def skinExists(skin = False):
 skinExists()
 
 def getSkinPath():
-	primary_skin_path = config.skin.primary_skin.value.replace('skin.xml', '')
+	#primary_skin_path = config.skin.primary_skin.value.replace('skin.xml', '')
+	p = config.skin.primary_skin.value
+	primary_skin_path = p[:p.rfind('/')+1]
 	if not primary_skin_path.endswith('/'):
 		primary_skin_path = primary_skin_path + '/'
 	return primary_skin_path
@@ -193,14 +194,16 @@ addSkin('skin_subtitles.xml')
 
 
 try:
-	addSkin(primary_skin_path + 'skin_user_colors.xml', SCOPE_SKIN)
-	print "[SKIN] loading user defined colors for skin", (primary_skin_path + 'skin_user_colors.xml')
+	if config.skin.primary_skin.value != DEFAULT_SKIN:
+		addSkin(primary_skin_path + 'skin_user_colors.xml', SCOPE_SKIN)
+		print "[SKIN] loading user defined colors for skin", (primary_skin_path + 'skin_user_colors.xml')
 except (SkinError, IOError, AssertionError), err:
 	print "[SKIN] not loading user defined colors for skin"
 
 try:
-	addSkin(primary_skin_path + 'skin_user_header.xml', SCOPE_SKIN)
-	print "[SKIN] loading user defined header file for skin", (primary_skin_path + 'skin_user_header.xml')
+	if config.skin.primary_skin.value != DEFAULT_SKIN:
+		addSkin(primary_skin_path + 'skin_user_header.xml', SCOPE_SKIN)
+		print "[SKIN] loading user defined header file for skin", (primary_skin_path + 'skin_user_header.xml')
 except (SkinError, IOError, AssertionError), err:
 	print "[SKIN] not loading user defined header file for skin"
 
@@ -744,21 +747,6 @@ def loadSingleSkinData(desktop, skin, path_prefix):
 			if fileExists(skinfile):
 				print "[SKIN] loading include:", skinfile
 				loadSkin(skinfile)
-
-	for c in skin.findall('switchpixmap'):
-		for pixmap in c.findall('pixmap'):
-			get_attr = pixmap.attrib.get
-			name = get_attr('name')
-			if not name:
-				raise SkinError('[Skin] pixmap needs name attribute')
-			filename = get_attr('filename')
-			if not filename:
-				raise SkinError('[Skin] pixmap needs filename attribute')
-			resolved_png = resolveFilename(SCOPE_ACTIVE_SKIN, filename, path_prefix=path_prefix)
-			if fileExists(resolved_png):
-				switchPixmap[name] = LoadPixmap(resolved_png, cached=True)
-			else:
-				raise SkinError('[Skin] switchpixmap pixmap filename="%s" (%s) not found' % (filename, resolved_png))
 
 	for c in skin.findall("colors"):
 		for color in c.findall("color"):
