@@ -8,7 +8,7 @@ from Components.SystemInfo import SystemInfo
 from Components.Harddisk import harddiskmanager
 from GlobalActions import globalActionMap
 from enigma import eDVBVolumecontrol, eTimer, eDVBLocalTimeHandler, eServiceReference
-from boxbranding import getMachineBrand, getMachineName, getBoxType, getBrandOEM, getMachineBuild
+from boxbranding import getMachineBrand, getMachineName, getBoxType, getBrandOEM
 from Tools import Notifications
 from time import localtime, time
 import Screens.InfoBar

@@ -88,8 +88,6 @@ class OscamInfo:
 
 	def getUserData(self):
 		[webif, port, conf, ipcompiled] = self.confPath()
-		if conf == None:
-			conf = ""
 		conf += "/oscam.conf"
 
 		# Assume that oscam webif is NOT blocking localhost, IPv6 is also configured if it is compiled in,
@@ -178,7 +176,7 @@ class OscamInfo:
 			elif hasattr(e, "code"):
 				err = str(e.code)
 		if err is not False:
-			print "[openWebIF] error: %s" % err
+			print "[openWebIF] Fehler: %s" % err
 			return False, err
 		else:
 			return True, data

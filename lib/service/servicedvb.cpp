@@ -1181,7 +1181,7 @@ void eDVBServicePlay::serviceEvent(int event)
 		updateEpgCacheNowNext();
 
 		/* default behaviour is to start an eit reader, and wait for now/next info, unless this is disabled */
-		if (m_dvb_service && m_dvb_service->useEIT() && eConfigManager::getConfigBoolValue("config.usage.show_eit_nownext", true))
+		if (eConfigManager::getConfigBoolValue("config.usage.show_eit_nownext", true))
 		{
 			ePtr<iDVBDemux> m_demux;
 			if (!m_service_handler.getDataDemux(m_demux))
@@ -1943,9 +1943,6 @@ int eDVBServicePlay::getInfo(int w)
 			return aspect;
 		break;
 	}
-	case sGamma:
-		if (m_decoder) return m_decoder->getVideoGamma();
-		break;
 	case sIsCrypted:
 		if (no_program_info)
 			return false;
@@ -1987,9 +1984,6 @@ int eDVBServicePlay::getInfo(int w)
 			apid = m_dvb_service->getCacheEntry(eDVBService::cAC3PID);
 			if (apid != -1)
 				return apid;
-			apid = m_dvb_service->getCacheEntry(eDVBService::cAC4PID);
-			if (apid != -1)
-				return apid;
 			apid = m_dvb_service->getCacheEntry(eDVBService::cDDPPID);
 			if (apid != -1)
 				return apid;
@@ -1999,9 +1993,6 @@ int eDVBServicePlay::getInfo(int w)
 			apid = m_dvb_service->getCacheEntry(eDVBService::cAACAPID);
 			if (apid != -1)
 				return apid;
-			apid = m_dvb_service->getCacheEntry(eDVBService::cDRAAPID);
-			if (apid != -1)
-				return apid;				
 		}
 		if (no_program_info)
 			return -1;
@@ -2150,14 +2141,10 @@ RESULT eDVBServicePlay::getTrackInfo(struct iAudioTrackInfo &info, unsigned int 
 		info.m_description = "MPEG";
 	else if (program.audioStreams[i].type == eDVBServicePMTHandler::audioStream::atAC3)
 		info.m_description = "AC3";
-	else if (program.audioStreams[i].type == eDVBServicePMTHandler::audioStream::atAC4)
-		info.m_description = "AC4";
 	else if (program.audioStreams[i].type == eDVBServicePMTHandler::audioStream::atDDP)
 		info.m_description = "AC3+";
 	else if (program.audioStreams[i].type == eDVBServicePMTHandler::audioStream::atAAC)
 		info.m_description = "AAC";
-	else if (program.audioStreams[i].type == eDVBServicePMTHandler::audioStream::atDRA)
-		info.m_description = "DRA";
 	else if (program.audioStreams[i].type == eDVBServicePMTHandler::audioStream::atAACHE)
 		info.m_description = "AAC-HE";
 	else if (program.audioStreams[i].type == eDVBServicePMTHandler::audioStream::atDTS)
@@ -2271,20 +2258,15 @@ int eDVBServicePlay::selectAudioStream(int i)
 	if (m_dvb_service && ((i != -1) || (program.audioStreams.size() == 1)
 		|| ((m_dvb_service->getCacheEntry(eDVBService::cMPEGAPID) == -1)
 		&& (m_dvb_service->getCacheEntry(eDVBService::cAC3PID)== -1)
-		&& (m_dvb_service->getCacheEntry(eDVBService::cAC4PID)== -1)
 		&& (m_dvb_service->getCacheEntry(eDVBService::cDDPPID)== -1)
 		&& (m_dvb_service->getCacheEntry(eDVBService::cAACHEAPID) == -1)
-		&& (m_dvb_service->getCacheEntry(eDVBService::cAACAPID) == -1)
-		&& (m_dvb_service->getCacheEntry(eDVBService::cDRAAPID) == -1))))
+		&& (m_dvb_service->getCacheEntry(eDVBService::cAACAPID) == -1))))
 	{
 		m_dvb_service->setCacheEntry(eDVBService::cMPEGAPID, apidtype == eDVBAudio::aMPEG ? apid : -1);
 		m_dvb_service->setCacheEntry(eDVBService::cAC3PID, apidtype == eDVBAudio::aAC3 ? apid : -1);
-		m_dvb_service->setCacheEntry(eDVBService::cAC4PID, apidtype == eDVBAudio::aAC4 ? apid : -1);
 		m_dvb_service->setCacheEntry(eDVBService::cDDPPID, apidtype == eDVBAudio::aDDP ? apid : -1);
 		m_dvb_service->setCacheEntry(eDVBService::cAACHEAPID, apidtype == eDVBAudio::aAACHE ? apid : -1);
 		m_dvb_service->setCacheEntry(eDVBService::cAACAPID, apidtype == eDVBAudio::aAAC ? apid : -1);
-		m_dvb_service->setCacheEntry(eDVBService::cDRAAPID, apidtype == eDVBAudio::aDRA ? apid : -1);
-
 	}
 
 	h.resetCachedProgram();
@@ -3613,9 +3595,6 @@ void eDVBServicePlay::video_event(struct iTSMPEGDecoder::videoEvent event)
 			break;
 		case iTSMPEGDecoder::videoEvent::eventProgressiveChanged:
 			m_event((iPlayableService*)this, evVideoProgressiveChanged);
-			break;
-		case iTSMPEGDecoder::videoEvent::eventGammaChanged:
-			m_event((iPlayableService*)this, evVideoGammaChanged);
 			break;
 		default:
 			break;

@@ -43,8 +43,6 @@
 #include <lib/base/eerroroutput.h>
 ePtr<eErrorOutput> m_erroroutput;
 
-bool verbose = false;
-
 #ifdef OBJECT_DEBUG
 int object_total_remaining;
 
@@ -231,16 +229,6 @@ void quitMainloop(int exitCode)
 	eApp->quit(0);
 }
 
-void pauseInit()
-{
-	eInit::pauseInit();
-}
-
-void resumeInit()
-{
-	eInit::resumeInit();
-}
-
 static void sigterm_handler(int num)
 {
 	quitMainloop(128 + num);
@@ -276,11 +264,6 @@ int main(int argc, char **argv)
 		if (!(strcmp(argv[i], "--debug-no-color")) or !(strcmp(argv[i], "--nc")))
 		{
 			logOutputColors = 0;
-		}
-
-		if (!(strcmp(argv[i], "--verbose")))
-		{
-			verbose = true;
 		}
 	}
 
@@ -375,9 +358,9 @@ int main(int argc, char **argv)
 			i++;
 		}
 		if (i)
-			my_dc->setSpinner(eRect(ePoint(50, 50), wait[0]->size()), wait, i);
+			my_dc->setSpinner(eRect(ePoint(25, 25), wait[0]->size()), wait, i);
 		else
-			my_dc->setSpinner(eRect(50, 50, 0, 0), wait, 1);
+			my_dc->setSpinner(eRect(25, 25, 0, 0), wait, 1);
 	}
 
 	gRC::getInstance()->setSpinnerDC(my_dc);
@@ -465,15 +448,9 @@ void setAnimation_speed(int speed)
 {
 	gles_set_animation_speed(speed);
 }
-
-void setAnimation_current_listbox(int a)
-{
-	gles_set_animation_listbox_func(a);
-}
 #else
 #ifndef HAVE_OSDANIMATION
 void setAnimation_current(int a) {}
 void setAnimation_speed(int speed) {}
-void setAnimation_current_listbox(int a) {}
 #endif
 #endif

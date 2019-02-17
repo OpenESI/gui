@@ -250,7 +250,6 @@ class ParentalControl:
 			# Reset PIN cache on standby: Use StandbyCounter- Config- Callback
 			config.misc.standbyCounter.addNotifier(self.standbyCounterCallback, initial_call = False)
 			self.filesOpened = True
-			refreshServiceList()
 
 	def __getattr__(self, name):
 		# This method is called if we lack a property. I'm lazy, so

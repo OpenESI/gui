@@ -16,7 +16,7 @@ from Components.Network import iNetwork
 
 from Tools.StbHardware import getFPVersion
 
-from os import path,popen
+from os import path
 from re import search
 
 import time
@@ -260,24 +260,20 @@ class About(Screen):
 				"cancel": self.close,
 				"ok": self.close,
 				"log": self.showAboutReleaseNotes,
-				"up": self.pageUp,
-				"down": self.pageDown,
-				"red": self.close,
+				"up": self["AboutScrollLabel"].pageUp,
+				"down": self["AboutScrollLabel"].pageDown,
 				"green": self.showTranslationInfo,
-				"0": self.showID,
 			})
 
+	def populate(self):
+		self["lab1"] = StaticText(_("openESI"))
+		self["lab2"] = StaticText(_("By openESI Team"))
+		model = None
+		self["lab3"] = StaticText(_("Support at") + " www.openesi.eu")
 
-	def showID(self):
-		if SystemInfo["HaveID"]:
-			try:
-				f = open("/etc/.id")
-				id = f.read()[:-1].split('=')
-				f.close()
-				from Screens.MessageBox import MessageBox
-				self.session.open(MessageBox,id[1], type = MessageBox.TYPE_INFO)
-			except:
-				pass
+		AboutText = getAboutText()[0]
+
+		self["AboutScrollLabel"] = ScrollLabel(AboutText)
 
 	def showTranslationInfo(self):
 		self.session.open(TranslationInfo)
@@ -304,8 +300,6 @@ class Devices(Screen):
 		self.activityTimer.timeout.get().append(self.populate2)
 		self["actions"] = ActionMap(["SetupActions", "ColorActions", "TimerEditActions"],
 			{
-				"up": self["allinonedevices"].pageUp,
-				"down": self["allinonedevices"].pageDown,
 				"cancel": self.close,
 				"ok": self.close,
 			})
@@ -318,7 +312,6 @@ class Devices(Screen):
 		self["nims"].setText(scanning)
 		self["hdd"].setText(scanning)
 		self['mounts'].setText(scanning)
-		self['allinonedevices'].setText(scanning)
 		self.activityTimer.start(1)
 
 	def populate2(self):
@@ -382,12 +375,6 @@ class Devices(Screen):
 			list2.append(device)
 		self.list = '\n'.join(self.list)
 		self["hdd"].setText(self.list)
-		self["allinonedevices"].setText(
-			self["TunerHeader"].getText() + "\n\n" +
-			self["nims"].getText() + "\n\n" +
-			self["HDDHeader"].getText() + "\n\n" +
-			self["hdd"].getText() + "\n\n"
-			)
 
 		self.Console.ePopen("df -mh | grep -v '^Filesystem'", self.Stage1Complete)
 
@@ -418,12 +405,6 @@ class Devices(Screen):
 			self["mounts"].setText(self.mountinfo)
 		else:
 			self["mounts"].setText(_('none'))
-
-		self["allinonedevices"].setText(
-			self["allinonedevices"].getText() +
-			self["MountsHeader"].getText() + "\n\n" +
-			self["mounts"].getText()
-			)
 		self["actions"].setEnabled(True)
 
 	def createSummary(self):
@@ -475,24 +456,11 @@ class SystemMemoryInfo(Screen):
 		self.Console = Console()
 		self.Console.ePopen("df -mh / | grep -v '^Filesystem'", self.Stage1Complete)
 
-	def MySize(self, RamText):
-		RamText_End = RamText[len(RamText)-1]
-		RamText_End2 = RamText_End
-		if RamText_End == "G":
-			RamText_End = _("GB")
-		elif RamText_End == "M":
-			RamText_End = _("MB")
-		elif RamText_End == "K":
-			RamText_End = _("KB")
-		if RamText_End != RamText_End2:
-			RamText = RamText[0:len(RamText)-1] + " " + RamText_End
-		return RamText
-
 	def Stage1Complete(self, result, retval, extra_args=None):
 		flash = str(result).replace('\n', '')
 		flash = flash.split()
-		RamTotal = self.MySize(flash[1])
-		RamFree = self.MySize(flash[3])
+		RamTotal = flash[1]
+		RamFree = flash[3]
 
 		self.AboutText += _("FLASH") + '\n\n'
 		self.AboutText += _("Total:") + "\t" + RamTotal + "\n"
@@ -554,22 +522,6 @@ class SystemNetworkInfo(Screen):
 			})
 
 	def createscreen(self):
-		def netspeed():
-			netspeed=""
-			for line in popen('ethtool eth0 |grep Speed','r'):
-				line = line.strip().split(":")
-				line =line[1].replace(' ','')
-				netspeed += line
-				return str(netspeed)
-
-		def netspeed_eth1():
-			netspeed=""
-			for line in popen('ethtool eth1 |grep Speed','r'):
-				line = line.strip().split(":")
-				line =line[1].replace(' ','')
-				netspeed += line
-				return str(netspeed)
-
 		self.AboutText = ""
 		self.iface = "eth0"
 		eth0 = about.getIfConfig('eth0')
@@ -579,7 +531,6 @@ class SystemNetworkInfo(Screen):
 				self.AboutText += _("Netmask:") + "\t" + eth0['netmask'] + "\n"
 			if eth0.has_key('hwaddr'):
 				self.AboutText += _("MAC:") + "\t" + eth0['hwaddr'] + "\n"
-			self.AboutText += _("Network Speed:") + "\t" + netspeed() + "\n"
 			self.iface = 'eth0'
 
 		eth1 = about.getIfConfig('eth1')
@@ -589,7 +540,6 @@ class SystemNetworkInfo(Screen):
 				self.AboutText += _("Netmask:") + "\t" + eth1['netmask'] + "\n"
 			if eth1.has_key('hwaddr'):
 				self.AboutText += _("MAC:") + "\t" + eth1['hwaddr'] + "\n"
-			self.AboutText += _("Network Speed:") + "\t" + netspeed_eth1() + "\n"
 			self.iface = 'eth1'
 
 		ra0 = about.getIfConfig('ra0')

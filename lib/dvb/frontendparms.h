@@ -16,9 +16,9 @@
 
 extern int roundMulti(int value, int m);//round value to multiple of m
 
-class eDVBFrontendParametersSatellite
+
+struct eDVBFrontendParametersSatellite
 {
-public:
 #ifndef SWIG
 	void set(const SatelliteDeliverySystemDescriptor  &);
 	void set(const S2SatelliteDeliverySystemDescriptor  &);
@@ -69,9 +69,8 @@ public:
 };
 SWIG_ALLOW_OUTPUT_SIMPLE(eDVBFrontendParametersSatellite);
 
-class eDVBFrontendParametersCable
+struct eDVBFrontendParametersCable
 {
-public:
 #ifndef SWIG
 	void set(const CableDeliverySystemDescriptor  &);
 #endif
@@ -100,9 +99,8 @@ public:
 };
 SWIG_ALLOW_OUTPUT_SIMPLE(eDVBFrontendParametersCable);
 
-class eDVBFrontendParametersTerrestrial
+struct eDVBFrontendParametersTerrestrial
 {
-public:
 #ifndef SWIG
 	void set(const TerrestrialDeliverySystemDescriptor  &);
 	void set(const T2DeliverySystemDescriptor &);
@@ -157,9 +155,8 @@ public:
 };
 SWIG_ALLOW_OUTPUT_SIMPLE(eDVBFrontendParametersTerrestrial);
 
-class eDVBFrontendParametersATSC
+struct eDVBFrontendParametersATSC
 {
-public:
 	enum {
 		Inversion_Off, Inversion_On, Inversion_Unknown
 	};
