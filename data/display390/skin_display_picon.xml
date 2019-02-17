@@ -37,6 +37,49 @@
 			<convert type="ConditionalShowHide" />
 		</widget>
 	</screen>
+<!-- Tuner Panel -->	
+	<screen name="MeinTunerESIteam">
+		<widget source="session.FrontendInfo" render="FixedLabel" position="0,214" size="24,24" text="A" foregroundColor="#04B404" font="FdLcD;24" zPosition="1" transparent="1" halign="center" >
+			<convert type="FrontendInfo">NUMBER</convert>
+			<convert type="ValueRange">0,0</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.FrontendInfo" render="FixedLabel" position="22,214" size="24,24" text="B" foregroundColor="#04B404" font="FdLcD;24" zPosition="1" transparent="1" halign="center" >
+			<convert type="FrontendInfo">NUMBER</convert>
+			<convert type="ValueRange">1,1</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.FrontendInfo" render="FixedLabel" position="44,214" size="24,24" text="C" foregroundColor="#04B404" font="FdLcD;24" zPosition="1" transparent="1" halign="center" >
+			<convert type="FrontendInfo">NUMBER</convert>
+			<convert type="ValueRange">2,2</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.FrontendInfo" render="FixedLabel" position="66,214" size="24,24" text="D" foregroundColor="#04B404" font="FdLcD;24" zPosition="1" transparent="1" halign="center" >
+			<convert type="FrontendInfo">NUMBER</convert>
+			<convert type="ValueRange">3,3</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.TunerInfo" render="FixedLabel" position="0,214" size="24,24" text="A" foregroundColor="#708090" font="FdLcD;24" zPosition="0" transparent="1" halign="center" >
+			<convert type="TunerInfo">TunerUseMask</convert>
+			<convert type="ValueBitTest">1</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.TunerInfo" render="FixedLabel" position="22,214" size="24,24" text="B" foregroundColor="#708090" font="FdLcD;24" zPosition="0" transparent="1" halign="center" >
+			<convert type="TunerInfo">TunerUseMask</convert>
+			<convert type="ValueBitTest">2</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.TunerInfo" render="FixedLabel" position="44,214" size="24,24" text="C" foregroundColor="#708090" font="FdLcD;24" zPosition="0" transparent="1" halign="center" >
+			<convert type="TunerInfo">TunerUseMask</convert>
+			<convert type="ValueBitTest">4</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.TunerInfo" render="FixedLabel" position="66,214" size="24,24" text="D" foregroundColor="#708090" font="FdLcD;24" zPosition="0" transparent="1" halign="center" >
+			<convert type="TunerInfo">TunerUseMask</convert>
+			<convert type="ValueBitTest">8</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
+	</screen>	
 <!-- EPG Panel -->	
 	<screen name="MyEPGPanel" position="0,0" size="390,240">
 		<widget source="parent.Service" render="LcdPicon" position="125,0" size="150,90" zPosition="1" alphatest="on">
@@ -83,7 +126,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerEsiPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>
 <!-- Movieplayer auch MediaPortal-->
 	<screen name="InfoBarMoviePlayerSummary" position="0,0" size="390,240">
@@ -100,7 +143,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerEsiPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>
 
 	<screen name="MovieContextMenuSummary" position="0,0" size="390,240">
@@ -135,7 +178,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerEsiPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>		
 <!-- channelselection -->
 	<screen name="ChannelSelection_summary" position="0,0" size="390,240">
@@ -197,6 +240,17 @@
 		<eLabel position="0,87" size="390,1" backgroundColor="white" />
 		<widget source="parent.summary_description" render="Label" position="0,88" size="390,152" zPosition="1" font="FdLcD;35" halign="center" valign="center" />
 	</screen>
+<!-- AeonFHD_MOD-Menu -->
+	<screen name="MainSettingsView_summary" position="0,0" size="390,240">
+		<widget source="parent.titleText" render="Label" position="0,0" size="390,178" font="FdLcD;35" foregroundColor="#87CEFA" halign="center" valign="center" />
+		<panel name="SummaryClockPanel" />
+	</screen>
+<!-- ESIteam -->
+	<screen name="ESIteam_summary" position="0,0" size="390,240">
+		<widget source="parent.Title" render="Label" position="0,0" size="390,85" font="FdLcD;38" foregroundColor="#87CEFA" halign="center" valign="center" />
+		<eLabel position="0,87" size="390,1" backgroundColor="white" />
+		<widget source="parent.summary_description" render="Label" position="0,88" size="390,152" zPosition="1" font="FdLcD;35" halign="center" valign="center" />
+	</screen>
 <!-- setup-->
 	<screen name="SetupSummary" position="fill">
 		<widget source="SetupTitle" render="Label" position="top" size="*,85" font="FdLcD;38" foregroundColor="#87CEFA" halign="left"  valign="center" />
@@ -253,7 +307,7 @@
 			<convert type="ClockToText">Format:%d.%m.%Y</convert>
 		</widget>
 		<panel name="MeinRecordingPanel" />
-		<panel name="MeinTunerEsiPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>
 <!-- Plugin browser -->
 	<screen name="PluginBrowserSummary" position="fill">
@@ -489,7 +543,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerEsiPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>
 	<screen name="MovieMenu_summary" position="0,0" size="390,240">
 		<widget source="parent.menu" render="Label" position="0,0," size="390,178" font="FdLcD;41" foregroundColor="#87CEFA" halign="center" valign="center">
@@ -516,6 +570,6 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerEsiPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>
 </skin>

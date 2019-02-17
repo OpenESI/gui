@@ -23,7 +23,7 @@ has_scart = False
 has_rca = SystemInfo["HaveRCA"]
 has_dvi = SystemInfo["HaveDVI"]
 has_jack = SystemInfo["HaveAVJACK"]
-has_scart = SystemInfo["HaveSCART"]
+has_scart = SystemInfo["HAVESCART"]
 
 
 class VideoWizardSummary(WizardSummary):

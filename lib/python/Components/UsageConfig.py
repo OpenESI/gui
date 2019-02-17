@@ -10,7 +10,7 @@ from Components.NimManager import nimmanager
 from Components.ServiceList import refreshServiceList
 from SystemInfo import SystemInfo
 from Tools.HardwareInfo import HardwareInfo
-from boxbranding import getBoxType
+from boxbranding import getBoxType, getDisplayType
 from keyids import KEYIDS
 from sys import maxint
 import glob
@@ -60,10 +60,10 @@ def InitUsageConfig():
 	config.usage.boot_action = ConfigSelection(default = "normal", choices = [("normal", _("just boot")), ("standby", _("goto standby"))])
 	config.usage.showdish = ConfigSelection(default = "flashing", choices = [("flashing", _("Flashing")), ("normal", _("Not Flashing")), ("off", _("Off"))])
 	config.usage.multibouquet = ConfigYesNo(default = True)
-	config.usage.maxchannelnumlen = ConfigSelection(default = "4", choices = [("4", _("4")), ("5", _("5"))])
+	config.usage.maxchannelnumlen = ConfigSelection(default = "4", choices = [("1", _("1")), ("2", _("2")),("3", _("3")), ("4", _("4")), ("5", _("5"))])
 	config.usage.numzaptimeoutmode = ConfigSelection(default = "standard", choices = [("standard", _("Standard")), ("userdefined", _("User defined")), ("off", _("off"))])
-	config.usage.numzaptimeout1 = ConfigSlider(default = 3000, increment = 250, limits = (750, 5000))
-	config.usage.numzaptimeout2 = ConfigSlider(default = 1000, increment = 250, limits = (750, 5000))
+	config.usage.numzaptimeout1 = ConfigSlider(default = 3000, increment = 250, limits = (500, 5000))
+	config.usage.numzaptimeout2 = ConfigSlider(default = 1000, increment = 250, limits = (0, 5000))
 	config.usage.numzappicon = ConfigYesNo(default = False)
 	config.usage.use_pig = ConfigYesNo(default = False)
 	config.usage.update_available = NoSave(ConfigYesNo(default = False))
@@ -92,10 +92,12 @@ def InitUsageConfig():
 		choicelist.append(("%d" % i, ngettext("%d pixel wide", "%d pixels wide", i) % i))
 	config.usage.servicelist_column = ConfigSelection(default="-1", choices=choicelist)
 	config.usage.servicelist_column.addNotifier(refreshServiceList)
+	config.usage.servicelist_infokey = ConfigSelection(default = "event", choices = [("epg", _("Single EPG")), ("event", _("Eventview"))])
 
 	config.usage.service_icon_enable = ConfigYesNo(default = False)
 	config.usage.service_icon_enable.addNotifier(refreshServiceList)
 	config.usage.servicelist_picon_downsize = ConfigSelectionNumber(default = -2, stepwidth = 1, min = -8, max = 0, wraparound = True)
+	config.usage.servicelist_picon_ratio = ConfigSelection(default = "167", choices = [("100", _("1:1")), ("150", _("3:2")), ("133", _("4:3")), ("250", _("5:2")), ("167", _("5:3")), ("233", _("7:3"))])
 	config.usage.servicelist_cursor_behavior = ConfigSelection(default = "keep", choices = [
 		("standard", _("Standard")),
 		("keep", _("Keep service")),
@@ -103,18 +105,7 @@ def InitUsageConfig():
 		("keep reverseB", _("Keep service") + " + " + _("Reverse bouquet buttons"))])
 	config.usage.multiepg_ask_bouquet = ConfigYesNo(default = False)
 	config.usage.showpicon = ConfigYesNo(default = True)
-	
-#########  Workaround for VTI Skins   ##############
-	config.usage.picon_dir = ConfigDirectory(default = "/usr/share/enigma2/picon")
-	config.usage.movielist_show_picon = ConfigYesNo(default = False)
-	config.usage.use_extended_pig = ConfigYesNo(default = False)
-	config.usage.use_extended_pig_channelselection = ConfigYesNo(default = False)
-	config.usage.servicelist_preview_mode = ConfigYesNo(default = False)
-	config.usage.numberzap_show_picon = ConfigYesNo(default = False)
-	config.usage.numberzap_show_servicename = ConfigYesNo(default = False)
-#####################################################
-
-	config.usage.panicbutton = ConfigYesNo(default = False)
+        config.usage.panicbutton = ConfigYesNo(default = False)
 	config.usage.panicchannel = ConfigInteger(default = 1, limits=(1,5000) )
 	config.usage.quickzap_bouquet_change = ConfigYesNo(default = False)
 	config.usage.e1like_radio_mode = ConfigYesNo(default = True)
@@ -440,15 +431,33 @@ def InitUsageConfig():
 	config.usage.show_event_progress_in_servicelist.addNotifier(refreshServiceList)
 	config.usage.show_channel_numbers_in_servicelist.addNotifier(refreshServiceList)
 
-	config.usage.blinking_display_clock_during_recording = ConfigYesNo(default = False)
-	
-	if getBoxType() in ('tiviaraplus','formuler1tc','zgemmah7','vimastec1000', 'vimastec1500','et7000', 'et7500', 'et8000', 'triplex', 'formuler1', 'mutant1200', 'solo2', 'mutant1265', 'mutant1100', 'mutant500c', 'mutant530c', 'mutant1500', 'osminiplus', 'ax51', 'mutant51', '9910lx', '9911lx'):
+	#standby
+	if getDisplayType() in ('textlcd7segment'):
+		config.usage.blinking_display_clock_during_recording = ConfigSelection(default = "Rec", choices = [
+						("Rec", _("REC")), 
+						("RecBlink", _("Blinking REC")), 
+						("Nothing", _("Nothing"))])
+	else:
+		config.usage.blinking_display_clock_during_recording = ConfigYesNo(default = False)
+		
+	#in use
+	if getDisplayType() in ('textlcd'):
 		config.usage.blinking_rec_symbol_during_recording = ConfigSelection(default = "Channel", choices = [
 						("Rec", _("REC Symbol")), 
 						("RecBlink", _("Blinking REC Symbol")), 
 						("Channel", _("Channelname"))])
+	if getDisplayType() in ('textlcd7segment'):
+		config.usage.blinking_rec_symbol_during_recording = ConfigSelection(default = "Rec", choices = [
+						("Rec", _("REC")), 
+						("RecBlink", _("Blinking REC")), 
+						("Time", _("Time"))])
 	else:
 		config.usage.blinking_rec_symbol_during_recording = ConfigYesNo(default = True)
+		
+	if getDisplayType() in ('textlcd7segment'):
+		config.usage.show_in_standby = ConfigSelection(default = "time", choices = [
+						("time", _("Time")), 
+						("nothing", _("Nothing"))])
 
 	config.usage.show_message_when_recording_starts = ConfigYesNo(default = True)
 
@@ -705,6 +714,14 @@ def InitUsageConfig():
 	config.seek.withjumps_avoid_zero   = ConfigYesNo(default = True)
 
 	config.crash = ConfigSubsection()
+	#// handle python crashes
+	config.crash.bsodpython = ConfigYesNo(default = True)
+	config.crash.bsodpython_ready = NoSave(ConfigYesNo(default = False))
+	choicelist = [("0", _("never")), ("1", "1") , ("2", "2"), ("3", "3"), ("4", "4"), ("5", "5"), ("6", "6"), ("7", "7"), ("8", "8"), ("9", "9"), ("10", "10")]
+	config.crash.bsodhide = ConfigSelection(default = "1", choices = choicelist)
+	config.crash.bsodmax = ConfigSelection(default = "3", choices = choicelist)
+	#//
+	
 	config.crash.enabledebug = ConfigYesNo(default = False)
 	config.crash.debugloglimit = ConfigSelectionNumber(min = 1, max = 10, stepwidth = 1, default = 4, wraparound = True)
 	config.crash.daysloglimit = ConfigSelectionNumber(min = 1, max = 30, stepwidth = 1, default = 8, wraparound = True)
@@ -749,7 +766,7 @@ def InitUsageConfig():
 		else:
 			StackTracePrinter.getInstance().deactivate()
 
-	config.crash.pystackonspinner = ConfigYesNo(default = False)
+	config.crash.pystackonspinner = ConfigYesNo(default = True)
 	config.crash.pystackonspinner.addNotifier(updateStackTracePrinter, immediate_feedback = False, call_on_save_or_cancel = True, initial_call = True)
 
 	config.usage.timerlist_finished_timer_position = ConfigSelection(default = "end", choices = [("beginning", _("at beginning")), ("end", _("at end"))])
@@ -806,6 +823,22 @@ def InitUsageConfig():
 	config.subtitles.colourise_dialogs = ConfigYesNo(default = False)
 	config.subtitles.subtitle_borderwidth = ConfigSelection(choices = ["1", "2", "3", "4", "5"], default = "3")
 	config.subtitles.subtitle_fontsize  = ConfigSelection(choices = ["%d" % x for x in range(16,101) if not x % 2], default = "40")
+	backtrans = [
+		("0", _("No transparency")),
+		("12", "5%"),
+		("25", "10%"),
+		("38", "15%"),
+		("50", "20%"),
+		("75", "30%"),
+		("100", "40%"),
+		("125", "50%"),
+		("150", "60%"),
+		("175", "70%"),
+		("200", "80%"),
+		("225", "90%"),
+		("255", _("Full transparency"))]
+	config.subtitles.subtitles_backtrans = ConfigSelection(default = "255", choices = backtrans)
+	config.subtitles.dvb_subtitles_backtrans = ConfigSelection(default = "0", choices = backtrans)
 
 	subtitle_delay_choicelist = []
 	for i in range(-54000000, 54045000, 45000):
@@ -819,18 +852,6 @@ def InitUsageConfig():
 	config.subtitles.dvb_subtitles_original_position = ConfigSelection(default = "0", choices = [("0", _("Original")), ("1", _("Fixed")), ("2", _("Relative"))])
 	config.subtitles.dvb_subtitles_centered = ConfigYesNo(default = False)
 	config.subtitles.subtitle_bad_timing_delay = ConfigSelection(default = "0", choices = subtitle_delay_choicelist)
-	config.subtitles.dvb_subtitles_backtrans = ConfigSelection(default = "0", choices = [
-		("0", _("No transparency")),
-		("25", "10%"),
-		("50", "20%"),
-		("75", "30%"),
-		("100", "40%"),
-		("125", "50%"),
-		("150", "60%"),
-		("175", "70%"),
-		("200", "80%"),
-		("225", "90%"),
-		("255", _("Full transparency"))])
 	config.subtitles.pango_subtitle_colors = ConfigSelection(default = "1", choices = [
 		("0", _("alternative")),
 		("1", _("white")),
@@ -978,17 +999,16 @@ def InitUsageConfig():
 	config.epgselection.infobar_oklong = ConfigSelection(choices = [("Zap",_("Zap")), ("Zap + Exit", _("Zap + Exit"))], default = "Zap + Exit")
 	config.epgselection.infobar_itemsperpage = ConfigSelectionNumber(default = 2, stepwidth = 1, min = 1, max = 4, wraparound = True)
 	config.epgselection.infobar_roundto = ConfigSelection(default = "15", choices = [("15", _("%d minutes") % 15), ("30", _("%d minutes") % 30), ("60", _("%d minutes") % 60)])
-	config.epgselection.infobar_prevtime = ConfigClock(default = time())
-	config.epgselection.infobar_prevtimeperiod = ConfigSelection(default = "180", choices = [("60", _("%d minutes") % 60), ("90", _("%d minutes") % 90), ("120", _("%d minutes") % 120), ("150", _("%d minutes") % 150), ("180", _("%d minutes") % 180), ("210", _("%d minutes") % 210), ("240", _("%d minutes") % 240), ("270", _("%d minutes") % 270), ("300", _("%d minutes") % 300)])
 	config.epgselection.infobar_primetimehour = ConfigSelectionNumber(default = 20, stepwidth = 1, min = 00, max = 23, wraparound = True)
 	config.epgselection.infobar_primetimemins = ConfigSelectionNumber(default = 00, stepwidth = 1, min = 00, max = 59, wraparound = True)
-	config.epgselection.infobar_servicetitle_mode = ConfigSelection(default = "servicename", choices = [("servicename", _("Service Name")),("picon", _("Picon")),("picon+servicename", _("Picon and Service Name")) ])
+	#config.epgselection.infobar_servicetitle_mode = ConfigSelection(default = "servicename", choices = [("servicename", _("Service Name")),("picon", _("Picon")),("picon+servicename", _("Picon and Service Name")) ])
+	config.epgselection.infobar_servicetitle_mode = ConfigSelection(default = "picon+servicename", choices = [("servicename", _("Service Name")),("picon", _("Picon")),("servicenumber+picon+servicename", _("Service Number, Picon and Service Name")),("servicenumber+servicename", _("Service Number and Service Name")),("picon+servicename", _("Picon and Service Name")) ])
 	config.epgselection.infobar_servfs = ConfigSelectionNumber(default = 0, stepwidth = 1, min = -8, max = 10, wraparound = True)
 	config.epgselection.infobar_eventfs = ConfigSelectionNumber(default = 0, stepwidth = 1, min = -8, max = 10, wraparound = True)
 	config.epgselection.infobar_timelinefs = ConfigSelectionNumber(default = 0, stepwidth = 1, min = -8, max = 10, wraparound = True)
 	config.epgselection.infobar_timeline24h = ConfigYesNo(default = True)
 	config.epgselection.infobar_servicewidth = ConfigSelectionNumber(default = 250, stepwidth = 1, min = 70, max = 500, wraparound = True)
-	config.epgselection.infobar_piconwidth = ConfigSelectionNumber(default = 100, stepwidth = 1, min = 70, max = 500, wraparound = True)
+	config.epgselection.infobar_piconwidth = ConfigSelectionNumber(default = 100, stepwidth = 1, min = 50, max = 500, wraparound = True)
 	config.epgselection.infobar_infowidth = ConfigSelectionNumber(default = 25, stepwidth = 25, min = 0, max = 150, wraparound = True)
 	config.epgselection.enhanced_preview_mode = ConfigYesNo(default = True)
 	config.epgselection.enhanced_ok = ConfigSelection(choices = [("Zap",_("Zap")), ("Zap + Exit", _("Zap + Exit"))], default = "Zap")
@@ -1009,11 +1029,9 @@ def InitUsageConfig():
 	config.epgselection.graph_info = ConfigSelection(choices = [("Channel Info", _("Channel Info")), ("Single EPG", _("Single EPG"))], default = "Channel Info")
 	config.epgselection.graph_infolong = ConfigSelection(choices = [("Channel Info", _("Channel Info")), ("Single EPG", _("Single EPG"))], default = "Single EPG")
 	config.epgselection.graph_roundto = ConfigSelection(default = "15", choices = [("15", _("%d minutes") % 15), ("30", _("%d minutes") % 30), ("60", _("%d minutes") % 60)])
-	config.epgselection.graph_prevtime = ConfigClock(default = time())
-	config.epgselection.graph_prevtimeperiod = ConfigSelection(default = "180", choices = [("60", _("%d minutes") % 60), ("90", _("%d minutes") % 90), ("120", _("%d minutes") % 120), ("150", _("%d minutes") % 150), ("180", _("%d minutes") % 180), ("210", _("%d minutes") % 210), ("240", _("%d minutes") % 240), ("270", _("%d minutes") % 270), ("300", _("%d minutes") % 300)])
 	config.epgselection.graph_primetimehour = ConfigSelectionNumber(default = 20, stepwidth = 1, min = 00, max = 23, wraparound = True)
 	config.epgselection.graph_primetimemins = ConfigSelectionNumber(default = 00, stepwidth = 1, min = 00, max = 59, wraparound = True)
-	config.epgselection.graph_servicetitle_mode = ConfigSelection(default = "picon+servicename", choices = [("servicename", _("Service Name")),("picon", _("Picon")),("picon+servicename", _("Picon and Service Name")) ])
+	config.epgselection.graph_servicetitle_mode = ConfigSelection(default = "picon+servicename", choices = [("servicename", _("Service Name")),("picon", _("Picon")),("servicenumber+picon+servicename", _("Service Number, Picon and Service Name")),("servicenumber+servicename", _("Service Number and Service Name")),("picon+servicename", _("Picon and Service Name")) ])
 	config.epgselection.graph_startmode = ConfigSelection(default = "standard", choices = [("standard", _("Standard")), ("primetime", _("Primetime")),("channel1", _("Channel 1")), ("channel1+primetime", _("Channel 1 with Primetime")) ])
 	config.epgselection.graph_servfs = ConfigSelectionNumber(default = 0, stepwidth = 1, min = -8, max = 10, wraparound = True)
 	config.epgselection.graph_eventfs = ConfigSelectionNumber(default = 0, stepwidth = 1, min = -8, max = 10, wraparound = True)
@@ -1032,7 +1050,7 @@ def InitUsageConfig():
 	config.epgselection.graph_pig = ConfigYesNo(default = False)
 	config.epgselection.graph_heightswitch = NoSave(ConfigYesNo(default = False))
 	config.epgselection.graph_servicewidth = ConfigSelectionNumber(default = 250, stepwidth = 1, min = 70, max = 500, wraparound = True)
-	config.epgselection.graph_piconwidth = ConfigSelectionNumber(default = 100, stepwidth = 1, min = 70, max = 500, wraparound = True)
+	config.epgselection.graph_piconwidth = ConfigSelectionNumber(default = 100, stepwidth = 1, min = 50, max = 500, wraparound = True)
 	config.epgselection.graph_infowidth = ConfigSelectionNumber(default = 25, stepwidth = 25, min = 0, max = 150, wraparound = True)
 	config.epgselection.graph_rec_icon_height = ConfigSelection(choices = [("bottom",_("bottom")),("top", _("top")), ("middle", _("middle")),  ("hide", _("hide"))], default = "bottom")
 

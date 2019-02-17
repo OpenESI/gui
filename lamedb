@@ -1497,7 +1497,7 @@ p:Tatlises Medya
 APTN1 GVW +442074827430
 p:APTN LONDON
 0001:01a4b159:0001:0001:1:0
-esi
+atv
 p:Service Provider
 0001:01a4af64:0001:0001:1:0
 EAS PROMO
@@ -1735,7 +1735,7 @@ MTV Polska
 p:MTV Networks
 0002:01a4b159:0001:0001:1:0
 YENI TV
-p:ESI
+p:ATV
 0002:01a4af64:0001:0001:1:0
 SU TV TEST
 p:EAS
@@ -6231,7 +6231,7 @@ p:SkyItalia
 SKY Calcio 1
 p:SkyItalia
 4f65:00c00000:044b:0001:1:0
-Magyar ESI
+Magyar ATV
 p:UPC Direct
 7565:00c00000:0412:0001:1:0
 TAQUILLA 5
@@ -10200,7 +10200,7 @@ p:,C:090f
 24 SydNytt
 p:Telenor
 10ce:00460000:c670:007e:1:0
-ESI
+ATV
 p:Digital Platform
 10ce:011c0000:07d7:0002:1:0
 Sky Movies 2
@@ -10440,8 +10440,8 @@ p:NSAB
 Telegenova
 p:Scopus Network Technologies
 32d4:00c00000:045d:0001:1:0
-ESI+
-p:ESI+,C:0d05,C:1702,C:1762,C:1801
+ATV+
+p:ATV+,C:0d05,C:1702,C:1762,C:1801
 32d4:00820000:0190:013e:1:0
 CNBC
 p:CYFRA +

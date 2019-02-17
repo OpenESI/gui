@@ -108,12 +108,14 @@ void eDVBFrontendParametersSatellite::set(const S2SatelliteDeliverySystemDescrip
 		is_id = descriptor.getInputStreamIdentifier();
 		pls_mode = eDVBFrontendParametersSatellite::PLS_Gold;
 		pls_code = descriptor.getScramblingSequenceIndex();
+		t2mi_plp_id = eDVBFrontendParametersSatellite::No_T2MI_PLP_Id;
 	}
 	else // default DVB-S2 physical layer scrambling sequence of index n = 0 is used
 	{
 		is_id = NO_STREAM_ID_FILTER;
 		pls_mode = eDVBFrontendParametersSatellite::PLS_Gold;
 		pls_code = 0;
+		t2mi_plp_id = eDVBFrontendParametersSatellite::No_T2MI_PLP_Id;
 	}
 }
 
@@ -144,9 +146,10 @@ void eDVBFrontendParametersSatellite::set(const SatelliteDeliverySystemDescripto
 	is_id = NO_STREAM_ID_FILTER;
 	pls_mode = eDVBFrontendParametersSatellite::PLS_Gold;
 	pls_code = 0;
+	t2mi_plp_id = eDVBFrontendParametersSatellite::No_T2MI_PLP_Id;
 	if (system == System_DVB_S2)
 	{
-		eDebug("[eDVBFrontendParametersSatellite] SAT DVB-S2 freq %d, %s, pos %d, sr %d, fec %d, modulation %d, rolloff %d, is_id %d, pls_mode %d, pls_code %d",
+		eDebug("[eDVBFrontendParametersSatellite] SAT DVB-S2 freq %d, %s, pos %d, sr %d, fec %d, modulation %d, rolloff %d, is_id %d, pls_mode %d, pls_code %d t2mi_plp_id %d",
 			frequency,
 			polarisation ? "hor" : "vert",
 			orbital_position,
@@ -155,7 +158,8 @@ void eDVBFrontendParametersSatellite::set(const SatelliteDeliverySystemDescripto
 			rolloff,
 			is_id,
 			pls_mode,
-			pls_code);
+			pls_code,
+			t2mi_plp_id);
 	}
 	else
 	{
@@ -388,7 +392,7 @@ RESULT eDVBFrontendParameters::calculateDifference(const iDVBFrontendParameters 
 	{
 		case iDVBFrontend::feSatellite:
 		{
-			eDVBFrontendParametersSatellite osat;
+			eDVBFrontendParametersSatellite osat = {0};
 			if (parm->getDVBS(osat))
 				return -2;
 			if (sat.orbital_position != osat.orbital_position)
@@ -401,7 +405,9 @@ RESULT eDVBFrontendParameters::calculateDifference(const iDVBFrontendParameters 
 				diff = 1<<27;
 			else if (sat.pls_code != osat.pls_code)
 				diff = 1<<27;
-			else if (exact && sat.fec != osat.fec && sat.fec != eDVBFrontendParametersSatellite::FEC_Auto && osat.fec != eDVBFrontendParametersSatellite::FEC_Auto)
+			else if (sat.t2mi_plp_id != osat.t2mi_plp_id)
+				diff = 1<<27;
+ 			else if (exact && sat.fec != osat.fec && sat.fec != eDVBFrontendParametersSatellite::FEC_Auto && osat.fec != eDVBFrontendParametersSatellite::FEC_Auto)
 				diff = 1<<27;
 			else if (exact && sat.modulation != osat.modulation && sat.modulation != eDVBFrontendParametersSatellite::Modulation_Auto && osat.modulation != eDVBFrontendParametersSatellite::Modulation_Auto)
 				diff = 1<<27;
@@ -414,7 +420,7 @@ RESULT eDVBFrontendParameters::calculateDifference(const iDVBFrontendParameters 
 		}
 		case iDVBFrontend::feCable:
 		{
-			eDVBFrontendParametersCable ocable;
+			eDVBFrontendParametersCable ocable = {0};
 			if (parm->getDVBC(ocable))
 				return -2;
 
@@ -433,7 +439,7 @@ RESULT eDVBFrontendParameters::calculateDifference(const iDVBFrontendParameters 
 		}
 		case iDVBFrontend::feTerrestrial:
 		{
-			eDVBFrontendParametersTerrestrial oterrestrial;
+			eDVBFrontendParametersTerrestrial oterrestrial = {0};
 			if (parm->getDVBT(oterrestrial))
 				return -2;
 
@@ -474,7 +480,7 @@ RESULT eDVBFrontendParameters::calculateDifference(const iDVBFrontendParameters 
 		}
 		case iDVBFrontend::feATSC:
 		{
-			eDVBFrontendParametersATSC oatsc;
+			eDVBFrontendParametersATSC oatsc = {0};
 			if (parm->getATSC(oatsc))
 				return -2;
 
@@ -778,15 +784,16 @@ int eDVBFrontend::openFrontend()
 					if (::ioctl(m_fd, FE_GET_INFO, &m_fe_info[delsys]) < 0)
 						eWarning("[eDVBFrontend] ioctl FE_GET_INFO failed: %m");
 				}
+				ioctlMeasureEval("DTV_ENUM_DELSYS");
 			}
 			else
+			{
 				eWarning("[eDVBFrontend] ioctl FE_GET_PROPERTY/DTV_ENUM_DELSYS failed: %m");
-			ioctlMeasureEval("DTV_ENUM_DELSYS");
 #else
 			/* no DTV_ENUM_DELSYS support */
 			if (1)
-#endif
 			{
+#endif
 				/* old DVB API, fill delsys map with some defaults */
 				switch (fe_info.type)
 				{
@@ -1238,7 +1245,7 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 	}
 	else if (!strcmp(m_description, "BCM4501 (internal)"))
 	{
-		eDVBFrontendParametersSatellite parm;
+		eDVBFrontendParametersSatellite parm = {0};
 		float SDS_SNRE = snr << 16;
 		float snr_in_db;
 		oparm.getDVBS(parm);
@@ -1351,7 +1358,7 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 	}
 	else if (!strcmp(m_description, "Philips CU1216Mk3"))
 	{
-		eDVBFrontendParametersCable parm;
+		eDVBFrontendParametersCable parm = {0};
 		int mse = (~snr) & 0xFF;
 		oparm.getDVBC(parm);
 		switch (parm.modulation)
@@ -1469,6 +1476,7 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 	}
 	else if (!strcmp(m_description, "CXD1981"))
 	{
+		eDVBFrontendParametersCable parm = {0};
 		int mse = (~snr) & 0xFF;
 		int type = -1;
 		oparm.getSystem(type);
@@ -1507,7 +1515,7 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 	}
 	else if (!strcmp(m_description, "Si216x"))
 	{
-		eDVBFrontendParametersTerrestrial parm;
+		eDVBFrontendParametersTerrestrial parm = {0};
 		oparm.getDVBT(parm);
 		switch (parm.system)
 		{
@@ -1555,7 +1563,7 @@ void eDVBFrontend::calculateSignalQuality(int snr, int &signalquality, int &sign
 	}
 	else if(!strcmp(m_description, "WinTV HVR-850") || !strcmp(m_description, "Hauppauge") || !strcmp(m_description, "LG Electronics LGDT3306A VSB/QAM Frontend"))
 	{
-		eDVBFrontendParametersATSC parm;
+		eDVBFrontendParametersATSC parm = {0};
 		oparm.getATSC(parm);
 		switch (parm.modulation)
 		{
@@ -1819,7 +1827,7 @@ void eDVBFrontend::getFrontendStatus(ePtr<iDVBFrontendStatus> &dest)
 void eDVBFrontend::getTransponderData(ePtr<iDVBTransponderData> &dest, bool original)
 {
 	int type = -1;
-	struct dtv_property p[16];
+	struct dtv_property p[18];
 	memset(p, 0, sizeof(p));
 	struct dtv_properties cmdseq;
 	oparm.getSystem(type);
@@ -1842,6 +1850,7 @@ void eDVBFrontend::getTransponderData(ePtr<iDVBTransponderData> &dest, bool orig
 			p[cmdseq.num++].cmd = DTV_ROLLOFF;
 			p[cmdseq.num++].cmd = DTV_PILOT;
 			p[cmdseq.num++].cmd = DTV_STREAM_ID;
+			p[cmdseq.num++].cmd = DTV_ISDBT_SB_SEGMENT_IDX; /* FIXME HACK ALERT use unused by enigma2 ISDBT SEGMENT IDX to pass T2MI PLP ID */
 		}
 		else if (type == feCable)
 		{
@@ -2597,7 +2606,7 @@ void eDVBFrontend::setFrontend(bool recvEvents)
 		if (recvEvents)
 			m_sn->start();
 		feEvent(-1); // flush events
-		struct dtv_property p[17];
+		struct dtv_property p[18];
 		memset(p, 0, sizeof(p));
 		struct dtv_properties cmdseq;
 		cmdseq.props = p;
@@ -2608,7 +2617,7 @@ void eDVBFrontend::setFrontend(bool recvEvents)
 #endif
 		if (type == iDVBFrontend::feSatellite)
 		{
-			eDVBFrontendParametersSatellite parm;
+			eDVBFrontendParametersSatellite parm = {0};
 			fe_rolloff_t rolloff = ROLLOFF_35;
 			fe_pilot_t pilot = PILOT_OFF;
 			fe_modulation_t modulation = QPSK;
@@ -2698,11 +2707,13 @@ void eDVBFrontend::setFrontend(bool recvEvents)
 					p[cmdseq.num].cmd = DTV_STREAM_ID, p[cmdseq.num].u.data = parm.is_id | (parm.pls_code << 8) | (parm.pls_mode << 26), cmdseq.num++;
 #endif
 				}
+				/* FIXME HACK ALERT use unused by enigma2 ISDBT SEGMENT IDX to pass T2MI PLP ID */
+				p[cmdseq.num].cmd = DTV_ISDBT_SB_SEGMENT_IDX, p[cmdseq.num].u.data = (parm.t2mi_plp_id == eDVBFrontendParametersSatellite::No_T2MI_PLP_Id ? 0 : parm.t2mi_plp_id), cmdseq.num++;
 			}
 		}
 		else if (type == iDVBFrontend::feCable)
 		{
-			eDVBFrontendParametersCable parm;
+			eDVBFrontendParametersCable parm = {0};
 			oparm.getDVBC(parm);
 #if HAVE_ALIEN5
 			m_looptimeout = 300;
@@ -2775,7 +2786,7 @@ void eDVBFrontend::setFrontend(bool recvEvents)
 		}
 		else if (type == iDVBFrontend::feTerrestrial)
 		{
-			eDVBFrontendParametersTerrestrial parm;
+			eDVBFrontendParametersTerrestrial parm = {0};
 			fe_delivery_system_t system = SYS_DVBT;
 			oparm.getDVBT(parm);
 #if HAVE_ALIEN5
@@ -2910,7 +2921,7 @@ void eDVBFrontend::setFrontend(bool recvEvents)
 		}
 		else if (type == iDVBFrontend::feATSC)
 		{
-			eDVBFrontendParametersATSC parm;
+			eDVBFrontendParametersATSC parm = {0};
 			oparm.getATSC(parm);
 			//p[cmdseq.num].cmd = DTV_LNA, p[cmdseq.num].u.data = 0, cmdseq.num++;
 			p[cmdseq.num].cmd = DTV_DELIVERY_SYSTEM;
@@ -3043,7 +3054,7 @@ RESULT eDVBFrontend::prepare_sat(const eDVBFrontendParametersSatellite &feparm, 
 	res = m_sec->prepare(*this, feparm, satfrequency, 1 << m_slotid, tunetimeout);
 	if (!res)
 	{
-		eDebugNoSimulate("frontend %d prepare_sat System %d Freq %d Pol %d SR %d INV %d FEC %d orbpos %d system %d modulation %d pilot %d, rolloff %d, is_id %d, pls_mode %d, pls_code %d",
+		eDebugNoSimulate("frontend %d prepare_sat System %d Freq %d Pol %d SR %d INV %d FEC %d orbpos %d system %d modulation %d pilot %d, rolloff %d, is_id %d, pls_mode %d, pls_code %d, t2mi_plp_id %d",
 			m_dvbid,
 			feparm.system,
 			feparm.frequency,
@@ -3058,7 +3069,8 @@ RESULT eDVBFrontend::prepare_sat(const eDVBFrontendParametersSatellite &feparm, 
 			feparm.rolloff,
 			feparm.is_id,
 			feparm.pls_mode,
-			feparm.pls_code);
+			feparm.pls_code,
+			feparm.t2mi_plp_id);
 		if ((unsigned int)satfrequency < m_fe_info[SYS_DVBS].frequency_min || (unsigned int)satfrequency > m_fe_info[SYS_DVBS].frequency_max)
 		{
 			eDebugNoSimulate("%d MHz out of tuner range.. dont tune (min: %d MHz max: %d MHz)", satfrequency / 1000, m_fe_info[SYS_DVBS].frequency_min/1000, m_fe_info[SYS_DVBS].frequency_max/1000);

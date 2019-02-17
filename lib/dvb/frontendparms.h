@@ -16,9 +16,9 @@
 
 extern int roundMulti(int value, int m);//round value to multiple of m
 
-
-struct eDVBFrontendParametersSatellite
+class eDVBFrontendParametersSatellite
 {
+public:
 #ifndef SWIG
 	void set(const SatelliteDeliverySystemDescriptor  &);
 	void set(const S2SatelliteDeliverySystemDescriptor  &);
@@ -62,15 +62,19 @@ struct eDVBFrontendParametersSatellite
 		No_Stream_Id_Filter = NO_STREAM_ID_FILTER
 	};
 
+	enum {
+		No_T2MI_PLP_Id = eDVBFrontendParametersSatellite::No_Stream_Id_Filter
+	};
 	bool no_rotor_command_on_tune;
 	int frequency, symbol_rate;
-	int polarisation, fec, inversion, orbital_position, system, modulation, rolloff, pilot, is_id, pls_mode, pls_code;
+	int polarisation, fec, inversion, orbital_position, system, modulation, rolloff, pilot, is_id, pls_mode, pls_code, t2mi_plp_id;
 	int plp_id;
 };
 SWIG_ALLOW_OUTPUT_SIMPLE(eDVBFrontendParametersSatellite);
 
-struct eDVBFrontendParametersCable
+class eDVBFrontendParametersCable
 {
+public:
 #ifndef SWIG
 	void set(const CableDeliverySystemDescriptor  &);
 #endif
@@ -99,8 +103,9 @@ struct eDVBFrontendParametersCable
 };
 SWIG_ALLOW_OUTPUT_SIMPLE(eDVBFrontendParametersCable);
 
-struct eDVBFrontendParametersTerrestrial
+class eDVBFrontendParametersTerrestrial
 {
+public:
 #ifndef SWIG
 	void set(const TerrestrialDeliverySystemDescriptor  &);
 	void set(const T2DeliverySystemDescriptor &);
@@ -155,8 +160,9 @@ struct eDVBFrontendParametersTerrestrial
 };
 SWIG_ALLOW_OUTPUT_SIMPLE(eDVBFrontendParametersTerrestrial);
 
-struct eDVBFrontendParametersATSC
+class eDVBFrontendParametersATSC
 {
+public:
 	enum {
 		Inversion_Off, Inversion_On, Inversion_Unknown
 	};
@@ -221,6 +227,7 @@ public:
 	int getIsId() const;
 	int getPLSMode() const;
 	int getPLSCode() const;
+	int getT2MIPlpId() const;
 	int getBandwidth() const;
 	int getCodeRateLp() const;
 	int getCodeRateHp() const;
@@ -257,6 +264,7 @@ public:
 	int getIsId() const;
 	int getPLSMode() const;
 	int getPLSCode() const;
+	int getT2MIPlpId() const;
 };
 
 class eDVBCableTransponderData : public eDVBTransponderData
