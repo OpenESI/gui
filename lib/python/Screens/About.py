@@ -260,24 +260,20 @@ class About(Screen):
 				"cancel": self.close,
 				"ok": self.close,
 				"log": self.showAboutReleaseNotes,
-				"up": self.pageUp,
-				"down": self.pageDown,
-				"red": self.close,
+				"up": self["AboutScrollLabel"].pageUp,
+				"down": self["AboutScrollLabel"].pageDown,
 				"green": self.showTranslationInfo,
-				"0": self.showID,
 			})
 
+	def populate(self):
+		self["lab1"] = StaticText(_("openESI"))
+		self["lab2"] = StaticText(_("By openESI Team"))
+		model = None
+		self["lab3"] = StaticText(_("Support at") + " www.openesi.eu")
 
-	def showID(self):
-		if SystemInfo["HaveID"]:
-			try:
-				f = open("/etc/.id")
-				id = f.read()[:-1].split('=')
-				f.close()
-				from Screens.MessageBox import MessageBox
-				self.session.open(MessageBox,id[1], type = MessageBox.TYPE_INFO)
-			except:
-				pass
+		AboutText = getAboutText()[0]
+
+		self["AboutScrollLabel"] = ScrollLabel(AboutText)
 
 	def showTranslationInfo(self):
 		self.session.open(TranslationInfo)
