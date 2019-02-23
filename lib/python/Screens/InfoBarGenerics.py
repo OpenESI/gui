@@ -51,9 +51,10 @@ from boxbranding import getBoxType, getMachineProcModel, getMachineBuild, getMac
 
 from time import time, localtime, strftime
 from bisect import insort
-from sys import maxint
 from keyids import KEYIDS
 from datetime import datetime
+import itertools, datetime
+from sys import maxint
 
 import os, cPickle
 
@@ -167,6 +168,48 @@ def ToggleVideo():
 		f.close()
 resumePointCache = loadResumePoints()
 resumePointCacheLast = int(time())
+
+subservice_groupslist = None
+def reload_subservice_groupslist(force=False):
+	global subservice_groupslist
+	if subservice_groupslist is None or force:
+		try:
+			groupedservices = "/etc/enigma2/groupedservices"
+			if not os.path.isfile(groupedservices):
+				groupedservices = "/usr/share/enigma2/groupedservices"
+			subservice_groupslist = [list(g) for k,g in itertools.groupby([line.split('#')[0].strip() for line in open(groupedservices).readlines()], lambda x:not x) if not k]
+		except:
+			subservice_groupslist = []
+reload_subservice_groupslist()
+
+def getPossibleSubservicesForCurrentChannel(current_service):
+	if current_service and subservice_groupslist:
+		ref_in_subservices_group = [x for x in subservice_groupslist if current_service in x]
+		if ref_in_subservices_group:
+			return ref_in_subservices_group[0]
+	return []
+
+def getActiveSubservicesForCurrentChannel(current_service):
+	if current_service:
+		possibleSubservices = getPossibleSubservicesForCurrentChannel(current_service)
+		activeSubservices = []
+		epgCache = eEPGCache.getInstance()
+		idx = 0
+		for subservice in possibleSubservices:
+			events = epgCache.lookupEvent(['BDTS', (subservice, 0, -1)])
+			if events and len(events) == 1:
+				event = events[0]
+				title = event[2]
+				if title and "Sendepause" not in title:
+					starttime = datetime.datetime.fromtimestamp(event[0]).strftime('%H:%M')
+					endtime = datetime.datetime.fromtimestamp(event[0] + event[1]).strftime('%H:%M')
+					current_show_name = title + " " + str(starttime) + "-" + str(endtime)
+					activeSubservices.append((current_show_name, subservice))
+		return activeSubservices
+
+def hasActiveSubservicesForCurrentChannel(current_service):
+	activeSubservices = getActiveSubservicesForCurrentChannel(current_service)
+	return bool(activeSubservices and len(activeSubservices) > 1)
 
 class InfoBarDish:
 	def __init__(self):
@@ -507,7 +550,10 @@ class SecondInfoBar(Screen):
 			description += '\n'
 		elif description and not extended:
 			extended = description
-		text = description + extended
+		if description == extended:
+			text = description
+		else:
+			text = description + extended
 		self.setTitle(event.getEventName())
 		self["epg_description"].setText(text)
 		self["FullDescription"].setText(extended)
@@ -1055,8 +1101,8 @@ class NumberZap(Screen):
 			self["servicename"].setText(ServiceReference(self.service).getServiceName())
 
 	def keyNumberGlobal(self, number):
-		if config.usage.numzaptimeoutmode.value is not "off":
-			if config.usage.numzaptimeoutmode.value is "standard":
+		if config.usage.numzaptimeoutmode.value != "off":
+			if config.usage.numzaptimeoutmode.value == "standard":
 				self.Timer.start(1000, True)
 			else:
 				self.Timer.start(config.usage.numzaptimeout2.value, True)
@@ -1072,7 +1118,9 @@ class NumberZap(Screen):
 			self.showPicon()
 
 		if len(self.numberString) >= int(config.usage.maxchannelnumlen.value):
-			self.keyOK()
+			if self.Timer.isActive():
+				self.Timer.stop()
+			self.Timer.start(100, True)
 
 	def showPicon(self):
 		self["Service"].newService(self.service)
@@ -1121,8 +1169,10 @@ class NumberZap(Screen):
 
 		self.Timer = eTimer()
 		self.Timer.callback.append(self.keyOK)
-		if config.usage.numzaptimeoutmode.value is not "off":
-			if config.usage.numzaptimeoutmode.value is "standard":
+		if config.usage.maxchannelnumlen.value == "1":
+			self.Timer.start(100, True)
+		elif config.usage.numzaptimeoutmode.value != "off":
+			if config.usage.numzaptimeoutmode.value == "standard":
 				self.Timer.start(3000, True)
 			else:
 				self.Timer.start(config.usage.numzaptimeout1.value, True)
@@ -1606,7 +1656,7 @@ class InfoBarMenu:
 		else:
 			config.av.aspect.value = "auto"
 		config.av.aspect.save()
-		self.session.open(MessageBox, _("AV aspect is %s." % ASPECT_MSG[config.av.aspect.value]), MessageBox.TYPE_INFO, timeout=5)
+		self.session.open(MessageBox, _("AV aspect is %s.") % ASPECT_MSG[config.av.aspect.value], MessageBox.TYPE_INFO, timeout=5)
 
 	def showSystemMenu(self):
 		menulist = mdom.getroot().findall('menu')
@@ -1647,7 +1697,7 @@ class InfoBarMenu:
 class InfoBarSimpleEventView:
 	""" Opens the Eventview for now/next """
 	def __init__(self):
-		self["EPGActions"] = HelpableActionMap(self, "InfobarEPGActions",
+		self["EventViewActions"] = HelpableActionMap(self, "InfobarEPGActions",
 			{
 				"showEventInfo": (self.openEventView, _("show event details")),
 				"InfoPressed": (self.openEventView, _("show event details")),
@@ -1928,7 +1978,7 @@ class InfoBarEPG:
 	def openBouquetEPG(self, bouquet = None, bouquets = None):
 		if bouquet:
 			self.StartBouquet = bouquet
-		self.dlg_stack.append(self.session.openWithCallback(self.closed, EPGSelection, zapFunc=self.zapToService, EPGtype=self.EPGtype, StartBouquet=self.StartBouquet, StartRef=self.StartRef, bouquets = bouquets))
+		self.dlg_stack.append(self.session.openWithCallback(self.closed, EPGSelection, None, zapFunc=self.zapToService, EPGtype=self.EPGtype, StartBouquet=self.StartBouquet, StartRef=self.StartRef, bouquets = bouquets))
 
 	def closed(self, ret=False):
 		if not self.dlg_stack:
@@ -3132,7 +3182,7 @@ class InfoBarExtensions:
 		return _("Restart Network")
 
 	def getRestartNetwork(self):
-			return [((boundFunction(self.getRestartNetworkname), boundFunction(self.openRestartNetwork), lambda: True), None)]
+		return [((boundFunction(self.getRestartNetworkname), boundFunction(self.openRestartNetwork), lambda: True), None)]
 
 	def get3DSetupname(self):
 		return _("OSD 3D Setup")
@@ -3638,6 +3688,8 @@ class InfoBarESIpanel:
 			isHBBTV = True
 		if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/QtHbbtv/plugin.pyo"):
 			isHBBTV = True
+		if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/Hbbtv/plugin.pyo"):
+			isHBBTV = True
 
 		if isWEBBROWSER or isHBBTV:
 			service = self.session.nav.getCurrentService()
@@ -4079,7 +4131,7 @@ class InfoBarSubserviceSelection:
 		self["SubserviceSelectionAction"] = HelpableActionMap(self, "InfobarSubserviceSelectionActions",
 			{
 				"GreenPressed": (self.GreenPressed),
-				"subserviceSelection": (self.subserviceSelection),
+				"subserviceSelection": (self.subserviceSelection, _("Subservice list...")),
 			})
 
 		self["SubserviceQuickzapAction"] = HelpableActionMap(self, "InfobarSubserviceQuickzapActions",
@@ -4095,42 +4147,16 @@ class InfoBarSubserviceSelection:
 			})
 		self.onClose.append(self.__removeNotifications)
 
-		self.bsel = None
-
-	def GreenPressed(self):
-		if not config.plisettings.Subservice.value:
-			self.openTimerList()
-		else:
-			service = self.session.nav.getCurrentService()
-			subservices = service and service.subServices()
-			if not subservices or subservices.getNumberOfSubservices() == 0:
-				if fileExists("/usr/lib/enigma2/python/Plugins/Extensions/CustomSubservices/plugin.pyo"):
-					serviceRef = self.session.nav.getCurrentlyPlayingServiceReference()
-					subservices = self.getAvailableSubservices(serviceRef)
-					if not subservices or len(subservices) == 0:
-						self.openPluginBrowser()
-					else:
-						self.subserviceSelection()
-				else:
-					self.openPluginBrowser()
-			else:
-				self.subserviceSelection()
-
-	def openPluginBrowser(self):
-		try:
-			from Screens.PluginBrowser import PluginBrowser
-			self.session.open(PluginBrowser)
-		except:
-			pass
+		self.bouquets = self.bsel = self.selectedSubservice = None
 
 	def __removeNotifications(self):
 		self.session.nav.event.remove(self.checkSubservicesAvail)
 
 	def checkSubservicesAvail(self):
-		service = self.session.nav.getCurrentService()
-		subservices = service and service.subServices()
-		if not subservices or subservices.getNumberOfSubservices() == 0:
+		serviceRef = self.session.nav.getCurrentlyPlayingServiceReference()
+		if not serviceRef or not hasActiveSubservicesForCurrentChannel(serviceRef.toString()):
 			self["SubserviceQuickzapAction"].setEnabled(False)
+			self.bouquets = self.bsel = self.selectedSubservice = None
 
 	def nextSubservice(self):
 		self.changeSubservice(+1)
@@ -4138,101 +4164,108 @@ class InfoBarSubserviceSelection:
 	def prevSubservice(self):
 		self.changeSubservice(-1)
 
+	def playSubservice(self, ref):
+		if ref.getUnsignedData(6) == 0:
+			ref.setName("")
+		self.session.nav.playService(ref, checkParentalControl=False, adjust=False)
+
 	def changeSubservice(self, direction):
-		service = self.session.nav.getCurrentService()
-		subservices = service and service.subServices()
-		n = subservices and subservices.getNumberOfSubservices()
-		if n and n > 0:
-			selection = -1
-			ref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
-			idx = 0
-			while idx < n:
-				if subservices.getSubservice(idx).toString() == ref.toString():
-					selection = idx
-					break
-				idx += 1
-			if selection != -1:
-				selection += direction
-				if selection >= n:
-					selection=0
-				elif selection < 0:
-					selection=n-1
-				newservice = subservices.getSubservice(selection)
-				if newservice.valid():
-					del subservices
-					del service
-					self.session.nav.playService(newservice, False)
+		serviceRef = self.session.nav.getCurrentlyPlayingServiceReference()
+		if serviceRef:
+			subservices = getActiveSubservicesForCurrentChannel(serviceRef.toString())
+			if subservices and len(subservices) > 1 and serviceRef.toString() in [x[1] for x in subservices]:
+				selection = [x[1] for x in subservices].index(serviceRef.toString())
+				selection += direction % len(subservices)
+				try:
+					newservice = eServiceReference(subservices[selection][0])
+				except:
+					newservice = None
+				if newservice and newservice.valid():
+					self.playSubservice(newservice)
 
 	def subserviceSelection(self):
-		service = self.session.nav.getCurrentService()
-		subservices = service and service.subServices()
-		self.bouquets = self.servicelist.getBouquetList()
-		n = subservices and subservices.getNumberOfSubservices()
-		selection = 0
-		if n and n > 0:
-			ref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
-			tlist = []
-			idx = 0
-			while idx < n:
-				i = subservices.getSubservice(idx)
-				if i.toString() == ref.toString():
-					selection = idx
-				tlist.append((i.getName(), i))
-				idx += 1
-
-			if self.bouquets and len(self.bouquets):
-				keys = ["red", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
-				if config.usage.multibouquet.value:
-					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to bouquet"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("--", "")] + tlist
-				else:
-					tlist = [(_("Quick zap"), "quickzap", service.subServices()), (_("Add to favourites"), "CALLFUNC", self.addSubserviceToBouquetCallback), ("--", "")] + tlist
-				selection += 3
-			else:
-				tlist = [(_("Quick zap"), "quickzap", service.subServices()), ("--", "")] + tlist
-				keys = ["red", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
+		serviceRef = self.session.nav.getCurrentlyPlayingServiceReference()
+		if serviceRef:
+			subservices = getActiveSubservicesForCurrentChannel(serviceRef.toString())
+			if subservices and len(subservices) > 1 and serviceRef.toString() in [x[1] for x in subservices]:
+				selection = [x[1] for x in subservices].index(serviceRef.toString())
+				self.bouquets = self.servicelist and self.servicelist.getBouquetList()
+				#if self.bouquets and len(self.bouquets):
+				#	keys = ["red", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+				#	call_func_title = _("Add to favourites")
+				#	if config.usage.multibouquet.value:
+				#		call_func_title = _("Add to bouquet")
+				#		tlist = [(_("Quick zap"), "quickzap", subservices), (call_func_title, "CALLFUNC", self.addSubserviceToBouquetCallback), ("--", "")] + subservices
+				#	selection += 3
+				#else:
+				tlist = [(_("Quick zap"), "quickzap", subservices), ("--", "")] + subservices
+				keys = ["red", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 				selection += 2
-
-			self.session.openWithCallback(self.subserviceSelected, ChoiceBox, title=_("Please select a sub service..."), list = tlist, selection = selection, keys = keys, skin_name = "SubserviceSelection")
+				self.session.openWithCallback(self.subserviceSelected, ChoiceBox, title=_("Please select a sub service..."), list=tlist, selection=selection, keys=keys, skin_name ="SubserviceSelection")
 
 	def subserviceSelected(self, service):
-		del self.bouquets
-		if not service is None:
-			if isinstance(service[1], str):
-				if service[1] == "quickzap":
-					from Screens.SubservicesQuickzap import SubservicesQuickzap
-					self.session.open(SubservicesQuickzap, service[2])
+		if service and len(service) > 1:
+			if service[1] == "quickzap":
+				from Screens.SubservicesQuickzap import SubservicesQuickzap
+				self.session.open(SubservicesQuickzap, service[2])
 			else:
-				self["SubserviceQuickzapAction"].setEnabled(True)
-				self.session.nav.playService(service[1], False)
+				try:
+					ref = eServiceReference(service[1])
+				except:
+					ref = None
+				if ref and ref.valid():
+					self["SubserviceQuickzapAction"].setEnabled(True)
+					self.playSubservice(ref)
 
 	def addSubserviceToBouquetCallback(self, service):
-		if not service is None:
-			if len(service) > 1 and isinstance(service[1], eServiceReference):
-				self.selectedSubservice = service
-				if self.bouquets is None:
-					cnt = 0
-				else:
-					cnt = len(self.bouquets)
-				if cnt > 1: # show bouquet list
-					self.bsel = self.session.openWithCallback(self.bouquetSelClosed, BouquetSelector, self.bouquets, self.addSubserviceToBouquet)
-				elif cnt == 1: # add to only one existing bouquet
-					self.addSubserviceToBouquet(self.bouquets[0][1])
-					self.session.open(MessageBox, _("Service has been added to the favourites."), MessageBox.TYPE_INFO)
+		if service and len(service) > 1:
+			try:
+				self.selectedSubservice = eServiceReference(service[1])
+			except:
+				self.selectedSubservice = None
+			if self.selectedSubservice is None or not self.selectedSubservice.valid() or self.bouquets is None:
+				self.bouquets = self.bsel = self.selectedSubservice = None
+				return
+			cnt = len(self.bouquets)
+			if cnt > 1:
+				self.bsel = self.session.openWithCallback(self.bouquetSelClosed, BouquetSelector, self.bouquets, self.addSubserviceToBouquet)
+			elif cnt == 1:
+				self.addSubserviceToBouquet(self.bouquets[0][1])
+				self.session.open(MessageBox, _("Service has been added to the favourites."), MessageBox.TYPE_INFO, timeout=5)
 		else:
-			self.session.open(MessageBox, _("Service cant been added to the favourites."), MessageBox.TYPE_INFO)
+			self.session.open(MessageBox, _("Service cant been added to the favourites."), MessageBox.TYPE_INFO, timeout=5)
 
 	def bouquetSelClosed(self, confirmed):
-		self.bsel = None
-		del self.selectedSubservice
+		self.bouquets = self.bsel = self.selectedSubservice = None
 		if confirmed:
-			self.session.open(MessageBox, _("Service has been added to the selected bouquet."), MessageBox.TYPE_INFO)
+			self.session.open(MessageBox, _("Service has been added to the selected bouquet."), MessageBox.TYPE_INFO, timeout=5)
 
 	def addSubserviceToBouquet(self, dest):
-		self.servicelist.addServiceToBouquet(dest, self.selectedSubservice[1])
+		self.servicelist.addServiceToBouquet(dest, self.selectedSubservice)
 		if self.bsel:
 			self.bsel.close(True)
+			self.bouquets = self.bsel = self.selectedSubservice = None
+
+	def GreenPressed(self):
+		if not config.plisettings.Subservice.value:
+			self.openTimerList()
 		else:
-			del self.selectedSubservice
+			serviceRef = self.session.nav.getCurrentlyPlayingServiceReference()
+			if serviceRef:
+				subservices = getActiveSubservicesForCurrentChannel(serviceRef.toString())
+				if subservices and len(subservices) > 1 and serviceRef.toString() in [x[1] for x in subservices]:
+					self.subserviceSelection()
+				else:
+					self.openPluginBrowser()
+			else:
+				self.openPluginBrowser()
+
+	def openPluginBrowser(self):
+		try:
+			from Screens.PluginBrowser import PluginBrowser
+			self.session.open(PluginBrowser)
+		except:
+			pass
 
 	def openTimerList(self):
 		self.session.open(TimerEditList)
@@ -5277,4 +5310,58 @@ class InfoBarOpenOnTopHelper:
 				self.session.open(session, option)
 		except Exception, e:
 			print "[openInfoBarSession] Exception:", e
+
+#########################################################################################
+# handle bsod (python crashes) and show information after crash                         #
+#########################################################################################
+
+from enigma import getBsodCounter, resetBsodCounter
+class InfoBarHandleBsod:
+	def __init__(self):
+		self.lastBsod = 0
+		self.infoBsodIsShown = False
+		self.lastestBsodWarning = False
+		self.checkBsodTimer = eTimer()
+		self.checkBsodTimer.callback.append(self.checkBsodCallback)
+		self.checkBsodTimer.start(1000, True)
+		config.crash.bsodpython_ready.setValue(True)
+
+	def checkBsodCallback(self):
+		self.checkBsodTimer.start(1000, True)
+		if Screens.Standby.inStandby or self.infoBsodIsShown:
+			return
+		bsodcnt = getBsodCounter()
+		if config.crash.bsodpython.value and self.lastBsod < bsodcnt:
+			maxbs = int(config.crash.bsodmax.value) or 100
+			writelog = bsodcnt == 1 or not bsodcnt > int(config.crash.bsodhide.value) or bsodcnt >= maxbs
+			txt = _("Your Receiver has a Software problem detected. Since the last reboot it has occured %d times.\n") %bsodcnt
+			txt += _("(Attention: There will be a restart after %d crashes.)") %maxbs
+			if writelog:
+				txt += "\n" + "-"*80 + "\n"
+				txt += _("A crashlog was %s created in '%s'") %((_('not'),'')[int(writelog)], config.crash.debug_path.value)
+			#if not writelog:
+			#	txt += "\n" + "-"*80 + "\n"
+			#	txt += _("(It is set that '%s' crash logs are displayed and written.\nInfo: It will always write the first, last but one and lastest crash log.)") % str(int(config.crash.bsodhide.value) or _('never'))
+			if bsodcnt >= maxbs:
+				txt += "\n" + "-"*80 + "\n"
+				txt += _("Warning: This is the last crash before an automatic restart is performed.\n")
+				txt += _("Should the crash counter be reset to prevent a restart?")
+				self.lastestBsodWarning = True
+			try:
+				self.session.openWithCallback(self.infoBsodCallback, MessageBox, txt, type=MessageBox.TYPE_ERROR, default = False, close_on_any_key=not self.lastestBsodWarning, showYESNO = self.lastestBsodWarning)
+				self.infoBsodIsShown = True
+			except Exception, e:
+				#print "[InfoBarHandleBsod] Exception:", e
+				self.checkBsodTimer.stop()
+				self.checkBsodTimer.start(5000, True)
+				self.infoBsodCallback(False)
+				raise
+		self.lastBsod = bsodcnt
+
+	def infoBsodCallback(self, ret):
+		if ret and self.lastestBsodWarning:
+			resetBsodCounter()
+		self.infoBsodIsShown = False
+		self.lastestBsodWarning = False
+
 #########################################################################################
