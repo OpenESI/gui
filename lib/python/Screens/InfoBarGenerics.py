@@ -4247,8 +4247,10 @@ class InfoBarSubserviceSelection:
 			self.bouquets = self.bsel = self.selectedSubservice = None
 
 	def GreenPressed(self):
-		if not config.plisettings.Subservice.value:
+		if config.plisettings.Subservice.value == "0":
 			self.openTimerList()
+		elif config.plisettings.Subservice.value == "1":
+			self.openPluginBrowser()
 		else:
 			serviceRef = self.session.nav.getCurrentlyPlayingServiceReference()
 			if serviceRef:
@@ -4256,9 +4258,15 @@ class InfoBarSubserviceSelection:
 				if subservices and len(subservices) > 1 and serviceRef.toString() in [x[1] for x in subservices]:
 					self.subserviceSelection()
 				else:
-					self.openPluginBrowser()
+					if config.plisettings.Subservice.value == "2":
+						self.openTimerList()
+					else:
+						self.openPluginBrowser()
 			else:
-				self.openPluginBrowser()
+				if config.plisettings.Subservice.value == "2":
+					self.openTimerList()
+				else:
+					self.openPluginBrowser()
 
 	def openPluginBrowser(self):
 		try:

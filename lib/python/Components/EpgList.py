@@ -56,10 +56,12 @@ class EPGList(HTMLComponent, GUIComponent):
 			self.posx, self.posy , self.picx, self.picy, self.gap = skinparameter.get("EpgListIcon", (2,13,25,25,2))
 			self.column_service, self.column_time , self.column_remaining, self.column_gap = skinparameter.get("EpgListMulti", (240,180,120,30))
 			self.progress_width, self.progress_height , self.progress_borderwidth = skinparameter.get("EpgListMultiProgressBar", (120,15,1))
+			self.column_weekday, self.column_datetime = skinparameter.get("EpgListSingle", (75,225))
 		else:
 			self.posx, self.posy , self.picx, self.picy, self.gap = skinparameter.get("EpgListIcon", (1,11,23,23,1))
 			self.column_service, self.column_time , self.column_remaining, self.column_gap = skinparameter.get("EpgListMulti", (160,120,80,20))
 			self.progress_width, self.progress_height , self.progress_borderwidth = skinparameter.get("EpgListMultiProgressBar", (80,10,1))
+			self.column_weekday, self.column_datetime = skinparameter.get("EpgListSingle", (50,150))
 
 		self.cur_event = None
 		self.cur_service = None
@@ -490,7 +492,7 @@ class EPGList(HTMLComponent, GUIComponent):
 					if best is None or (diff < best_diff):
 						best = idx
 						best_diff = diff
-					if ev_end_time < now:
+					if ev_end_time < now and getnow:
 						best = idx+1
 					if best is not None and ev_end_time > now and (ev_time > last_time or (getnow and ev_time < now)):
 						break
@@ -693,9 +695,9 @@ class EPGList(HTMLComponent, GUIComponent):
 			self.datetime_rect = Rect(0, 0, width, dh)
 			self.descr_rect = Rect(0, dh, width, height-dh)
 		else:
-			self.weekday_rect = Rect(0, 0, float(width * 10) / 100, height)
-			self.datetime_rect = Rect(self.weekday_rect.width(), 0, float(width * 24) / 100, height)
-			self.descr_rect = Rect(self.datetime_rect.left() + self.datetime_rect.width(), 0, float(width * 66) / 100, height)
+			self.weekday_rect = Rect(0, 0, self.column_weekday, height)
+			self.datetime_rect = Rect(self.column_weekday, 0, self.column_datetime, height)
+			self.descr_rect = Rect(self.column_weekday + self.column_datetime, 0, width - (self.column_weekday + self.column_datetime), height)
 
 	def calcEntryPosAndWidthHelper(self, stime, duration, start, end, width):
 		xpos = (stime - start) * width / (end - start)
@@ -1316,6 +1318,7 @@ class EPGList(HTMLComponent, GUIComponent):
 		cur_service = self.cur_service    #(service, service_name, events, picon)
 		self.recalcEntrySize()
 		valid_event = self.cur_event is not None
+		now = time() - int(config.epg.histminutes.value) * 60
 		if cur_service:
 			update = True
 			entries = cur_service[2]
@@ -1339,6 +1342,10 @@ class EPGList(HTMLComponent, GUIComponent):
 					self.time_base -= self.time_epoch * 60
 					self.fillGraphEPG(None) # refill
 					return True
+				elif self.time_base > now and valid_event and cur_service[2][0][2] <= self.time_base:
+					self.time_base -= self.time_epoch * 60
+					self.fillGraphEPG(None, self.time_base) # refill
+					return True
 			elif dir == +2: #next page
 				self.offs += 1
 				self.fillGraphEPG(None) # refill
@@ -1352,12 +1359,15 @@ class EPGList(HTMLComponent, GUIComponent):
 					self.time_base -= self.time_epoch * 60
 					self.fillGraphEPG(None) # refill
 					return True
+				elif self.time_base > now and valid_event and cur_service[2][0][2] <= self.time_base:
+					self.time_base -= self.time_epoch * 60
+					self.fillGraphEPG(None, self.time_base) # refill
+					return True
 			elif dir == +24:
 				self.time_base += 86400
 				self.fillGraphEPG(None, self.time_base) # refill
 				return True
 			elif dir == -24:
-				now = time() - int(config.epg.histminutes.value) * 60
 				roundto = None
 				if self.type == EPG_TYPE_GRAPH:
 					roundto = config.epgselection.graph_roundto
