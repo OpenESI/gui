@@ -326,7 +326,7 @@ class UserInterfacePositioner2(Screen, ConfigListScreen):
 		self.setPreviewPosition()
 
 	def keyDefault(self):
-		config.osd.alpha.setValue(237)
+		config.osd.alpha.setValue(255)
 		config.osd.alpha_teletext.setValue(255)
 		config.osd.alpha_webbrowser.setValue(255)
 
@@ -464,7 +464,7 @@ class UserInterfacePositioner(Screen, ConfigListScreen):
 		self.setPreviewPosition()
 
 	def keyDefault(self):
-		config.osd.alpha.setValue(237)
+		config.osd.alpha.setValue(255)
 		config.osd.alpha_teletext.setValue(255)
 		config.osd.alpha_webbrowser.setValue(255)
 
