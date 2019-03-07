@@ -52,7 +52,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		if config.usage.show_infobar_lite.value and (config.skin.primary_skin.value.startswith('AeonFHD_MOD/')):
+		if config.usage.show_infobar_lite.value and (config.skin.primary_skin.value.startswith('Adrenalinnrw_Mod_RED/')):
 			self.skinName = "InfoBarLite"
 
 		self["actions"] = HelpableActionMap(self, "InfobarActions",
