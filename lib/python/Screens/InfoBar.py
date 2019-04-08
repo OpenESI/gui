@@ -52,7 +52,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		if config.usage.show_infobar_lite.value and (config.skin.primary_skin.value.startswith('DarknessFHD/')):
+		if config.usage.show_infobar_lite.value and (config.skin.primary_skin.value.startswith('DarknessHD/')):
 			self.skinName = "InfoBarLite"
 
 		self["actions"] = HelpableActionMap(self, "InfobarActions",

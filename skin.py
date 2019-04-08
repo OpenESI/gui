@@ -33,7 +33,7 @@ fonts = {
 parameters = {}
 constant_widgets = {}
 variables = {}
-DEFAULT_SKIN = "DarknessFHD/skin.xml"
+DEFAULT_SKIN = "DarknessHD/skin.xml"
 DEFAULT_DISPLAY_SKIN = "skin_display.xml"
 if SystemInfo["grautec"]:
 	DEFAULT_DISPLAY_SKIN = "skin_display_grautec.xml"
@@ -397,7 +397,7 @@ def cachemenu():
 		ptr = loadPixmap(value, desktop)
 		pngcache.append((value,ptr))
 try:
-	if config.skin.primary_skin.value == "DarknessFHD/skin.xml" or config.skin.primary_skin.value == DEFAULT_SKIN:
+	if config.skin.primary_skin.value == "DarknessHD/skin.xml" or config.skin.primary_skin.value == DEFAULT_SKIN:
 		cachemenu()
 except:
 	print "fail cache main menu"

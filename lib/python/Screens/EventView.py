@@ -33,7 +33,7 @@ class EventViewContextMenu(Screen):
 			})
 
 		try:
-			if config.skin.primary_skin.value.startswith('DarknessFHD/'):
+			if config.skin.primary_skin.value.startswith('DarknessHD/'):
 				count = 0
 				for entry in menu:
 					menu[count] = ("        " + entry[0], entry[1])
