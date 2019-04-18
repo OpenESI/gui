@@ -33,13 +33,44 @@ ROOTFSBIN = getMachineRootFile()
 KERNELBIN = getMachineKernelFile()
 MTDKERNEL = getMachineMtdKernel()
 MTDROOTFS = getMachineMtdRoot()
+
+
+##### edit lululla
+from Components.config import config, getConfigListEntry, ConfigText, ConfigInteger, ConfigSelection, ConfigSubsection, ConfigYesNo
+from Components.ConfigList import ConfigListScreen
+
+def mount_flsh():
+    mnt_flsh = []
+    if os.path.isfile('/proc/mounts'):
+        for line in open('/proc/mounts'):
+            if '/dev/sd' in line or '/dev/disk/by-uuid/' in line or '/dev/mmc' in line or '/dev/mtdblock' in line:
+                drive = line.split()[1].replace('\\040', ' ') #+ '/'
+                if not drive in mnt_flsh: 
+                      mnt_flsh.append(drive)
+    mnt_flsh.append('/media/hdd')
+    return mnt_flsh 
+    
+config.plugins.flh_openesi = ConfigSubsection()
+config.plugins.flh_openesi.mnt_flsh = ConfigSelection(default = "/media/hdd",choices = mount_flsh())
+   
+
+
 images = []
 imagesCounter = 0
 images.append(['ESI 8.5', 'http://www.openesi.eu/images'])
-imagePath = '/media/hdd/images'
-flashPath = '/media/hdd/images/flash'
-flashTmp = '/media/hdd/images/tmp'
+# imagePath = '/media/hdd/images'
+# flashPath = '/media/hdd/images/flash'
+# flashTmp = '/media/hdd/images/tmp'
+
+imagePath = str(config.plugins.flh_openesi.mnt_flsh.value) + '/images'
+flashPath = str(config.plugins.flh_openesi.mnt_flsh.value) +  '/images/flash'
+flashTmp = str(config.plugins.flh_openesi.mnt_flsh.value) +  '/images/tmp'
+##### edit lululla
+
 ofgwritePath = '/usr/bin/ofgwrite'
+
+
+
 
 def Freespace(dev):
     statdev = os.statvfs(dev)
@@ -47,8 +78,9 @@ def Freespace(dev):
     print '[Flash ESI-Online] Free space on %s = %i kilobytes' % (dev, space)
     return space
 
-
-class FlashOnline(Screen):
+##### edit lululla 
+# class FlashOnline(Screen):    
+class FlashOnline(Screen, ConfigListScreen):
     skin = '\n\t<screen position="center,center" size="560,400" title="Flash_OnLine-ESI">\n\t\t<ePixmap position="0,360"   zPosition="1" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="140,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="280,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="420,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on" />\n\t\t<widget name="key_red" position="0,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_green" position="140,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_yellow" position="280,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_blue" position="420,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="info-online" position="10,80" zPosition="1" size="450,100" font="Regular;20" halign="left" valign="top" transparent="1" />\n\t\t<widget name="info-local" position="10,150" zPosition="1" size="450,200" font="Regular;20" halign="left" valign="top" transparent="1" />\n\t</screen>'
 
     def __init__(self, session):
@@ -65,6 +97,8 @@ class FlashOnline(Screen):
         self.list = self.list_files('/boot')
         self.MTDKERNEL = getMachineMtdKernel()
         self.MTDROOTFS = getMachineMtdRoot()
+        
+   
         Screen.setTitle(self, _('Flash_OnLine-ESI'))
         if SystemInfo['HaveMultiBoot']:
             self['key_blue'] = Button(_('STARTUP'))
@@ -73,12 +107,16 @@ class FlashOnline(Screen):
         self['key_green'] = Button(_('Online'))
         self['key_red'] = Button(_('Exit'))
         self['key_yellow'] = Button(_('Local'))
-        self['info-local'] = Label(_('Local = Flash a image from local path /hdd/images'))
+        self['info-local'] = Label(_('Local = Flash a image from local path /hdd/images or /usb/images'))
         self['info-online'] = Label(_('Online = Download a image and flash it'))
-        self['actions'] = ActionMap(['OkCancelActions', 'ColorActions'], {'blue': self.blue,
+        self['actions'] = ActionMap(['OkCancelActions', 'DirectionActions', 'ColorActions'], {'blue': self.blue,
          'yellow': self.yellow,
          'green': self.green,
          'red': self.quit,
+##### edit lululla
+         'left': self.keyLeft,
+         'right': self.keyRight, 
+##########end         
          'cancel': self.quit}, -2)
         if SystemInfo['HaveMultiBoot']:
             if getMachineBuild() in 'gb7252':
@@ -88,14 +126,71 @@ class FlashOnline(Screen):
                 self.multi = self.read_startup('/boot/' + self.list[self.selection]).split('.', 1)[1].split(' ', 1)[0]
                 self.multi = self.multi[-1:]
             print '[Flash ESI-Online] MULTI:', self.multi
+##### edit lululla
+        self['description'] = Label('')
+        self.onChangedEntry = [ ]
+        self.listx = []
+        ConfigListScreen.__init__(self, self.listx, session = self.session, on_change = self.changedEntry)
+        self.createSetup()
+        self.setup_title = ('Flash_OnLine-ESI')
+############end     
+            
+##### edit lululla
+        self.onLayoutFinish.append(self.layoutFinished)
+        
+    def layoutFinished(self):
+            self.setTitle(self.setup_title)        
+               
+    def changedEntry(self):
+            for x in self.onChangedEntry:
+                    x()        
+
+    def getCurrentEntry(self):
+            return self["config"].getCurrent()[0]
+
+    def getCurrentValue(self):
+            return str(self["config"].getCurrent()[1].getText())
+
+    def createSummary(self):
+            from Screens.Setup import SetupSummary
+            return SetupSummary
+
+    def keyLeft(self):
+            ConfigListScreen.keyLeft(self)
+            print "current selection:", self["config"].l.getCurrentSelection()
+            self.createSetup()
+
+    def keyRight(self):
+            ConfigListScreen.keyRight(self)
+            print "current selection:", self["config"].l.getCurrentSelection()
+            self.createSetup()
+        
+    def createSetup(self):
+            self.editListEntry = None
+            self.listx = []
+            self.listx.append(getConfigListEntry(_('Path Flashing'), config.plugins.flh_openesi.mnt_flsh, _("Path Image Flashing"))) 
+            self["config"].list = self.listx
+            self["config"].setList(self.listx) 
+#########end            
 
     def check_hdd(self):
-        if not os.path.exists('/media/hdd'):
-            self.session.open(MessageBox, _('No /hdd found !!\nPlease make sure you have a HDD mounted.\n\nExit plugin.'), type=MessageBox.TYPE_ERROR)
-            return False
-        if Freespace('/media/hdd') < 300000:
-            self.session.open(MessageBox, _('Not enough free space on /hdd !!\nYou need at least 300Mb free space.\n\nExit plugin.'), type=MessageBox.TYPE_ERROR)
-            return False
+    
+##### edit lululla    
+        device_mnt = str(config.plugins.flh_openesi.mnt_flsh.value)
+        if not os.path.exists(device_mnt):
+            self.session.open(MessageBox, _('No %s!!\nPlease make sure you have mounted.\n\nExit plugin.' % device_mnt), type=MessageBox.TYPE_ERROR)
+            return False    
+        if Freespace(device_mnt) < 300000:
+            self.session.open(MessageBox, _('Not enough free space on %s !!\nYou need at least 300Mb free space.\n\nExit plugin.' % device_mnt), type=MessageBox.TYPE_ERROR)
+            return False    
+##### end             
+            
+        # if not os.path.exists('/media/hdd'):
+            # self.session.open(MessageBox, _('No /hdd found !!\nPlease make sure you have a HDD mounted.\n\nExit plugin.'), type=MessageBox.TYPE_ERROR)
+            # return False
+        # if Freespace('/media/hdd') < 300000:
+            # self.session.open(MessageBox, _('Not enough free space on /hdd !!\nYou need at least 300Mb free space.\n\nExit plugin.'), type=MessageBox.TYPE_ERROR)
+            # return False
         if not os.path.exists(ofgwritePath):
             self.session.open(MessageBox, _('ofgwrite not found !!\nPlease make sure you have ofgwrite installed in /usr/bin/ofgwrite.\n\nExit plugin.'), type=MessageBox.TYPE_ERROR)
             return False
@@ -389,8 +484,13 @@ class doFlashImage(Screen):
 
     def flashWithPostFlashAction(self, ret = True):
         if ret:
+#########edit lululla            
+            device_pst = str(config.plugins.flh_openesi.mnt_flsh.value)
+            
             print 'flashWithPostFlashAction'
-            title = _('Please select what to do after flashing the image:\n(In addition, if it exists, a local script will be executed as well at /media/hdd/images/config/myrestore.sh)')
+            
+            title = _('Please select what to do after flashing the image:\n(In addition, if it exists, a local script will be executed as well at /%s/images/config/myrestore.sh)' % device_pst)
+#end edited            
             list = ((_('Flash and start installation wizard'), 'wizard'),
              (_('Flash and restore settings and no plugins'), 'restoresettingsnoplugin'),
              (_('Flash and restore settings and selected plugins (ask user)'), 'restoresettings'),
@@ -405,12 +505,21 @@ class doFlashImage(Screen):
         Settings = False
         AllPlugins = False
         noPlugins = False
-        if os.path.exists('/media/hdd/images/config/settings'):
+#########edit lululla         
+        device_cfg = str(config.plugins.flh_openesi.mnt_flsh.value)
+        if os.path.exists(device_cfg + '/images/config/settings'):
             Settings = True
-        if os.path.exists('/media/hdd/images/config/plugins'):
+        if os.path.exists(device_cfg + '/images/config/plugins'):
             AllPlugins = True
-        if os.path.exists('/media/hdd/images/config/noplugins'):
-            noPlugins = True
+        if os.path.exists(device_cfg + '/images/config/noplugins'):
+            noPlugins = True        
+ #########end        
+        # if os.path.exists('/media/hdd/images/config/settings'):
+            # Settings = True
+        # if os.path.exists('/media/hdd/images/config/plugins'):
+            # AllPlugins = True
+        # if os.path.exists('/media/hdd/images/config/noplugins'):
+            # noPlugins = True
         if Settings and noPlugins:
             index = 1
         elif Settings and not AllPlugins and not noPlugins:
@@ -436,40 +545,79 @@ class doFlashImage(Screen):
             if restoreSettings:
                 self.SaveEPG()
             if answer[1] != 'abort':
+#########edit lululla             
+                restore_cfg = str(config.plugins.flh_openesi.mnt_flsh.value)
+            
                 if restoreSettings:
                     try:
-                        if not os.path.exists('/media/hdd/images/config'):
-                            os.makedirs('/media/hdd/images/config')
-                        open('/media/hdd/images/config/settings', 'w').close()
+                        if not os.path.exists(restore_cfg +'/images/config'):
+                            os.makedirs(restore_cfg +'/images/config')
+                        open(restore_cfg +'/images/config/settings', 'w').close()
                     except:
-                        print 'postFlashActionCallback: failed to create /media/hdd/images/config/settings'
+                        print 'postFlashActionCallback: failed to create %s/images/config/settings' % restore_cfg
 
-                elif os.path.exists('/media/hdd/images/config/settings'):
-                    os.unlink('/media/hdd/images/config/settings')
+                elif os.path.exists(restore_cfg +'/images/config/settings'):
+                    os.unlink(restore_cfg +'images/config/settings')
                 if restoreAllPlugins:
                     try:
-                        if not os.path.exists('/media/hdd/images/config'):
-                            os.makedirs('/media/hdd/images/config')
-                        open('/media/hdd/images/config/plugins', 'w').close()
+                        if not os.path.exists(restore_cfg +'/images/config'):
+                            os.makedirs(restore_cfg +'/images/config')
+                        open(restore_cfg +'/images/config/plugins', 'w').close()
                     except:
-                        print 'postFlashActionCallback: failed to create /media/hdd/images/config/plugins'
+                        print 'postFlashActionCallback: failed to create %s/images/config/plugins' % restore_cfg
 
-                elif os.path.exists('/media/hdd/images/config/plugins'):
-                    os.unlink('/media/hdd/images/config/plugins')
+                elif os.path.exists(restore_cfg +'/images/config/plugins'):
+                    os.unlink(restore_cfg +'/images/config/plugins')
                 if restoreSettingsnoPlugin:
                     try:
-                        if not os.path.exists('/media/hdd/images/config'):
-                            os.makedirs('/media/hdd/images/config')
-                        open('/media/hdd/images/config/noplugins', 'w').close()
+                        if not os.path.exists(restore_cfg +'/images/config'):
+                            os.makedirs(restore_cfg +'/images/config')
+                        open(restore_cfg +'/images/config/noplugins', 'w').close()
                     except:
-                        print 'postFlashActionCallback: failed to create /media/hdd/images/config/noplugins'
+                        print 'postFlashActionCallback: failed to create %s/images/config/noplugins' %restore_cfg
 
-                elif os.path.exists('/media/hdd/images/config/noplugins'):
-                    os.unlink('/media/hdd/images/config/noplugins')
+                elif os.path.exists(restore_cfg +'/images/config/noplugins'):
+                    os.unlink(restore_cfg +'/images/config/noplugins')
                 if self.flashWithPostFlashActionMode == 'online':
                     self.unzip_image(self.filename, flashPath)
                 else:
-                    self.startInstallLocalCB()
+                    self.startInstallLocalCB()            
+            
+#########edit end             
+                # if restoreSettings:
+                    # try:
+                        # if not os.path.exists('/media/hdd/images/config'):
+                            # os.makedirs('/media/hdd/images/config')
+                        # open('/media/hdd/images/config/settings', 'w').close()
+                    # except:
+                        # print 'postFlashActionCallback: failed to create /media/hdd/images/config/settings'
+
+                # elif os.path.exists('/media/hdd/images/config/settings'):
+                    # os.unlink('/media/hdd/images/config/settings')
+                # if restoreAllPlugins:
+                    # try:
+                        # if not os.path.exists('/media/hdd/images/config'):
+                            # os.makedirs('/media/hdd/images/config')
+                        # open('/media/hdd/images/config/plugins', 'w').close()
+                    # except:
+                        # print 'postFlashActionCallback: failed to create /media/hdd/images/config/plugins'
+
+                # elif os.path.exists('/media/hdd/images/config/plugins'):
+                    # os.unlink('/media/hdd/images/config/plugins')
+                # if restoreSettingsnoPlugin:
+                    # try:
+                        # if not os.path.exists('/media/hdd/images/config'):
+                            # os.makedirs('/media/hdd/images/config')
+                        # open('/media/hdd/images/config/noplugins', 'w').close()
+                    # except:
+                        # print 'postFlashActionCallback: failed to create /media/hdd/images/config/noplugins'
+
+                # elif os.path.exists('/media/hdd/images/config/noplugins'):
+                    # os.unlink('/media/hdd/images/config/noplugins')
+                # if self.flashWithPostFlashActionMode == 'online':
+                    # self.unzip_image(self.filename, flashPath)
+                # else:
+                    # self.startInstallLocalCB()
             else:
                 self.show()
         else:
