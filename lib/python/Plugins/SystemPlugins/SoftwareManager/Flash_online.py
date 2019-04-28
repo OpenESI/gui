@@ -69,8 +69,8 @@ flashTmp = str(config.plugins.flh_openesi.mnt_flsh.value) +  '/images/tmp'
 
 ofgwritePath = '/usr/bin/ofgwrite'
 
-
-
+# global online
+# online=True
 
 def Freespace(dev):
     statdev = os.statvfs(dev)
@@ -100,13 +100,22 @@ class FlashOnline(Screen, ConfigListScreen):
         
    
         Screen.setTitle(self, _('Flash_OnLine-ESI'))
-        if SystemInfo['HaveMultiBoot']:
-            self['key_blue'] = Button(_('STARTUP'))
+        # if SystemInfo['HaveMultiBoot']:
+            # self['key_blue'] = Button(_('STARTUP'))
+        # else:
+            # self['key_blue'] = Button(_(' '))
+        # self['key_green'] = Button(_('Online'))
+        # self['key_red'] = Button(_('Exit'))
+        # self['key_yellow'] = Button(_('Local'))
+        
+        if SystemInfo['HaveMultiBoot']:        
+            self['key_blue'] = Label(_('STARTUP'))
         else:
-            self['key_blue'] = Button(_(' '))
-        self['key_green'] = Button(_('Online'))
-        self['key_red'] = Button(_('Exit'))
-        self['key_yellow'] = Button(_('Local'))
+            self['key_blue'] = Label(_(' '))
+        self['key_green'] = Label(_('Online'))
+        self['key_red'] = Label(_('Exit'))
+        self['key_yellow'] = Label(_('Local'))        
+        
         self['info-local'] = Label(_('Local = Flash a image from local path /hdd/images or /usb/images'))
         self['info-online'] = Label(_('Online = Download a image and flash it'))
         self['actions'] = ActionMap(['OkCancelActions', 'DirectionActions', 'ColorActions'], {'blue': self.blue,
@@ -330,11 +339,19 @@ class doFlashImage(Screen):
         Screen.__init__(self, session)
         self.session = session
         Screen.setTitle(self, _('Flash_OnLine-ESI (select a image)'))
-        self['key_green'] = Button(_('Flash'))
-        self['key_red'] = Button(_('Exit'))
-        self['key_blue'] = Button('')
-        #self['key_yellow'] = Button('Device') #rem lululla
-        self['key_yellow']= Button('Backup&Flash')
+        # self['key_green'] = Button(_('Flash'))
+        # self['key_red'] = Button(_('Exit'))
+        # self['key_blue'] = Button('')
+        # self['key_yellow']= Button('')        
+        
+#rem lululla
+        
+        self['key_green'] = Label(_('Flash'))
+        self['key_red'] = Label(_('Exit'))        
+        self['key_blue'] = Label('')
+        self['key_yellow']= Label('')
+        
+        
         self.imagesCounter = imagesCounter
         self.filename = None
         self.imagelist = []
@@ -785,6 +802,9 @@ class doFlashImage(Screen):
         brand = getMachineBrand()
         box = getBoxType()
         self.imagelist = []
+        
+        print 'Self.online= ', self.Online
+        
         if self.Online:
             self['key_yellow'].setText('Backup&Flash')
             self.feedurl = images[self.imagesCounter][1]
