@@ -333,7 +333,8 @@ class doFlashImage(Screen):
         self['key_green'] = Button(_('Flash'))
         self['key_red'] = Button(_('Exit'))
         self['key_blue'] = Button('')
-        self['key_yellow'] = Button('Device')
+        #self['key_yellow'] = Button('Device') #rem lululla
+        self['key_yellow']= Button('Backup&Flash')
         self.imagesCounter = imagesCounter
         self.filename = None
         self.imagelist = []
