@@ -1,4 +1,4 @@
-# Embedded file name: /usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager/Flash_online.py
+# Edited from Lululla for image OpenEsi 03.05.2019
 from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
 from Components.Button import Button
 from Components.config import config
@@ -52,16 +52,17 @@ def mount_flsh():
     
 config.plugins.flh_openesi = ConfigSubsection()
 config.plugins.flh_openesi.mnt_flsh = ConfigSelection(default = "/media/hdd",choices = mount_flsh())
-   
 
-
+#edit end
+        
+        
 images = []
 imagesCounter = 0
 images.append(['ESI 8.5', 'http://www.openesi.eu/images'])
 # imagePath = '/media/hdd/images'
 # flashPath = '/media/hdd/images/flash'
 # flashTmp = '/media/hdd/images/tmp'
-
+#edit lululla
 imagePath = str(config.plugins.flh_openesi.mnt_flsh.value) + '/images'
 flashPath = str(config.plugins.flh_openesi.mnt_flsh.value) +  '/images/flash'
 flashTmp = str(config.plugins.flh_openesi.mnt_flsh.value) +  '/images/tmp'
@@ -78,9 +79,11 @@ def Freespace(dev):
     print '[Flash ESI-Online] Free space on %s = %i kilobytes' % (dev, space)
     return space
 
-##### edit lululla 
-# class FlashOnline(Screen):    
+
+# class FlashOnline(Screen):
+##### edit lululla     
 class FlashOnline(Screen, ConfigListScreen):
+#edit end
     skin = '\n\t<screen position="center,center" size="560,400" title="Flash_OnLine-ESI">\n\t\t<ePixmap position="0,360"   zPosition="1" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="140,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="280,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="420,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on" />\n\t\t<widget name="key_red" position="0,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_green" position="140,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_yellow" position="280,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_blue" position="420,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="info-online" position="10,80" zPosition="1" size="450,100" font="Regular;20" halign="left" valign="top" transparent="1" />\n\t\t<widget name="info-local" position="10,150" zPosition="1" size="450,200" font="Regular;20" halign="left" valign="top" transparent="1" />\n\t</screen>'
 
     def __init__(self, session):
@@ -97,8 +100,6 @@ class FlashOnline(Screen, ConfigListScreen):
         self.list = self.list_files('/boot')
         self.MTDKERNEL = getMachineMtdKernel()
         self.MTDROOTFS = getMachineMtdRoot()
-        
-   
         Screen.setTitle(self, _('Flash_OnLine-ESI'))
         # if SystemInfo['HaveMultiBoot']:
             # self['key_blue'] = Button(_('STARTUP'))
@@ -107,7 +108,7 @@ class FlashOnline(Screen, ConfigListScreen):
         # self['key_green'] = Button(_('Online'))
         # self['key_red'] = Button(_('Exit'))
         # self['key_yellow'] = Button(_('Local'))
-        
+#edit lululla        
         if SystemInfo['HaveMultiBoot']:        
             self['key_blue'] = Label(_('STARTUP'))
         else:
@@ -115,7 +116,7 @@ class FlashOnline(Screen, ConfigListScreen):
         self['key_green'] = Label(_('Online'))
         self['key_red'] = Label(_('Exit'))
         self['key_yellow'] = Label(_('Local'))        
-        
+#edit end        
         self['info-local'] = Label(_('Local = Flash a image from local path /hdd/images or /usb/images'))
         self['info-online'] = Label(_('Online = Download a image and flash it'))
         self['actions'] = ActionMap(['OkCancelActions', 'DirectionActions', 'ColorActions'], {'blue': self.blue,
@@ -184,7 +185,7 @@ class FlashOnline(Screen, ConfigListScreen):
 
     def check_hdd(self):
     
-##### edit lululla    
+#edit lululla   
         device_mnt = str(config.plugins.flh_openesi.mnt_flsh.value)
         if not os.path.exists(device_mnt):
             self.session.open(MessageBox, _('No %s!!\nPlease make sure you have mounted.\n\nExit plugin.' % device_mnt), type=MessageBox.TYPE_ERROR)
@@ -193,7 +194,6 @@ class FlashOnline(Screen, ConfigListScreen):
             self.session.open(MessageBox, _('Not enough free space on %s !!\nYou need at least 300Mb free space.\n\nExit plugin.' % device_mnt), type=MessageBox.TYPE_ERROR)
             return False    
 ##### end             
-            
         # if not os.path.exists('/media/hdd'):
             # self.session.open(MessageBox, _('No /hdd found !!\nPlease make sure you have a HDD mounted.\n\nExit plugin.'), type=MessageBox.TYPE_ERROR)
             # return False
@@ -344,14 +344,12 @@ class doFlashImage(Screen):
         # self['key_blue'] = Button('')
         # self['key_yellow']= Button('')        
         
-#rem lululla
-        
+#edit lululla
         self['key_green'] = Label(_('Flash'))
         self['key_red'] = Label(_('Exit'))        
         self['key_blue'] = Label('')
         self['key_yellow']= Label('')
-        
-        
+#edit end
         self.imagesCounter = imagesCounter
         self.filename = None
         self.imagelist = []
@@ -504,9 +502,7 @@ class doFlashImage(Screen):
         if ret:
 #########edit lululla            
             device_pst = str(config.plugins.flh_openesi.mnt_flsh.value)
-            
             print 'flashWithPostFlashAction'
-            
             title = _('Please select what to do after flashing the image:\n(In addition, if it exists, a local script will be executed as well at /%s/images/config/myrestore.sh)' % device_pst)
 #end edited            
             list = ((_('Flash and start installation wizard'), 'wizard'),
@@ -563,9 +559,8 @@ class doFlashImage(Screen):
             if restoreSettings:
                 self.SaveEPG()
             if answer[1] != 'abort':
-#########edit lululla             
+#edit lululla            
                 restore_cfg = str(config.plugins.flh_openesi.mnt_flsh.value)
-            
                 if restoreSettings:
                     try:
                         if not os.path.exists(restore_cfg +'/images/config'):
@@ -573,7 +568,6 @@ class doFlashImage(Screen):
                         open(restore_cfg +'/images/config/settings', 'w').close()
                     except:
                         print 'postFlashActionCallback: failed to create %s/images/config/settings' % restore_cfg
-
                 elif os.path.exists(restore_cfg +'/images/config/settings'):
                     os.unlink(restore_cfg +'images/config/settings')
                 if restoreAllPlugins:
@@ -583,7 +577,6 @@ class doFlashImage(Screen):
                         open(restore_cfg +'/images/config/plugins', 'w').close()
                     except:
                         print 'postFlashActionCallback: failed to create %s/images/config/plugins' % restore_cfg
-
                 elif os.path.exists(restore_cfg +'/images/config/plugins'):
                     os.unlink(restore_cfg +'/images/config/plugins')
                 if restoreSettingsnoPlugin:
@@ -593,14 +586,12 @@ class doFlashImage(Screen):
                         open(restore_cfg +'/images/config/noplugins', 'w').close()
                     except:
                         print 'postFlashActionCallback: failed to create %s/images/config/noplugins' %restore_cfg
-
                 elif os.path.exists(restore_cfg +'/images/config/noplugins'):
                     os.unlink(restore_cfg +'/images/config/noplugins')
                 if self.flashWithPostFlashActionMode == 'online':
                     self.unzip_image(self.filename, flashPath)
                 else:
                     self.startInstallLocalCB()            
-            
 #########edit end             
                 # if restoreSettings:
                     # try:
@@ -933,9 +924,15 @@ class DeviceBrowser(Screen, HelpableScreen):
         Screen.__init__(self, session)
         HelpableScreen.__init__(self)
         Screen.setTitle(self, _('Please select medium'))
-        self['key_red'] = StaticText(_('Cancel'))
-        self['key_green'] = StaticText()
-        self['message'] = StaticText(message)
+        #edit lululla        
+        # self['key_red'] = StaticText(_('Cancel'))
+        # self['key_green'] = StaticText()
+        # self['message'] = StaticText(message)
+        self['key_green'] = Label(_(''))
+        self['key_red'] = Label(_('Cancel'))  
+        self['message'] = Label(_(''))          
+        self['message'].setText(message) 
+##############
         self.filelist = FileList(startdir, showDirectories=showDirectories, showFiles=showFiles, showMountpoints=showMountpoints, matchingPattern=matchingPattern, useServiceRef=useServiceRef, inhibitDirs=inhibitDirs, inhibitMounts=inhibitMounts, isTop=isTop, enableWrapAround=enableWrapAround, additionalExtensions=additionalExtensions)
         self['filelist'] = self.filelist
         self['FilelistActions'] = ActionMap(['SetupActions', 'ColorActions'], {'green': self.use,
@@ -952,9 +949,16 @@ class DeviceBrowser(Screen, HelpableScreen):
 
     def updateButton(self):
         if self['filelist'].getFilename() or self['filelist'].getCurrentDirectory():
-            self['key_green'].text = _('Flash')
+        
+        #edit lululla
+            # self['key_green'].text = _('Flash')
+        # else:
+            # self['key_green'].text = ''
+#############
+            self['key_green'].setText('Flash')
         else:
-            self['key_green'].text = ''
+            self['key_green'].setText('')            
+            
 
     def removeHotplug(self):
         print '[removeHotplug]'
