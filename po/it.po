@@ -1600,10 +1600,10 @@ msgid "Brightness (Dimmed)"
 msgstr "Luminosità attenuata"
 
 msgid "Brightness (Normal)"
-msgstr "Luminosità (Normale)"
+msgstr "Luminosità Normale"
 
 msgid "Brightness (Standby)"
-msgstr "Luminosità (Standby)"
+msgstr "Luminosità Standby"
 
 msgid "Buffering %d%%"
 msgstr "Buffering %d%%"
