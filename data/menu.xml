@@ -28,6 +28,48 @@
 from Plugins.Extensions.EsiPanel.plugin import *
 self.session.open(EsiPanel)
 </code>
+	</item>  
+        <item weight="5" level="0" text="ExtraAddonss" entryID="ExtraAddonss">  
+    <code>
+from Plugins.Extensions.ExtraAddonss.plugin import *
+self.session.open(AddonsGroups)
+</code>
+        </item>  
+	    <item weight="5" level="0" text="FlashOnline" entryID="FlashOnline">  
+    <code>
+from Plugins.SystemPlugins.SoftwareManager.plugin import *
+self.session.open(FlashOnline)
+</code>
+        </item> 
+	    <item weight="5" level="0" text="ImageBackup" entryID="ImageBackup">  
+    <code>
+from Plugins.SystemPlugins.SoftwareManager.plugin import *
+self.session.open(ImageBackup)
+</code>
+        </item> 
+<item weight="5" level="0" text="MountManager" entryID="MountManager"> 
+<code>
+from Plugins.Extensions.EsiPanel.plugin import *
+self.session.open(HddMount)
+</code>
+</item>
+<item weight="5" level="0" text="Shutdown" requires="!DeepstandbySupport" entryID="deep_standby"><screen module="Standby" screen="TryQuitMainloop">1</screen></item>
+<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootHD" entryID="deep_standby"><screen module="MultiBootStartup" screen="MultiBootStartup" /></item>
+<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootXC" entryID="deep_standby"><screen module="MultiBootStartupXC" screen="MultiBootStartup" /></item>
+<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootGB" entryID="deep_standby"><screen module="MultiBootStartupGB" screen="MultiBootStartup" /></item>
+<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootCY" entryID="deep_standby"><screen module="MultiBootStartupCY" screen="MultiBootStartup" /></item>
+<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootDS" entryID="deep_standby"><screen module="MultiBootStartupDS" screen="MultiBootStartup" /></item>
+<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootOS" entryID="deep_standby"><screen module="MultiBootStartupOS" screen="MultiBootStartup" /></item>
+<item weight="10" level="0" text="WOL Standby" requires="GBWOL" entryID="deep_standby">
+<code>
+from Screens.Standby import TryQuitMainloop
+from Screens.MessageBox import MessageBox
+recordings = self.session.nav.getRecordingsCheckBeforeActivateDeepStandby()
+if recordings:
+self.session.openWithCallback(self.gotoStandby,MessageBox,_("Recording(s) are in progress or coming up in few seconds!\nEntering standby, after recording the box will shutdown."), type = MessageBox.TYPE_INFO, close_on_any_key = True, timeout = 10)
+else:
+self.session.open(TryQuitMainloop, 45)
+</code>
         </item>  
 	</menu>
     
@@ -248,35 +290,6 @@ self.session.openWithCallback(msgClosed, FactoryReset)
 	<!-- Menu / Standby Restart -->
 	<menu weight="99" level="0" text="Standby / Restart" entryID="standby_restart_list">
 		<id val="shutdown" />
-		<item weight="0" level="0" text="Deep Standby" requires="DeepstandbySupport" entryID="deep_standby">
-			<code>
-from Screens.Standby import TryQuitMainloop
-from Screens.MessageBox import MessageBox
-recordings = self.session.nav.getRecordingsCheckBeforeActivateDeepStandby()
-if recordings:
-	self.session.openWithCallback(self.gotoStandby,MessageBox,_("Recording(s) are in progress or coming up in few seconds!\nEntering standby, after recording the box will shutdown."), type = MessageBox.TYPE_INFO, close_on_any_key = True, timeout = 10)
-else:
-	self.session.open(TryQuitMainloop, 1)
-</code>
-		</item>
-		<item weight="5" level="0" text="Shutdown" requires="!DeepstandbySupport" entryID="deep_standby"><screen module="Standby" screen="TryQuitMainloop">1</screen></item>
-		<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootHD" entryID="deep_standby"><screen module="MultiBootStartup" screen="MultiBootStartup" /></item>
-		<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootXC" entryID="deep_standby"><screen module="MultiBootStartupXC" screen="MultiBootStartup" /></item>
-		<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootGB" entryID="deep_standby"><screen module="MultiBootStartupGB" screen="MultiBootStartup" /></item>
-		<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootCY" entryID="deep_standby"><screen module="MultiBootStartupCY" screen="MultiBootStartup" /></item>
-		<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootDS" entryID="deep_standby"><screen module="MultiBootStartupDS" screen="MultiBootStartup" /></item>
-		<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootOS" entryID="deep_standby"><screen module="MultiBootStartupOS" screen="MultiBootStartup" /></item>
-		<item weight="10" level="0" text="WOL Standby" requires="GBWOL" entryID="deep_standby">
-			<code>
-from Screens.Standby import TryQuitMainloop
-from Screens.MessageBox import MessageBox
-recordings = self.session.nav.getRecordingsCheckBeforeActivateDeepStandby()
-if recordings:
-	self.session.openWithCallback(self.gotoStandby,MessageBox,_("Recording(s) are in progress or coming up in few seconds!\nEntering standby, after recording the box will shutdown."), type = MessageBox.TYPE_INFO, close_on_any_key = True, timeout = 10)
-else:
-	self.session.open(TryQuitMainloop, 45)
-</code>
-		</item>
 		<item weight="15" level="0" text="Standby" entryID="standby"><screen module="Standby" screen="Standby"/></item>
 		<item weight="20" level="0" text="Sleep Timer" requires="DeepstandbySupport" entryID="sleep"><screen module="SleepTimerEdit" screen="SleepTimerEdit" /></item>
 		<item weight="25" level="0" text="Restart" entryID="restart"><screen module="Standby" screen="TryQuitMainloop">2</screen></item>
