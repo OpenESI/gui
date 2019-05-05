@@ -3,35 +3,11 @@
 #
 
 LANG_TEXT = {
-"en_GB": {
-	 "T1": "Please use the UP and DOWN keys to select your language. Afterwards press the OK button.",
-	 "T2": "Language selection",
-	 "T3": "Cancel",
-	 "T4": "Save",
-},
-"en_US": {
-	 "T1": "Please use the UP and DOWN keys to select your language. Afterwards press the OK button.",
-	 "T2": "Language selection",
-	 "T3": "Cancel",
-	 "T4": "Save",
-},
 "it_IT": {
 	 "T1": "Selezionare la propria lingua utilizzando i tasti Sù/Giù. Premere OK per confermare.",
 	 "T2": "Selezione lingua",
 	 "T3": "Annull.",
 	 "T4": "Salvare",
-},	 
-"de_DE": {
-	 "T1": "Für Sprachauswahl Hoch/Runter-Tasten nutzen. Danach OK drücken.",
-	 "T2": "Sprachauswahl",
-	 "T3": "Abbrechen",
-	 "T4": "Speichern",
-},
-"fr_FR": {
-	 "T1": "Veuillez utiliser les touches HAUT et BAS pour choisir votre langue. Ensuite pressez le bouton OK.",
-	 "T2": "Sélection de la langue",
-	 "T3": "Annuler",
-	 "T4": "Sauver",
 },
 "ar_AE": {
 	 "T1": "من فضلك أستخدم ذر السهم العلوى أو السفلى لإختيار اللغه. ثم أضغط موافق .",
@@ -69,11 +45,29 @@ LANG_TEXT = {
 	 "T3": "Fortryd",
 	 "T4": "Gem",
 },
+"de_DE": {
+	 "T1": "Für Sprachauswahl Hoch/Runter-Tasten nutzen. Danach OK drücken.",
+	 "T2": "Sprachauswahl",
+	 "T3": "Abbrechen",
+	 "T4": "Speichern",
+},
 "el_GR": {
 	 "T1": "Χρησιμοποιήστε τα πλήκτρα ΠΑΝΩ και ΚΑΤΩ για επιλογή γλώσσας. Μετά πιέστε το ΟΚ.",
 	 "T2": "Επιλογή γλώσσας",
 	 "T3": "Άκυρο ",
 	 "T4": "Αποθήκευση",
+},
+"en_GB": {
+	 "T1": "Please use the UP and DOWN keys to select your language. Afterwards press the OK button.",
+	 "T2": "Language selection",
+	 "T3": "Cancel",
+	 "T4": "Save",
+},
+"en_US": {
+	 "T1": "Please use the UP and DOWN keys to select your language. Afterwards press the OK button.",
+	 "T2": "Language selection",
+	 "T3": "Cancel",
+	 "T4": "Save",
 },
 "es_ES": {
 	 "T1": "Usa las teclas ARRIBA y ABAJO para seleccionar el idioma. Después, pulsa el botón OK.",
@@ -98,6 +92,12 @@ LANG_TEXT = {
 	 "T2": "Kielivalinta",
 	 "T3": "Peruuta",
 	 "T4": "Tallenna",
+},
+"fr_FR": {
+	 "T1": "Veuillez utiliser les touches HAUT et BAS pour choisir votre langue. Ensuite pressez le bouton OK.",
+	 "T2": "Sélection de la langue",
+	 "T3": "Annuler",
+	 "T4": "Sauver",
 },
 "fy_NL": {
 	 "T1": "Brúk de op en del toets om jo taal te kiezen. Dernei druk op OK",

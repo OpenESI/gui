@@ -1,6 +1,7 @@
 import skin
 
 from enigma import ePoint, eSize
+from Components.config import config
 
 class GUIComponent(object):
 	""" GUI component """
@@ -36,6 +37,8 @@ class GUIComponent(object):
 		if self.skinAttributes is None:
 			return False
 
+		if config.skin.primary_skin.value.split('/')[0] not in ('DarknessHD'):
+			self.skinAttributes.sort()
 		skin.applyAllAttributes(self.instance, desktop, self.skinAttributes, parent.scale)
 		return True
 

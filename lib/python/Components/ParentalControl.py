@@ -37,7 +37,7 @@ def InitParentalControl():
 	config.ParentalControl.config_sections.standby_menu = ConfigYesNo(default = False)
 	config.ParentalControl.config_sections.movie_list = ConfigYesNo(default = False)
 	config.ParentalControl.config_sections.context_menus = ConfigYesNo(default = False)
-	config.ParentalControl.config_sections.infopanel = ConfigYesNo(default = False)
+	config.ParentalControl.config_sections.esipanel = ConfigYesNo(default = False)
 	config.ParentalControl.config_sections.quickmenu = ConfigYesNo(default = False)
 
 	#Added for backwards compatibility with some 3rd party plugins that depend on this config
@@ -250,6 +250,7 @@ class ParentalControl:
 			# Reset PIN cache on standby: Use StandbyCounter- Config- Callback
 			config.misc.standbyCounter.addNotifier(self.standbyCounterCallback, initial_call = False)
 			self.filesOpened = True
+			refreshServiceList()
 
 	def __getattr__(self, name):
 		# This method is called if we lack a property. I'm lazy, so
