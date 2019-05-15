@@ -8,7 +8,7 @@ class VideoEnhancement:
 	firstRun = True
 
 	def __init__(self):
-		self.last_modes_preferred = [ ]
+		self.last_modes_preferred =  [ ]
 		self.createConfig()
 
 	def createConfig(self, *args):
@@ -17,11 +17,11 @@ class VideoEnhancement:
 
 		if os_path.exists("/proc/stb/vmpeg/0/pep_contrast"):
 			def setContrast(config):
-				myval = int(config.value * 255)
+				myval = int(config.value * 256)
 				try:
 					print "--> setting contrast to: %0.8X" % myval
 					f = open("/proc/stb/vmpeg/0/pep_contrast", "w")
-					f.write("%0.8X" % myval)
+					f.write("%0.8X\n" % myval)
 					f.close()
 				except IOError:
 					print "couldn't write pep_contrast."
@@ -36,7 +36,7 @@ class VideoEnhancement:
 
 		if os_path.exists("/proc/stb/vmpeg/0/pep_saturation"):
 			def setSaturation(config):
-				myval = int(config.value * 255)
+				myval = int(config.value * 256)
 				try:
 					print "--> setting saturation to: %0.8X" % myval
 					f = open("/proc/stb/vmpeg/0/pep_saturation", "w")
@@ -55,7 +55,7 @@ class VideoEnhancement:
 
 		if os_path.exists("/proc/stb/vmpeg/0/pep_hue"):
 			def setHue(config):
-				myval = int(config.value * 255)
+				myval = int(config.value * 256)
 				try:
 					print "--> setting hue to: %0.8X" % myval
 					f = open("/proc/stb/vmpeg/0/pep_hue", "w")
@@ -74,7 +74,7 @@ class VideoEnhancement:
 
 		if os_path.exists("/proc/stb/vmpeg/0/pep_brightness"):
 			def setBrightness(config):
-				myval = int(config.value * 255)
+				myval = int(config.value * 256)
 				try:
 					print "--> setting brightness to: %0.8X" % myval
 					f = open("/proc/stb/vmpeg/0/pep_brightness", "w")
@@ -85,7 +85,6 @@ class VideoEnhancement:
 
 				if not VideoEnhancement.firstRun:
 					self.setConfiguredValues()
-
 			config.pep.brightness = ConfigSlider(default=128, limits=(0,255))
 			config.pep.brightness.addNotifier(setBrightness)
 		else:
@@ -172,7 +171,7 @@ class VideoEnhancement:
 
 		if os_path.exists("/proc/stb/vmpeg/0/pep_sharpness"):
 			def setSharpness(config):
-				myval = int(config.value * 255)
+				myval = int(config.value * 256)
 				try:
 					print "--> setting sharpness to: %0.8X" % myval
 					f = open("/proc/stb/vmpeg/0/pep_sharpness", "w")
@@ -184,10 +183,10 @@ class VideoEnhancement:
 				if not VideoEnhancement.firstRun:
 					self.setConfiguredValues()
 
-			if getBoxType() in ('gbquad', 'gbquadplus', 'gbquad4k'):
-				config.pep.sharpness = ConfigSlider(default=255, limits=(0,255))
+			if getBoxType() in ('gbquad', 'gbquadplus'):
+				config.pep.sharpness = ConfigSlider(default=256, limits=(0,256))
 			else:
-				config.pep.sharpness = ConfigSlider(default=0, limits=(0,255))
+				config.pep.sharpness = ConfigSlider(default=0, limits=(0,256))
 			config.pep.sharpness.addNotifier(setSharpness)
 		else:
 			config.pep.sharpness = NoSave(ConfigNothing())
@@ -263,7 +262,7 @@ class VideoEnhancement:
 				if not VideoEnhancement.firstRun:
 					self.setConfiguredValues()
 
-			if getBoxType() in ('gbquad', 'gbquadplus', 'gbquad4k'):
+			if getBoxType() in ('gbquad', 'gbquadplus'):
 				config.pep.dynamic_contrast = ConfigSlider(default=3, limits=(0,255))
 			else:
 				config.pep.dynamic_contrast = ConfigSlider(default=0, limits=(0,255))

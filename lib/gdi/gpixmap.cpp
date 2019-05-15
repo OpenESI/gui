@@ -314,7 +314,7 @@ void gPixmap::fill(const gRegion &region, const gColor &color)
 			}
 #endif
 #endif
-		} else
+		}	else
 			eWarning("[gPixmap] couldn't fill %d bpp", surface->bpp);
 	}
 }
@@ -384,7 +384,7 @@ void gPixmap::fill(const gRegion &region, const gRGB &color)
 				while (x--)
 					*dst++=col;
 			}
-		} else
+		}	else
 			eWarning("[gPixmap] couldn't rgbfill %d bpp", surface->bpp);
 	}
 }
@@ -468,14 +468,32 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 
 //	eDebug("[gPixmap] source size: %d %d", src.size().width(), src.size().height());
 
-	if (!(flag & blitScale)) /* pos' size is valid only when scaling */
-		pos = eRect(pos.topLeft(), src.size());
-	else if (pos.size() == src.size()) /* no scaling required */
-		flag &= ~blitScale;
-
 	int scale_x = FIX, scale_y = FIX;
 
-	if (flag & blitScale)
+	if (!(flag & blitScale))
+	{
+		// pos' size is ignored if left or top aligning.
+		// if its size isn't set, centre and right/bottom aligning is ignored
+		
+		if (_pos.size().isValid())
+		{
+			if (flag & blitHAlignCenter)
+				pos.setLeft(_pos.left() + (_pos.width() - src.size().width()) / 2);
+			else if (flag & blitHAlignRight)
+				pos.setLeft(_pos.right() - src.size().width());
+
+			if (flag & blitVAlignCenter)
+				pos.setTop(_pos.top() + (_pos.height() - src.size().height()) / 2);
+			else if (flag & blitVAlignBottom)
+				pos.setTop(_pos.bottom() - src.size().height());
+		}
+
+		pos.setWidth(src.size().width());
+		pos.setHeight(src.size().height());
+	}
+	else if (pos.size() == src.size()) /* no scaling required */
+		flag &= ~blitScale;
+	else // blitScale is set
 	{
 		ASSERT(src.size().width());
 		ASSERT(src.size().height());
@@ -485,15 +503,23 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 		{
 			if (scale_x > scale_y)
 			{
-				pos = eRect(ePoint(pos.x() + (scale_x - scale_y) * pos.width() / (2 * FIX), pos.y()),
-					eSize(src.size().width() * pos.height() / src.size().height(), pos.height()));
+				// vertical is full height, adjust horizontal to be smaller
 				scale_x = scale_y;
+				pos.setWidth(src.size().width() * _pos.height() / src.size().height());
+				if (flag & blitHAlignCenter)
+					pos.moveBy((_pos.width() - pos.width()) / 2, 0);
+				else if (flag & blitHAlignRight)
+					pos.moveBy(_pos.width() - pos.width(), 0);
 			}
 			else
 			{
-				pos = eRect(ePoint(pos.x(), pos.y()  + (scale_y - scale_x) * pos.height() / (2 * FIX)),
-					eSize(pos.width(), src.size().height() * pos.width() / src.size().width()));
+				// horizontal is full width, adjust vertical to be smaller
 				scale_y = scale_x;
+				pos.setHeight(src.size().height() * _pos.width() / src.size().width());
+				if (flag & blitVAlignCenter)
+					pos.moveBy(0, (_pos.height() - pos.height()) / 2);
+				else if (flag & blitVAlignBottom)
+					pos.moveBy(0, _pos.height() - pos.height());
 			}
 		}
 	}
@@ -532,7 +558,7 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 
 	for (unsigned int i=0; i<clip.rects.size(); ++i)
 	{
-//		eDebug("[gPixmap] clip rect: %d %d %d %d", clip.rects[i].x(), clip.rects[i].y(), clip.rects[i].width(), clip.rects[i].height());
+//		eDebug("clip rect: %d %d %d %d", clip.rects[i].x(), clip.rects[i].y(), clip.rects[i].width(), clip.rects[i].height());
 		eRect area = pos; /* pos is the virtual (pre-clipping) area on the dest, which can be larger/smaller than src if scaling is enabled */
 		area&=clip.rects[i];
 		area&=eRect(ePoint(0, 0), size());
@@ -573,6 +599,7 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 					/* Hardware alpha blending is broken on the few
 					 * boxes that support it, so only use it
 					 * when scaling */
+
 					accel = true;
 #else
 					if (flag & blitScale)
@@ -759,8 +786,8 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 				{
 					// no real alphatest yet
 					int width=area.width();
-					uint8_t *s = srcptr;
-					uint8_t *d = dstptr;
+					unsigned char *s = (unsigned char*)srcptr;
+					unsigned char *d = (unsigned char*)dstptr;
 					// use duff's device here!
 					while (width--)
 					{
@@ -800,20 +827,24 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 			{
 				if (flag & blitAlphaTest)
 				{
-					int width = area.width();
-					uint32_t *src = srcptr;
-					uint32_t *dst = dstptr;
+					int width=area.width();
+#if defined(__aarch64__)
+					unsigned int *src=(unsigned int*)srcptr;
+					unsigned int *dst=(unsigned int*)dstptr;
+#else
+					unsigned long *src=(unsigned long*)srcptr;
+					unsigned long *dst=(unsigned long*)dstptr;
+#endif
 					while (width--)
 					{
 						if (!((*src)&0xFF000000))
 						{
-							++src;
-							++dst;
+							src++;
+							dst++;
 						} else
 							*dst++=*src++;
 					}
-				}
-				else if (flag & blitAlphaBlend)
+				} else if (flag & blitAlphaBlend)
 				{
 					int width = area.width();
 					gRGB *src = (gRGB*)srcptr;
@@ -823,8 +854,7 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 						dst->alpha_blend(*src++);
 						++dst;
 					}
-				}
-				else
+				} else
 					memcpy(dstptr, srcptr, area.width()*surface->bypp);
 				srcptr = (uint32_t*)((uint8_t*)srcptr + src.surface->stride);
 				dstptr = (uint32_t*)((uint8_t*)dstptr + surface->stride);
@@ -912,8 +942,8 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 					{
 						if (!((*srcp)&0xFF000000))
 						{
-							++srcp;
-							++dstp;
+							srcp++;
+							dstp++;
 						} else
 						{
 							gRGB icol = *srcp++;
@@ -977,9 +1007,8 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 				dstptr+=surface->stride;
 			}
 		}
-		else {
-			// eWarning("[gPixmap] cannot blit %dbpp from %dbpp", surface->bpp, src.surface->bpp);
-		}
+		else
+			eWarning("[gPixmap] cannot blit %dbpp from %dbpp", surface->bpp, src.surface->bpp);
 #ifdef GPIXMAP_DEBUG
 		s.stop();
 		eDebug("[gPixmap] [BLITBENCH] cpu blit (%d bytes) took %u us", srcarea.surface() * src.surface->bypp, s.elapsed_us());

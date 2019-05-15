@@ -4,7 +4,6 @@ from Components.About import about
 class HardwareInfo:
 	device_name = None
 	device_version = None
-	device_model = None
 
 	def __init__(self):
 		if HardwareInfo.device_name is not None:

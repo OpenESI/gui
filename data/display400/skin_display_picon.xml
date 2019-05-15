@@ -38,7 +38,7 @@
 		</widget>
 	</screen>
 <!-- Tuner Panel -->	
-	<screen name="MeinTunerInfoPanel">
+	<screen name="MeinTunerESIteam">
 		<widget source="session.FrontendInfo" render="FixedLabel" position="0,216" size="24,24" text="A" foregroundColor="#04B404" font="FdLcD;24" zPosition="1" transparent="1" halign="center" >
 			<convert type="FrontendInfo">NUMBER</convert>
 			<convert type="ValueRange">0,0</convert>
@@ -126,7 +126,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerInfoPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>
 <!-- Movieplayer auch MediaPortal-->
 	<screen name="InfoBarMoviePlayerSummary" position="0,0" size="400,240">
@@ -143,7 +143,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerInfoPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>
 
 	<screen name="MovieContextMenuSummary" position="0,0" size="400,240">
@@ -178,7 +178,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerInfoPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>		
 <!-- channelselection -->
 	<screen name="ChannelSelection_summary" position="0,0" size="400,240">
@@ -213,7 +213,7 @@
 		</widget>
 		<panel name="SummaryClockPanel" />
 	</screen>
-<!-- Numberzap -->
+<!-- Numberzap -->    
 	<screen name="NumberZap_summary" position="0,0" size="400,240">
 		<widget source="parent.number_summary" render="Label" position="0,0" size="400,99" font="FdLcD;105" halign="center" valign="center" transparent="1" />
 		<widget source="parent.service_summary" render="Label" position="0,101" size="400,139" font="FdLcD;55" halign="center" valign="center" transparent="1" />
@@ -222,7 +222,7 @@
 		<widget source="parent.number_summary" render="Label" position="0,0" size="400,99" font="FdLcD;105" halign="center" valign="center" transparent="1" />
 		<widget source="parent.service_summary" render="Label" position="0,101" size="400,139" font="FdLcD;55" halign="center" valign="center" transparent="1" />
 	</screen>
-<!-- NumberZapExt -->
+<!-- NumberZapExt -->    
 	<screen name="NumberZapExt_summary" position="0,0" size="400,240">
 		<widget source="parent.channel" render="Label" position="0,0" size="400,240" font="FdLcD;80" halign="center" valign="center" transparent="1" />
 	</screen>
@@ -240,12 +240,17 @@
 		<eLabel position="0,87" size="400,1" backgroundColor="white" />
 		<widget source="parent.summary_description" render="Label" position="0,88" size="400,152" zPosition="1" font="FdLcD;35" halign="center" valign="center" />
 	</screen>
-<!-- Metrix-Menu -->
+<!-- AeonFHD_MOD-Menu -->
 	<screen name="MainSettingsView_summary" position="0,0" size="400,240">
 		<widget source="parent.titleText" render="Label" position="0,0" size="400,178" font="FdLcD;35" foregroundColor="#87CEFA" halign="center" valign="center" />
 		<panel name="SummaryClockPanel" />
 	</screen>
-
+<!-- ESIteam -->
+	<screen name="ESIteam_summary" position="0,0" size="400,240">
+		<widget source="parent.Title" render="Label" position="0,0" size="400,85" font="FdLcD;38" foregroundColor="#87CEFA" halign="center" valign="center" />
+		<eLabel position="0,87" size="400,1" backgroundColor="white" />
+		<widget source="parent.summary_description" render="Label" position="0,88" size="400,152" zPosition="1" font="FdLcD;35" halign="center" valign="center" />
+	</screen>
 <!-- setup-->
 	<screen name="SetupSummary" position="fill">
 		<widget source="SetupTitle" render="Label" position="top" size="*,85" font="FdLcD;38" foregroundColor="#87CEFA" halign="left"  valign="center" />
@@ -256,8 +261,8 @@
 	</screen>		
 <!-- Servicescan -->
 	<screen name="ServiceScanSummary" position="0,0" size="400,240">
-		<widget source="parent.Title" render="Label" position="0,0" size="400,85" font="FdLcD;38" foregroundColor="#87CEFA" halign="center" valign="center" />
-		<widget name="scan_progress" render="Progress" position="0,100" size="400,35"  borderWidth="2" />
+		<widget name="Title" position="0,0" size="400,85" font="FdLcD;38" foregroundColor="#87CEFA" halign="center" valign="center" />
+		<widget name="scan_progress" position="0,100" size="400,35"  borderWidth="2" />
 		<widget name="Service" position="0,150" size="400,85" font="FdLcD;38" halign="center" valign="center" />
 	</screen> 		
 <!-- Network -->	
@@ -302,7 +307,7 @@
 			<convert type="ClockToText">Format:%d.%m.%Y</convert>
 		</widget>
 		<panel name="MeinRecordingPanel" />
-		<panel name="MeinTunerInfoPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>
 <!-- Plugin browser -->
 	<screen name="PluginBrowserSummary" position="fill">
@@ -313,7 +318,7 @@
 	</screen>
 <!-- JobView Summary -->
 	<screen name="JobView_summary" position="0,0" size="400,240">
-		<widget source="parent.summary_job_progress" render="Label" position="0,0" size="400,70" font="FdLcD;70" zposition="0" halign="center" valign="center" transparent="1" >
+		<widget source="parent.summary_job_progress" render="Label" position="0,0" size="400,70" font="FdLcD;70" zposition="1" halign="center" valign="center" transparent="1" >
 			<convert type="ProgressToText">InPercent</convert>
 		</widget>
 		<widget source="parent.summary_job_progress" render="Progress" position="0,90" size="400,40" borderWidth="1" zPosition="1" />
@@ -340,7 +345,9 @@
 	<screen name="EPGSelectionMulti_summary" position="0,0" size="400,240">
 		<panel name="MyEPGPanel" />
 	</screen>
-
+	<screen name="EPGvertical_summary" position="0,0" size="400,240">
+		<panel name="MyEPGPanel" />
+	</screen>
 	<screen name="EPGSelection_summary" position="0,0" size="400,240">
 		<widget source="parent.Service" render="Label" position="0,0" size="400,38" foregroundColor="#87CEFA" font="FdLcD;34" transparent="1" halign="center" noWrap="1" >
 			<convert type="ServiceName">Name</convert>
@@ -519,6 +526,9 @@
 			<convert type="MovieInfo">FileSize</convert>
 		</widget>
 	</screen>
+	<screen name="EMCSelectionSummary" position="0,0" size="400,240">
+		<panel name="EMCSelection_summary" />
+	</screen>
 	<screen name="EMCMoviePlayerSummary" position="0,0" size="400,240" >
 		<widget source="session.CurrentService" render="Label" position="0,0" size="400,133" font="FdLcD;38" halign="center" valign="center" transparent="1" zPosition="2" >
 			  <convert type="ServiceName">Name</convert>
@@ -533,7 +543,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerInfoPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>
 	<screen name="MovieMenu_summary" position="0,0" size="400,240">
 		<widget source="parent.menu" render="Label" position="0,0," size="400,178" font="FdLcD;41" foregroundColor="#87CEFA" halign="center" valign="center">
@@ -560,6 +570,6 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerInfoPanel" />
+		<panel name="MeinTunerESIteam" />
 	</screen>
 </skin>

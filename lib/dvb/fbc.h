@@ -28,15 +28,15 @@ private:
 	static eFBCTunerManager *m_instance;
 	std::map<int, FBC_TUNER> m_fbc_tuners;
 
-	int setProcFBCID(int feid, int root_idx, bool is_linked);
+	int setProcFBCID(int fe_id, int root_idx, bool is_linked);
 	int feSlotID(const eDVBRegisteredFrontend *fe) const;
 	bool isLinked(eDVBRegisteredFrontend *fe) const;
  	bool isUnicable(eDVBRegisteredFrontend *fe) const;
  	bool isFeUsed(eDVBRegisteredFrontend *fe, bool a_simulate) const;
-	bool isSameFbcSet(int feid_a, int feid_b);
+	bool isSameFbcSet(int fe_id_a, int fe_id_b);
 	bool isRootFe(eDVBRegisteredFrontend *fe);
-	int getFBCID(int feid);
-	int getDefaultFBCID(int feid);
+	int getFBCID(int fe_id);
+	int getDefaultFBCID(int fe_id);
 
 	eDVBRegisteredFrontend *getPrev(eDVBRegisteredFrontend *fe) const;
 	eDVBRegisteredFrontend *getNext(eDVBRegisteredFrontend *fe) const;
@@ -60,8 +60,9 @@ public:
 	void unLink(eDVBRegisteredFrontend *link_fe);
 	bool canLink(eDVBRegisteredFrontend *fe);
 	int getLinkedSlotID(int feid) const;
-	int getFBCSetID(int feid);
-	bool isFBCLink(int feid);
+	int getFBCSetID(int fe_id);
+	bool isFBCLink(int fe_id);
 };
 
 #endif /* __dvb_fbc_h */
+

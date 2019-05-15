@@ -5,7 +5,6 @@ from Components.ChoiceList import ChoiceList, ChoiceEntryComponent
 from Components.SystemInfo import SystemInfo
 from Components.config import config, ConfigSubsection, ConfigText, ConfigYesNo
 from Components.PluginComponent import plugins
-from Components.Sources.StaticText import StaticText
 from Screens.ChoiceBox import ChoiceBox
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -14,16 +13,17 @@ from Tools.BoundFunction import boundFunction
 from ServiceReference import ServiceReference
 from enigma import eServiceReference, eActionMap
 from Components.Label import Label
+from boxbranding import getHaveHDMIinHD, getHaveHDMIinFHD, getHaveCI
 import os
 
 def getButtonSetupKeys():
-	return [(_("Red"), "red", ""),
-		(_("Red long"), "red_long", ""),
+	return [(_("Red"), "red", "Plugins/Extensions/WeatherPlugin/1"),
+		(_("Red long"), "red_long", "Infobar/instantRecord"),
 		(_("Green"), "green", ""),
-		(_("Green long"), "green_long", ""),
+		(_("Green long"), "green_long", "Plugins/Extensions/MediaPlayer/1"),
 		(_("Yellow"), "yellow", ""),
-		(_("Yellow long"), "yellow_long", ""),
-		(_("Blue"), "blue", ""),
+		(_("Yellow long"), "yellow_long", "Module/Screens.audioSelection/audioSelection"),
+		(_("Blue"), "blue", "Infobar/showExtensionSelection"),
 		(_("Blue long"), "blue_long", ""),
 		(_("Info (EPG)"), "info", "Infobar/InfoPressed/1"),
 		(_("Info (EPG) Long"), "info_long", "Infobar/showEventInfoPlugins/1"),
@@ -41,6 +41,8 @@ def getButtonSetupKeys():
 		(_("PageDown long"), "pagedown_long", ""),
 		(_("Channel up"), "channelup", ""),
 		(_("Channel down"), "channeldown", ""),
+		(_("EJECTCD"), "ejectcd", ""),
+		(_("EJECTCD long"), "ejectcd_long", ""),
 		(_("TV"), "showTv", ""),
 		(_("Radio"), "radio", ""),
 		(_("Radio long"), "radio_long", ""),
@@ -65,6 +67,8 @@ def getButtonSetupKeys():
 		(_("Media long"), "media_long", ""),
 		(_("Open"), "open", ""),
 		(_("Open long"), "open_long", ""),
+		(_("Option"), "option", ""),
+		(_("Option long"), "option_long", ""),
 		(_("Www"), "www", ""),
 		(_("Www long"), "www_long", ""),
 		(_("Directory"), "directory", ""),
@@ -76,10 +80,13 @@ def getButtonSetupKeys():
 		(_("Aspect"), "mode", ""),
 		(_("Aspect long"), "mode_long", ""),
 		(_("Home"), "home", ""),
+		(_("Home long"), "home_long", ""),
 		(_("End"), "end", ""),
+		(_("End long"), "end_long", ""),
 		(_("Next"), "next", ""),
 		(_("Previous"), "previous", ""),
 		(_("Audio"), "audio", ""),
+		(_("Audio long"), "audio_long", ""),
 		(_("Play"), "play", ""),
 		(_("Playpause"), "playpause", ""),
 		(_("Stop"), "stop", ""),
@@ -97,25 +104,33 @@ def getButtonSetupKeys():
 		(_("Prevsong long"), "prevsong_long", ""),
 		(_("Program"), "prog", ""),
 		(_("Program long"), "prog_long", ""),
-		(_("Timeshift"), "timeshift", ""),
+		(_("Time"), "time", ""),
+		(_("Time long"), "time_long", ""),
 		(_("Homepage"), "homep", ""),
 		(_("Homepage long"), "homep_long", ""),
 		(_("Search/WEB"), "search", ""),
 		(_("Search/WEB long"), "search_long", ""),
 		(_("Slow"), "slow", ""),
 		(_("Mark/Portal/Playlist"), "mark", ""),
+		(_("Mark/Portal/Playlist long"), "mark_long", ""),
 		(_("Sleep"), "sleep", ""),
 		(_("Sleep long"), "sleep_long", ""),
 		(_("Power"), "power", ""),
 		(_("Power long"), "power_long", ""),
+		(_("HDMIin"), "HDMIin", "Infobar/HDMIIn"),
+		(_("HDMIin") + " " + _("long"), "HDMIin_long", (SystemInfo["LcdLiveTV"] and "Infobar/ToggleLCDLiveTV") or ""),
 		(_("Context"), "contextMenu", "Infobar/showExtensionSelection"),
 		(_("Context long"), "context_long", ""),
 		(_("SAT"), "sat", "Infobar/openSatellites"),
 		(_("SAT long"), "sat_long", ""),
 		(_("Prov"), "prov", ""),
 		(_("Prov long"), "prov_long", ""),
-		(_("F1/LAN"), "f1", ""),
-		(_("F1/LAN long"), "f1_long", ""),
+		(_("LAN"), "lan", ""),
+		(_("LAN long"), "lan_long", ""),
+		(_("PC"), "pc", ""),
+		(_("PC long"), "pc_long", ""),
+		(_("F1"), "f1", ""),
+		(_("F1 long"), "f1_long", ""),
 		(_("F2"), "f2", ""),
 		(_("F2 long"), "f2_long", ""),
 		(_("F3"), "f3", ""),
@@ -123,7 +138,13 @@ def getButtonSetupKeys():
 		(_("F4"), "f4", ""),
 		(_("F4 long"), "f4_long", ""),
 		(_("PIP"), "f6", ""),
-		(_("PIP long"), "f6_long", ""),]
+		(_("PIP long"), "f6_long", ""),
+		(_("MOUSE"), "mouse", ""),
+		(_("MOUSE long"), "mouse_long", ""),
+		(_("VOD"), "vod", ""),
+		(_("VOD long"), "vod_long", ""),
+		(_("ZOOM"), "zoom", ""),
+		(_("ZOOM long"), "zoom_long", "")]
 
 config.misc.ButtonSetup = ConfigSubsection()
 config.misc.ButtonSetup.additional_keys = ConfigYesNo(default=True)
@@ -138,21 +159,21 @@ def getButtonSetupFunctions():
 	pluginlist.sort(key=lambda p: p.name)
 	for plugin in pluginlist:
 		if plugin.name not in twinPlugins and plugin.path and 'selectedevent' not in plugin.__call__.func_code.co_varnames:
-			if plugin.path[24:] in twinPaths:
-				twinPaths[plugin.path[24:]] += 1
+			if twinPaths.has_key(plugin.path[plugin.path.rfind("Plugins"):]):
+				twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] += 1
 			else:
-				twinPaths[plugin.path[24:]] = 1
-			ButtonSetupFunctions.append((plugin.name, plugin.path[24:] + "/" + str(twinPaths[plugin.path[24:]]) , "EPG"))
+				twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] = 1
+			ButtonSetupFunctions.append((plugin.name, plugin.path[plugin.path.rfind("Plugins"):] + "/" + str(twinPaths[plugin.path[plugin.path.rfind("Plugins"):]]) , "EPG"))
 			twinPlugins.append(plugin.name)
 	pluginlist = plugins.getPlugins([PluginDescriptor.WHERE_PLUGINMENU, PluginDescriptor.WHERE_EXTENSIONSMENU, PluginDescriptor.WHERE_EVENTINFO])
 	pluginlist.sort(key=lambda p: p.name)
 	for plugin in pluginlist:
 		if plugin.name not in twinPlugins and plugin.path:
-			if plugin.path[24:] in twinPaths:
-				twinPaths[plugin.path[24:]] += 1
+			if twinPaths.has_key(plugin.path[plugin.path.rfind("Plugins"):]):
+				twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] += 1
 			else:
-				twinPaths[plugin.path[24:]] = 1
-			ButtonSetupFunctions.append((plugin.name, plugin.path[24:] + "/" + str(twinPaths[plugin.path[24:]]) , "Plugins"))
+				twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] = 1
+			ButtonSetupFunctions.append((plugin.name, plugin.path[plugin.path.rfind("Plugins"):] + "/" + str(twinPaths[plugin.path[plugin.path.rfind("Plugins"):]]) , "Plugins"))
 			twinPlugins.append(plugin.name)
 	ButtonSetupFunctions.append((_("Show graphical multi EPG"), "Infobar/openGraphEPG", "EPG"))
 	ButtonSetupFunctions.append((_("Main menu"), "Infobar/mainMenu", "InfoBar"))
@@ -177,6 +198,7 @@ def getButtonSetupFunctions():
 	ButtonSetupFunctions.append((_("Disable digital downmix"), "Infobar/audioDownmixOff", "InfoBar"))
 	ButtonSetupFunctions.append((_("Switch to radio mode"), "Infobar/showRadio", "InfoBar"))
 	ButtonSetupFunctions.append((_("Switch to TV mode"), "Infobar/showTv", "InfoBar"))
+	ButtonSetupFunctions.append((_("Show servicelist or movies"), "Infobar/showServiceListOrMovies", "InfoBar"))
 	ButtonSetupFunctions.append((_("Show movies"), "Infobar/showMovies", "InfoBar"))
 	ButtonSetupFunctions.append((_("Instant record"), "Infobar/instantRecord", "InfoBar"))
 	ButtonSetupFunctions.append((_("Start instant recording"), "Infobar/startInstantRecording", "InfoBar"))
@@ -196,7 +218,7 @@ def getButtonSetupFunctions():
 		ButtonSetupFunctions.append((_("Move PIP"), "Infobar/movePiP", "InfoBar"))
 		ButtonSetupFunctions.append((_("Toggle PIPzap"), "Infobar/togglePipzap", "InfoBar"))
 	ButtonSetupFunctions.append((_("Activate HbbTV (Redbutton)"), "Infobar/activateRedButton", "InfoBar"))
-	if SystemInfo["HDMIin"]:
+	if getHaveHDMIinHD() in ('True') or getHaveHDMIinFHD() in ('True'):
 		ButtonSetupFunctions.append((_("Toggle HDMI-In full screen"), "Infobar/HDMIInFull", "InfoBar"))
 		ButtonSetupFunctions.append((_("Toggle HDMI-In PiP"), "Infobar/HDMIInPiP", "InfoBar"))
 	if SystemInfo["LcdLiveTV"]:
@@ -205,9 +227,16 @@ def getButtonSetupFunctions():
 		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartup/MultiBootStartup", "InfoBar"))
 	if SystemInfo["HaveMultiBootGB"]:
 		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupGB/MultiBootStartup", "InfoBar"))
+	if SystemInfo["HaveMultiBootCY"]:
+		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupCY/MultiBootStartup", "InfoBar"))
+	if SystemInfo["HaveMultiBootDS"]:
+		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupDS/MultiBootStartup", "InfoBar"))
+	if SystemInfo["HaveMultiBootOS"]:
+		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupOS/MultiBootStartup", "InfoBar"))
 	ButtonSetupFunctions.append((_("Hotkey Setup"), "Module/Screens.ButtonSetup/ButtonSetup", "Setup"))
 	ButtonSetupFunctions.append((_("Software update"), "Module/Screens.SoftwareUpdate/UpdatePlugin", "Setup"))
-	ButtonSetupFunctions.append((_("CI (Common Interface) Setup"), "Module/Screens.Ci/CiSelection", "Setup"))
+	if getHaveCI() in ('True'):
+		ButtonSetupFunctions.append((_("CI (Common Interface) Setup"), "Module/Screens.Ci/CiSelection", "Setup"))
 	ButtonSetupFunctions.append((_("Videosetup"), "Module/Screens.VideoMode/VideoSetup", "Setup"))
 	ButtonSetupFunctions.append((_("Tuner Configuration"), "Module/Screens.Satconfig/NimSelection", "Scanning"))
 	ButtonSetupFunctions.append((_("Manual Scan"), "Module/Screens.ScanSetup/ScanSetup", "Scanning"))
@@ -216,10 +245,12 @@ def getButtonSetupFunctions():
 		ButtonSetupFunctions.append((plugin[0], "MenuPlugin/scan/" + plugin[2], "Scanning"))
 	ButtonSetupFunctions.append((_("Network setup"), "Module/Screens.NetworkSetup/NetworkAdapterSelection", "Setup"))
 	ButtonSetupFunctions.append((_("Network menu"), "Infobar/showNetworkMounts", "Setup"))
+	ButtonSetupFunctions.append((_("VPN"), "Module/Screens.NetworkSetup/NetworkOpenvpn", "Setup"))
 	ButtonSetupFunctions.append((_("Plugin Browser"), "Module/Screens.PluginBrowser/PluginBrowser", "Setup"))
 	ButtonSetupFunctions.append((_("Channel Info"), "Module/Screens.ServiceInfo/ServiceInfo", "Setup"))
 	ButtonSetupFunctions.append((_("SkinSelector"), "Module/Screens.SkinSelector/SkinSelector", "Setup"))
-	ButtonSetupFunctions.append((_("LCD SkinSelector"), "Module/Screens.SkinSelector/LcdSkinSelector", "Setup"))
+	if SystemInfo["LCDSKINSetup"]:
+		ButtonSetupFunctions.append((_("LCD SkinSelector"), "Module/Screens.SkinSelector/LcdSkinSelector", "Setup"))
 	ButtonSetupFunctions.append((_("Timer"), "Module/Screens.TimerEdit/TimerEditList", "Setup"))
 	ButtonSetupFunctions.append((_("Open AutoTimer"), "Infobar/showAutoTimerList", "Setup"))
 	for plugin in plugins.getPluginsForMenu("system"):
@@ -238,8 +269,8 @@ def getButtonSetupFunctions():
 	ButtonSetupFunctions.append((_("Subtitles Settings"), "Setup/subtitlesetup", "Setup"))
 	ButtonSetupFunctions.append((_("Language"), "Module/Screens.LanguageSelection/LanguageSelection", "Setup"))
 	ButtonSetupFunctions.append((_("OscamInfo Mainmenu"), "Module/Screens.OScamInfo/OscamInfoMenu", "Plugins"))
-	ButtonSetupFunctions.append((_("NCamInfo Mainmenu"), "Module/Screens.NcamInfo/NcamInfoMenu", "Plugins"))
 	ButtonSetupFunctions.append((_("CCcamInfo Mainmenu"), "Module/Screens.CCcamInfo/CCcamInfoMain", "Plugins"))
+	ButtonSetupFunctions.append((_("Movieplayer"), "Infobar/showMoviePlayer", "Plugins"))
 	if os.path.isdir("/etc/ppanels"):
 		for x in [x for x in os.listdir("/etc/ppanels") if x.endswith(".xml")]:
 			x = x[:-4]
@@ -248,10 +279,6 @@ def getButtonSetupFunctions():
 		for x in [x for x in os.listdir("/usr/script") if x.endswith(".sh")]:
 			x = x[:-3]
 			ButtonSetupFunctions.append((_("Shellscript") + " " + x, "Shellscript/" + x, "Shellscripts"))
-	if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/plugin.pyo"):
-		ButtonSetupFunctions.append((_("EnhancedMovieCenter"), "EMC/", "Plugins"))
-	if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/ESIteam/ScriptRunner.pyo"):
-		ButtonSetupFunctions.append((_("ScriptRunner"), "ScriptRunner/", "Plugins"))
 	if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/Kodi/plugin.pyo"):
 		ButtonSetupFunctions.append((_("Kodi MediaCenter"), "Kodi/", "Plugins"))
 	if os.path.isfile("/usr/lib/enigma2/python/Plugins/SystemPlugins/BluetoothSetup/plugin.pyo"):
@@ -261,20 +288,8 @@ def getButtonSetupFunctions():
 	return ButtonSetupFunctions
 
 class ButtonSetup(Screen):
-	def __init__(self, session, menu_path="", args=None):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
-		screentitle = _("Button setup")
-		if config.usage.show_menupath.value == 'large':
-			menu_path += screentitle
-			title = menu_path
-			self["menu_path_compressed"] = StaticText("")
-		elif config.usage.show_menupath.value == 'small':
-			title = screentitle
-			self["menu_path_compressed"] = StaticText(menu_path + " >" if not menu_path.endswith(' / ') else menu_path[:-3] + " >" or "")
-		else:
-			title = screentitle
-			self["menu_path_compressed"] = StaticText("")
-		Screen.setTitle(self, title)
 		self['description'] = Label(_('Click on your remote on the button you want to change'))
 		self.session = session
 		self.setTitle(_("Hotkey Setup"))
@@ -319,7 +334,7 @@ class ButtonSetup(Screen):
 		if self.longkeyPressed:
 			self.longkeyPressed = False
 		index = 0
-		for x in self.list[:config.misc.ButtonSetup.additional_keys.value and len(self.ButtonSetupKeys) or 16]:
+		for x in self.list[:config.misc.ButtonSetup.additional_keys.value and len(self.ButtonSetupKeys) or 10]:
 			if key == x[0][1]:
 				self["list"].moveToIndex(index)
 				if key.endswith("_long"):
@@ -361,7 +376,7 @@ class ButtonSetupSelect(Screen):
 		self.prevselected = self.selected[:]
 		self["choosen"] = ChoiceList(list=self.selected, selection=0)
 		self["list"] = ChoiceList(list=self.getFunctionList(), selection=0)
-		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions", "KeyboardInputActions"],
+		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions", "KeyboardInputActions"], 
 		{
 			"ok": self.keyOk,
 			"cancel": self.cancel,
@@ -401,7 +416,7 @@ class ButtonSetupSelect(Screen):
 		functionslist = []
 		catagories = {}
 		for function in self.ButtonSetupFunctions:
-			if function[2] not in catagories:
+			if not catagories.has_key(function[2]):
 				catagories[function[2]] = []
 			catagories[function[2]].append(function)
 		for catagorie in sorted(list(catagories)):
@@ -470,6 +485,7 @@ class ButtonSetupSelect(Screen):
 			direction()
 		else:
 			return 0
+
 	def save(self):
 		configValue = []
 		for x in self.selected:
@@ -480,7 +496,7 @@ class ButtonSetupSelect(Screen):
 
 	def cancel(self):
 		if self.selected != self.prevselected:
-			self.session.openWithCallback(self.cancelCallback, MessageBox, _("are you sure to cancel all changes"), default=False)
+			self.session.openWithCallback(self.cancelCallback, MessageBox, _("Are you sure to cancel all changes"), default=False)
 		else:
 			self.close()
 
@@ -489,7 +505,7 @@ class ButtonSetupSelect(Screen):
 
 class ButtonSetupActionMap(ActionMap):
 	def action(self, contexts, action):
-		if action in tuple(x[1] for x in getButtonSetupKeys()) and action in self.actions:
+		if (action in tuple(x[1] for x in getButtonSetupKeys()) and self.actions.has_key(action)):
 			res = self.actions[action](action)
 			if res is not None:
 				return res
@@ -499,7 +515,7 @@ class ButtonSetupActionMap(ActionMap):
 
 class helpableButtonSetupActionMap(HelpableActionMap):
 	def action(self, contexts, action):
-		if action in tuple(x[1] for x in getButtonSetupKeys()) and action in self.actions:
+		if (action in tuple(x[1] for x in getButtonSetupKeys()) and self.actions.has_key(action)):
 			res = self.actions[action](action)
 			if res is not None:
 				return res
@@ -524,7 +540,9 @@ class InfoBarButtonSetup():
 		selection = eval("config.misc.ButtonSetup." + key + ".value.split(',')")
 		selected = []
 		for x in selection:
-			if x.startswith("Zap"):
+			if x.startswith("ZapPanic"):
+				selected.append(((_("Panic to") + " " + ServiceReference(eServiceReference(x.split("/", 1)[1]).toString()).getServiceName()), x))
+			elif x.startswith("Zap"):
 				selected.append(((_("Zap to") + " " + ServiceReference(eServiceReference(x.split("/", 1)[1]).toString()).getServiceName()), x))
 			else:
 				function = list(function for function in getButtonSetupFunctions() if function[1] == x )
@@ -554,7 +572,7 @@ class InfoBarButtonSetup():
 				return self.execButtonSetup(selected[0])
 			else:
 				key = tuple(x[0] for x in self.ButtonSetupKeys if x[1] == key)[0]
-				self.session.openWithCallback(self.execButtonSetup, ChoiceBox, (_("Hotkey")) + "  " + key, selected)
+				self.session.openWithCallback(self.execButtonSetup, ChoiceBox, (_("Hotkey")) + ": " + key, selected)
 
 	def execButtonSetup(self, selected):
 		if selected:
@@ -562,26 +580,38 @@ class InfoBarButtonSetup():
 			if selected[0] == "Plugins":
 				twinPlugins = []
 				twinPaths = {}
-				pluginlist = plugins.getPlugins([PluginDescriptor.WHERE_PLUGINMENU ,PluginDescriptor.WHERE_EXTENSIONSMENU, PluginDescriptor.WHERE_EVENTINFO])
+				pluginlist = plugins.getPlugins(PluginDescriptor.WHERE_EVENTINFO)
+				pluginlist.sort(key=lambda p: p.name)
+				for plugin in pluginlist:
+					if plugin.name not in twinPlugins and plugin.path and 'selectedevent' not in plugin.__call__.func_code.co_varnames:	
+						if twinPaths.has_key(plugin.path[plugin.path.rfind("Plugins"):]):
+							twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] += 1
+						else:
+							twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] = 1
+						if plugin.path[plugin.path.rfind("Plugins"):] + "/" + str(twinPaths[plugin.path[plugin.path.rfind("Plugins"):]]) == "/".join(selected):
+							self.runPlugin(plugin)
+							return
+						twinPlugins.append(plugin.name)
+				pluginlist = plugins.getPlugins([PluginDescriptor.WHERE_PLUGINMENU, PluginDescriptor.WHERE_EXTENSIONSMENU])
 				pluginlist.sort(key=lambda p: p.name)
 				for plugin in pluginlist:
 					if plugin.name not in twinPlugins and plugin.path:
-						if plugin.path[24:] in twinPaths:
-							twinPaths[plugin.path[24:]] += 1
+						if twinPaths.has_key(plugin.path[plugin.path.rfind("Plugins"):]):
+							twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] += 1
 						else:
-							twinPaths[plugin.path[24:]] = 1
-						if plugin.path[24:] + "/" + str(twinPaths[plugin.path[24:]])== "/".join(selected):
+							twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] = 1
+						if plugin.path[plugin.path.rfind("Plugins"):] + "/" + str(twinPaths[plugin.path[plugin.path.rfind("Plugins"):]]) == "/".join(selected):
 							self.runPlugin(plugin)
-							break
+							return
 						twinPlugins.append(plugin.name)
 			elif selected[0] == "MenuPlugin":
 				for plugin in plugins.getPluginsForMenu(selected[1]):
 					if plugin[2] == selected[2]:
 						self.runPlugin(plugin[1])
-						break
+						return
 			elif selected[0] == "Infobar":
 				if hasattr(self, selected[1]):
-					exec "self." + selected[1] + "()"
+					exec "self." + ".".join(selected[1:]) + "()"
 				else:
 					return 0
 			elif selected[0] == "Module":
@@ -593,7 +623,10 @@ class InfoBarButtonSetup():
 			elif selected[0] == "Setup":
 				exec "from Screens.Setup import *"
 				exec "self.session.open(Setup, \"" + selected[1] + "\")"
-			elif selected[0] == "Zap":
+			elif selected[0].startswith("Zap"):
+				if selected[0] == "ZapPanic":
+					self.servicelist.history = []
+					self.pipShown() and self.showPiP()
 				self.servicelist.servicelist.setCurrent(eServiceReference("/".join(selected[1:])))
 				self.servicelist.zap(enable_pipzap = True)
 				if hasattr(self, "lastservice"):
@@ -601,6 +634,10 @@ class InfoBarButtonSetup():
 					self.close()
 				else:
 					self.show()
+				from Screens.MovieSelection import defaultMoviePath
+				moviepath = defaultMoviePath()
+				if moviepath:
+					config.movielist.last_videodir.value = moviepath
 			elif selected[0] == "PPanel":
 				ppanelFileName = '/etc/ppanels/' + selected[1] + ".xml"
 				if os.path.isfile(ppanelFileName) and os.path.isdir('/usr/lib/enigma2/python/Plugins/Extensions/PPanel'):
@@ -621,10 +658,6 @@ class InfoBarButtonSetup():
 					open(showMoviesNew(InfoBar.instance))
 				except Exception as e:
 					print('[EMCPlayer] showMovies exception:\n' + str(e))
-			elif selected[0] == "ScriptRunner":
-				if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/ESIteam/ScriptRunner.pyo"):
-					from Plugins.Extensions.ESIteam.ScriptRunner import ScriptRunner
-					self.session.open (ScriptRunner)
 			elif selected[0] == "Kodi":
 				if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/Kodi/plugin.pyo"):
 					from Plugins.Extensions.Kodi.plugin import KodiMainScreen
@@ -637,3 +670,13 @@ class InfoBarButtonSetup():
 				if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/Chromium/plugin.pyo"):
 					from Plugins.Extensions.Chromium.youtube import YoutubeTVWindow
 					self.session.open(YoutubeTVWindow)
+
+	def showServiceListOrMovies(self):
+		if hasattr(self, "openServiceList"):
+			self.openServiceList()
+		elif hasattr(self, "showMovies"):
+			self.showMovies()
+
+	def ToggleLCDLiveTV(self):
+		config.lcd.showTv.value = not config.lcd.showTv.value
+

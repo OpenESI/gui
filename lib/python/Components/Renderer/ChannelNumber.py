@@ -17,3 +17,4 @@ class ChannelNumber(Renderer, VariableText):
 				self.text = str(num)
 			else:
 				self.text = '---'
+

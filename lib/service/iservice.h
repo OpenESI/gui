@@ -388,8 +388,8 @@ public:
 
 		sHBBTVUrl,
 		sLiveStreamDemuxId,
-		sIsDedicated3D,
 		sBuffer,
+		sIsDedicated3D,
 		sHideVBI,
 		sCenterDVBSubs,
 
@@ -821,6 +821,7 @@ public:
 	virtual SWIG_VOID(RESULT) getAdapterId(int &result) const = 0;
 	virtual SWIG_VOID(RESULT) getDemuxId(int &result) const = 0;
 	virtual SWIG_VOID(RESULT) getCaIds(std::vector<int> &caids, std::vector<int> &ecmpids, std::vector<std::string> &ecmdatabytes) const = 0;
+	virtual SWIG_VOID(RESULT) getDefaultAudioPid(int &result) const = 0;
 };
 
 class iStreamableService: public iObject
@@ -1028,10 +1029,6 @@ public:
 	virtual SWIG_VOID(RESULT) stream(ePtr<iStreamableService> &SWIG_OUTPUT)=0;
 	virtual SWIG_VOID(RESULT) subServices(ePtr<iSubserviceList> &SWIG_OUTPUT)=0;
 	virtual SWIG_VOID(RESULT) getFilenameExtension(std::string &SWIG_OUTPUT)=0;
-	virtual PyObject *getCutList()
-	{
-		return PyList_New(0);
-	}
 };
 SWIG_TEMPLATE_TYPEDEF(ePtr<iRecordableService>, iRecordableServicePtr);
 

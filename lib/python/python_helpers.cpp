@@ -6,11 +6,11 @@ void PutToDict(ePyObject &dict, const char *key, long value)
 	if (item)
 	{
 		if (PyDict_SetItemString(dict, key, item))
-			eDebug("put %s to dict failed", key);
+			eDebug("[PutToDict] put %s to dict failed", key);
 		Py_DECREF(item);
 	}
 	else
-		eDebug("could not create PyObject for %s", key);
+		eDebug("[PutToDict] could not create PyObject for %s", key);
 }
 
 void PutToDict(ePyObject &dict, const char *key, ePyObject item)
@@ -18,11 +18,11 @@ void PutToDict(ePyObject &dict, const char *key, ePyObject item)
 	if (item)
 	{
 		if (PyDict_SetItemString(dict, key, item))
-			eDebug("put %s to dict failed", key);
+			eDebug("[PutToDict] put %s to dict failed", key);
 		Py_DECREF(item);
 	}
 	else
-		eDebug("invalid PyObject for %s", key);
+		eDebug("[PutToDict] invalid PyObject for %s", key);
 }
 
 void PutToDict(ePyObject &dict, const char *key, const char *value)
@@ -31,11 +31,11 @@ void PutToDict(ePyObject &dict, const char *key, const char *value)
 	if (item)
 	{
 		if (PyDict_SetItemString(dict, key, item))
-			eDebug("put %s to dict failed", key);
+			eDebug("[PutToDict] put %s to dict failed", key);
 		Py_DECREF(item);
 	}
 	else
-		eDebug("could not create PyObject for %s", key);
+		eDebug("[PutToDict] could not create PyObject for %s", key);
 }
 
 static PyObject *createTuple(int pid, const char *type)
@@ -107,6 +107,8 @@ void transponderDataToDict(ePyObject &dest, ePtr<iDVBTransponderData> data)
 		if (value >= 0) PutToDict(dest, "pls_mode", value);
 		value = data->getPLSCode();
 		if (value >= 0) PutToDict(dest, "pls_code", value);
+		value = data->getT2MIPlpId();
+		if (value >= -1) PutToDict(dest, "t2mi_plp_id", value);
 
 		/* additional terrestrial fields */
 		value = data->getBandwidth();
@@ -132,7 +134,7 @@ void streamingDataToDict(ePyObject &dest, ePtr<iStreamData> data)
 {
 	if (dest && PyDict_Check(dest))
 	{
-		int pmt, pcr, txt, adapter, demux;
+		int pmt, pcr, txt, adapter, demux, default_audio_pid;
 		std::vector<int> video, audio, subtitle;
 		unsigned int i;
 		ePyObject l = PyList_New(0);
@@ -171,5 +173,7 @@ void streamingDataToDict(ePyObject &dest, ePtr<iStreamData> data)
 		PutToDict(dest, "adapter", adapter);
 		data->getDemuxId(demux);
 		PutToDict(dest, "demux", demux);
+		data->getDefaultAudioPid(default_audio_pid);
+		PutToDict(dest, "default_audio_pid", default_audio_pid);
 	}
 }

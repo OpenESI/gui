@@ -3,11 +3,11 @@
 #
 
 LANG_TEXT = {
-"de_DE": {
-	 "T1": "Für Sprachauswahl Hoch/Runter-Tasten nutzen. Danach OK drücken.",
-	 "T2": "Sprachauswahl",
-	 "T3": "Abbrechen",
-	 "T4": "Speichern",
+"it_IT": {
+	 "T1": "Selezionare la propria lingua utilizzando i tasti Sù/Giù. Premere OK per confermare.",
+	 "T2": "Selezione lingua",
+	 "T3": "Annull.",
+	 "T4": "Salvare",
 },
 "ar_AE": {
 	 "T1": "من فضلك أستخدم ذر السهم العلوى أو السفلى لإختيار اللغه. ثم أضغط موافق .",
@@ -44,6 +44,12 @@ LANG_TEXT = {
 	 "T2": "Valg af sprog",
 	 "T3": "Fortryd",
 	 "T4": "Gem",
+},
+"de_DE": {
+	 "T1": "Für Sprachauswahl Hoch/Runter-Tasten nutzen. Danach OK drücken.",
+	 "T2": "Sprachauswahl",
+	 "T3": "Abbrechen",
+	 "T4": "Speichern",
 },
 "el_GR": {
 	 "T1": "Χρησιμοποιήστε τα πλήκτρα ΠΑΝΩ και ΚΑΤΩ για επιλογή γλώσσας. Μετά πιέστε το ΟΚ.",
@@ -105,6 +111,12 @@ LANG_TEXT = {
 	 "T3": "בטל",
 	 "T4": "שמור",
 },
+"hk_HK": {
+	 "T1": "按 上/下 鍵選擇語言, 選定後按 OK.",
+	 "T2": "語言選擇",
+	 "T3": "取消",
+	 "T4": "保存",
+},
 "hr_HR": {
 	 "T1": "Please use the UP and DOWN keys to select your language. Afterwards press the OK button.",
 	 "T2": "Odaberite Jezik",
@@ -122,12 +134,6 @@ LANG_TEXT = {
 	 "T2": "Val tungumáls",
 	 "T3": "Hætta við",
 	 "T4": "Vista",
-},
-"it_IT": {
-	 "T1": "Selezionare la propria lingua utilizzando i tasti Sù/Giù. Premere OK per confermare.",
-	 "T2": "Selezione lingua",
-	 "T3": "Annull.",
-	 "T4": "Salvare",
 },
 "ku_KU": {
 	 "T1": "Please use the UP and DOWN keys to select your language. Afterwards press the OK button.",
@@ -172,8 +178,8 @@ LANG_TEXT = {
 	 "T4": "Zapisz",
 },
 "pt_PT": {
-	 "T1": "Por favor use as teclas de Cima e Baixi para selecionar a sua língua. Depois prima OK.",
-	 "T2": "Selecção do Idioma",
+	 "T1": "Por favor use as teclas de Cima e Baixo para selecionar o seu idioma. Depois prima OK.",
+	 "T2": "Seleção do Idioma",
 	 "T3": "Cancelar",
 	 "T4": "Guardar",
 },
@@ -236,5 +242,11 @@ LANG_TEXT = {
 	 "T2": "Вибір мови",
 	 "T3": "Відмінити",
 	 "T4": "Зберегти",
+},
+"zh_CN": {
+	 "T1": "按 上/下 键选择语言, 选定后按 OK.",
+	 "T2": "语言选择",
+	 "T3": "取消",
+	 "T4": "保存",
 },
 }

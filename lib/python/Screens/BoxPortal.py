@@ -68,7 +68,7 @@ class BoxPortal(Screen):
 				InfoBar.showTv(InfoBar.instance)
 				self.exit()
 			elif selection[1] == "pvr":
-				InfoBar.showMovies(InfoBar.instance)
+				InfoBar.showMoviePlayer(InfoBar.instance)
 			elif selection[1] == "bmc":
 				InfoBar.showMediaCenter(InfoBar.instance)
 			elif selection[1] == "emc":
@@ -86,7 +86,7 @@ class BoxPortal(Screen):
 					from Plugins.Extensions.AZPlay.plugin import main
 					open(main(self.session))
 				except Exception as e:
-					print('[AZPlay] exception:\n' + str(e))
+					print('[AZPlay] exception:\n' + str(e))					
 			elif selection[1] == "teletext":
 				self.InfoBarTeletextPlugin()
 

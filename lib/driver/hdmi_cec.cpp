@@ -262,7 +262,7 @@ void eHdmiCEC::getAddressInfo()
 			{
 				if (memcmp(physicalAddress, addressinfo.physical, sizeof(physicalAddress)))
 				{
-					eDebug("eHdmiCEC: detected physical address change: %02X%02X --> %02X%02X", physicalAddress[0], physicalAddress[1], addressinfo.physical[0], addressinfo.physical[1]);
+					eDebug("[eHdmiCEC] detected physical address change: %02X%02X --> %02X%02X", physicalAddress[0], physicalAddress[1], addressinfo.physical[0], addressinfo.physical[1]);
 					memcpy(physicalAddress, addressinfo.physical, sizeof(physicalAddress));
 					reportPhysicalAddress();
 					/* emit */ addressChanged((physicalAddress[0] << 8) | physicalAddress[1]);
@@ -372,37 +372,14 @@ void eHdmiCEC::hdmiEvent(int what)
 		{
 			bool keypressed = false;
 			static unsigned char pressedkey = 0;
-			static unsigned char data_temp = 0;
 
-			eDebugNoNewLineStart("eHdmiCEC: received message");
+			eDebugNoNewLineStart("[eHdmiCEC] received message");
+			eDebugNoNewLine(" %02X", rxmessage.address);
 			for (int i = 0; i < rxmessage.length; i++)
 			{
 				eDebugNoNewLine(" %02X", rxmessage.data[i]);
 			}
 			eDebugNoNewLine("\n");
-
-			if (rxmessage.data[4] == 0x44) 
-			{
-				eDebugNoNewLineStart("eHdmiCEC: REGZALINK key pressed");
-				data_temp = rxmessage.data[5];
-				memset(rxmessage.data, 0, sizeof(rxmessage.data));
-				rxmessage.data[0] = 0x44;
-				rxmessage.data[1] = data_temp;
-				rxmessage.length = 2;
-				eDebugNoNewLine(" %02X", rxmessage.data[0]);
-				eDebugNoNewLine(" %02X", rxmessage.data[1]);
-				eDebugNoNewLine("\n");
-			}
-			if (rxmessage.data[4] == 0x45) 
-			{
-				eDebugNoNewLineStart("eHdmiCEC: REGZALINK key released");
-				memset(rxmessage.data, 0, sizeof(rxmessage.data));
-				rxmessage.data[0] = 0x45;
-				rxmessage.length = 1;
-				eDebugNoNewLine(" %02X", rxmessage.data[0]);
-				eDebugNoNewLine("\n");
-			}
-
 			bool hdmicec_report_active_menu = eConfigManager::getConfigBoolValue("config.hdmicec.report_active_menu", false);
 			if (hdmicec_report_active_menu)
 			{
@@ -423,11 +400,8 @@ void eHdmiCEC::hdmiEvent(int what)
 					}
 				}
 			}
-			if (rxmessage.length > 0)
-			{
-				ePtr<iCECMessage> msg = new eCECMessage(rxmessage.address, rxmessage.data[0], (char*)&rxmessage.data[1], rxmessage.length);
-				messageReceived(msg);
-			}
+			ePtr<iCECMessage> msg = new eCECMessage(rxmessage.address, rxmessage.data[0], (char*)&rxmessage.data[1], rxmessage.length);
+			messageReceived(msg);
 		}
 	}
 }
@@ -542,32 +516,8 @@ long eHdmiCEC::translateKey(unsigned char code)
 		case 0x74:
 			key = 0x190;
 			break;
-		case 0x40:
-			key = 0x74;
-			break;
-		case 0x11:
-			key = 0x8b;
-			break;
-		case 0x10:
-			key = 0x16d;
-			break;
-		case 0x0a:
-			key = 0x8d;
-			break;
-		case 0x33:
-			key = 0xd5;
-			break;
-		case 0x35:
-			key = 0x166;
-			break;
-		case 0x4a:
-			key = 0x172;
-			break;
-		case 0x0b:
-			key = 0x1b6;
-			break;
 		default:
-			key = 0x00;
+			key = 0x8b;
 			break;
 	}
 	return key;
@@ -577,12 +527,13 @@ void eHdmiCEC::sendMessage(struct cec_message &message)
 {
 	if (hdmiFd >= 0)
 	{
-		eDebugNoNewLineStart("eHdmiCEC: send message");
+		eDebugNoNewLineStart("[eHdmiCEC] send message");
+		eDebugNoNewLine(" %02X", message.address);
 		for (int i = 0; i < message.length; i++)
 		{
 			eDebugNoNewLine(" %02X", message.data[i]);
 		}
-		eDebugEOL();
+		eDebugNoNewLine("\n");
 		if (linuxCEC)
 		{
 			struct cec_msg msg;

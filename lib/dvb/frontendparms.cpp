@@ -154,11 +154,6 @@ int eDVBTransponderData::getPilot() const
 	return -1;
 }
 
-int eDVBTransponderData::getSystem() const
-{
-	return -1;
-}
-
 int eDVBTransponderData::getIsId() const
 {
 	return -1;
@@ -170,6 +165,14 @@ int eDVBTransponderData::getPLSMode() const
 }
 
 int eDVBTransponderData::getPLSCode() const
+{
+	return -1;
+}
+int eDVBTransponderData::getT2MIPlpId() const
+{
+	return -1;
+}
+int eDVBTransponderData::getSystem() const
 {
 	return -1;
 }
@@ -239,7 +242,7 @@ int eDVBSatelliteTransponderData::getInversion() const
 	{
 	case INVERSION_OFF: return eDVBFrontendParametersSatellite::Inversion_Off;
 	case INVERSION_ON: return eDVBFrontendParametersSatellite::Inversion_On;
-	default: eDebug("got unsupported inversion from frontend! report as INVERSION_AUTO!\n");
+	default: eDebug("[eDVBSatelliteTransponderData] got unsupported inversion from frontend! report as INVERSION_AUTO!\n");
 	case INVERSION_AUTO: return eDVBFrontendParametersSatellite::Inversion_Unknown;
 	}
 }
@@ -247,10 +250,7 @@ int eDVBSatelliteTransponderData::getInversion() const
 
 int eDVBSatelliteTransponderData::getFrequency() const
 {
-	if (originalValues)
-	{
-		return transponderParameters.frequency;
-	}
+	if (originalValues) return transponderParameters.frequency;
 
 	return roundMulti((spectinvCnt&1) ? frequencyOffset - getProperty(DTV_FREQUENCY) : frequencyOffset + getProperty(DTV_FREQUENCY), 1000);
 }
@@ -284,7 +284,7 @@ int eDVBSatelliteTransponderData::getFecInner() const
 	case FEC_8_9: return eDVBFrontendParametersSatellite::FEC_8_9;
 	case FEC_9_10: return eDVBFrontendParametersSatellite::FEC_9_10;
 	case FEC_NONE: return eDVBFrontendParametersSatellite::FEC_None;
-	default: eDebug("got unsupported FEC from frontend! report as FEC_AUTO!\n");
+	default: eDebug("[eDVBSatelliteTransponderData] got unsupported FEC from frontend! report as FEC_AUTO!\n");
 	case FEC_AUTO: return eDVBFrontendParametersSatellite::FEC_Auto;
 	}
 }
@@ -295,7 +295,7 @@ int eDVBSatelliteTransponderData::getModulation() const
 
 	switch (getProperty(DTV_MODULATION))
 	{
-	default: eDebug("got unsupported modulation from frontend! report as QPSK!");
+	default: eDebug("[eDVBSatelliteTransponderData] got unsupported modulation from frontend! report as QPSK!");
 	case QPSK: return eDVBFrontendParametersSatellite::Modulation_QPSK;
 	case PSK_8: return eDVBFrontendParametersSatellite::Modulation_8PSK;
 	case APSK_16: return eDVBFrontendParametersSatellite::Modulation_16APSK;
@@ -341,10 +341,15 @@ int eDVBSatelliteTransponderData::getSystem() const
 
 	switch (getProperty(DTV_DELIVERY_SYSTEM))
 	{
-	default: eDebug("got unsupported system from frontend! report as DVBS!");
+	default: eDebug("[eDVBSatelliteTransponderData] got unsupported system from frontend! report as DVBS!");
 	case SYS_DVBS: return eDVBFrontendParametersSatellite::System_DVB_S;
 	case SYS_DVBS2: return eDVBFrontendParametersSatellite::System_DVB_S2;
 	}
+}
+
+int eDVBSatelliteTransponderData::getSystems() const
+{
+	return -1;
 }
 
 int eDVBSatelliteTransponderData::getIsId() const
@@ -373,12 +378,15 @@ int eDVBSatelliteTransponderData::getPLSCode() const
 	if (stream_id == NO_STREAM_ID_FILTER) return transponderParameters.pls_code;
 	return (stream_id >> 8) & 0x3FFFF;
 }
-
-int eDVBSatelliteTransponderData::getSystems() const
+int eDVBSatelliteTransponderData::getT2MIPlpId() const
 {
-	return -1;
-}
+	if (originalValues) return transponderParameters.t2mi_plp_id;
 
+	/* FIXME HACK ALERT use unused by enigma2 ISDBT SEGMENT IDX to pass T2MI PLP ID */
+	unsigned int t2mi_plp_id = getProperty(DTV_ISDBT_SB_SEGMENT_IDX);
+	if (t2mi_plp_id == eDVBFrontendParametersSatellite::No_T2MI_PLP_Id) return transponderParameters.t2mi_plp_id;
+	return t2mi_plp_id;
+}
 DEFINE_REF(eDVBCableTransponderData);
 
 eDVBCableTransponderData::eDVBCableTransponderData(struct dtv_property *dtvproperties, unsigned int propertycount, eDVBFrontendParametersCable &transponderparms, bool original)
@@ -507,7 +515,6 @@ int eDVBTerrestrialTransponderData::getFrequency() const
 	{
 		return transponderParameters.frequency;
 	}
-
 	return getProperty(DTV_FREQUENCY);
 }
 
@@ -527,12 +534,8 @@ int eDVBTerrestrialTransponderData::getCodeRateLp() const
 	case FEC_1_2: return eDVBFrontendParametersTerrestrial::FEC_1_2;
 	case FEC_2_3: return eDVBFrontendParametersTerrestrial::FEC_2_3;
 	case FEC_3_4: return eDVBFrontendParametersTerrestrial::FEC_3_4;
-	case FEC_3_5: return eDVBFrontendParametersTerrestrial::FEC_3_5;
-	case FEC_4_5: return eDVBFrontendParametersTerrestrial::FEC_4_5;
 	case FEC_5_6: return eDVBFrontendParametersTerrestrial::FEC_5_6;
-	case FEC_6_7: return eDVBFrontendParametersTerrestrial::FEC_6_7;
 	case FEC_7_8: return eDVBFrontendParametersTerrestrial::FEC_7_8;
-	case FEC_8_9: return eDVBFrontendParametersTerrestrial::FEC_8_9;
 	default:
 	case FEC_AUTO: return eDVBFrontendParametersTerrestrial::FEC_Auto;
 	}
@@ -547,12 +550,8 @@ int eDVBTerrestrialTransponderData::getCodeRateHp() const
 	case FEC_1_2: return eDVBFrontendParametersTerrestrial::FEC_1_2;
 	case FEC_2_3: return eDVBFrontendParametersTerrestrial::FEC_2_3;
 	case FEC_3_4: return eDVBFrontendParametersTerrestrial::FEC_3_4;
-	case FEC_3_5: return eDVBFrontendParametersTerrestrial::FEC_3_5;
-	case FEC_4_5: return eDVBFrontendParametersTerrestrial::FEC_4_5;
 	case FEC_5_6: return eDVBFrontendParametersTerrestrial::FEC_5_6;
-	case FEC_6_7: return eDVBFrontendParametersTerrestrial::FEC_6_7;
 	case FEC_7_8: return eDVBFrontendParametersTerrestrial::FEC_7_8;
-	case FEC_8_9: return eDVBFrontendParametersTerrestrial::FEC_8_9;
 	default:
 	case FEC_AUTO: return eDVBFrontendParametersTerrestrial::FEC_Auto;
 	}

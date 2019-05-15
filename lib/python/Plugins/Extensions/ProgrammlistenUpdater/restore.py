@@ -30,9 +30,9 @@ class PU_Restore(Screen,ConfigListScreen):
         self.session = session
         self['ListSetting'] = MenuList([])
         self.skinName = "PU_Restore"
-        self.setup_title = _("Programmlisten-Updater Restore")
+        self.setup_title = _("Programmlisten Restore")
         self.setTitle(self.setup_title)
-
+        
         self["key_red"] = StaticText(_("Exit"))
         self["key_green"] = StaticText(_("Restore"))
         self["key_yellow"] = StaticText(_("Delete"))
@@ -58,7 +58,8 @@ class PU_Restore(Screen,ConfigListScreen):
 
     def keyGreen(self):
         self.filename = self['ListSetting'].getCurrent()
-        self.session.openWithCallback(self.CBselect, MessageBox, _('Selected settingslist: %s\n\nDo you want to restore this settinglist?') % (self.filename), MessageBox.TYPE_YESNO)
+        if self.filename is not None:
+            self.session.openWithCallback(self.CBselect, MessageBox, _('Selected settingslist: %s\n\nDo you want to restore this settinglist?') % (self.filename), MessageBox.TYPE_YESNO)
 
     def CBselect(self, req):
         if req:
@@ -66,14 +67,15 @@ class PU_Restore(Screen,ConfigListScreen):
 
     def keyYellow(self):
         self.filename = self['ListSetting'].getCurrent()
-        self.session.openWithCallback(self.CBremove, MessageBox, _('Selected settingslist: %s\n\nDo you want to delete this settinglist?') % (self.filename), MessageBox.TYPE_YESNO)
+        if self.filename is not None:
+            self.session.openWithCallback(self.CBremove, MessageBox, _('Selected settingslist: %s\n\nDo you want to delete this settinglist?') % (self.filename), MessageBox.TYPE_YESNO)
 
     def CBremove(self, req):
         if req:
             os.system('rm -rf %s' %(Directory + '/Settings/enigma2/' + self.filename))
             self.List = self.Search_Settings()
             self.SettingsMenu()
-
+    
     def Search_Settings(self):
         list = []
         os.chdir(Directory + '/Settings/enigma2')
@@ -101,3 +103,5 @@ class PU_Restore(Screen,ConfigListScreen):
         eDVBDB.getInstance().reloadBouquets()
         self.session.open(MessageBox, _('Setting Restored ') + self.filename + _(' of ') + date, MessageBox.TYPE_INFO, timeout=15)
         self.close()
+        
+        

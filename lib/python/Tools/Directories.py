@@ -35,10 +35,9 @@ SCOPE_ACTIVE_SKIN = 19
 SCOPE_LCDSKIN = 20
 SCOPE_ACTIVE_LCDSKIN = 21
 SCOPE_AUTORECORD = 22
-SCOPE_VOD = 23
-SCOPE_DEFAULTDIR = 24
-SCOPE_DEFAULTPARTITION = 25
-SCOPE_DEFAULTPARTITIONMOUNTDIR = 26
+SCOPE_DEFAULTDIR = 23
+SCOPE_DEFAULTPARTITION = 24
+SCOPE_DEFAULTPARTITIONMOUNTDIR = 25
 
 PATH_CREATE = 0
 PATH_DONTCREATE = 1
@@ -57,7 +56,6 @@ defaultPaths = {
 		SCOPE_SKIN_IMAGE: (eEnv.resolve("${datadir}/enigma2/"), PATH_DONTCREATE),
 		SCOPE_HDD: ("/media/hdd/movie/", PATH_DONTCREATE),
 		SCOPE_TIMESHIFT: ("/media/hdd/timeshift/", PATH_DONTCREATE),
-		SCOPE_VOD: ('/media/hdd/vod/', PATH_DONTCREATE),
 		SCOPE_AUTORECORD: ("/media/hdd/movie/", PATH_DONTCREATE),
 		SCOPE_MEDIA: ("/media/", PATH_DONTCREATE),
 		SCOPE_PLAYLIST: (eEnv.resolve("${sysconfdir}/enigma2/playlist/"), PATH_CREATE),
@@ -78,7 +76,6 @@ fallbackPaths = {
 					   (eEnv.resolve("${datadir}/enigma2/defaults/"), FILE_COPY)],
 		SCOPE_HDD: [("/media/hdd/movie", PATH_MOVE)],
 		SCOPE_TIMESHIFT: [("/media/hdd/timeshift", PATH_MOVE)],
-		SCOPE_VOD: [('/media/hdd/vod', PATH_MOVE)],
 		SCOPE_AUTORECORD: [("/media/hdd/movie", PATH_MOVE)]
 	}
 
@@ -148,7 +145,7 @@ def resolveFilename(scope, base = "", path_prefix = None):
 		if base and pathExists(tmp + base):
 			path = tmp
 		elif base and pathExists(defaultPaths[SCOPE_LCDSKIN][0] + base):
-			path = defaultPaths[SCOPE_LCDSKIN][0]
+			path = defaultPaths[SCOPE_SKIN][0]
 		else:
 			tmp = defaultPaths[SCOPE_LCDSKIN][0]
 			pos = config.skin.display_skin.value.rfind('/')
@@ -231,41 +228,33 @@ def resolveFilename(scope, base = "", path_prefix = None):
 pathExists = os.path.exists
 isMount = os.path.ismount
 
-def bestRecordingLocation(candidates):
-	path = ''
-	biggest = 0
-	for candidate in candidates:
-		try:
-			stat = os.statvfs(candidate[1])
-			# must have some free space (i.e. not read-only)
-			if stat.f_bavail:
-				# Free space counts double
-				size = (stat.f_blocks + stat.f_bavail) * stat.f_bsize
-				if size > biggest:
-					path = candidate[1]
-					biggest = size
-		except Exception, e:
-			print "[DRL]", e
-	return path
-
 def defaultRecordingLocation(candidate=None):
 	if candidate and os.path.exists(candidate):
 		return candidate
 	# First, try whatever /hdd points to, or /media/hdd
 	try:
-		path = os.readlink('/hdd') or os.readlink('/mmc') or os.readlink('/usb')
+		path = os.readlink('/hdd')
 	except:
-		path = '/media/hdd' or '/media/mmc' or '/media/usb'
+		path = '/media/hdd'
 	if not os.path.exists(path):
 		path = ''
 		# Find the largest local disk
 		from Components import Harddisk
 		mounts = [m for m in Harddisk.getProcMounts() if m[1].startswith('/media/')]
-		# Search local devices first, use the larger one
-		path = bestRecordingLocation([m for m in mounts if m[0].startswith('/dev/')])
-		# If we haven't found a viable candidate yet, try remote mounts
-		if not path:
-			path = bestRecordingLocation(mounts)
+		biggest = 0
+		havelocal = False
+		for candidate in mounts:
+			try:
+				islocal = candidate[1].startswith('/dev/') # Good enough
+				stat = os.statvfs(candidate[1])
+				# Free space counts double
+				size = (stat.f_blocks + stat.f_bavail) * stat.f_bsize
+				if (islocal and not havelocal) or (islocal or not havelocal and size > biggest):
+					path = candidate[1]
+					havelocal = islocal
+					biggest = size
+			except Exception, e:
+				print "[DRL]", e
 	if path:
 		# If there's a movie subdir, we'd probably want to use that.
 		movie = os.path.join(path, 'movie')
@@ -320,10 +309,7 @@ def getRecordingFilename(basename, dirname = None):
 		filename += c
 
 	# max filename length for ext4 is 255 (minus 8 characters for .ts.meta)
-	# But must not truncate in the middle of a multi-byte utf8 character!
-	# So convert the truncation to unicode and back, ignoring errors.
-	# The result will be valid utf8 and so xml parsing will be OK.
-	filename = unicode(filename[:247], 'utf8', 'ignore').encode('utf8', 'ignore')
+	filename = filename[:247]
 
 	if dirname is not None:
 		if not dirname.startswith('/'):

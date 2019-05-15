@@ -21,30 +21,35 @@ class Screen(dict, GUISkin):
 		self.skinName = self.__class__.__name__
 		self.session = session
 		self.parent = parent
+		GUISkin.__init__(self)
+
 		self.onClose = [ ]
 		self.onFirstExecBegin = [ ]
 		self.onExecBegin = [ ]
 		self.onExecEnd = [ ]
 		self.onShown = [ ]
+
 		self.onShow = [ ]
 		self.onHide = [ ]
-		self.execing = False
-		self.shown = True
 
+		self.execing = False
+
+		self.shown = True
 		# already shown is false until the screen is really shown (after creation)
 		self.already_shown = False
+
 		self.renderer = [ ]
 
 		# in order to support screens *without* a help,
 		# we need the list in every screen. how ironic.
 		self.helpList = [ ]
+
 		self.close_on_next_exec = None
 
 		# stand alone screens (for example web screens)
 		# don't care about having or not having focus.
 		self.stand_alone = False
 		self.keyboardMode = None
-		GUISkin.__init__(self)
 
 	def saveKeyboardMode(self):
 		rcinput = eRCInput.getInstance()
@@ -122,13 +127,9 @@ class Screen(dict, GUISkin):
 			val.disconnectAll()  # disconnected converter/sources and probably destroy them. Sources will not be destroyed.
 
 		del self.session
-		for name in self.keys():
-			val = self[name]
-			if val:
-				val.destroy()
-			for (n, v) in self.items():
-				if v == val:
-					self[n] = None
+		for (name, val) in self.items():
+			val.destroy()
+			del self[name]
 
 		self.renderer = [ ]
 
@@ -146,7 +147,7 @@ class Screen(dict, GUISkin):
 
 	def show(self):
 		# Temporarily add to ease up identification of screens
-		#print '[SCREENNAME] ',self.skinName
+		print '[SCREENNAME] ',self.skinName
 		if (self.shown and self.already_shown) or not self.instance:
 			return
 		self.shown = True

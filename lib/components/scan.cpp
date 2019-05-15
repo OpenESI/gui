@@ -21,17 +21,17 @@ void eComponentScan::scanEvent(int evt)
 			int err;
 			if ((err = eDVBResourceManager::getInstance(res)) != 0)
 			{
-				eDebug("no resource manager");
+				eDebug("[eComponentScan] no resource manager");
 				m_failed = 2;
 			} else if ((err = res->getChannelList(db)) != 0)
 			{
 				m_failed = 3;
-				eDebug("no channel list");
+				eDebug("[eComponentScan] no channel list");
 			} else
 			{
 				m_scan->insertInto(db);
 				db->flush();
-				eDebug("scan done!");
+				eDebug("[eComponentScan] scan done!");
 			}
 			break;
 		}
@@ -39,7 +39,7 @@ void eComponentScan::scanEvent(int evt)
 			newService();
 			return;
 		case eDVBScan::evtFail:
-			eDebug("scan failed.");
+			eDebug("[eComponentScan] scan failed.");
 			m_failed = 1;
 			m_done = 1;
 			break;
@@ -101,31 +101,31 @@ int eComponentScan::start(int feid, int flags, int networkid)
 		return -1;
 
 	m_done = 0;
-	ePtr<eDVBResourceManager> res;
-	int err;
+	ePtr<eDVBResourceManager> mgr;
 
-	if ((err = eDVBResourceManager::getInstance(res)) != 0)
-	{
-		eDebug("[eComponentScan] no resource manager");
-		return -1;
-	}
+	eDVBResourceManager::getInstance(mgr);
 
 	eUsePtr<iDVBChannel> channel;
 
-	if (res->allocateRawChannel(channel, feid))
+	if (mgr->allocateRawChannel(channel, feid))
 	{
-		eDebug("scan: allocating raw channel (on frontend %d) failed!", feid);
+		eDebug("[eComponentScan] allocating raw channel (on frontend %d) failed!", feid);
 		return -1;
 	}
 
+	std::list<ePtr<iDVBFrontendParameters> > list;
 	m_scan = new eDVBScan(channel);
 	m_scan->connectEvent(sigc::mem_fun(*this, &eComponentScan::scanEvent), m_scan_event_connection);
 
 	if (!(flags & scanRemoveServices))
 	{
 		ePtr<iDVBChannelList> db;
-		if ((err = res->getChannelList(db)) != 0)
-			eDebug("no channel list");
+		ePtr<eDVBResourceManager> res;
+		int err;
+		if ((err = eDVBResourceManager::getInstance(res)) != 0)
+			eDebug("[eComponentScan] no resource manager");
+		else if ((err = res->getChannelList(db)) != 0)
+			eDebug("[eComponentScan] no channel list");
 		else
 		{
 			if (m_initial.size() > 1)

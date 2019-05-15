@@ -6,6 +6,9 @@
 #include <signal.h>
 #include <sys/sysinfo.h>
 #include <sys/mman.h>
+#ifdef HAVE_AMLOGIC
+#include <lib/dvb/amldecoder.h>
+#endif
 
 #include <linux/dvb/dmx.h>
 
@@ -15,9 +18,6 @@
 #include <lib/dvb/demux.h>
 #include <lib/dvb/esection.h>
 #include <lib/dvb/decoder.h>
-#ifdef HAVE_AMLOGIC
-#include <lib/dvb/amldecoder.h>
-#endif
 
 #include "crc32.h"
 
@@ -39,6 +39,7 @@ enum dmx_source {
 #define DMX_SET_SOURCE _IOW('o', 49, enum dmx_source)
 #endif
 
+
 //#define SHOW_WRITE_TIME
 static int determineBufferCount()
 {
@@ -49,20 +50,14 @@ static int determineBufferCount()
 	}
 	unsigned int megabytes = si.totalram >> 20;
 	int result;
-	if (megabytes > 600)
-		result = 64; // Use 15MB IO buffers
-	else if (megabytes > 500)
-		result = 52; // Use 12MB IO buffers
-	else if (megabytes > 400)
-		result = 44; // Use 10MB IO buffers
-	else if (megabytes > 300)
-		result = 32; // Use 7MB IO buffers
+	if (megabytes > 400)
+		result = 40; // 1024MB systems: Use 8MB IO buffers (vusolo2, vuduo2, ...)
 	else if (megabytes > 200)
-		result = 20; // Use 4MB IO buffers
+		result = 20; // 512MB systems: Use 4MB IO buffers (et9x00, vuultimo, ...)
 	else if (megabytes > 100)
-		result = 16; // Use 3MB demux buffers
+		result = 16; // 256MB systems: Use 3MB demux buffers (dm8000, et5x00, vuduo)
 	else
-		result = 8; // Use 1.5MB buffer
+		result = 8; // Smaller boxes: Use 1.5MB buffer (dm7025)
 	return result;
 }
 
@@ -81,6 +76,7 @@ eDVBDemux::eDVBDemux(int adapter, int demux):
 {
 	if (CFile::parseInt(&m_dvr_source_offset, "/proc/stb/frontend/dvr_source_offset") == 0)
 		eDebug("[eDVBDemux] using %d for PVR DMX_SET_SOURCE", m_dvr_source_offset);
+
 }
 
 eDVBDemux::~eDVBDemux()
@@ -97,9 +93,6 @@ int eDVBDemux::openDemux(void)
 
 int eDVBDemux::openDVR(int flags)
 {
-#ifdef HAVE_OLDPVR
-	return ::open("/dev/misc/pvr", flags);
-#else
 	char filename[32];
 	snprintf(filename, sizeof(filename), "/dev/dvb/adapter%d/dvr%d", adapter, demux);
 	eDebug("[eDVBDemux] open dvr %s", filename);
@@ -108,7 +101,6 @@ int eDVBDemux::openDVR(int flags)
 	return m_pvr_fd;
 #else
 	return ::open(filename, flags);
-#endif
 #endif
 }
 
@@ -125,7 +117,7 @@ RESULT eDVBDemux::setSourceFrontend(int fenum)
 		eDebug("[eDVBDemux] DMX_SET_SOURCE Frontend%d failed: %m", fenum);
 #if HAVE_AMLOGIC
 		/** FIXME: gg begin dirty hack  */
-		eDebug("Ignoring due to limitation to one frontend for each adapter and missing ioctl....");
+		eDebug("[eDVBDemux] Ignoring due to limitation to one frontend for each adapter and missing ioctl....");
 		source = fenum;
 		res = 0;
 		/** FIXME: gg end dirty hack  */
@@ -366,7 +358,7 @@ void eDVBPESReader::data(int)
 
 eDVBPESReader::eDVBPESReader(eDVBDemux *demux, eMainloop *context, RESULT &res): m_demux(demux), m_active(0)
 {
-	eDebug("[eDVBPESReader] Created. Opening demux");
+	eWarning("[eDVBPESReader] Created. Opening demux");
 	m_fd = m_demux->openDemux();
 	if (m_fd >= 0)
 	{
@@ -456,7 +448,7 @@ eDVBRecordFileThread::eDVBRecordFileThread(int packetsize, int bufferCount):
 	 m_buffer_use_histogram(bufferCount+1, 0)
 {
 	if (m_buffer == MAP_FAILED)
-		eFatal("[eDVBRecordFileThread] Failed to allocate filepush buffer, contact Team\n");
+		eFatal("[eDVBRecordFileThread] Failed to allocate filepush buffer, contact MiLo\n");
 	// m_buffer actually points to a data block large enough to hold ALL buffers. m_buffer will
 	// move around during writes, so we must remember where the "head" is.
 	m_allocated_buffer = m_buffer;
@@ -504,12 +496,8 @@ int eDVBRecordFileThread::AsyncIO::wait()
 {
 	if (aio.aio_buf != NULL) // Only if we had a request outstanding
 	{
-		int res;
-		while (1)
+		while (aio_error(&aio) == EINPROGRESS)
 		{
-			res = aio_error(&aio);
-			if (res != EINPROGRESS)
-				break;
 			eDebug("[eDVBRecordFileThread] Waiting for I/O to complete");
 			struct aiocb* paio = &aio;
 			int r = aio_suspend(&paio, 1, NULL);
@@ -519,20 +507,11 @@ int eDVBRecordFileThread::AsyncIO::wait()
 				return -1;
 			}
 		}
-		if (res == 0 || res == ECANCELED)
+		int r = aio_return(&aio);
+		aio.aio_buf = NULL;
+		if (r < 0)
 		{
-			__ssize_t r = aio_return(&aio);
-			aio.aio_buf = NULL;
-			if (r < 0)
-			{
-				eDebug("[eDVBRecordFileThread] wait: aio_return returned failure: %m");
-				return -1;
-			}
-		}
-		else //res > 0
-		{
-			aio.aio_buf = NULL;
-			eDebug("[eDVBRecordFileThread] wait: aio_error returned failure: %m");
+			eDebug("[eDVBRecordFileThread] wait: aio_return returned failure: %m");
 			return -1;
 		}
 	}
@@ -552,34 +531,23 @@ int eDVBRecordFileThread::AsyncIO::poll()
 {
 	if (aio.aio_buf == NULL)
 		return 0;
-	int res = aio_error(&aio);
-	if (res == EINPROGRESS)
+	if (aio_error(&aio) == EINPROGRESS)
 	{
 		return 1;
 	}
-	else if (res > 0)
+	int r = aio_return(&aio);
+	aio.aio_buf = NULL;
+	if (r < 0)
 	{
-		aio.aio_buf = NULL;
-		eDebug("[eDVBRecordFileThread] wait: aio_error returned failure: %m");
+		eDebug("[eDVBRecordFileThread] poll: aio_return returned failure: %m");
 		return -1;
 	}
-	else if (res == 0 || res == ECANCELED)
-	{
-		__ssize_t r = aio_return(&aio);
-		aio.aio_buf = NULL;
-		if (r < 0)
-		{
-			eDebug("[eDVBRecordFileThread] wait: aio_return returned failure: %m");
-			return -1;
-		}
-	}
-	aio.aio_buf = NULL;
 	return 0;
 }
 
 int eDVBRecordFileThread::AsyncIO::start(int fd, off_t offset, size_t nbytes, void* buffer)
 {
-	memset(&aio, 0, sizeof(aiocb)); // Documentation says "zero it before call".
+	memset(&aio, 0, sizeof(struct aiocb)); // Documentation says "zero it before call".
 	aio.aio_fildes = fd;
 	aio.aio_nbytes = nbytes;
 	aio.aio_offset = offset;   // Offset can be omitted with O_APPEND
@@ -595,7 +563,6 @@ int eDVBRecordFileThread::asyncWrite(int len)
 	suseconds_t diff;
 	gettimeofday(&starttime, NULL);
 #endif
-
 	if(!getProtocol())
 		m_ts_parser.parseData(m_current_offset, m_buffer, len);
 
@@ -668,7 +635,7 @@ void eDVBRecordFileThread::flush()
 		it->wait();
 	}
 	int bufferCount = m_aio.size();
-	eDebug("[eDVBRecordFileThread] buffer usage histogram (%d buffers of %zd kB)", bufferCount, m_buffersize>>10);
+	eDebug("[eDVBRecordFileThread] buffer usage histogram (%d buffers of %d kB)", bufferCount, m_buffersize>>10);
 	for (int i=0; i <= bufferCount; ++i)
 	{
 		if (m_buffer_use_histogram[i] != 0)
@@ -689,6 +656,7 @@ eDVBRecordStreamThread::eDVBRecordStreamThread(int packetsize) :
 {
 	eDebug("[eDVBRecordStreamThread] allocated %zu buffers of %zu kB", m_aio.size(), m_buffersize>>10);
 }
+
 
 int eDVBRecordStreamThread::writeData(int len)
 {
@@ -786,7 +754,11 @@ RESULT eDVBTSRecorder::start()
 	char filename[128];
 	snprintf(filename, 128, "/dev/dvb/adapter%d/demux%d", m_demux->adapter, m_demux->demux);
 
+#if HAVE_HISILICON
+	m_source_fd = ::open(filename, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
+#else
 	m_source_fd = ::open(filename, O_RDONLY | O_CLOEXEC);
+#endif
 
 	if (m_source_fd < 0)
 	{

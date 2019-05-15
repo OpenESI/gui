@@ -22,9 +22,8 @@ class Pig(Renderer):
 		attribs = self.skinAttributes[:]
 		for (attrib, value) in self.skinAttributes:
 			if attrib == "hidePip":
-				self.hidePip = value == "1"
+				self.hidePip = value == 1
 				attribs.remove((attrib,value))
-				break
 		self.skinAttributes = attribs
 		ret = Renderer.applySkin(self, desktop, parent)
 		if ret:

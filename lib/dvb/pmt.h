@@ -53,9 +53,9 @@ public:
 	std::string m_HbbTVUrl;
 	std::string m_ApplicationName;
 public:
-	HbbTVApplicationInfo(int controlCode, int orgid, int appid, std::string hbbtvUrl, std::string applicationName, int profileCode)
-		: m_ControlCode(controlCode), m_HbbTVUrl(hbbtvUrl), m_ApplicationName(applicationName), m_OrgId(orgid), 
-		  m_AppId(appid), m_ProfileCode(profileCode)
+	HbbTVApplicationInfo(int controlCode, int orgid, int appid, std::string hbbtvUrl, std::string applicationName,int profileCode)
+		: m_ControlCode(controlCode), m_HbbTVUrl(hbbtvUrl), m_ApplicationName(applicationName), m_OrgId(orgid), m_AppId(appid),
+		m_ProfileCode(profileCode)
 	{}
 };
 typedef std::list<HbbTVApplicationInfo *> HbbTVApplicationInfoList;
@@ -147,7 +147,7 @@ public:
 	int getDecodeDemux(ePtr<iDVBDemux> &demux);
 	void getAITApplications(std::map<int, std::string> &aitlist);
 	void getCaIds(std::vector<int> &caids, std::vector<int> &ecmpids, std::vector<std::string> &ecmdatabytes);
-	PyObject *getHbbTVApplications(void);
+	PyObject *getHbbTVApplications();
 
 	int getPVRChannel(ePtr<iDVBPVRChannel> &pvr_channel);
 	int getServiceReference(eServiceReferenceDVB &service) { service = m_reference; return 0; }
@@ -193,6 +193,7 @@ private:
 		std::string name;
 	};
 	std::vector<struct aitInfo> m_aitInfoList;
+	int compareAudioSubtitleCode(const std::string &subtitleTrack, const std::string &audioTrack);
 #endif
 };
 

@@ -50,8 +50,10 @@ public:
 #include <lib/dvb/sec.h>
 class eSecCommandList;
 
+#endif
 class eDVBFrontend: public iDVBFrontend, public sigc::trackable
 {
+#ifndef SWIG
 public:
 	enum {
 		NEW_CSW,
@@ -155,11 +157,12 @@ private:
 
 	uint64_t m_DebugOptions;
 
+#endif
 public:
+#ifndef SWIG
 	eDVBFrontend(const char *devidenodename, int fe, int &ok, bool simulate=false, eDVBFrontend *simulate_fe=NULL);
 	virtual ~eDVBFrontend();
 
-	int initModeList();
 	int readInputpower();
 	int getCurrentType(){return m_type;}
 	void overrideType(int type){m_type = type;} //workaraound for dvb api < 5
@@ -189,6 +192,7 @@ public:
 	void getTransponderData(ePtr<iDVBTransponderData> &dest, bool original);
 	void getFrontendData(ePtr<iDVBFrontendData> &dest);
 
+	bool isPreferred(int preferredFrontend, int slotid);
 	int isCompatibleWith(ePtr<iDVBFrontendParameters> &feparm);
 	int getDVBID() { return m_dvbid; }
 	int getSlotID() { return m_slotid; }
@@ -197,23 +201,26 @@ public:
 	static int getTypePriorityOrder() { return PriorityOrder; }
 	static void setPreferredFrontend(int index) { PreferredFrontendIndex = index; }
 	static int getPreferredFrontend() { return PreferredFrontendIndex; }
+#endif
+	static const int preferredFrontendScore = 100000;
+	static const int preferredFrontendBinaryMode = 0x40000000;
+	static const int preferredFrontendPrioForced = 0x20000000;
+	static const int preferredFrontendPrioHigh   = 0x10000000;
+#ifndef SWIG
 	bool supportsDeliverySystem(const fe_delivery_system_t &sys, bool obeywhitelist);
-	std::string getDeliverySystem();
 	void setDeliverySystemWhitelist(const std::vector<fe_delivery_system_t> &whitelist, bool append=false);
 	bool setDeliverySystem(fe_delivery_system_t delsys);
-#if defined DTV_ENUM_DELSYS
-	bool setDeliverySystem(const char *type);
-#endif
 
+	int initModeList();
 	void reopenFrontend();
 	int openFrontend();
 	int closeFrontend(bool force=false, bool no_delayed=false);
 	const char *getDescription() const { return m_description; }
+	bool is_simulate() const { return m_simulate; }
 	const dvb_frontend_info getFrontendInfo() const { return fe_info; }
 	const dvb_frontend_info getFrontendInfo(fe_delivery_system_t delsys)  { return m_fe_info[delsys]; }
-	bool is_simulate() const { return m_simulate; }
 	bool is_FBCTuner() { return m_fbc; }
-	bool setFBCTuner(bool enable) { m_fbc = enable; }
+	void setFBCTuner(bool enable) { m_fbc = enable; }
 	bool getEnabled() { return m_enabled; }
 	void setEnabled(bool enable) { m_enabled = enable; }
 	bool is_multistream();
@@ -233,9 +240,9 @@ public:
 	void getTop(iDVBFrontend &fe, eDVBFrontend * &top_fe);
 
 	eDVBRegisteredFrontend *getLast(eDVBRegisteredFrontend *fe);
+#endif // SWIG
 
 };
 
-#endif // SWIG
 
 #endif

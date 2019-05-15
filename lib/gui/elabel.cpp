@@ -68,7 +68,7 @@ int eLabel::event(int event, void *data, void *data2)
 				bbox = eRect(left, 0, right-left, size().height());
 				painter.fill(bbox);
 			} else if ((m_pos < 0) || (m_pos >= glyphs))
-				eWarning("glyph index %d in eLabel out of bounds!", m_pos);
+				eWarning("[eLabel] glyph index %d in eLabel out of bounds!", m_pos);
 			else
 			{
 				para->setGlyphFlag(m_pos, GS_INVERT);
@@ -233,11 +233,16 @@ void eLabel::clearForegroundColor()
 
 eSize eLabel::calculateSize()
 {
-	ePtr<eTextPara> p = new eTextPara(eRect(0, 0, size().width(), size().height()));
+	return calculateTextSize(m_font, m_text, size(), m_nowrap);
+}
 
-	p->setFont(m_font);
-	p->renderString(m_text.empty()?0:m_text.c_str(), m_nowrap ? 0 : RS_WRAP);
-
-	eRect bbox = p->getBoundBox();
-	return bbox.size();
+eSize eLabel::calculateTextSize(gFont* font, const std::string &string, eSize targetSize, bool nowrap)
+{
+	// Calculate text size for a piece of text without creating an eLabel instance 
+	// this avoids the side effect of "invalidate" being called on the parent container
+	// during the setup of the font and text on the eLabel
+	eTextPara para(eRect(0, 0, targetSize.width(), targetSize.height()));
+	para.setFont(font);
+	para.renderString(string.empty() ? 0 : string.c_str(), nowrap ? 0 : RS_WRAP);
+	return para.getBoundBox().size();
 }

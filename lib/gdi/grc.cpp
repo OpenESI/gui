@@ -38,9 +38,9 @@ gRC::gRC(): rp(0), wp(0)
 	int res = pthread_create(&the_thread, &attr, thread_wrapper, this);
 	pthread_attr_destroy(&attr);
 	if (res)
-		eFatal("RC thread couldn't be created");
+		eFatal("[gRC] thread couldn't be created");
 	else
-		eDebug("RC thread created successfully");
+		eDebug("[gRC] thread created successfully");
 #endif
 }
 
@@ -70,9 +70,9 @@ gRC::~gRC()
 	o.opcode=gOpcode::shutdown;
 	submit(o);
 #ifndef SYNC_PAINT
-	eDebug("waiting for gRC thread shutdown");
+	eDebug("[gRC] waiting for gRC thread shutdown");
 	pthread_join(the_thread, 0);
-	eDebug("gRC thread has finished");
+	eDebug("[gRC] thread has finished");
 #endif
 }
 
@@ -94,7 +94,7 @@ void gRC::submit(const gOpcode &o)
 #else
 			thread();
 #endif
-			//printf("render buffer full...\n");
+			//eDebug("[gRC] render buffer full...");
 			//fflush(stdout);
 			usleep(1000);  // wait 1 msec
 			continue;
@@ -208,7 +208,7 @@ void *gRC::thread()
 				{
 					if (!m_spinner_enabled)
 					{
-						eDebug("main thread is non-idle! display spinner!");
+						eDebug("[gRC] main thread is non-idle! display spinner!");
 							std::ofstream dummy("/tmp/doPythonStackTrace");
 							dummy.close();
 					}
@@ -244,7 +244,7 @@ void gRC::enableSpinner()
 {
 	if (!m_spinner_dc)
 	{
-		eDebug("no spinner DC!");
+		eDebug("[gRC] enabelSpinner: no spinner DC!");
 		return;
 	}
 
@@ -266,7 +266,7 @@ void gRC::disableSpinner()
 
 	if (!m_spinner_dc)
 	{
-		eDebug("no spinner DC!");
+		eDebug("[gRC] disableSpinner: no spinner DC!");
 		return;
 	}
 
@@ -377,7 +377,7 @@ void gPainter::renderText(const eRect &pos, const std::string &string, int flags
 	m_rc->submit(o);
 }
 
-void gPainter::renderPara(ePtr<eTextPara> para, ePoint offset)
+void gPainter::renderPara(eTextPara *para, ePoint offset)
 {
 	if ( m_dc->islocked() )
 		return;
@@ -431,15 +431,18 @@ void gPainter::clear()
 	m_rc->submit(o);
 }
 
-void gPainter::blit(gPixmap *pixmap, ePoint pos, const eRect &clip, int flags)
+void gPainter::blitScale(gPixmap *pixmap, const eRect &pos, const eRect &clip, int flags, int aflags)
 {
-	blitScale(pixmap, eRect(pos, eSize()), clip, flags, 0);
+	blit(pixmap, pos, clip, flags | aflags);
 }
 
-void gPainter::blitScale(gPixmap *pixmap, const eRect &position, const eRect &clip, int flags, int aflags)
+void gPainter::blit(gPixmap *pixmap, ePoint pos, const eRect &clip, int flags)
 {
-	flags |= aflags;
+	blit(pixmap, eRect(pos, eSize()), clip, flags);
+}
 
+void gPainter::blit(gPixmap *pixmap, const eRect &pos, const eRect &clip, int flags)
+{
 	if ( m_dc->islocked() )
 		return;
 	gOpcode o;
@@ -453,7 +456,7 @@ void gPainter::blitScale(gPixmap *pixmap, const eRect &position, const eRect &cl
 	o.parm.blit->pixmap = pixmap;
 	o.parm.blit->clip = clip;
 	o.parm.blit->flags = flags;
-	o.parm.blit->position = position;
+	o.parm.blit->position = pos;
 	m_rc->submit(o);
 }
 
@@ -666,6 +669,30 @@ void gPainter::sendHide(ePoint point, eSize size)
 }
 
 #ifdef USE_LIBVUGLES2
+void gPainter::sendShowItem(long dir, ePoint point, eSize size)
+{
+       if ( m_dc->islocked() )
+               return;
+       gOpcode o;
+       o.opcode=gOpcode::sendShowItem;
+       o.dc = m_dc.grabRef();
+       o.parm.setShowItemInfo = new gOpcode::para::psetShowItemInfo;
+       o.parm.setShowItemInfo->dir = dir;
+       o.parm.setShowItemInfo->point = point;
+       o.parm.setShowItemInfo->size = size;
+       m_rc->submit(o);
+}
+void gPainter::setFlush(bool val)
+{
+       if ( m_dc->islocked() )
+               return;
+       gOpcode o;
+       o.opcode=gOpcode::setFlush;
+       o.dc = m_dc.grabRef();
+       o.parm.setFlush = new gOpcode::para::psetFlush;
+       o.parm.setFlush->enable = val;
+       m_rc->submit(o);
+}
 void gPainter::setView(eSize size)
 {
 	if ( m_dc->islocked() )
@@ -895,6 +922,10 @@ void gDC::exec(const gOpcode *o)
 	case gOpcode::sendHide:
 		break;
 #ifdef USE_LIBVUGLES2
+	case gOpcode::sendShowItem:
+		break;
+	case gOpcode::setFlush:
+		break;
 	case gOpcode::setView:
 		break;
 #endif
@@ -908,7 +939,7 @@ void gDC::exec(const gOpcode *o)
 		incrementSpinner();
 		break;
 	default:
-		eFatal("illegal opcode %d. expect memory leak!", o->opcode);
+		eFatal("[gDC] illegal opcode %d. expect memory leak!", o->opcode);
 	}
 }
 
@@ -918,7 +949,7 @@ gRGB gDC::getRGB(gColor col)
 		return gRGB(col, col, col);
 	if (col<0)
 	{
-		eFatal("bla transp");
+		eFatal("[gDC] getRGB transp");
 		return gRGB(0, 0, 0, 0xFF);
 	}
 	return m_pixmap->surface->clut.data[col];

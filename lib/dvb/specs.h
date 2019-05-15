@@ -39,14 +39,7 @@ public:
 	{
 		m_spec.pid     = ServiceDescriptionSection::PID;
 		m_spec.tid     = ServiceDescriptionSection::TID;
-		/*
-		 * from Digital Video Broadcasting (DVB) Guidelines on implementation and usage of Service Information (SI)
-		 * DVB Document A005 June 2017:
-		 *
-		 * "all sections of the SDT for the actual multiplex shall be transmitted at least every 2 s"
-		 * "all sections of the SDT for other TSs shall be transmitted at least every 10 s if present"
-		 */
-		m_spec.timeout = 2500; // ServiceDescriptionSection::TIMEOUT;
+		m_spec.timeout = 60000; // ServiceDescriptionSection::TIMEOUT;
 		m_spec.flags   = eDVBTableSpec::tfAnyVersion |
 			eDVBTableSpec::tfHaveTID | eDVBTableSpec::tfCheckCRC |
 			eDVBTableSpec::tfHaveTimeout;
@@ -56,14 +49,7 @@ public:
 		m_spec.pid     = ServiceDescriptionSection::PID;
 		m_spec.tid     = ServiceDescriptionSection::TID;
 		m_spec.tidext  = tsid;
-		/*
-		 * from Digital Video Broadcasting (DVB) Guidelines on implementation and usage of Service Information (SI)
-		 * DVB Document A005 June 2017:
-		 *
-		 * "all sections of the SDT for the actual multiplex shall be transmitted at least every 2 s"
-		 * "all sections of the SDT for other TSs shall be transmitted at least every 10 s if present"
-		 */
-		m_spec.timeout = other ? 10500 : 2500; // ServiceDescriptionSection::TIMEOUT;
+		m_spec.timeout = 60000; // ServiceDescriptionSection::TIMEOUT;
 		m_spec.flags   = eDVBTableSpec::tfAnyVersion |
 			eDVBTableSpec::tfHaveTID | eDVBTableSpec::tfCheckCRC |
 			eDVBTableSpec::tfHaveTIDExt | eDVBTableSpec::tfHaveTimeout;

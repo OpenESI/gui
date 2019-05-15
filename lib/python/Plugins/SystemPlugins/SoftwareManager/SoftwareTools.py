@@ -61,7 +61,7 @@ class SoftwareTools(PackageInfoHandler):
 
 	def getUpdates(self, callback = None):
 		if self.lastDownloadDate is None:
-				if self.NetworkConnectionAvailable == True:
+				if self.NetworkConnectionAvailable:
 					self.lastDownloadDate = time()
 					if self.list_updating is False and callback is None:
 						self.list_updating = True
@@ -79,7 +79,7 @@ class SoftwareTools(PackageInfoHandler):
 					elif self.NotifierCallback is not None:
 						self.NotifierCallback(False)
 		else:
-			if self.NetworkConnectionAvailable == True:
+			if self.NetworkConnectionAvailable:
 				self.lastDownloadDate = time()
 				if self.list_updating is False and callback is None:
 					self.list_updating = True

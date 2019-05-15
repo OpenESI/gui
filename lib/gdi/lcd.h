@@ -43,6 +43,7 @@ public:
 	virtual bool detected() { return lcdfd >= 0; };
 	virtual int setLCDContrast(int contrast)=0;
 	virtual int setLCDBrightness(int brightness)=0;
+	virtual int setLED(int value, int option)=0;
 	virtual void setInverted( unsigned char )=0;
 	virtual void setFlipped(bool)=0;
 	virtual void setDump(bool)=0;
@@ -50,7 +51,6 @@ public:
 	virtual bool isOled() const=0;
 	int getLcdType() { return lcd_type; };
 	virtual void setPalette(gUnmanagedSurface)=0;
-	virtual int setLED(int value, int option)=0;
 #ifndef SWIG
 	eLCD();
 	virtual ~eLCD();
@@ -80,10 +80,10 @@ public:
 #endif
 	int setLCDContrast(int contrast);
 	int setLCDBrightness(int brightness);
+	int setLED(int value, int option);
 	void setInverted( unsigned char );
 	void setFlipped(bool);
 	void setDump(bool);
-	int setLED(int value, int option);
 	bool isOled() const { return !!lcd_type; };
 	void setPalette(gUnmanagedSurface) {};
 	void update();

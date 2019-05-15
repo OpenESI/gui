@@ -14,7 +14,7 @@ class ResourceManager:
 		return self.resourceList[name]
 
 	def hasResource(self, name):
-		return name in self.resourceList
+		return self.resourceList.has_key(name)
 
 	def removeResource(self, name):
 		if self.hasResource(name):

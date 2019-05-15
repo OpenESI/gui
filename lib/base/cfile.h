@@ -12,27 +12,18 @@ struct CFile
 	CFile(const char *filename, const char *mode)
 		: handle(fopen(filename, mode))
 	{
-#ifdef DEBUG
+/*#ifdef DEBUG
 		if (!handle)
-		{
-			std::string fn = filename;
-			std::string ext = fn.substr(fn.find_last_of('.')+1);
-			if( (ext != "meta") && (ext != "epl"))
-				eDebug("[CFile] information %s [%m]", filename);
-		}
-#endif
+			eDebug("error %s [%m]",filename);
+#endif*/
 	}
 	CFile(const std::string &filename, const char *mode)
 		: handle(fopen(filename.c_str(), mode))
 	{
-#ifdef DEBUG
+/*#ifdef DEBUG
 		if (!handle)
-		{
-			std::string ext=filename.substr(filename.find_last_of('.')+1);
-			if( (ext != "meta") && (ext != "epl"))
-				eDebug("[CFile] information %s [%m]",filename.c_str());
-		}
-#endif
+			eDebug("error %s [%m]",filename.c_str());
+#endif*/
 	}
 	~CFile()
 	{
@@ -48,8 +39,8 @@ struct CFile
 	static int parseInt(int *result, const char *filename);
 	static int writeIntHex(const char *filename, int value);
 	static int writeInt(const char *filename, int value);
-	static int write(const char *filename, const char *value);
 	static int writeStr(const char *filename, std::string value);
+	static int write(const char *filename, const char *value);
 	static std::string read(const std::string &filename);
 	static bool contains_word(const std::string &filename, const std::string &word);
 };

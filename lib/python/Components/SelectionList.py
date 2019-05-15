@@ -1,40 +1,25 @@
 from MenuList import MenuList
 from Tools.Directories import resolveFilename, SCOPE_ACTIVE_SKIN
-from enigma import eListboxPythonMultiContent, eListbox, gFont, RT_HALIGN_LEFT, RT_VALIGN_CENTER, getDesktop
+from enigma import eListboxPythonMultiContent, gFont, RT_HALIGN_LEFT, RT_VALIGN_CENTER
 from Tools.LoadPixmap import LoadPixmap
 import skin
+
 
 selectiononpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_on.png"))
 selectionoffpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_ACTIVE_SKIN, "icons/lock_off.png"))
 
 def SelectionEntryComponent(description, value, index, selected):
-	screenwidth = getDesktop(0).size().width()
-	if screenwidth and screenwidth == 1920:
-		dx, dy, dw, dh = skin.parameters.get("SelectionListDescr",(80, 5, 900, 55))
-		res = [
-			(description, value, index, selected),
-			(eListboxPythonMultiContent.TYPE_TEXT, dx, dy, dw, dh, 1, RT_HALIGN_LEFT, description)
-		]
-	else:
-		dx, dy, dw, dh = skin.parameters.get("SelectionListDescr",(25, 3, 650, 30))
-		res = [
-			(description, value, index, selected),
-			(eListboxPythonMultiContent.TYPE_TEXT, dx, dy, dw, dh, 0, RT_HALIGN_LEFT, description)
-		]
+	dx, dy, dw, dh = skin.parameters.get("SelectionListDescr",(25, 3, 650, 30))
+	res = [
+		(description, value, index, selected),
+		(eListboxPythonMultiContent.TYPE_TEXT, dx, dy, dw, dh, 0, RT_HALIGN_LEFT, description)
+	]
 	if selected:
-		if screenwidth and screenwidth == 1920:
-			ix, iy, iw, ih = skin.parameters.get("SelectionListLock",(10, 5, 50, 50))
-			res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, ix, iy, iw, ih, selectiononpng))
-		else:
-			ix, iy, iw, ih = skin.parameters.get("SelectionListLock",(0, 2, 25, 24))
-			res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, ix, iy, iw, ih, selectiononpng))
+		ix, iy, iw, ih = skin.parameters.get("SelectionListLock",(0, 2, 25, 24))
+		res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, ix, iy, iw, ih, selectiononpng))
 	else:
-		if screenwidth and screenwidth == 1920:
-			ix, iy, iw, ih = skin.parameters.get("SelectionListLock",(10, 5, 50, 50))
-			res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, ix, iy, iw, ih, selectionoffpng))
-		else:
-			ix, iy, iw, ih = skin.parameters.get("SelectionListLock",(0, 2, 25, 24))
-			res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, ix, iy, iw, ih, selectionoffpng))
+		ix, iy, iw, ih = skin.parameters.get("SelectionListLockOff",(0, 2, 25, 24))
+		res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, ix, iy, iw, ih, selectionoffpng))
 	return res
 
 class SelectionList(MenuList):
@@ -49,7 +34,7 @@ class SelectionList(MenuList):
 		self.setList(self.list)
 
 	def toggleSelection(self):
-		if len(self.list):
+		if len(self.list) > 0:
 			idx = self.getSelectedIndex()
 			item = self.list[idx][0]
 			self.list[idx] = SelectionEntryComponent(item[0], item[1], item[2], not item[3])
@@ -64,18 +49,6 @@ class SelectionList(MenuList):
 			self.list[idx] = SelectionEntryComponent(item[0], item[1], item[2], not item[3])
 		self.setList(self.list)
 
-	def removeSelection(self, item):
-		for it in self.list:
-			if it[0][2] == item[2]:
-				self.list.pop(self.list.index(it))
-		self.setList(self.list)
-
-	def toggleItemSelection(self, item):
-		idx = item[2]
-		item = self.list[idx][0]
-		self.list[idx] = SelectionEntryComponent(item[0], item[1], item[2], not item[3])
-		self.setList(self.list)
-
 	def sort(self, sortType=False, flag=False):
 		# sorting by sortType:
 		# 0 - description
@@ -84,6 +57,3 @@ class SelectionList(MenuList):
 		# 3 - selected
 		self.list.sort(key=lambda x: x[0][sortType],reverse=flag)
 		self.setList(self.list)
-
-	def len(self):
-		return len(self.list)

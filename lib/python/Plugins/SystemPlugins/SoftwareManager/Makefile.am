@@ -9,7 +9,7 @@ install_PYTHON =	\
 	ImageWizard.py \
 	SoftwareTools.py \
 	ImageBackup.py \
-	ShellCompatibleFunctions.py
+	Flash_online.py
 
 dist_install_DATA = \
 	imagewizard.xml \

@@ -18,3 +18,4 @@ gen.source = db
 gen.destination = xml
 gen.docopymerge(action = "copy")
 xml.write()
+

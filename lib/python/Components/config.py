@@ -5,8 +5,7 @@ from Components.Harddisk import harddiskmanager
 from Tools.LoadPixmap import LoadPixmap
 from copy import copy as copy_copy
 from os import path as os_path
-from time import time as getTime, localtime, strftime
-from datetime import datetime
+from time import localtime, strftime
 
 # ConfigElement, the base class of all ConfigElements.
 
@@ -88,21 +87,18 @@ class ConfigElement(object):
 		else:
 			self.saved_value = self.tostring(self.value)
 		if self.callNotifiersOnSaveAndCancel:
-			self.changedFinal()  # call none immediate_feedback notifiers, immediate_feedback Notifiers are called as they are chanaged, so do not need to be called here.
+			self.changed()
 
 	def cancel(self):
 		self.load()
 		if self.callNotifiersOnSaveAndCancel:
-			self.changedFinal()  # call none immediate_feedback notifiers, immediate_feedback Notifiers are called as they are chanaged, so do not need to be called here.
+			self.changed()
 
 	def isChanged(self):
 		sv = self.saved_value
-		strv = self.tostring(self.value)
-		if sv is None:
-			retval = strv != self.tostring(self.default)
-		else:
-			retval = strv != sv
-		return retval
+		if sv is None and self.value == self.default:
+			return False
+		return self.tostring(self.value) != sv
 
 	def changed(self):
 		if self.__notifiers:
@@ -134,7 +130,7 @@ class ConfigElement(object):
 		assert callable(notifier), "notifiers must be callable"
 		try:
 			self.extra_args[notifier] = extra_args
-		except: pass
+		except: pass	
 		if immediate_feedback:
 			self.__notifiers[str(notifier)] = (notifier, self.value, call_on_save_or_cancel)
 		else:
@@ -157,11 +153,10 @@ class ConfigElement(object):
 		try:
 			del self.__notifiers[str(notifier)]
 		except:
-			pass
-		try:
-			del self.__notifiers_final[str(notifier)]
-		except:
-			pass
+			try:
+				del self.__notifiers_final[str(notifier)]
+			except:
+				pass
 
 	def clearNotifiers(self):
 		self.__notifiers = { }
@@ -171,16 +166,14 @@ class ConfigElement(object):
 		self.save_disabled = True
 
 	def __call__(self, selected):
-		try:
-			return self.getMulti(selected)
-		except:
-			pass
+		return self.getMulti(selected)
 
 	def onSelect(self, session):
 		pass
 
 	def onDeselect(self, session):
 		if not self.last_value == self.value:
+			self.changedFinal()
 			self.last_value = self.value
 
 KEY_LEFT = 0
@@ -326,16 +319,16 @@ class descriptionList(choicesList): # XXX: we might want a better name for this
 # all ids MUST be plain strings.
 #
 class ConfigSelection(ConfigElement):
-	def __init__(self, choices, default = None):
+	def __init__(self, choices, default = None, graphic=True):
 		ConfigElement.__init__(self)
 		self.choices = choicesList(choices)
+		self.graphic = graphic
 
 		if default is None:
 			default = self.choices.default()
 
 		self._descr = None
 		self.default = self._value = self.last_value = default
-		return
 
 	def setChoices(self, choices, default = None):
 		self.choices = choicesList(choices)
@@ -346,10 +339,6 @@ class ConfigSelection(ConfigElement):
 
 		if self.value not in self.choices:
 			self.value = default
-		return
-
-	def getChoices(self):
-		return self.choices.choices
 
 	def setValue(self, value):
 		if value in self.choices:
@@ -358,10 +347,9 @@ class ConfigSelection(ConfigElement):
 			self._value = self.default
 		self._descr = None
 		self.changed()
-		return
 
 	def tostring(self, val):
-		return str(val)
+		return val
 
 	def getValue(self):
 		return self._value
@@ -404,8 +392,14 @@ class ConfigSelection(ConfigElement):
 		return self._descr
 
 	def getMulti(self, selected):
+		from config import config
+		from skin import switchPixmap
 		if self._descr is None:
 			self._descr = self.description[self.value]
+		keywords_true = ('true','yes','enabled','on', _('True'),_('Yes'),_('Enabled'),_('On'))
+		keywords_false = ('false','no','disabled','off', _('False'),_('No'),_('Disabled'),_('Off'))
+		if self._descr in (keywords_true + keywords_false) and self.graphic and config.usage.boolean_graphic.value and switchPixmap.get("menu_on", False) and switchPixmap.get("menu_off", False):
+			return ('pixmap', self._descr in keywords_true and switchPixmap["menu_on"] or switchPixmap["menu_off"])
 		return ("text", self._descr)
 
 	# HTML
@@ -431,9 +425,8 @@ class ConfigSelection(ConfigElement):
 # several customized versions exist for different
 # descriptions.
 #
-boolean_descriptions = {False: _("false"), True: _("true")}
 class ConfigBoolean(ConfigElement):
-	def __init__(self, default=False, descriptions=boolean_descriptions, graphic=True):
+	def __init__(self, default = False, descriptions = {False: _("false"), True: _("true")}, graphic=True):
 		ConfigElement.__init__(self)
 		self.descriptions = descriptions
 		self.value = self.last_value = self.default = default
@@ -448,10 +441,7 @@ class ConfigBoolean(ConfigElement):
 			self.value = True
 
 	def getText(self):
-		descr = self.descriptions[self.value]
-		if descr:
-			return _(descr)
-		return descr
+		return self.descriptions[self.value]
 
 	def getMulti(self, selected):
 		from config import config
@@ -459,19 +449,16 @@ class ConfigBoolean(ConfigElement):
 		if self.graphic and config.usage.boolean_graphic.value and switchPixmap.get("menu_on", False) and switchPixmap.get("menu_off", False):
 			return ('pixmap', self.value and switchPixmap["menu_on"] or switchPixmap["menu_off"])
 		else:
-			descr = self.descriptions[self.value]
-			if descr:
-				return "text", _(descr)
-			return "text", descr
+			return ("text", self.descriptions[self.value])
 
 	def tostring(self, value):
-		if not value or str(value).lower() == 'false':
-			return "False"
+		if not value:
+			return "false"
 		else:
-			return "True"
+			return "true"
 
 	def fromstring(self, val):
-		if str(val).lower() == "true":
+		if val == "true":
 			return True
 		else:
 			return False
@@ -495,20 +482,17 @@ class ConfigBoolean(ConfigElement):
 			self.changedFinal()
 			self.last_value = self.value
 
-yes_no_descriptions = {False: _("no"), True: _("yes")}
 class ConfigYesNo(ConfigBoolean):
-	def __init__(self, default = False, graphic = True):
-		ConfigBoolean.__init__(self, default = default, descriptions = yes_no_descriptions, graphic = graphic)
+	def __init__(self, default = False):
+		ConfigBoolean.__init__(self, default = default, descriptions = {False: _("no"), True: _("yes")})
 
-on_off_descriptions = {False: _("off"), True: _("on")}
 class ConfigOnOff(ConfigBoolean):
-	def __init__(self, default = False, graphic = True):
-		ConfigBoolean.__init__(self, default = default, descriptions = on_off_descriptions, graphic = graphic)
+	def __init__(self, default = False):
+		ConfigBoolean.__init__(self, default = default, descriptions = {False: _("off"), True: _("on")})
 
-enable_disable_descriptions = {False: _("disable"), True: _("enable")}
 class ConfigEnableDisable(ConfigBoolean):
-	def __init__(self, default = False, graphic = True):
-		ConfigBoolean.__init__(self, default = default, descriptions = enable_disable_descriptions, graphic = graphic)
+	def __init__(self, default = False):
+		ConfigBoolean.__init__(self, default = default, descriptions = {False: _("disable"), True: _("enable")})
 
 class ConfigDateTime(ConfigElement):
 	def __init__(self, default, formatstring, increment = 86400):
@@ -646,7 +630,7 @@ class ConfigSequence(ConfigElement):
 			# position in the block
 			posinblock = self.marked_pos - block_len_total[blocknumber]
 
-			oldvalue = abs(self._value[blocknumber]) # we are using abs in order to allow change negative values like default -1 on mis
+			oldvalue = abs(self._value[blocknumber])
 			olddec = oldvalue % 10 ** (number_len - posinblock) - (oldvalue % 10 ** (number_len - posinblock - 1))
 			newvalue = oldvalue - olddec + (10 ** (number_len - posinblock - 1) * number)
 
@@ -673,11 +657,8 @@ class ConfigSequence(ConfigElement):
 		return value, mPos
 
 	def getText(self):
-		try:
-			(value, mPos) = self.genText()
-			return value
-		except:
-			pass
+		(value, mPos) = self.genText()
+		return value
 
 	def getMulti(self, selected):
 		(value, mPos) = self.genText()
@@ -689,17 +670,14 @@ class ConfigSequence(ConfigElement):
 			return "text", value
 
 	def tostring(self, val):
-		if val:
-			return self.seperator.join([self.saveSingle(x) for x in val])
-		return None
+		return self.seperator.join([self.saveSingle(x) for x in val])
 
 	def saveSingle(self, v):
 		return str(v)
 
 	def fromstring(self, value):
 		try:
-			ret = [int(x) for x in value.split(self.seperator)]
-			return ret + [int(x[0]) for x in self.limits[len(ret):]]
+			return [int(x) for x in value.split(self.seperator)]
 		except:
 			return self.default
 
@@ -768,12 +746,11 @@ class ConfigIP(ConfigSequence):
 	def genText(self):
 		value = ""
 		block_strlen = []
-		if self._value:
-			for i in self._value:
-				block_strlen.append(len(str(i)))
-				if value:
-					value += self.seperator
-				value += str(i)
+		for i in self._value:
+			block_strlen.append(len(str(i)))
+			if value:
+				value += self.seperator
+			value += str(i)
 		leftPos = sum(block_strlen[:self.marked_block])+self.marked_block
 		rightPos = sum(block_strlen[:(self.marked_block+1)])+self.marked_block
 		mBlock = range(leftPos, rightPos)
@@ -993,8 +970,6 @@ class ConfigInteger(ConfigSequence):
 class ConfigPIN(ConfigInteger):
 	def __init__(self, default, len = 4, censor = ""):
 		assert isinstance(default, int), "ConfigPIN default must be an integer"
-		if default == -1:
-			default = "aaaa"
 		ConfigSequence.__init__(self, seperator = ":", limits = [(0, (10**len)-1)], censor_char = censor, default = default)
 		self.len = len
 
@@ -1009,15 +984,6 @@ class ConfigFloat(ConfigSequence):
 		return float(self.value[1] / float(self.limits[1][1] + 1) + self.value[0])
 
 	float = property(getFloat)
-
-	def getFloatInt(self):
-		return int(self.value[0] * float(self.limits[1][1] + 1) + self.value[1])
-
-	def setFloatInt(self, val):
-		self.value[0] = val / float(self.limits[1][1] + 1)
-		self.value[1] = val % float(self.limits[1][1] + 1)
-
-	floatint = property(getFloatInt, setFloatInt)
 
 # an editable text...
 class ConfigText(ConfigElement, NumericalTextInput):
@@ -1271,7 +1237,7 @@ class ConfigSelectionNumber(ConfigSelection):
 		strv = str(self.tostring(self.value))
 		if sv is None and strv == str(self.default):
 			return False
-		return strv != self.tostring(sv)
+		return strv != str(sv)
 
 	def handleKey(self, key):
 		if not self.wraparound:
@@ -1316,11 +1282,9 @@ class ConfigNumber(ConfigText):
 	def isChanged(self):
 		sv = self.saved_value
 		strv = self.tostring(self.value)
-		if sv is None:
-			retval = strv != self.default
-		else:
-			retval = strv != sv
-		return retval
+		if sv is None and strv == self.default:
+			return False
+		return strv != sv
 
 	def conform(self):
 		pos = len(self.text) - self.marked_pos
@@ -1408,7 +1372,7 @@ class ConfigSlider(ConfigElement):
 			value = self.min
 		elif value > self.max:
 			value = self.max
-		if self.value != value:
+		if self.value != value:		#avoid call of setter if value not changed
 			self.value = value
 
 	def handleKey(self, key):
@@ -1534,6 +1498,7 @@ class ConfigSet(ConfigElement):
 		return eval(val)
 
 	description = property(lambda self: descriptionList(self.choices.choices, choicesList.LIST_TYPE_LIST))
+
 
 class ConfigDictionarySet(ConfigElement):
 	def __init__(self, default = {}):
@@ -1667,8 +1632,7 @@ class ConfigLocations(ConfigElement):
 		locations = self.locations
 		if val is None and not locations:
 			return False
-		retval = self.tostring([x[0] for x in locations]) != sv
-		return retval
+		return self.tostring([x[0] for x in locations]) != sv
 
 	def addedMount(self, mp):
 		for x in self.locations:
@@ -1893,9 +1857,7 @@ class ConfigSubsection(object):
 			value.load()
 
 	def __getattr__(self, name):
-		if name in self.content.items:
-			return self.content.items[name]
-		raise AttributeError(name)
+		return self.content.items[name]
 
 	def getSavedValue(self):
 		res = self.content.stored_values
@@ -2032,22 +1994,16 @@ class ConfigFile:
 	def load(self):
 		try:
 			config.loadFromFile(self.CONFIG_FILE, True)
-			print "[Config] Config file loaded ok..."
 		except IOError, e:
-			print "[Config] unable to load config (%s), assuming defaults..." % str(e)
+			print "unable to load config (%s), assuming defaults..." % str(e)
 
 	def save(self):
 #		config.save()
-		try:
-			config.saveToFile(self.CONFIG_FILE)
-			#print "[Config] Config file saved ok..."
-		except:
-			print "[Config] Config file saevd NOT FOUND..."
-			return
+		config.saveToFile(self.CONFIG_FILE)
 
 	def __resolveValue(self, pickles, cmap):
 		key = pickles[0]
-		if key in cmap:
+		if cmap.has_key(key):
 			if len(pickles) > 1:
 				return self.__resolveValue(pickles[1:], cmap[key].dict())
 			else:
@@ -2061,7 +2017,7 @@ class ConfigFile:
 				ret = self.__resolveValue(names[1:], config.content.items)
 				if ret and len(ret) or ret == "":
 					return ret
-		print "[Config] getResolvedKey", key, "failed !! (Typo??)"
+		print "getResolvedKey", key, "failed !! (Typo??)"
 		return ""
 
 def NoSave(element):

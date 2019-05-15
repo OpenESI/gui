@@ -1,5 +1,6 @@
 from Components.Converter.Converter import Converter
 from enigma import iServiceInformation, iPlayableService
+from Screens.InfoBarGenerics import hasActiveSubservicesForCurrentChannel
 from Components.Element import cached
 
 from os import path
@@ -43,6 +44,7 @@ class ServiceInfo(Converter, object):
 	IS_HDR = 34
 	IS_HDR10 = 35
 	IS_HLG = 36
+	IS_HDHDR = 37
 
 	def __init__(self, type):
 		Converter.__init__(self, type)
@@ -72,22 +74,20 @@ class ServiceInfo(Converter, object):
 				"Editmode": (self.EDITMODE, (iPlayableService.evUpdatedInfo,)),
 				"IsStream": (self.IS_STREAM, (iPlayableService.evUpdatedInfo,)),
 				"IsSD": (self.IS_SD, (iPlayableService.evVideoSizeChanged,)),
-				"IsHD": (self.IS_HD, (iPlayableService.evVideoSizeChanged,)),
+				"IsHD": (self.IS_HD, (iPlayableService.evVideoSizeChanged,iPlayableService.evVideoGammaChanged,)),
 				"Is1080": (self.IS_1080, (iPlayableService.evVideoSizeChanged,)),
 				"Is720": (self.IS_720, (iPlayableService.evVideoSizeChanged,)),
 				"Is576": (self.IS_576, (iPlayableService.evVideoSizeChanged,)),
 				"Is480": (self.IS_480, (iPlayableService.evVideoSizeChanged,)),
-				"Is4K": (self.IS_4K, (iPlayableService.evVideoSizeChanged,)),
+				"Is4K": (self.IS_4K, (iPlayableService.evVideoSizeChanged,iPlayableService.evVideoGammaChanged,)),
 				"IsIPStream": (self.IS_IPSTREAM, (iPlayableService.evUpdatedInfo,)),
-				"IsSDR": (self.IS_SDR, (iPlayableService.evVideoGammaChanged,)),
-				"IsHDR": (self.IS_HDR, (iPlayableService.evVideoGammaChanged,)),
-				"IsHDR10": (self.IS_HDR10, (iPlayableService.evVideoGammaChanged,)),
-				"IsHLG": (self.IS_HLG, (iPlayableService.evVideoGammaChanged,)),
+				"IsSDR": (self.IS_SDR, (iPlayableService.evVideoSizeChanged,iPlayableService.evVideoGammaChanged,)),
+				"IsHDR": (self.IS_HDR, (iPlayableService.evVideoSizeChanged,iPlayableService.evVideoGammaChanged,)),
+				"IsHDR10": (self.IS_HDR10, (iPlayableService.evVideoSizeChanged,iPlayableService.evVideoGammaChanged,)),
+				"IsHLG": (self.IS_HLG, (iPlayableService.evVideoSizeChanged,iPlayableService.evVideoGammaChanged,)),
+				"IsHDHDR": (self.IS_HDHDR, (iPlayableService.evVideoSizeChanged,iPlayableService.evVideoGammaChanged,)),
 			}[type]
-		self.need_wa = iPlayableService.evVideoSizeChanged in self.interesting_events
 
-	def reuse(self):
-		self.need_wa = iPlayableService.evVideoSizeChanged in self.interesting_events
 	def getServiceInfoString(self, info, what, convert = lambda x: "%d" % x):
 		v = info.getInfo(what)
 		if v == -1:
@@ -102,7 +102,7 @@ class ServiceInfo(Converter, object):
 			return "N/A"
 		if v == -2:
 			return info.getInfoString(what)
-		return convert(v)
+		return convert(v)    
 
 	@cached
 	def getBoolean(self):
@@ -112,11 +112,20 @@ class ServiceInfo(Converter, object):
 			return False
 
 		video_height = None
+		video_width = None
 		video_aspect = None
 		if path.exists("/proc/stb/vmpeg/0/yres"):
 			f = open("/proc/stb/vmpeg/0/yres", "r")
 			try:
 				video_height = int(f.read(),16)
+			except:
+				pass
+			f.close()
+
+		if path.exists("/proc/stb/vmpeg/0/xres"):
+			f = open("/proc/stb/vmpeg/0/xres", "r")
+			try:
+				video_width = int(f.read(),16)
 			except:
 				pass
 			f.close()
@@ -128,6 +137,7 @@ class ServiceInfo(Converter, object):
 			except:
 				pass
 			f.close()
+
 		if not video_height:
 			video_height = int(info.getInfo(iServiceInformation.sVideoHeight))
 		if not video_aspect:
@@ -145,7 +155,8 @@ class ServiceInfo(Converter, object):
 				while idx < n:
 					i = audio.getTrackInfo(idx)
 					description = i.getDescription()
-					if description and description.split()[0] in ("AC3", "AC-3", "AC3+", "DTS", "DTS-HD"): # some audio description has 'audio' as additional value (e.g. 'AC-3 audio')
+					#if description in ("AC3", "AC-3", "AC3+", "DTS"):
+					if description and description.split()[0] in ("AC3", "AC-3", "AC3+", "DTS"): # some audio description has 'audio' as additional value (e.g. 'AC-3 audio')
 						if self.type == self.IS_MULTICHANNEL:
 							return True
 						elif self.type == self.AUDIO_STEREO:
@@ -163,13 +174,12 @@ class ServiceInfo(Converter, object):
 		elif self.type == self.IS_NOT_WIDESCREEN:
 			return video_aspect not in WIDESCREEN
 		elif self.type == self.SUBSERVICES_AVAILABLE:
-			subservices = service.subServices()
-			return bool(subservices) and subservices.getNumberOfSubservices() > 0
+			return hasActiveSubservicesForCurrentChannel(':'.join(info.getInfoString(iServiceInformation.sServiceref).split(':')[:11]))
 		elif self.type == self.HAS_HBBTV:
 			return info.getInfoString(iServiceInformation.sHBBTVUrl) != ""
 		elif self.type == self.AUDIOTRACKS_AVAILABLE:
 			audio = service.audioTracks()
-			return bool(audio) and audio.getNumberOfTracks() > 1
+			return audio and audio.getNumberOfTracks() > 1
 		elif self.type == self.SUBTITLES_AVAILABLE:
 			subtitle = service and service.subtitle()
 			subtitlelist = subtitle and subtitle.getSubtitleList()
@@ -183,7 +193,10 @@ class ServiceInfo(Converter, object):
 		elif self.type == self.IS_SD:
 			return video_height < 720
 		elif self.type == self.IS_HD:
-			return video_height >= 720 and video_height < 2151
+			if info.getInfo(iServiceInformation.sGamma) > 0:
+				return False
+			else:
+				return video_width >= 721 and video_width < 1980
 		elif self.type == self.IS_1080:
 			return video_height > 1000 and video_height <= 1080
 		elif self.type == self.IS_720:
@@ -192,18 +205,23 @@ class ServiceInfo(Converter, object):
 			return video_height > 500 and video_height <= 576
 		elif self.type == self.IS_480:
 			return video_height > 0 and video_height <= 480
-		elif self.type == self.IS_4K:
-			return video_height > 2152 and video_height <= 2160
+		elif self.type == self.IS_4K: 
+			if info.getInfo(iServiceInformation.sGamma) > 0:
+				return False
+			else:
+				return video_width > 2160 and video_width <= 3840
 		elif self.type == self.IS_IPSTREAM:
 			return service.streamed() is not None
 		elif self.type == self.IS_SDR:
-			return info.getInfo(iServiceInformation.sGamma) == 0
+			return video_width > 2160 and video_width <= 3840 and info.getInfo(iServiceInformation.sGamma) == 0
 		elif self.type == self.IS_HDR:
-			return info.getInfo(iServiceInformation.sGamma) == 1
+			return video_width > 2160 and video_width <= 3840 and info.getInfo(iServiceInformation.sGamma) == 1
 		elif self.type == self.IS_HDR10:
-			return info.getInfo(iServiceInformation.sGamma) == 2
+			return video_width > 2160 and video_width <= 3840 and info.getInfo(iServiceInformation.sGamma) == 2
 		elif self.type == self.IS_HLG:
-			return info.getInfo(iServiceInformation.sGamma) == 3
+			return video_width > 2160 and video_width <= 3840 and info.getInfo(iServiceInformation.sGamma) == 3
+		elif self.type == self.IS_HDHDR:
+			return video_width >= 721 and video_width < 1980 and info.getInfo(iServiceInformation.sGamma) > 0
 		return False
 
 	boolean = property(getBoolean)
@@ -324,8 +342,6 @@ class ServiceInfo(Converter, object):
 			if not video_rate:
 				video_rate = info.getInfo(iServiceInformation.sFrameRate)
 			return str(video_rate)
-		elif self.type == self.IS_WIDESCREEN:
-			return info.getInfo(iServiceInformation.sAspect)
 
 		return -1
 
@@ -333,8 +349,4 @@ class ServiceInfo(Converter, object):
 
 	def changed(self, what):
 		if what[0] != self.CHANGED_SPECIFIC or what[1] in self.interesting_events:
-			Converter.changed(self, what)
-		elif self.need_wa:
-			if self.getValue() != -1:
-				Converter.changed(self, (self.CHANGED_SPECIFIC, iPlayableService.evVideoSizeChanged))
-				self.need_wa = False
+			Converter.changed(self, what) 

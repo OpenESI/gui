@@ -119,24 +119,24 @@ class WlanStatus(Screen):
 						essid = _("No Connection")
 					else:
 						accesspoint = status[self.iface]["accesspoint"]
-					if "BSSID" in self:
+					if self.has_key("BSSID"):
 						self["BSSID"].setText(accesspoint)
-					if "ESSID" in self:
+					if self.has_key("ESSID"):
 						self["ESSID"].setText(essid)
 
 					quality = status[self.iface]["quality"]
-					if "quality" in self:
+					if self.has_key("quality"):
 						self["quality"].setText(quality)
 
 					if status[self.iface]["bitrate"] == '0':
 						bitrate = _("Unsupported")
 					else:
 						bitrate = str(status[self.iface]["bitrate"]) + " Mb/s"
-					if "bitrate" in self:
+					if self.has_key("bitrate"):
 						self["bitrate"].setText(bitrate)
 
 					signal = status[self.iface]["signal"]
-					if "signal" in self:
+					if self.has_key("signal"):
 						self["signal"].setText(signal)
 
 					if status[self.iface]["encryption"] == "off":
@@ -146,7 +146,7 @@ class WlanStatus(Screen):
 							encryption = _("off or wpa2 on")
 					else:
 						encryption = _("Enabled")
-					if "enc" in self:
+					if self.has_key("enc"):
 						self["enc"].setText(encryption)
 					self.updateStatusLink(status)
 
@@ -332,7 +332,7 @@ class WlanScan(Screen):
 							compList.remove(compentry)
 			for entry in compList:
 				self.cleanList.append( ( entry[0], entry[1], entry[2], entry[3], entry[4], entry[5] ) )
-				if entry[0] not in self.oldlist:
+				if not self.oldlist.has_key(entry[0]):
 					self.oldlist[entry[0]] = { 'data': entry }
 				else:
 					self.oldlist[entry[0]]['data'] = entry
@@ -392,7 +392,7 @@ def configStrings(iface):
 		ret += '\tpost-down wl-down.sh || true\n'
 		return ret
 	if driver == 'madwifi' and config.plugins.wlan.hiddenessid.value:
-		ret += "\tpre-up iwconfig " + iface + " essid \"" + re_escape(config.plugins.wlan.essid.value) + "\" || true\n"
+		ret += "\tpre-up iwconfig " + iface + " essid \"" + re.escape(config.plugins.wlan.essid.value) + "\" || true\n"
 	ret += "\tpre-up wpa_supplicant -i" + iface + " -c" + getWlanConfigName(iface) + " -B -dd -D" + driver + " || true\n"
 	if config.plugins.wlan.hiddenessid.value == True:
 		ret += "\tpre-up iwconfig " + iface + " essid \"" + re_escape(config.plugins.wlan.essid.value) + "\" || true\n"

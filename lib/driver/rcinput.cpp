@@ -21,21 +21,21 @@ void eRCDeviceInputDev::handleCode(long rccode)
 
 #if WETEKRC
 /*
-	eDebug("==> BEFORE check for evtype: %x %x %x", ev->value, ev->code, ev->type);
-	eDebug("==> BEFORE check for evtype:-->BackspaceFLAG %d", bflag);
+	eDebug("[eRCDeviceInputDev] ==> BEFORE check for evtype: %x %x %x", ev->value, ev->code, ev->type);
+	eDebug("[eRCDeviceInputDev] ==> BEFORE check for evtype:-->BackspaceFLAG %d", bflag);
 */
 	if (ev->code == KEY_BACKSPACE && ev->value == 1 ) {
 		bflag = !bflag;
 	}
 /*
-	eDebug("==> BEFORE check for evtype after check for evvalue:-->BackspaceFLAG %d", bflag);
+	eDebug("[eRCDeviceInputDev] ==> BEFORE check for evtype after check for evvalue:-->BackspaceFLAG %d", bflag);
 */
 #endif
 
 	if (ev->type != EV_KEY)
 		return;
 		
-	eDebug("%x %x %x", ev->value, ev->code, ev->type);
+	eDebug("[eRCDeviceInputDev] %x %x %x", ev->value, ev->code, ev->type);
 
 	int km = iskeyboard ? input->getKeyboardMode() : eRCInput::kmNone;
 
@@ -57,7 +57,7 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	if (km == eRCInput::kmAscii)
 	{
 		bool ignore = false;
-		bool ascii = ev->code > 0 && ev->code < 59;
+		bool ascii = (ev->code > 0 && ev->code < 61);
 
 		switch (ev->code)
 		{
@@ -76,7 +76,7 @@ void eRCDeviceInputDev::handleCode(long rccode)
 			case KEY_BACKSPACE:
 /*
 				bflag = !bflag;
-				eDebug("--> AFTER flip BackspaceFLAG %d", bflag);
+				eDebug("[eRCDeviceInputDev] --> AFTER flip BackspaceFLAG %d", bflag);
 */
 			case KEY_ENTER:
 			case KEY_INSERT:
@@ -171,8 +171,8 @@ void eRCDeviceInputDev::handleCode(long rccode)
 
 #if WETEKRC
 /*
-	eDebug("-->BackspaceFLAG %d", bflag);
-	eDebug("-->before change %x %x %x", ev->value, ev->code, ev->type);
+	eDebug("[eRCDeviceInputDev] -->BackspaceFLAG %d", bflag);
+	eDebug("[eRCDeviceInputDev] -->before change %x %x %x", ev->value, ev->code, ev->type);
 */
 /* default is with NO numerc keys !!!*/
 	if (bflag) {
@@ -208,9 +208,40 @@ void eRCDeviceInputDev::handleCode(long rccode)
 		}
 	}
 /*
-	eDebug("-->BackspaceFLAG %d", bflag);
-	eDebug("-->after change %x %x %x", ev->value, ev->code, ev->type);
+	eDebug("[eRCDeviceInputDev] -->BackspaceFLAG %d", bflag);
+	eDebug("[eRCDeviceInputDev] -->after change %x %x %x", ev->value, ev->code, ev->type);
 */
+#endif
+
+#if KEY_F6_TO_KEY_FAVORITES
+	if (ev->code == KEY_F6) {
+		ev->code = KEY_FAVORITES;
+	}
+#endif
+
+#if KEY_HELP_TO_KEY_AUDIO
+	if (ev->code == KEY_HELP) {
+		ev->code = KEY_AUDIO;
+	}
+#endif
+
+
+#if KEY_WWW_TO_KEY_FILE
+	if (ev->code == KEY_WWW) {
+		ev->code = KEY_FILE;
+	}
+#endif
+
+#if KEY_CONTEXT_MENU_TO_KEY_BACK
+	if (ev->code == KEY_CONTEXT_MENU) {
+		ev->code = KEY_BACK;
+	}
+#endif
+
+#if KEY_VIDEO_TO_KEY_ANGLE
+	if (ev->code == KEY_VIDEO) {
+		ev->code = KEY_ANGLE;
+	}
 #endif
 
 #if KEY_F7_TO_KEY_MENU
@@ -632,6 +663,22 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	}
 #endif
 
+#if KEY_BOOKMARKS_IS_KEY_DIRECTORY
+	if (ev->code == KEY_BOOKMARKS)
+	{
+		/* Beyonwiz U4 RCU workaround to open pluginbrowser */
+		ev->code = KEY_DIRECTORY;
+	}
+#endif
+
+#if KEY_VIDEO_TO_KEY_BOOKMARKS
+	if (ev->code == KEY_VIDEO)
+	{
+		/* Axas Ultra have two keys open Movie folder , use Media key to open Mediaportal */
+		ev->code = KEY_BOOKMARKS;
+	}
+#endif
+
 	switch (ev->value)
 	{
 		case 0:
@@ -652,7 +699,7 @@ eRCDeviceInputDev::eRCDeviceInputDev(eRCInputEventDriver *driver, int consolefd)
 		consoleFd(consolefd), shiftState(false), capsState(false)
 {
 	setExclusive(true);
-	eDebug("Input device \"%s\" is a %s", id.c_str(), iskeyboard ? "keyboard" : (ismouse ? "mouse" : "remotecontrol"));
+	eDebug("[eRCDeviceInputDev] device \"%s\" is a %s", id.c_str(), iskeyboard ? "keyboard" : (ismouse ? "mouse" : "remotecontrol"));
 }
 
 void eRCDeviceInputDev::setExclusive(bool b)
@@ -705,11 +752,12 @@ public:
 		{
 			char filename[32];
 			sprintf(filename, "/dev/input/event%d", i);
-			if (::access(filename, R_OK) < 0) break;
+			if (::access(filename, R_OK) < 0)
+				break;
 			add(filename);
 			++i;
 		}
-		eDebug("Found %d input devices.", i);
+		eDebug("[eInputDeviceInit] Found %d input devices.", i);
 #endif
 	}
 
@@ -724,6 +772,7 @@ public:
 
 	void add(const char* filename)
 	{
+		eDebug("[eInputDeviceInit] adding device %s", filename);
 		eRCInputEventDriver *p = new eRCInputEventDriver(filename);
 		items.push_back(new element(filename, p, new eRCDeviceInputDev(p, consoleFd)));
 	}
@@ -739,7 +788,7 @@ public:
 				return;
 			}
 		}
-		eDebug("Remove '%s', not found", filename);
+		eDebug("[eInputDeviceInit] Remove '%s', not found", filename);
 	}
 
 	void addAll(void)
@@ -754,11 +803,12 @@ public:
 		{
 			char filename[32];
 			sprintf(filename, "/dev/input/event%d", i);
-			if (::access(filename, R_OK) < 0) break;
+			if (::access(filename, R_OK) < 0)
+				break;
 			add(filename);
 			++i;
 		}
-		eDebug("Found %d input devices.", i);
+		eDebug("[eInputDeviceInit] Found %d input devices.", i);
 	}
 
 	void removeAll(void)

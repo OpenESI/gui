@@ -37,7 +37,7 @@ public:
 	void setStreamMode(int);
 	void setScatterGather(iFilePushScatterGather *);
 
-	enum { evtEOF, evtReadError, evtWriteError, evtUser, evtStopped, evtFlush };
+	enum { evtEOF, evtReadError, evtWriteError, evtUser, evtStopped };
 	sigc::signal1<void,int> m_event;
 
 		/* you can send private events if you want */
@@ -83,10 +83,10 @@ public:
 	sigc::signal1<void,int> m_event;
 
 	int getProtocol() { return m_protocol;}
-	void setProtocol(int i){ m_protocol = i;}
-	void setSession(int se, int st) { m_session_id = se; m_stream_id = st;}
+        void setProtocol(int i){ m_protocol = i;}
+        void setSession(int se, int st) { m_session_id = se; m_stream_id = st;}
 	int read_dmx(int fd, void *m_buffer, int size);
-	int pushReply(void *buf, int len);
+	int pushReply(void *buf, int len);	
 	void sendEvent(int evt);
 	static int64_t getTick();
 	static int read_ts(int fd, unsigned char *buf, int size);

@@ -58,12 +58,10 @@ class GUISkin:
 		return None
 
 	def addSummary(self, summary):
-		if summary is not None:
-			self.summaries.append(summary)
+		self.summaries.append(summary)
 
 	def removeSummary(self, summary):
-		if summary is not None:
-			self.summaries.remove(summary)
+		self.summaries.remove(summary)
 
 	def setTitle(self, title):
 		try:
@@ -76,16 +74,12 @@ class GUISkin:
 	def getTitle(self):
 		return self["Title"].text
 
-	def getSkinTitle(self):
-		return hasattr(self, "skin_title") and self.skin_title or ""
-
 	title = property(getTitle, setTitle)
 
 	def setDesktop(self, desktop):
 		self.desktop = desktop
 
 	def applySkin(self):
-		self.skin_title = ""
 		z = 0
 		baseres = (720, 576) # FIXME: a skin might have set another resolution, which should be the base res
 		idx = 0
@@ -95,7 +89,6 @@ class GUISkin:
 			if key == "zPosition":
 				z = int(value)
 			elif key == "title":
-				self.skin_title = value
 				skin_title_idx = idx
 				if title:
 					self.skinAttributes[skin_title_idx] = ("title", title)

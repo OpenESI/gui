@@ -47,7 +47,7 @@ def startup(reason, **kwargs):
 
 def OSDPosSetup(menuid, **kwargs):
 	if menuid == "osd_menu":
-		return [(_("Position and size"), main, "osd_position_setup", 80)]
+		return [(_("Overscan"), main, "osd_position_setup", 80)]
 	else:
 		return []
 

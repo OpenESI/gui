@@ -51,7 +51,7 @@ class CIselectMainMenu(Screen):
 		self.dlg = None
 		self.state = { }
 		self.list = [ ]
-		if NUM_CI and NUM_CI > 0:
+		if  NUM_CI and NUM_CI > 0:
 			for slot in range(NUM_CI):
 				state = eDVBCI_UI.getInstance().getState(slot)
 				if state != -1:
@@ -382,8 +382,8 @@ class CAidSelect(Screen):
 
 		self["actions"] = ActionMap(["ColorActions","SetupActions"],
 		{
-			"ok": self.list.toggleSelection,
-			"cancel": self.cancel,
+			"ok": self.list.toggleSelection, 
+			"cancel": self.cancel, 
 			"green": self.greenPressed,
 			"red": self.cancel
 		}, -1)
@@ -430,7 +430,7 @@ class myProviderSelection(ChannelSelectionBase):
 		self["key_green"] = StaticText()
 		self["key_yellow"] = StaticText()
 		self["key_blue"] = StaticText()
-		self["introduction"] = StaticText(_("Press OK to select a service."))
+		self["introduction"] = StaticText(_("Press OK to select a provider."))
 
 	def showProviders(self):
 		pass
@@ -447,8 +447,7 @@ class myProviderSelection(ChannelSelectionBase):
 
 	def channelSelected(self): # just return selected service
 		ref = self.getCurrentSelection()
-		if ref is None:
-			return
+		if ref is None: return
 		if not (ref.flags & 64):
 			splited_ref = ref.toString().split(":")
 			if ref.flags == 7 and splited_ref[6] != "0":
@@ -569,7 +568,7 @@ class myChannelSelection(ChannelSelectionBase):
 		self["key_green"] = StaticText(_("Close"))
 		self["key_yellow"] = StaticText()
 		self["key_blue"] = StaticText(_("Favourites"))
-		self["introduction"] = StaticText(_("Press OK to select a provider."))
+		self["introduction"] = StaticText(_("Press OK to select a service."))
 
 	def __onExecCallback(self):
 		self.setModeTv()

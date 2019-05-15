@@ -594,9 +594,6 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
 		<widget source="Statustext" render="Label" position="10,395" size="115,21" zPosition="10" font="Regular;20" halign="left" backgroundColor="#25062748" transparent="1"/>
 		<widget name="statuspic" pixmaps="skin_default/buttons/button_green.png,skin_default/buttons/button_green_off.png" position="130,400" zPosition="10" size="15,16" transparent="1" alphatest="on"/>
 	</screen>
-	<screen name="StreamingClientsInfo" position="center,center" size="540,490" title="Streaming Clients Info">
-		<widget name="ScrollLabel" font="Regular;20" position="0,00" size="540,490" zPosition="2" halign="left"/>
-	</screen>
 	<screen name="AudioSelection" position="center,center" size="560,460" title="Audio">
 		<panel name="BasicTemplate" />
 		<widget name="config" position="50,10" size="500,110" scrollbarMode="showOnDemand" />
@@ -1078,17 +1075,6 @@ self.autoResize()
 		<widget name="config" position="10,50" size="540,280" scrollbarMode="showOnDemand" />
 		<widget source="introduction" render="Label" position="10,350" size="540,50" zPosition="10" font="Regular;21" halign="center" valign="center" backgroundColor="#25062748" transparent="1" />
 	</screen>
-	<!-- IPv6 -->
-	<screen name="IPv6Setup" position="center,center" size="560,400" title="IPv6 setup" >
-		<ePixmap pixmap="skin_default/buttons/red.png" position="0,0" size="140,40" alphatest="on" />
-		<ePixmap pixmap="skin_default/buttons/green.png" position="140,0" size="140,40" alphatest="on" />
-		<widget source="key_red" render="Label" position="0,0" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" />
-		<widget source="key_green" render="Label" position="140,0" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" />
-		<widget name="config" position="5,50" size="550,280" scrollbarMode="showOnDemand" />
-		<ePixmap pixmap="skin_default/div-h.png" position="0,340" zPosition="1" size="560,2" />
-		<widget source="introduction" render="Label" position="0,350" size="560,50" zPosition="10" font="Regular;21" halign="center" valign="center" backgroundColor="#25062748" transparent="1" />
-	</screen>
-	<!-- Network adapter selection -->
 	<screen name="NetworkAdapterSelection" position="center,center" size="560,460" title="Select a network adapter">
 		<panel name="BasicTemplate" />
 		<panel name="Red2Panel" />
@@ -1149,18 +1135,6 @@ self.autoResize()
 		<panel name="BasicTemplate" />
 		<widget name="menu" position="10,10" size="540,350" />
 	</screen>
-	<!-- Inetd recovery -->
-	<screen name="InetdRecovery" position="center,center" size="560,412" title="Inetd recovery">
-		<ePixmap pixmap="skin_default/buttons/red.png" position="0,0" size="140,40" alphatest="on" />
-		<ePixmap pixmap="skin_default/buttons/green.png" position="140,0" size="140,40" alphatest="on" />
-		<ePixmap pixmap="skin_default/buttons/yellow.png" position="280,0" size="140,40" alphatest="on" />
-		<ePixmap pixmap="skin_default/buttons/blue.png" position="420,0" size="140,40" alphatest="on" />
-		<widget name="key_red" position="0,0" zPosition="1" size="140,40" font="Regular;19" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" />
-		<widget name="key_green" position="140,0" zPosition="1" size="140,40" font="Regular;19" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" />
-		<widget name="key_yellow" position="280,0" zPosition="1" size="140,40" font="Regular;19" halign="center" valign="center" backgroundColor="#a08500" transparent="1" />
-		<widget name="key_blue" position="420,0" zPosition="1" size="140,40" font="Regular;19" halign="center" valign="center" backgroundColor="#18188b" transparent="1" />
-		<widget name="config" position="10,50" size="540,355" scrollbarMode="showOnDemand" />
-	</screen>
 	<!-- Nim selection -->
 	<screen name="NimSelection" position="center,center" size="560,460" title="Select a tuner">
 		<panel name="BasicTemplate" />
@@ -1179,10 +1153,6 @@ self.autoResize()
 	<screen name="NimSetup" position="center,center" size="560,460" title="Reception settings">
 		<panel name="BasicTemplate" />
 		<widget name="config" position="10,10" size="540,410" scrollbarMode="showOnDemand" />
-	</screen>
-	<!-- BufferIndicator -->
-	<screen name="BufferIndicator" title="Channel" position="c-100,45" size="200,35" backgroundColor="transparent" flags="wfNoBorder">
-		<widget name="status" position="0,0" size="200,35" backgroundColor="transparent" transparent="1" font="Regular;26" borderColor="black" borderWidth="2" valign="center" haligh="center" zPosition="100"/>
 	</screen>
 	<screen name="NumericalTextInputHelpDialog" position="190,400" zPosition="2" size="394,124" backgroundColor="#202020" flags="wfNoBorder">
 		<eLabel position="0,0" size="392,122" backgroundColor="#c0c0c0" zPosition="-1" />

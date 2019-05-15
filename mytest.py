@@ -1,11 +1,6 @@
-import sys, os
-from time import strftime, time, localtime, mktime
-
-try:
-	reload(sys)
-	sys.setdefaultencoding('utf-8')
-except:
-	pass
+import sys
+import os
+from time import time
 
 if os.path.isfile("/usr/lib/enigma2/python/enigma.zip"):
 	sys.path.append("/usr/lib/enigma2/python/enigma.zip")
@@ -14,14 +9,8 @@ from Tools.Profile import profile, profile_final
 profile("PYTHON_START")
 
 import Tools.RedirectOutput
-from boxbranding import getBoxType, getBrandOEM, getImageType, getImageVersion, getImageBuild, getMachineBuild
-print "----------------------------"
-print "[Image Type] %s" % getImageType()
-print "[Image Version] %s" % getImageVersion()
-print "[Image Build] %s" % getImageBuild()
-print "----------------------------"
-
 import enigma
+from boxbranding import getBoxType, getBrandOEM, getMachineBuild
 import eConsoleImpl
 import eBaseImpl
 enigma.eTimer = eBaseImpl.eTimer
@@ -29,10 +18,15 @@ enigma.eSocketNotifier = eBaseImpl.eSocketNotifier
 enigma.eConsoleAppContainer = eConsoleImpl.eConsoleAppContainer
 boxtype = getBoxType()
 
-#if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal/plugin.pyo") and boxtype in ('dm7080','dm820','dm520','dm525','dm900'):
+
+#if os.path.isfile("/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal/plugin.pyo") and boxtype in ('dm7080','dm820','dm520','dm525','dm900','dm920'):
 #	import pyo_patcher
 
 from traceback import print_exc
+
+profile("SetupDevices")
+import Components.SetupDevices
+Components.SetupDevices.InitSetupDevices()
 
 profile("SimpleSummary")
 from Screens import InfoBar
@@ -41,8 +35,8 @@ from Screens.SimpleSummary import SimpleSummary
 from sys import stdout, exc_info
 
 profile("Bouquets")
-from Components.config import config, configfile, ConfigText, ConfigYesNo, ConfigInteger, NoSave, ConfigSelection
-config.misc.load_unlinked_userbouquets = ConfigYesNo(default=True)
+from Components.config import config, configfile, ConfigText, ConfigYesNo, ConfigInteger, NoSave
+config.misc.load_unlinked_userbouquets = ConfigYesNo(default=False)
 def setLoadUnlinkedUserbouquets(configElement):
 	enigma.eDVBDB.getInstance().setLoadUnlinkedUserbouquets(configElement.value)
 config.misc.load_unlinked_userbouquets.addNotifier(setLoadUnlinkedUserbouquets)
@@ -74,85 +68,12 @@ config.misc.radiopic = ConfigText(default = radiopic)
 #config.misc.isNextRecordTimerAfterEventActionAuto = ConfigYesNo(default=False)
 #config.misc.isNextPowerTimerAfterEventActionAuto = ConfigYesNo(default=False)
 config.misc.nextWakeup = ConfigText(default = "-1,-1,-1,0,0,-1,0")	#last shutdown time, wakeup time, timer begins, set by (0=rectimer,1=zaptimer, 2=powertimer or 3=plugin), go in standby, next rectimer, force rectimer
-config.misc.SyncTimeUsing = ConfigSelection(default = "0", choices = [("0", "Transponder Time"), ("1", _("NTP"))])
-config.misc.NTPserver = ConfigSelection(default = "pool.ntp.org", choices = [
-		("pool.ntp.org",_("Global")),
-		("ao.pool.ntp.org",_("Angola")),
-		("mg.pool.ntp.org",_("Madagascar")),
-		("za.pool.ntp.org",_("South Africa")),
-		("tz.pool.ntp.org",_("Tanzania")),
-		("bd.pool.ntp.org",_("Bangladesh")),
-		("cn.pool.ntp.org",_("China")),
-		("hk.pool.ntp.org",_("Hong Kong")),
-		("in.pool.ntp.org",_("India")),
-		("id.pool.ntp.org",_("Indonesia")),
-		("ir.pool.ntp.org",_("Iran")),
-		("jp.pool.ntp.org",_("Japan")),
-		("kz.pool.ntp.org",_("Kazakhstan")),
-		("kr.pool.ntp.org",_("Korea")),
-		("my.pool.ntp.org",_("Malaysia")),
-		("pk.pool.ntp.org",_("Pakistan")),
-		("ph.pool.ntp.org",_("Philippines")),
-		("sg.pool.ntp.org",_("Singapore")),
-		("tw.pool.ntp.org",_("Taiwan")),
-		("th.pool.ntp.org",_("Thailand")),
-		("tr.pool.ntp.org",_("Turkey")),
-		("ae.pool.ntp.org",_("United Arab Emirates")),
-		("uz.pool.ntp.org",_("Uzbekistan")),
-		("vn.pool.ntp.org",_("Vietnam")),
-		("at.pool.ntp.org",_("Austria")),
-		("by.pool.ntp.org",_("Belarus")),
-		("be.pool.ntp.org",_("Belgium")),
-		("bg.pool.ntp.org",_("Bulgaria")),
-		("cz.pool.ntp.org",_("Czech Republic")),
-		("dk.pool.ntp.org",_("Denmark")),
-		("ee.pool.ntp.org",_("Estonia")),
-		("fi.pool.ntp.org",_("Finland")),
-		("fr.pool.ntp.org",_("France")),
-		("de.pool.ntp.org",_("Germany")),
-		("gr.pool.ntp.org",_("Greece")),
-		("hu.pool.ntp.org",_("Hungary")),
-		("ie.pool.ntp.org",_("Ireland")),
-		("it.pool.ntp.org",_("Italy")),
-		("lv.pool.ntp.org",_("Latvia")),
-		("lt.pool.ntp.org",_("Lithuania")),
-		("lu.pool.ntp.org",_("Luxembourg")),
-		("mk.pool.ntp.org",_("Macedonia")),
-		("md.pool.ntp.org",_("Moldova")),
-		("nl.pool.ntp.org",_("Netherlands")),
-		("no.pool.ntp.org",_("Norway")),
-		("pl.pool.ntp.org",_("Poland")),
-		("pt.pool.ntp.org",_("Portugal")),
-		("ro.pool.ntp.org",_("Romania")),
-		("ru.pool.ntp.org",_("Russian Federation")),
-		("sk.pool.ntp.org",_("Slovakia")),
-		("si.pool.ntp.org",_("Slovenia")),
-		("es.pool.ntp.org",_("Spain")),
-		("se.pool.ntp.org",_("Sweden")),
-		("ch.pool.ntp.org",_("Switzerland")),
-		("ua.pool.ntp.org",_("Ukraine")),
-		("uk.pool.ntp.org",_("United Kingdom")),
-		("bs.pool.ntp.org",_("Bahamas")),
-		("ca.pool.ntp.org",_("Canada")),
-		("gt.pool.ntp.org",_("Guatemala")),
-		("mx.pool.ntp.org",_("Mexico")),
-		("pa.pool.ntp.org",_("Panama")),
-		("us.pool.ntp.org",_("United States")),
-		("au.pool.ntp.org",_("Australia")),
-		("nz.pool.ntp.org",_("New Zealand")),
-		("ar.pool.ntp.org",_("Argentina")),
-		("br.pool.ntp.org",_("Brazil")),
-		("cl.pool.ntp.org",_("Chile")),
-		])
+config.misc.SyncTimeUsing = ConfigSelection(default = "0", choices = [("0", _("Transponder Time")), ("1", _("NTP"))])
+config.misc.NTPserver = ConfigText(default = 'pool.ntp.org', fixed_size=False)
 
 config.misc.startCounter = ConfigInteger(default=0) # number of e2 starts...
 config.misc.standbyCounter = NoSave(ConfigInteger(default=0)) # number of standby
 config.misc.DeepStandby = NoSave(ConfigYesNo(default=False)) # detect deepstandby
-config.misc.RestartUI = ConfigYesNo(default=False) # detect user interface restart
-config.misc.epgcache_filename = ConfigText(default = "/hdd/epg.dat")
-
-def setEPGCachePath(configElement):
-	enigma.eEPGCache.getInstance().setCacheFile(configElement.value)
 
 #demo code for use of standby enter leave callbacks
 #def leaveStandby():
@@ -166,7 +87,7 @@ def setEPGCachePath(configElement):
 #config.misc.standbyCounter.addNotifier(standbyCountChanged, initial_call = False)
 ####################################################
 
-def useSyncUsingChanged(configElement):
+def useSyncUsingChanged(configelement):
 	if config.misc.SyncTimeUsing.value == "0":
 		print "[Time By]: Transponder"
 		enigma.eDVBLocalTimeHandler.getInstance().setUseDVBTime(True)
@@ -177,7 +98,10 @@ def useSyncUsingChanged(configElement):
 		enigma.eEPGCache.getInstance().timeUpdated()
 config.misc.SyncTimeUsing.addNotifier(useSyncUsingChanged)
 
-def NTPserverChanged(configElement):
+def NTPserverChanged(configelement):
+	if config.misc.NTPserver.value == "pool.ntp.org":
+		return
+	print "[NTPDATE] save /etc/default/ntpdate"
 	f = open("/etc/default/ntpdate", "w")
 	f.write('NTPSERVERS="' + config.misc.NTPserver.value + '"')
 	f.close()
@@ -185,8 +109,7 @@ def NTPserverChanged(configElement):
 	from Components.Console import Console
 	Console = Console()
 	Console.ePopen('/usr/bin/ntpdate-sync')
-config.misc.NTPserver.addNotifier(NTPserverChanged, immediate_feedback = False)
-config.misc.NTPserver.callNotifiersOnSaveAndCancel = True
+config.misc.NTPserver.addNotifier(NTPserverChanged, immediate_feedback = True)
 
 profile("Twisted")
 try:
@@ -222,7 +145,7 @@ def dump(dir, p = ""):
 			dump(val, p + "(dict)/" + entry)
 	if hasattr(dir, "__dict__"):
 		for name, value in dir.__dict__.items():
-			if str(value) not in had:
+			if not had.has_key(str(value)):
 				had[str(value)] = 1
 				dump(value, p + "/" + str(name))
 			else:
@@ -285,43 +208,6 @@ class Session:
 
 		self.screen = SessionGlobals(self)
 
-		##### hack for Openwebif - Create folders & symlink
-		from enigma import eEnv
-		from Tools.Directories import fileExists
-		import os
-		origwebifpath = eEnv.resolve('${libdir}/enigma2/python/Plugins/Extensions/WebInterface')
-		hookpath = eEnv.resolve('${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/pluginshook.src')
-		if not os.path.islink(origwebifpath + "/WebChilds/Toplevel.py") and os.path.exists(hookpath):
-			print "[OpenWebif] hooking original webif plugins"
-
-			cleanuplist = [
-				"/__init__.py",
-				"/__init__.pyo",
-				"/__init__.pyc",
-				"/WebChilds/__init__.py",
-				"/WebChilds/__init__.pyo",
-				"/WebChilds/__init__.pyc",
-				"/WebChilds/External/__init__.py",
-				"/WebChilds/External/__init__.pyo",
-				"/WebChilds/External/__init__.pyc",
-				"/WebChilds/Toplevel.py",
-				"/WebChilds/Toplevel.pyo"
-				"/WebChilds/Toplevel.pyc"
-			]
-
-			for cleanupfile in cleanuplist:
-				if fileExists(origwebifpath + cleanupfile):
-					os.remove(origwebifpath + cleanupfile)
-
-			if not os.path.exists(origwebifpath + "/WebChilds/External"):
-				os.makedirs(origwebifpath + "/WebChilds/External")
-			open(origwebifpath + "/__init__.py", "w").close()
-			open(origwebifpath + "/WebChilds/__init__.py", "w").close()
-			open(origwebifpath + "/WebChilds/External/__init__.py", "w").close()
-
-			os.symlink(hookpath, origwebifpath + "/WebChilds/Toplevel.py")
-		##########################################################
-
 		for p in plugins.getPlugins(PluginDescriptor.WHERE_SESSIONSTART):
 			try:
 				p(reason=0, session=self)
@@ -341,11 +227,6 @@ class Session:
 			del self.current_dialog
 		else:
 			del self.current_dialog.callback
-
-		## hack for ready eDVBLocalTimeHandler
-		# Thanks morser and OpenSPA: https://github.com/OpenSPA/dvbapp/commit/b8af9e056062a3f7765e6709dc9a3ae434b70fcb
-		##
-		enigma.eDVBLocalTimeHandler.getInstance().syncDVBTime()
 
 		self.popCurrent()
 		if callback is not None:
@@ -376,7 +257,7 @@ class Session:
 		self.current_dialog.restoreKeyboardMode()
 		self.current_dialog.hide()
 
-		if last and self.summary:
+		if last:
 			self.current_dialog.removeSummary(self.summary)
 			self.popSummary()
 
@@ -394,13 +275,12 @@ class Session:
 			callback(*retval)
 
 	def instantiateSummaryDialog(self, screen, **kwargs):
-		if self.summary_desktop is not None:
-			self.pushSummary()
-			summary = screen.createSummary() or SimpleSummary
-			arguments = (screen,)
-			self.summary = self.doInstantiateDialog(summary, arguments, kwargs, self.summary_desktop)
-			self.summary.show()
-			screen.addSummary(self.summary)
+		self.pushSummary()
+		summary = screen.createSummary() or SimpleSummary
+		arguments = (screen,)
+		self.summary = self.doInstantiateDialog(summary, arguments, kwargs, self.summary_desktop)
+		self.summary.show()
+		screen.addSummary(self.summary)
 
 	def doInstantiateDialog(self, screen, arguments, kwargs, desktop):
 		# create dialog
@@ -435,8 +315,9 @@ class Session:
 
 	def openWithCallback(self, callback, screen, *arguments, **kwargs):
 		dlg = self.open(screen, *arguments, **kwargs)
-		dlg.callback = callback
-		return dlg
+		if dlg != 'config.crash.bsodpython.value=True':
+			dlg.callback = callback
+			return dlg
 
 	def open(self, screen, *arguments, **kwargs):
 		if self.dialog_stack and not self.in_exec:
@@ -444,7 +325,15 @@ class Session:
 			# ...unless it's the very first screen.
 
 		self.pushCurrent()
-		dlg = self.current_dialog = self.instantiateDialog(screen, *arguments, **kwargs)
+		if config.crash.bsodpython.value:
+			try:
+				dlg = self.current_dialog = self.instantiateDialog(screen, *arguments, **kwargs)
+			except:
+				self.popCurrent()
+				raise
+				return 'config.crash.bsodpython.value=True'
+		else:
+			dlg = self.current_dialog = self.instantiateDialog(screen, *arguments, **kwargs)
 		dlg.isTmp = True
 		dlg.callback = None
 		self.execBegin()
@@ -471,16 +360,13 @@ class Session:
 	def pushSummary(self):
 		if self.summary is not None:
 			self.summary.hide()
-			self.summary_stack.append(self.summary)
-			self.summary = None
+		self.summary_stack.append(self.summary)
+		self.summary = None
 
 	def popSummary(self):
 		if self.summary is not None:
 			self.summary.doClose()
-		if not self.summary_stack:
-			self.summary = None
-		else:
-			self.summary = self.summary_stack.pop()
+		self.summary = self.summary_stack.pop()
 		if self.summary is not None:
 			self.summary.show()
 
@@ -521,8 +407,8 @@ class PowerKey:
 		self.doAction(action = config.usage.on_long_powerpress.value)
 
 	def doAction(self, action):
-		if Screens.Standby.TVinStandby:
-			Screens.Standby.setTVstate('on')
+		if Screens.Standby.TVinStandby.getTVstate('standby'):
+			Screens.Standby.TVinStandby.setTVstate('on')
 			return
 
 		self.standbyblocked = 1
@@ -541,16 +427,10 @@ class PowerKey:
 						menu_screen.setTitle(_("Standby / restart"))
 						return
 		elif action == "standby":
-			try:
-				config.hdmicec.control_tv_standby_skipnow.setValue(False)
-			except:
-				pass # no HdmiCec
+			Screens.Standby.TVinStandby.skipHdmiCecNow(False)
 			self.standby()
 		elif action == "standby_noTVshutdown":
-			try:
-				config.hdmicec.control_tv_standby_skipnow.setValue(True)
-			except:
-				pass # no HdmiCec
+			Screens.Standby.TVinStandby.skipHdmiCecNow(True)
 			self.standby()
 		elif action == "powertimerStandby":
 			val = 3
@@ -573,6 +453,7 @@ class PowerKey:
 
 	def standby(self):
 		if not Screens.Standby.inStandby and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND and self.session.in_exec:
+			self.session.nav.skipWakeup = True
 			self.session.open(Screens.Standby.Standby)
 
 	def openSleepTimer(self):
@@ -614,7 +495,7 @@ class AutoScartControl:
 		config.av.vcrswitch.addNotifier(self.recheckVCRSb)
 		enigma.eAVSwitch.getInstance().vcr_sb_notifier.get().append(self.VCRSbChanged)
 
-	def recheckVCRSb(self, configElement):
+	def recheckVCRSb(self, configelement):
 		self.VCRSbChanged(self.current_vcr_sb)
 
 	def VCRSbChanged(self, value):
@@ -640,7 +521,7 @@ from time import time, localtime, strftime
 from Tools.StbHardware import setFPWakeuptime, setRTCtime
 
 def autorestoreLoop():
-	# Check if auto restore settings fails, just start the wizard (avoid a endless loop)
+	# Check if auto restore settings fails, just start the wizard (avoid a endless loop) 
 	count = 0
 	if os.path.exists("/media/hdd/images/config/autorestore"):
 		f = open("/media/hdd/images/config/autorestore", "r")
@@ -655,11 +536,10 @@ def autorestoreLoop():
 	f = open("/media/hdd/images/config/autorestore", "w")
 	f.write(str(count))
 	f.close()
-	return True
+	return True		
 
 def runScreenTest():
 	config.misc.startCounter.value += 1
-	config.misc.startCounter.save()
 
 	profile("readPluginList")
 	enigma.pauseInit()
@@ -688,7 +568,7 @@ def runScreenTest():
 			os.system('rm -f /media/hdd/images/config/autorestore')
 		screensToRun = [ p.__call__ for p in plugins.getPlugins(PluginDescriptor.WHERE_WIZARD) ]
 		screensToRun += wizardManager.getWizards()
-
+	
 	screensToRun.append((100, InfoBar.InfoBar))
 	screensToRun.sort()
 	print screensToRun
@@ -697,7 +577,7 @@ def runScreenTest():
 
 	def runNextScreen(session, screensToRun, *result):
 		if result:
-			#print "[mytest.py] quitMainloop #3"
+			print "[mytest.py] quitMainloop #3"
 			enigma.quitMainloop(*result)
 			return
 
@@ -708,8 +588,6 @@ def runScreenTest():
 		else:
 			session.open(screen, *args)
 
-	config.misc.epgcache_filename.addNotifier(setEPGCachePath)
-
 	if not RestoreSettings:
 		runNextScreen(session, screensToRun)
 
@@ -717,8 +595,8 @@ def runScreenTest():
 	vol = VolumeControl(session)
 	profile("Init:PowerKey")
 	power = PowerKey(session)
-
-	if boxtype in ('alien5','osninopro','osnino','osninoplus','alphatriple','spycat4kmini','tmtwin4k','mbmicrov2','revo4k','force3uhd','wetekplay', 'wetekplay2', 'wetekhub', 'dm7020hd', 'dm7020hdv2', 'osminiplus', 'osmega', 'sf3038', 'spycat', 'e4hd', 'e4hdhybrid', 'mbmicro', 'et7500', 'mixosf5', 'mixosf7', 'mixoslumi', 'gi9196m', 'maram9', 'ixussone', 'ixusszero', 'uniboxhd1', 'uniboxhd2', 'uniboxhd3', 'sezam5000hd', 'mbtwin', 'sezam1000hd', 'mbmini', 'atemio5x00', 'beyonwizt3', '9910lx', '9911lx') or getBrandOEM() in ('fulan') or getMachineBuild() in ('dags7362' , 'dags73625', 'dags5'):
+	
+	if boxtype in ('alien5','osninopro','osnino','osninoplus','alphatriple','spycat4kmini','tmtwin4k','mbmicrov2','revo4k','force3uhd','wetekplay', 'wetekplay2', 'wetekhub', 'dm7020hd', 'dm7020hdv2', 'osminiplus', 'osmega', 'sf3038', 'spycat', 'e4hd', 'e4hdhybrid', 'mbmicro', 'et7500', 'mixosf5', 'mixosf7', 'mixoslumi', 'gi9196m', 'maram9', 'ixussone', 'ixusszero', 'uniboxhd1', 'uniboxhd2', 'uniboxhd3', 'sezam5000hd', 'mbtwin', 'sezam1000hd', 'mbmini', 'atemio5x00', 'beyonwizt3', '9910lx', '9911lx', '9920lx') or getBrandOEM() in ('fulan') or getMachineBuild() in ('dags7362','dags73625','dags5','ustym4kpro','sf8008','cc1','gbmv200'):
 		profile("VFDSYMBOLS")
 		import Components.VfdSymbols
 		Components.VfdSymbols.SymbolsCheck(session)
@@ -890,10 +768,6 @@ import Components.InputDevice
 Components.InputDevice.InitInputDevices()
 import Components.InputHotplug
 
-profile("SetupDevices")
-import Components.SetupDevices
-Components.SetupDevices.InitSetupDevices()
-
 profile("AVSwitch")
 import Components.AVSwitch
 Components.AVSwitch.InitAVSwitch()
@@ -926,6 +800,9 @@ Components.NetworkTime.AutoNTPSync()
 profile("keymapparser")
 import keymapparser
 keymapparser.readKeymap(config.usage.keymap.value)
+keymapparser.readKeymap(config.usage.keytrans.value)
+if os.path.exists(config.usage.keymap_usermod.value):
+	keymapparser.readKeymap(config.usage.keymap_usermod.value)
 
 profile("Network")
 import Components.Network
@@ -946,7 +823,7 @@ if boxtype in ('uniboxhd1', 'uniboxhd2', 'uniboxhd3', 'sezam5000hd', 'mbtwin', '
 	except:
 		print "Error disable enable_clock for ini5000 boxes"
 
-if boxtype in ('dm7080', 'dm820', 'dm900', 'gb7252'):
+if boxtype in ('dm7080', 'dm820', 'dm900', 'dm920', 'gb7252'):
 	f=open("/proc/stb/hdmi-rx/0/hdmi_rx_monitor","r")
 	check=f.read()
 	f.close()
@@ -981,15 +858,6 @@ Screens.Ci.InitCiConfig()
 
 profile("RcModel")
 import Components.RcModel
-
-profile("IPv6")
-if os.path.exists('/etc/enigma2/ipv6'):
-	try:
-		fp = open('/proc/sys/net/ipv6/conf/all/disable_ipv6', 'w')
-		fp.write("1")
-		fp.close()
-	except:
-		pass
 
 #from enigma import dump_malloc_stats
 #t = eTimer()

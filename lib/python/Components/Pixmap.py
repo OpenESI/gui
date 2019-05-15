@@ -12,20 +12,11 @@ class Pixmap(GUIComponent):
 
 	def getSize(self):
 		s = self.instance.size()
-		return (s.width(), s.height())
-
-	def setPixmap(self, pixmap):
-		self.instance.setPixmap(pixmap)
-
-	def setShowHideAnimation(self, key):
-		self.instance.setShowHideAnimation(key)
-
-	def resetShowHideAnimation(self):
-		self.instance.setShowHideAnimation("")
+		return s.width(), s.height()
 
 class PixmapConditional(ConditionalWidget, Pixmap):
 	def __init__(self, withTimer = True):
-		ConditionalWidget.__init__(self, withTimer)
+		ConditionalWidget.__init__(self)
 		Pixmap.__init__(self)
 
 class MovingPixmap(Pixmap):
@@ -44,7 +35,7 @@ class MovingPixmap(Pixmap):
 		self.moveTimer.callback.append(self.doMove)
 
 	def clearPath(self, repeated = False):
-		if (self.moving):
+		if self.moving:
 			self.moving = False
 			self.moveTimer.stop()
 
@@ -81,12 +72,12 @@ class MovingPixmap(Pixmap):
 		except: # moving not possible... widget not there any more... stop moving
 			self.stopMoving()
 
-		if (self.time == 0):
+		if self.time == 0:
 			self.currDest += 1
 			self.moveTimer.stop()
 			self.moving = False
-			if (self.currDest >= len(self.path)): # end of path
-				if (self.repeated):
+			if self.currDest >= len(self.path): # end of path
+				if self.repeated:
 					self.currDest = 0
 					self.moving = False
 					self.startMoving()
@@ -113,8 +104,6 @@ class MultiPixmap(Pixmap):
 							pngfile = resolveFilename(SCOPE_SKIN_IMAGE, p, path_prefix=skin_path_prefix)
 						elif fileExists(resolveFilename(SCOPE_ACTIVE_LCDSKIN, p, path_prefix=skin_path_prefix)):
 							pngfile = resolveFilename(SCOPE_ACTIVE_LCDSKIN, p, path_prefix=skin_path_prefix)
-						elif fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, p, path_prefix=skin_path_prefix)):
-							pngfile = resolveFilename(SCOPE_ACTIVE_SKIN, p, path_prefix=skin_path_prefix)
 						if path.exists(pngfile):
 							self.pixmaps.append(loadPixmap(pngfile, desktop))
 					if not pixmap:
@@ -123,16 +112,12 @@ class MultiPixmap(Pixmap):
 							pixmap = resolveFilename(SCOPE_SKIN_IMAGE, pixmaps[0], path_prefix=skin_path_prefix)
 						elif fileExists(resolveFilename(SCOPE_ACTIVE_LCDSKIN, pixmaps[0], path_prefix=skin_path_prefix)):
 							pixmap = resolveFilename(SCOPE_ACTIVE_LCDSKIN, pixmaps[0], path_prefix=skin_path_prefix)
-						elif fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, pixmaps[0], path_prefix=skin_path_prefix)):
-							pixmap = resolveFilename(SCOPE_ACTIVE_SKIN, pixmaps[0], path_prefix=skin_path_prefix)
 				elif attrib == "pixmap":
 					pixmap = resolveFilename(SCOPE_ACTIVE_SKIN, value, path_prefix=skin_path_prefix)
 					if fileExists(resolveFilename(SCOPE_SKIN_IMAGE, value, path_prefix=skin_path_prefix)):
 						pixmap = resolveFilename(SCOPE_SKIN_IMAGE, value, path_prefix=skin_path_prefix)
 					elif fileExists(resolveFilename(SCOPE_ACTIVE_LCDSKIN, value, path_prefix=skin_path_prefix)):
 						pixmap = resolveFilename(SCOPE_ACTIVE_LCDSKIN, value, path_prefix=skin_path_prefix)
-					elif fileExists(resolveFilename(SCOPE_ACTIVE_SKIN, value, path_prefix=skin_path_prefix)):
-						pixmap = resolveFilename(SCOPE_ACTIVE_SKIN, value, path_prefix=skin_path_prefix)
 				else:
 					attribs.append((attrib,value))
 			if pixmap:
@@ -145,4 +130,4 @@ class MultiPixmap(Pixmap):
 			if len(self.pixmaps) > x:
 				self.instance.setPixmap(self.pixmaps[x])
 			else:
-				print "setPixmapNum(%d) failed! defined pixmaps:" %(x), self.pixmaps
+				print "setPixmapNum(%d) failed! defined pixmaps:" % x, self.pixmaps

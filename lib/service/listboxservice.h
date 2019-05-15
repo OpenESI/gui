@@ -22,6 +22,7 @@ public:
 	void setIgnoreService( const eServiceReference &service );
 	void setRoot(const eServiceReference &ref, bool justSet=false);
 	void getCurrent(eServiceReference &ref);
+
 	void getPrev(eServiceReference &ref);
 	void getNext(eServiceReference &ref);
 
@@ -93,6 +94,7 @@ public:
 	void setItemHeight(int height);
 	void setHideNumberMarker(bool doHide) { m_hide_number_marker = doHide; }
 	void setServicePiconDownsize(int value) { m_service_picon_downsize = value; }
+	void setServicePiconRatio(int value) { m_service_picon_ratio = value; }
 	void setServiceTypeIconMode(int mode) { m_servicetype_icon_mode = mode; }
 	void setCryptoIconMode(int mode) { m_crypto_icon_mode = mode; }
 	void setRecordIndicatorMode(int mode) { m_record_indicator_mode = mode; }
@@ -189,6 +191,7 @@ private:
 	int m_itemheight;
 	bool m_hide_number_marker;
 	int m_service_picon_downsize;
+	int m_service_picon_ratio;
 	int m_servicetype_icon_mode;
 	int m_crypto_icon_mode;
 	int m_record_indicator_mode;

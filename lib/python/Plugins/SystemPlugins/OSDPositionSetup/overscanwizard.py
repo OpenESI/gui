@@ -1,5 +1,4 @@
 from Screens.Screen import Screen
-from Screens.Standby import QuitMainloopScreen
 from Components.ConfigList import ConfigListScreen
 from Components.config import config, ConfigSlider, getConfigListEntry, ConfigYesNo
 from Components.Label import Label
@@ -18,7 +17,7 @@ class OverscanWizard(Screen, ConfigListScreen):
 				<widget name="config" position="383,635" size="1234,226" font="Regular;30" itemHeight="40" zPosition="4"/>
 			</screen>"""
 		else:
-			self.skin = """<screen position="fill" flags="wfNoBorder">
+			self.skin = """<screen position="fill"  flags="wfNoBorder">
 				<ePixmap pixmap="skin_default/overscan1280x720.png" position="0,0" size="1280,720" zPosition="3" alphatest="on"/>
 				<eLabel position="223,120" size="810,475" zPosition="3"/>
 				<widget name="title" position="228,125" size="800,40" font="Regular;30" foregroundColor="blue" zPosition="4"/>
@@ -32,7 +31,7 @@ class OverscanWizard(Screen, ConfigListScreen):
 		from Components.ActionMap import ActionMap
 		from Components.Button import Button
 
-		self["title"] = Label(_("Overscan Wizard"))
+		self["title"] = Label(_("Overscan wizard"))
 		self["introduction"] = Label()
 
 		self["actions"] = ActionMap(["SetupActions", "ColorActions", "MenuActions"],
@@ -82,16 +81,16 @@ class OverscanWizard(Screen, ConfigListScreen):
 				"If you see the tips of all eight arrowheads, then your TV has overscan disabled.\n\n"
 				"Test Pattern by TigerDave - www.tigerdave.com/ht_menu.htm"))
 			self.yes_no = ConfigYesNo(default = True)
-			self.list.append(getConfigListEntry(_("Do you see all the eight arrowheads?"), self.yes_no))
+			self.list.append(getConfigListEntry(_("Did you see all eight arrow heads?"), self.yes_no))
 			self.save_new_position = False
 			setPosition(0, 720, 0, 576)
 		elif self.step == 2:
 			self.Timer.stop()
-			self["title"].setText(_("Overscan Wizard"))
+			self["title"].setText(_("Overscan wizard"))
 			self["introduction"].setText(_("It seems you did not see all the eight arrow heads. This means your TV is "
 				"has overscan enabled, and is not configured properly.\n\n"
 				"Please refer to your TVs manual to find how you can disable overscan on your TV. Look for terms like 'Just fit', 'Full width', etc. "
-				"If you can't find it, ask other users at forum https://www.openesi.eu.\n\n"))
+				"If you can't find it, ask other users at http://openesi.eu.\n\n"))
 			self.list.append(getConfigListEntry(_("Did you see all eight arrow heads?"), self.yes_no))
 			self.yes_no.value = True
 			self.save_new_position = False
@@ -112,24 +111,19 @@ class OverscanWizard(Screen, ConfigListScreen):
 			self.list.append(getConfigListEntry(_("bottom"), self.dst_bottom))
 			setConfiguredPosition()
 		elif self.step == 4:
-			self["introduction"].setText(_("You did not see all eight arrow heads. This means your TV has overscan enabled "
-				"and presents you with a zoomed-in picture, causing you to loose part of a full HD screen. In addition this "
-				"you may also miss parts of the user interface, for example volume bars and more.\n\n"
-				"Unfortunately, your model of receiver is not capable to adjust the dimensions of the user interface. "
-				"If not everything is visible, you should change the installed skin to one that supports the overscan area of your TV.\n\n"
-				"When you select a different skin, the user interface of your receiver will restart.\n\n"
-				"Note: you can always start the Overscan Wizard later,  via\n\nMenu->Setup->System->A/V settings->Video Settings->OSD settings->Position & Size"))
+			self["introduction"].setText(_("The overscan wizard has been completed.\n\n"
+				"Note: you can always start the Overscan wizard later,  via\n\nmenu->Configuration->Video-Audio-Osd-Display->Display and OSD"))
 			self.yes_no.value = False
 			self.list.append(getConfigListEntry(_("Do you want to select a different skin?"), self.yes_no))
 		elif self.step == 5:
 			self.Timer.stop()
-			self["title"].setText(_("Overscan Wizard"))
+			self["title"].setText(_("Overscan wizard"))
 			self["introduction"].setText(_("The overscan wizard has been completed.\n\n"
-				"Note: you can always start the Overscan Wizard later,  via\n\nMenu->Setup->System->A/V settings->Video Settings->OSD settings->Position & Size"))
+				"Note: you can always start the Overscan wizard later,  via\n\nmenu->Configuration->Video-Audio-Osd-Display->Display and OSD"))
 			self.yes_no.value = True
 			self.list.append(getConfigListEntry(_("Do you want to quit the overscan wizard?"), self.yes_no))
 		elif self.step == 6:
-			config.skin.primary_skin.value == "Elgato-HD-CN/skin.xml"
+			config.skin.primary_skin.value = "AeonFHD_MOD/skin.xml"
 			config.save()
 			self["introduction"].setText(_("The user interface of the receiver will now restart to select the selected skin"))
 			quitMainloop(3)
@@ -140,7 +134,7 @@ class OverscanWizard(Screen, ConfigListScreen):
 
 	def TimerTimeout(self):
 		self.countdown -= 1
-		self["title"].setText(_("Overscan Wizard") + " (%s)" % self.countdown)
+		self["title"].setText(_("Overscan wizard") + " (%s)" % self.countdown)
 		if not(self.countdown):
 			self.keyCancel()
 

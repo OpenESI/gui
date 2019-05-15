@@ -117,7 +117,7 @@ public:
 
 typedef struct _GstElement GstElement;
 
-typedef enum { atUnknown, atMPEG, atMP3, atAC3, atDTS, atAAC, atAACHE, atPCM, atOGG, atFLAC, atWMA, atDRA } audiotype_t;
+typedef enum { atUnknown, atMPEG, atMP3, atAC3, atDTS, atAAC, atPCM, atOGG, atFLAC, atWMA, atDRA } audiotype_t;
 typedef enum { stUnknown, stPlainText, stSSA, stASS, stSRT, stVOB, stPGS } subtype_t;
 typedef enum { ctNone, ctMPEGTS, ctMPEGPS, ctMKV, ctAVI, ctMP4, ctVCD, ctCDA, ctASF, ctOGG, ctWEBM, ctDRA } containertype_t;
 
@@ -245,7 +245,6 @@ public:
 		gboolean is_video;
 		gboolean is_streaming;
 		gboolean is_hls;
-		std::string protocol;
 		sourceStream()
 			:audiotype(atUnknown), containertype(ctNone), is_audio(FALSE), is_video(FALSE), is_streaming(FALSE), is_hls(FALSE)
 		{
@@ -293,7 +292,6 @@ protected:
 	int m_cuesheet_changed, m_cutlist_enabled;
 	void loadCuesheet();
 	void saveCuesheet();
-
 private:
 	static int pcm_delay;
 	static int ac3_delay;
@@ -392,10 +390,11 @@ private:
 
 	RESULT seekToImpl(pts_t to);
 
-	gint m_aspect, m_width, m_height, m_framerate, m_progressive;
+	gint m_aspect, m_width, m_height, m_framerate, m_progressive, m_gamma;
 	std::string m_useragent;
 	std::string m_extra_headers;
 	RESULT trickSeek(gdouble ratio);
+	ePtr<iTSMPEGDecoder> m_decoder; // for showSinglePic when radio
 };
 
 #endif

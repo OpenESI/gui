@@ -37,6 +37,8 @@ class AudioSelection(Screen, ConfigListScreen):
 		self["switchdescription"] = Label(_("Switch between Audio-, Subtitlepage"))
 		self["summary_description"] = StaticText("")
 
+		self.protectContextMenu = True
+
 		ConfigListScreen.__init__(self, [])
 		self.infobar = infobar or self.session.infobar
 
@@ -113,7 +115,7 @@ class AudioSelection(Screen, ConfigListScreen):
 				else:
 					self.settings.downmix_ac3 = ConfigOnOff(default=config.av.downmix_ac3.value)
 				self.settings.downmix_ac3.addNotifier(self.changeAC3Downmix, initial_call = False)
-				conflist.append(getConfigListEntry(_("Digital downmix"), self.settings.downmix_ac3, None))
+				conflist.append(getConfigListEntry(_("AC3 downmix"), self.settings.downmix_ac3, None))
 
 			if SystemInfo["CanDownmixDTS"]:
 				self.settings.downmix_dts = ConfigOnOff(default=config.av.downmix_dts.value)
@@ -205,7 +207,7 @@ class AudioSelection(Screen, ConfigListScreen):
 					for lang in languages:
 						if cnt:
 							language += ' / '
-						if lang in LanguageCodes:
+						if LanguageCodes.has_key(lang):
 							language += _(LanguageCodes[lang][0])
 						else:
 							language += lang
@@ -269,7 +271,7 @@ class AudioSelection(Screen, ConfigListScreen):
 
 					try:
 						if x[4] != "und":
-							if x[4] in LanguageCodes:
+							if LanguageCodes.has_key(x[4]):
 								language = _(LanguageCodes[x[4]][0])
 							else:
 								language = x[4]
@@ -543,7 +545,17 @@ class AudioSelection(Screen, ConfigListScreen):
 			self.keyRight()
 
 	def openAutoLanguageSetup(self):
-		self.session.open(Setup, "autolanguagesetup")
+		if self.protectContextMenu and config.ParentalControl.setuppinactive.value and config.ParentalControl.config_sections.context_menus.value:
+			self.session.openWithCallback(self.protectResult, PinInput, pinList=[x.value for x in config.ParentalControl.servicepin], triesEntry=config.ParentalControl.retries.servicepin, title=_("Please enter the correct pin code"), windowTitle=_("Enter pin code"))
+		else:
+			self.protectResult(True)
+
+	def protectResult(self, answer):
+		if answer:
+			self.session.open(Setup, "autolanguagesetup")
+			self.protectContextMenu = False
+		elif answer is not None:
+			self.session.openWithCallback(self.close, MessageBox, _("The pin code you entered is wrong."), MessageBox.TYPE_ERROR)
 
 	def cancel(self):
 		self.close(0)
@@ -579,13 +591,13 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 		elif sub[0] == 1: # teletext
 			menu = [
 				getConfigMenuItem("config.subtitles.ttx_subtitle_colors"),
+				getConfigMenuItem("config.subtitles.subtitle_borderwidth"),
+				getConfigMenuItem("config.subtitles.subtitles_backtrans"),
 				getConfigMenuItem("config.subtitles.ttx_subtitle_original_position"),
 				getConfigMenuItem("config.subtitles.subtitle_fontsize"),
 				getConfigMenuItem("config.subtitles.subtitle_position"),
-				getConfigMenuItem("config.subtitles.subtitle_rewrap"),
-				getConfigMenuItem("config.subtitles.subtitle_borderwidth"),
-				getConfigMenuItem("config.subtitles.showbackground"),
 				getConfigMenuItem("config.subtitles.subtitle_alignment"),
+				getConfigMenuItem("config.subtitles.subtitle_rewrap"),
 				getConfigMenuItem("config.subtitles.subtitle_bad_timing_delay"),
 				getConfigMenuItem("config.subtitles.subtitle_noPTSrecordingdelay"),
 			]
@@ -593,6 +605,8 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 			menu = [
 				getConfigMenuItem("config.subtitles.pango_subtitles_delay"),
 				getConfigMenuItem("config.subtitles.pango_subtitle_colors"),
+				getConfigMenuItem("config.subtitles.subtitle_borderwidth"),
+				getConfigMenuItem("config.subtitles.subtitles_backtrans"),
 				getConfigMenuItem("config.subtitles.pango_subtitle_fontswitch"),
 				getConfigMenuItem("config.subtitles.colourise_dialogs"),
 				getConfigMenuItem("config.subtitles.subtitle_fontsize"),
@@ -600,8 +614,6 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 				getConfigMenuItem("config.subtitles.subtitle_alignment"),
 				getConfigMenuItem("config.subtitles.subtitle_rewrap"),
 				getConfigMenuItem("config.subtitles.pango_subtitle_removehi"),
-				getConfigMenuItem("config.subtitles.subtitle_borderwidth"),
-				getConfigMenuItem("config.subtitles.showbackground"),
 				getConfigMenuItem("config.subtitles.pango_subtitles_fps"),
 			]
 			self["videofps"].setText(_("Video: %s fps") % (self.getFps().rstrip(".000")))
@@ -650,7 +662,7 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 			delay += 90000 * 30 # +30sec
 		elif number == 0:
 			delay = 0 # reset to "No delay"
-
+			
 		delay = min(max(delay, minDelay), maxDelay)
 
 		configItem.setValue(str(delay))

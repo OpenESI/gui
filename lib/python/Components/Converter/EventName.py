@@ -18,31 +18,26 @@ class EventName(Converter, object):
 	SRATING = 10
 	RAWRATING = 11
 	RATINGCOUNTRY = 12
-	PDC = 13
-	PDCTIME = 14
-	PDCTIMESHORT = 15
-	ISRUNNINGSTATUS = 16
+	EVENT_EXTRADATA = 13
+	EPG_SOURCE = 14
 
 	NEXT_DESCRIPTION = 21
 	THIRD_NAME = 22
-	THIRD_NAME2 = 23
-	THIRD_DESCRIPTION = 24
+	THIRD_DESCRIPTION = 23
 
-	EVENT_EXTRADATA = 25
-	EPG_SOURCE = 26
 
 	AUSSHORT = 0
-	AUSLONG = 1
+	AUSLONG  = 1
 	AUSTEXT = {
-		"NC" : (" ", "Not Classified"),
-		"P" : ("P", "Preschool"),
-		"C" : ("C", "Children"),
-		"G" : ("G", "General"),
-		"PG" : ("PG", "Parental Guidance Recommended"),
-		"M" : ("M", "Mature Audience 15+"),
-		"MA" : ("MA", "Mature Adult Audience 15+"),
-		"AV" : ("AV", "Adult Audience, Strong Violence 15+"),
-		"R" : ("R", "Restricted 18+")
+		"NC"	: (" ",  "Not Classified"),
+		"P"	: ("P",  "Preschool"),
+		"C"	: ("C",  "Children"),
+		"G"	: ("G",  "General"),
+		"PG"	: ("PG", "Parental Guidance Recommended"),
+		"M"	: ("M",  "Mature Audience 15+"),
+		"MA"	: ("MA", "Mature Adult Audience 15+"),
+		"AV"	: ("AV", "Adult Audience, Strong Violence 15+"),
+		"R"	: ("R",  "Restricted 18+")
 	}
 
 	AUSRATINGS = {
@@ -101,14 +96,6 @@ class EventName(Converter, object):
 			self.type = self.RATING
 		elif type == "SmallRating":
 			self.type = self.SRATING
-		elif type == "Pdc":
-			self.type = self.PDC
-		elif type == "PdcTime":
-			self.type = self.PDCTIME
-		elif type == "PdcTimeShort":
-			self.type = self.PDCTIMESHORT
-		elif type == "IsRunningStatus":
-			self.type = self.ISRUNNINGSTATUS
 		elif type == "RawRating":
 			self.type = self.RAWRATING
 		elif type == "RatingCountry":
@@ -121,8 +108,6 @@ class EventName(Converter, object):
 			self.type = self.NEXT_DESCRIPTION
 		elif type == "ThirdName":
 			self.type = self.THIRD_NAME
-		elif type == "ThirdNameOnly":
-			self.type = self.THIRD_NAME2
 		elif type == "ThirdDescription":
 			self.type = self.THIRD_DESCRIPTION
 		else:
@@ -133,18 +118,6 @@ class EventName(Converter, object):
 			return str(text).strip()
 		else:
 			return text
-
-	@cached
-	def getBoolean(self):
-		event = self.source.event
-		if event is None:
-			return False
-		if self.type == self.PDC:
-			if event.getPdcPil():
-				return True
-		return False
-
-	boolean = property(getBoolean)
 
 	@cached
 	def getText(self):
@@ -226,34 +199,6 @@ class EventName(Converter, object):
 			return description + extended
 		elif self.type == self.ID:
 			return str(event.getEventId())
-		elif self.type == self.PDC:
-			if event.getPdcPil():
-				return _("PDC")
-			return ""
-		elif self.type in (self.PDCTIME, self.PDCTIMESHORT):
-			pil = event.getPdcPil()
-			if pil:
-				if self.type == self.PDCTIMESHORT:
-					return _("%02d:%02d") % ((pil & 0x7C0) >> 6, (pil & 0x3F))
-				return _("%d.%02d. %02d:%02d") % ((pil & 0xF8000) >> 15, (pil & 0x7800) >> 11, (pil & 0x7C0) >> 6, (pil & 0x3F))
-			return ""
-		elif self.type == self.ISRUNNINGSTATUS:
-			if event.getPdcPil():
-				running_status = event.getRunningStatus()
-				if running_status == 1:
-					return "not running"
-				if running_status == 2:
-					return "starts in a few seconds"
-				if running_status == 3:
-					return "pausing"
-				if running_status == 4:
-					return "running"
-				if running_status == 5:
-					return "service off-air"
-				if running_status in (6,7):
-					return "reserved for future use"
-				return "undefined"
-			return ""
 		elif self.type == self.EVENT_EXTRADATA:
 			pass
 			#not include yet
@@ -281,10 +226,8 @@ class EventName(Converter, object):
 						if (description and extended) and (description[0:20] != extended[0:20]):
 							description += self.SEPARATOR
 						return description + extended
-					if self.type == self.THIRD_NAME and self.list[2][1]:
+					elif self.type == self.THIRD_NAME and self.list[2][1]:
 						return pgettext("third event: 'third' event label", "Later") + ": " + self.trimText(self.list[2][1])
-					elif self.type == self.THIRD_NAME2 and self.list[2][1]:
-						return self.list[2][1]
 					elif self.type == self.THIRD_DESCRIPTION and (self.list[2][2] or self.list[2][3]):
 						description = self.trimText(self.list[2][2])
 						extended = self.trimText(self.list[2][3])

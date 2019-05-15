@@ -118,7 +118,7 @@ protected:
 		unsigned char* buffer;
 		AsyncIO()
 		{
-			memset(&aio, 0, sizeof(aiocb));
+			memset(&aio, 0, sizeof(struct aiocb));
 			buffer = NULL;
 		}
 		int wait();
@@ -140,6 +140,7 @@ class eDVBRecordStreamThread: public eDVBRecordFileThread
 {
 public:
 	eDVBRecordStreamThread(int packetsize);
+
 protected:
 	int writeData(int len);
 	void flush();

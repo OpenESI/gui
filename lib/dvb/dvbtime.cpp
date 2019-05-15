@@ -19,9 +19,9 @@ int fileExist(const char* filename){
 	struct stat buffer;
 	int exist = stat(filename,&buffer);
 	if(exist == 0)
-		return 1;
+	    return 1;
 	else // -1
-		return 0;
+	    return 0;
 }
 
 void noRTC()
@@ -59,7 +59,7 @@ void setRTC(time_t time)
 				prev_time = time;
 		}
 		else
-			eDebug("write /proc/stb/fp/rtc failed (%m)");
+			eDebug("[eDVBLocalTimeHandler] write /proc/stb/fp/rtc failed: %m");
 		fclose(f);
 	}
 	else
@@ -68,7 +68,7 @@ void setRTC(time_t time)
 		if ( fd >= 0 )
 		{
 			if ( ::ioctl(fd, FP_IOCTL_SET_RTC, (void*)&time ) < 0 )
-				eDebug("FP_IOCTL_SET_RTC failed(%m)");
+				eDebug("[eDVBLocalTimeHandler] FP_IOCTL_SET_RTC failed: %m");
 			else
 				prev_time = time;
 			close(fd);
@@ -86,7 +86,7 @@ time_t getRTC()
 		// sanity check to detect corrupt atmel firmware
 		unsigned int tmp;
 		if (fscanf(f, "%u", &tmp) != 1)
-			eDebug("read /proc/stb/fp/rtc failed (%m)");
+			eDebug("[eDVBLocalTimeHandler] read /proc/stb/fp/rtc failed: %m");
 		else
 			if (strncmp(mybox,"gb800solo", sizeof(mybox)) == 0 || strncmp(mybox,"gb800se", sizeof(mybox)) == 0 || strncmp(mybox,"gb800ue", sizeof(mybox)) == 0)
 				rtc_time=0; // sorry no RTC
@@ -100,7 +100,7 @@ time_t getRTC()
 		if ( fd >= 0 )
 		{
 			if ( ::ioctl(fd, FP_IOCTL_GET_RTC, (void*)&rtc_time ) < 0 )
-				eDebug("FP_IOCTL_GET_RTC failed(%m)");
+				eDebug("[eDVBLocalTimeHandler] FP_IOCTL_GET_RTC failed: %m");
 			close(fd);
 		}
 	}
@@ -110,6 +110,15 @@ time_t getRTC()
 static void parseDVBdate(tm& t, int mjd)
 {
 	int k;
+
+	/*
+	 * When MJD epoch is before Unix epoch use Unix epoch
+	 * The value 40587 is the number of days between the MJD epoch (1858-11-17) and the Unix epoch (1970-01-01)
+	 */
+	if (mjd < 40587)
+	{
+		mjd = 40587;
+	}
 
 	t.tm_year = (int) ((mjd - 15078.2) / 365.25);
 	t.tm_mon = (int) ((mjd - 14956.1 - (int)(t.tm_year * 365.25)) / 30.6001);
@@ -133,7 +142,7 @@ static inline void parseDVBtime_impl(tm& t, const uint8_t *data)
 
 time_t parseDVBtime(uint16_t mjd, uint32_t stime_bcd)
 {
-	tm t;
+	tm t = {0};
 	parseDVBdate(t, mjd);
 	t.tm_hour = fromBCD(stime_bcd >> 16);
 	t.tm_min = fromBCD((stime_bcd >> 8) & 0xFF);
@@ -143,14 +152,14 @@ time_t parseDVBtime(uint16_t mjd, uint32_t stime_bcd)
 
 time_t parseDVBtime(const uint8_t *data)
 {
-	tm t;
+	tm t = {0};
 	parseDVBtime_impl(t, data);
 	return timegm(&t);
 }
 
 time_t parseDVBtime(const uint8_t *data, uint16_t *hash)
 {
-	tm t;
+	tm t = {0};
 	parseDVBtime_impl(t, data);
 	*hash = t.tm_hour * 60 + t.tm_min;
 	*hash |= t.tm_mday << 11;
@@ -265,7 +274,7 @@ eDVBLocalTimeHandler::~eDVBLocalTimeHandler()
 	instance=0;
 	if (ready())
 	{
-		eDebug("set RTC to previous valid time");
+		eDebug("[eDVBLocalTimeHandler] set RTC to previous valid time");
 		if (strncmp(mybox,"gb800solo", sizeof(mybox)) == 0 || strncmp(mybox,"gb800se", sizeof(mybox)) == 0 || strncmp(mybox,"gb800ue", sizeof(mybox)) == 0)
 				eDebug("Dont set RTC to previous valid time, giga box");
 			else
@@ -604,7 +613,7 @@ void eDVBLocalTimeHandler::updateTime( time_t tp_time, eDVBChannel *chan, int up
 			}
 		}
 
-		 /*emit*/ m_timeUpdated();
+ 		 /*emit*/ m_timeUpdated();
 	}
 
 	if ( restart_tdt )

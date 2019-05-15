@@ -46,6 +46,7 @@ class CronTimers(Screen):
 			self["list"].onSelectionChanged.append(self.selectionChanged)
 		self.service_name = 'cronie'
 		self.InstallCheck()
+		
 
 	def InstallCheck(self):
 		self.Console.ePopen('/usr/bin/opkg list_installed ' + self.service_name, self.checkNetworkState)
@@ -281,15 +282,17 @@ class CronTimersConfig(Screen, ConfigListScreen):
 		self["VKeyIcon"] = Boolean(False)
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
+		self['footnote'] = Label()
+		self['description'] = Label()
 		self.createSetup()
 
 	def createSetup(self):
 		predefinedlist = []
-		f = listdir('/usr/lib/enigma2/python/Plugins/Extensions/ESIteam/scripts')
+		f = listdir('/usr/script')
 		if f:
 			for line in f:
 				parts = line.split()
-				path = "/usr/lib/enigma2/python/Plugins/Extensions/ESIteam/scripts/"
+				path = "/usr/script/"
 				pkg = parts[0]
 				description = path + parts[0]
 				if pkg.find('.sh') >= 0:

@@ -3,7 +3,6 @@
 #include <lib/base/httpsstream.h>
 #include <lib/base/eerror.h>
 #include <lib/base/wrappers.h>
-#include <lib/base/nconfig.h> // access to python config
 
 // for shutdown
 #include <sys/socket.h>
@@ -19,10 +18,6 @@ eHttpsStream::eHttpsStream()
 	partialPktSz = 0;
 	tmpBufSize = 32;
 	tmpBuf = (char*)malloc(tmpBufSize);
-	if (eConfigManager::getConfigBoolValue("config.usage.remote_fallback_enabled", false))
-		startDelay = 500000;
-	else
-		startDelay = 0;
 
 	ctx = NULL;
 	ssl = NULL;
@@ -57,7 +52,7 @@ int eHttpsStream::openUrl(const std::string &url, std::string &newurl)
 
 	close();
 
-	std::string user_agent = "Enigma2 HbbTV/1.1.1 (+PVR+RTP+RTSP+RTMP+DL;OpenESI;;;;;)";
+	std::string user_agent = "Enigma2 HbbTV/1.1.1 (+PVR+RTSP+DL;OpenPLi;;;)";
 	std::string extra_headers = "";
 	size_t pos = uri.find('#');
 	if (pos != std::string::npos)
@@ -315,7 +310,7 @@ int eHttpsStream::open(const char *url)
 void eHttpsStream::thread()
 {
 	hasStarted();
-	usleep(startDelay); // wait up to half a second
+	usleep(500000); // wait half a second in general as not only fallback receiver needs this.
 	std::string currenturl, newurl;
 	currenturl = streamUrl;
 	for (unsigned int i = 0; i < 5; i++)
