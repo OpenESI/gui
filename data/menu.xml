@@ -59,25 +59,14 @@ self.session.open(HddMount)
 <item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootCY" entryID="deep_standby"><screen module="MultiBootStartupCY" screen="MultiBootStartup" /></item>
 <item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootDS" entryID="deep_standby"><screen module="MultiBootStartupDS" screen="MultiBootStartup" /></item>
 <item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootOS" entryID="deep_standby"><screen module="MultiBootStartupOS" screen="MultiBootStartup" /></item>
-<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootADV" entryID="deep_standby"><screen module="MultiBootStartupADV" screen="MultiBootStartup" /></item>
-<item weight="10" level="0" text="WOL Standby" requires="GBWOL" entryID="deep_standby">
-<code>
-from Screens.Standby import TryQuitMainloop
-from Screens.MessageBox import MessageBox
-recordings = self.session.nav.getRecordingsCheckBeforeActivateDeepStandby()
-if recordings:
-self.session.openWithCallback(self.gotoStandby,MessageBox,_("Recording(s) are in progress or coming up in few seconds!\nEntering standby, after recording the box will shutdown."), type = MessageBox.TYPE_INFO, close_on_any_key = True, timeout = 10)
-else:
-self.session.open(TryQuitMainloop, 45)
-</code>
-        </item>  
+
 	</menu>
     
     
 	<!-- Menu / Information -->
 	<menu weight="5" level="0" text="Information" entryID="info_screen">
 		<id val="information" />
-
+                <item weight="5" level="0" text="About" entryID="about_screen"><screen module="About" screen="About"/></item>
 		<item weight="7" level="0" text="Devices" entryID="device_screen"><screen module="About" screen="Devices"/></item>
 		<item weight="10" level="0" text="Memory" entryID="device_screen"><screen module="About" screen="SystemMemoryInfo"/></item>
 		<item weight="15" level="0" text="Network" entryID="device_screen"><screen module="About" screen="SystemNetworkInfo"/></item>
@@ -299,7 +288,11 @@ if recordings:
 	self.session.openWithCallback(self.gotoStandby,MessageBox,_("Recording(s) are in progress or coming up in few seconds!\nEntering standby, after recording the box will shutdown."), type = MessageBox.TYPE_INFO, close_on_any_key = True, timeout = 10)
 else:
 	self.session.open(TryQuitMainloop, 1)
-
+</code>
+		</item>
+		<item weight="5" level="0" text="Shutdown" requires="!DeepstandbySupport" entryID="deep_standby"><screen module="Standby" screen="TryQuitMainloop">1</screen></item>
+		<item weight="10" level="0" text="WOL Standby" requires="GBWOL" entryID="deep_standby">
+			<code>
 from Screens.Standby import TryQuitMainloop
 from Screens.MessageBox import MessageBox
 recordings = self.session.nav.getRecordingsCheckBeforeActivateDeepStandby()
