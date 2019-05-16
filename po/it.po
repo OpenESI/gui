@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: OpenESI\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-30 20:08+0000\n"
-"PO-Revision-Date: 2019-02-27 18:30+0100\n"
+"PO-Revision-Date: 2019-05-16 17:04+0100\n"
 "Last-Translator: OpenESI <openesi.eu@gmail.com>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -9546,6 +9546,14 @@ msgstr ""
 "USB = Vorresti creare un backup sulla pendrive?  \n"
 "La procedura impiega 4-15 minuti ed è completamente automatica."
 
+msgid ""
+"You can select with yellow the OnlineFlash Image\n"
+" or select Recovery to create a USB Disk Image for clean Install."
+msgstr ""
+"È possibile selezionare con con il tasto giallo l'immagine con flash online\n"
+" o selezionare Ripristino per creare un'immagine disco USB per "
+"l'installazione pulita."
+
 msgid "USB Stick"
 msgstr "USB Stick"
 
@@ -11937,6 +11945,9 @@ msgstr "PIN canale"
 
 msgid "set as startup service"
 msgstr "configura come canale all'avvio"
+
+msgid "enable swap at startup"
+msgstr "abilita lo swap all'avvio"
 
 msgid "share:"
 msgstr "condividi:"
