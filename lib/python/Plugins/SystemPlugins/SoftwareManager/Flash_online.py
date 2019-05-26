@@ -662,7 +662,7 @@ class doFlashImage(Screen):
                      MTDROOTFS,
                      MTDKERNEL,
                      flashTmp))
-		elif getMachineBuild() in ("h9","u55","u41","i55plus"):
+                elif getMachineBuild() in ('h9', 'i55plus', 'u55'):
                     cmdlist.append('%s -n -f -r -k %s > /dev/null 2>&1' % (ofgwritePath, flashTmp))
                 else:
                     cmdlist.append('%s -n -r -k %s > /dev/null 2>&1' % (ofgwritePath, flashTmp))
@@ -687,7 +687,7 @@ class doFlashImage(Screen):
                      MTDROOTFS,
                      MTDKERNEL,
                      flashTmp))
-		elif getMachineBuild() in ("h9","i55plus","u55","u41"):
+                elif getMachineBuild() in ('h9', 'i55plus', 'u55'):
                     cmdlist.append('%s -f -r -k %s > /dev/null 2>&1' % (ofgwritePath, flashTmp))
                 else:
                     cmdlist.append('%s -r -k %s > /dev/null 2>&1' % (ofgwritePath, flashTmp))
