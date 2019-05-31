@@ -223,9 +223,17 @@ def getButtonSetupFunctions():
 		ButtonSetupFunctions.append((_("Toggle HDMI-In PiP"), "Infobar/HDMIInPiP", "InfoBar"))
 	if SystemInfo["LcdLiveTV"]:
 		ButtonSetupFunctions.append((_("Toggle LCD LiveTV"), "Infobar/ToggleLCDLiveTV", "InfoBar"))
-	if SystemInfo["canMultiBoot"]:
-		ButtonSetupFunctions.append((_("Multiboot Image Selector"), "Module/Screens.MultiBootSelector/MultiBootSelector", "InfoBar"))
-	ButtonSetupFunctions.append((_("Hotkey Setup"), "Module/Screens.ButtonSetup/ButtonSetup", "Setup"))
+	if SystemInfo['HaveMultiBootHD']:
+        ButtonSetupFunctions.append((_('MultiBoot Selector'), 'Module/Screens.MultiBootStartup/MultiBootStartup', 'InfoBar'))
+    if SystemInfo['HaveMultiBootGB']:
+        ButtonSetupFunctions.append((_('MultiBoot Selector'), 'Module/Screens.MultiBootStartupGB/MultiBootStartup', 'InfoBar'))
+    if SystemInfo['HaveMultiBootCY']:
+        ButtonSetupFunctions.append((_('MultiBoot Selector'), 'Module/Screens.MultiBootStartupCY/MultiBootStartup', 'InfoBar'))
+    if SystemInfo['HaveMultiBootDS']:
+        ButtonSetupFunctions.append((_('MultiBoot Selector'), 'Module/Screens.MultiBootStartupDS/MultiBootStartup', 'InfoBar'))
+    if SystemInfo['HaveMultiBootOS']:
+        ButtonSetupFunctions.append((_('MultiBoot Selector'), 'Module/Screens.MultiBootStartupOS/MultiBootStartup', 'InfoBar'))
+    ButtonSetupFunctions.append((_("Hotkey Setup"), "Module/Screens.ButtonSetup/ButtonSetup", "Setup"))
 	ButtonSetupFunctions.append((_("Software update"), "Module/Screens.SoftwareUpdate/UpdatePlugin", "Setup"))
 	if getHaveCI() == 'True':
 		ButtonSetupFunctions.append((_("CI (Common Interface) Setup"), "Module/Screens.Ci/CiSelection", "Setup"))
