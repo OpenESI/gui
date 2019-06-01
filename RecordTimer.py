@@ -5,7 +5,7 @@ from time import localtime, strftime, ctime, time
 from bisect import insort
 from sys import maxint
 import os
-from enigma import eEPGCache, getBestPlayableServiceReference, eServiceReferenceDVB, eStreamServer, eServiceReference, iRecordableService, quitMainloop, eActionMap, setPreferredTuner, eServiceCenter
+from enigma import eEPGCache, getBestPlayableServiceReference, eStreamServer, eServiceReference, iRecordableService, quitMainloop, eActionMap, setPreferredTuner, eServiceCenter
 
 from Components.config import config
 from Components import Harddisk
@@ -15,14 +15,12 @@ import Components.RecordingConfig
 Components.RecordingConfig.InitRecordingConfig()
 from Screens.MessageBox import MessageBox
 import Screens.Standby
-from Tools.ServiceReference import service_types_tv_ref, service_types_radio_ref, serviceRefAppendPath
 from Tools import Directories, Notifications, ASCIItranslit, Trashcan
 from Tools.XMLTools import stringToXML
 import timer
 import NavigationInstance
 from ServiceReference import ServiceReference
 from enigma import pNavigation, eDVBFrontend
-import subprocess, threading
 
 
 # ok, for descriptions etc we have:
@@ -106,8 +104,18 @@ def findSafeRecordPath(dirname):
 			return None
 	return dirname
 
-service_types_tv = service_types_tv_ref.toString()
-service_types_radio = service_types_radio_ref.toString()
+# type 1 = digital television service
+# type 4 = nvod reference service (NYI)
+# type 17 = MPEG-2 HD digital television service
+# type 22 = advanced codec SD digital television
+# type 24 = advanced codec SD NVOD reference service (NYI)
+# type 25 = advanced codec HD digital television
+# type 27 = advanced codec HD NVOD reference service (NYI)
+# type 2 = digital radio sound service
+# type 10 = advanced codec digital radio sound service
+
+service_types_tv = '1:7:1:0:0:0:0:0:0:0:(type == 1) || (type == 17) || (type == 22) || (type == 25) || (type == 134) || (type == 195)'
+service_types_radio = '1:7:2:0:0:0:0:0:0:0:(type == 2) || (type == 10)'
 
 def getBqRootStr(ref):
 	ref = ref.toString()
@@ -164,9 +172,6 @@ class RecordTimerEntry(timer.TimerEntry, object):
 		self.messageStringShow = False
 		self.messageBoxAnswerPending = False
 		self.justTriedFreeingTuner = False
-		self.MountPathRetryCounter = 0
-		self.MountPathErrorNumber = 0
-		self.lastend = 0
 
 		if descramble == 'notset' and record_ecm == 'notset':
 			if config.recording.ecm_data.value == 'descrambled+ecm':
@@ -213,44 +218,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 		self.log_entries.append((int(time()), code, msg))
 		print "[TIMER]", msg
 
-	def MountTest(self, dirname, cmd):
-		if cmd == 'writeable':
-			if not os.access(dirname, os.W_OK):
-				self.stop_MountTest(None, cmd)
-		elif cmd == 'freespace':
-			s = os.statvfs(dirname)
-			if (s.f_bavail * s.f_bsize) / 1000000 < 1024:
-				self.stop_MountTest(None, cmd)
-		elif cmd == 'driveawake':
-			if not subprocess.call('touch %s/drive.awake' % dirname, shell=True):
-				subprocess.call('rm -f %s/drive.awake' % dirname, shell=True)
-			else:
-				self.stop_MountTest(None, cmd)
-
-	def stop_MountTest(self, thread, cmd):
-		if thread and thread.isAlive():
-			print 'timeout thread : %s' %cmd
-			thread._Thread__stop()
-
-		if cmd == 'writeable':
-			self.MountPathErrorNumber = 2
-		elif cmd == 'freespace':
-			self.MountPathErrorNumber = 3
-		elif cmd == 'driveawake':
-			self.MountPathErrorNumber = 4
-
-	def freespace_old(self, WRITEERROR = False):
-		if WRITEERROR:
-			if findSafeRecordPath(self.MountPath) is None:
-				return ("mount '%s' is not available." % self.MountPath, 1)
-			elif not os.access(self.MountPath, os.W_OK):
-				return ("mount '%s' is not writeable." % self.MountPath, 2)
-			s = os.statvfs(self.MountPath)
-			if (s.f_bavail * s.f_bsize) / 1000000 < 1024:
-				return ("mount '%s' has not enough free space to record." % self.MountPath, 3)
-			else:
-				return ("unknown error.", 0)
-
+	def freespace(self):
 		self.MountPath = None
 		if not self.dirname:
 			dirname = findSafeRecordPath(defaultMoviePath())
@@ -260,95 +228,21 @@ class RecordTimerEntry(timer.TimerEntry, object):
 				dirname = findSafeRecordPath(defaultMoviePath())
 				self.dirnameHadToFallback = True
 		if not dirname:
-			dirname = self.dirname
-			if not dirname:
-				dirname = defaultMoviePath() or '-'
-			self.log(0, ("Mount '%s' is not available." % dirname))
-			self.MountPathErrorNumber = 1
 			return False
 
+		self.MountPath = dirname
 		mountwriteable = os.access(dirname, os.W_OK)
 		if not mountwriteable:
 			self.log(0, ("Mount '%s' is not writeable." % dirname))
-			self.MountPathErrorNumber = 2
 			return False
 
 		s = os.statvfs(dirname)
 		if (s.f_bavail * s.f_bsize) / 1000000 < 1024:
-			self.log(0, _("Mount '%s' has not enough free space to record.") % dirname)
-			self.MountPathErrorNumber = 3
+			self.log(0, _("Not enough free space to record"))
 			return False
 		else:
 			if debug:
 				self.log(0, "Found enough free space to record")
-			self.MountPathRetryCounter = 0
-			self.MountPathErrorNumber = 0
-			self.MountPath = dirname
-			return True
-
-	def freespace(self, WRITEERROR = False):
-		if WRITEERROR:
-			dirname = self.MountPath
-			if findSafeRecordPath(dirname) is None:
-				return ("mount '%s' is not available." % dirname, 1)
-		else:
-			self.MountPath = None
-			if not self.dirname:
-				dirname = findSafeRecordPath(defaultMoviePath())
-			else:
-				dirname = findSafeRecordPath(self.dirname)
-				if dirname is None:
-					dirname = findSafeRecordPath(defaultMoviePath())
-					self.dirnameHadToFallback = True
-			if not dirname:
-				dirname = self.dirname
-				if not dirname:
-					dirname = defaultMoviePath() or '-'
-				self.log(0, "Mount '%s' is not available." % dirname)
-				self.MountPathErrorNumber = 1
-				return False
-
-		self.MountPathErrorNumber = 0
-		#for cmd in ('writeable', 'freespace', 'driveawake'): #driveawake is not needed
-		for cmd in ('writeable', 'freespace'):
-			print 'starting thread :%s' %cmd
-			p = threading.Thread(target=self.MountTest, args=(dirname, cmd))
-			t = threading.Timer(3, self.stop_MountTest, args=(p, cmd))
-			t.start()
-			p.start()
-			p.join()
-			t.cancel()
-			if self.MountPathErrorNumber:
-				print 'break - error number: %d' %self.MountPathErrorNumber
-				break
-			print 'finished thread :%s' %cmd
-
-		if WRITEERROR:
-			if self.MountPathErrorNumber == 2:
-				return ("mount '%s' is not writeable." % dirname, 2)
-			elif self.MountPathErrorNumber == 3:
-				return ("mount '%s' has not enough free space to record." % dirname, 3)
-			elif self.MountPathErrorNumber == 4:
-				return ("mount '%s' has failed to write file." % dirname, 2)
-			else:
-				return ("unknown error.", 0)
-
-		if self.MountPathErrorNumber == 2:
-			self.log(0, "Mount '%s' is not writeable." % dirname)
-			return False
-		elif self.MountPathErrorNumber == 3:
-			self.log(0, _("Mount '%s' has not enough free space to record.") % dirname)
-			return False
-		elif self.MountPathErrorNumber == 4:
-			self.MountPathErrorNumber = 2
-			self.log(0, _("Mount '%s' has failed to write file.") % dirname)
-			return False
-		else:
-			if debug:
-				self.log(0, "Found enough free space to record")
-			self.MountPathRetryCounter = 0
-			self.MountPathErrorNumber = 0
-			self.MountPath = dirname
 			return True
 
 	def calculateFilename(self, name = None):
@@ -495,14 +389,9 @@ class RecordTimerEntry(timer.TimerEntry, object):
 				return False
 
 			if not self.justplay and not self.freespace():
-				if self.MountPathErrorNumber < 3 and self.MountPathRetryCounter < 3:
-					self.MountPathRetryCounter += 1
-					self.start_prepare = time() + 5 # tryPrepare in 5 seconds
-					self.log(0, "next try in 5 seconds ...(%d/3)" % self.MountPathRetryCounter)
-					return False
-				message = _("Write error at start of recording. Disk %s\n%s") % ((_("not found!"), _("not writable!"), _("full?"))[self.MountPathErrorNumber-1],self.name)
+				message = _("Write error while recording. Disk full?\n%s") % self.name
 				messageboxtyp = MessageBox.TYPE_ERROR
-				timeout = 20
+				timeout = 5
 				id = "DiskFullMessage"
 				if InfoBar and InfoBar.instance:
 					InfoBar.instance.openInfoBarMessage(message, messageboxtyp, timeout)
@@ -510,7 +399,6 @@ class RecordTimerEntry(timer.TimerEntry, object):
 					Notifications.AddPopup(message, messageboxtyp, timeout = timeout, id = id)
 				self.failed = True
 				self.next_activation = time()
-				self.lastend = self.end
 				self.end = time() + 5
 				self.backoff = 0
 				return True
@@ -791,8 +679,6 @@ class RecordTimerEntry(timer.TimerEntry, object):
 				if self.record_service:
 					NavigationInstance.instance.stopRecordService(self.record_service)
 					self.record_service = None
-			if self.lastend and self.failed:
-				self.end = self.lastend
 
 			NavigationInstance.instance.RecordTimer.saveTimer()
 
@@ -1093,7 +979,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 
 	def timeChanged(self):
 		old_prepare = self.start_prepare
-		self.start_prepare = self.begin - config.recording.prepare_time.value #self.prepare_time
+		self.start_prepare = self.begin - self.prepare_time
 		self.backoff = 0
 
 		if int(old_prepare) > 60 and int(old_prepare) != int(self.start_prepare):
@@ -1109,20 +995,11 @@ class RecordTimerEntry(timer.TimerEntry, object):
 			return
 		# self.log(16, "record event %d" % event)
 		if event == iRecordableService.evRecordWriteError:
-			if self.record_service:
-				NavigationInstance.instance.stopRecordService(self.record_service)
-				self.record_service = None
-			self.failed = True
-			self.lastend = self.end
-			self.end = time() + 5
-			self.backoff = 0
-			msg, err = self.freespace(True)
-			self.log(16, "WRITE ERROR while recording, %s" % msg)
-			print "WRITE ERROR on recording, %s" % msg
+			print "WRITE ERROR on recording, disk full?"
 			# show notification. the 'id' will make sure that it will be
 			# displayed only once, even if more timers are failing at the
 			# same time. (which is very likely in case of disk fullness)
-			Notifications.AddPopup(text = _("Write error while recording. Disk %s") %(_("unknown error!"), _("not found!"), _("not writable!"), _("full?"))[err], type = MessageBox.TYPE_ERROR, timeout = 0, id = "DiskFullMessage")
+			Notifications.AddPopup(text = _("Write error while recording. Disk full?\n"), type = MessageBox.TYPE_ERROR, timeout = 0, id = "DiskFullMessage")
 			# ok, the recording has been stopped. we need to properly note
 			# that in our state, with also keeping the possibility to re-try.
 			# TODO: this has to be done.

@@ -6,7 +6,7 @@ from HTMLComponent import HTMLComponent
 from GUIComponent import GUIComponent
 from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaBlend, MultiContentEntryPixmapAlphaTest
 from Components.Renderer.Picon import getPiconName
-from skin import parseColor, parseFont, parameters as skinparameter, getSkinFactor
+from skin import parseColor, parseFont, parameters as skinparameter
 from Tools.Alternatives import CompareWithAlternatives
 from Tools.LoadPixmap import LoadPixmap
 from Components.config import config
@@ -24,6 +24,8 @@ EPG_TYPE_INFOBARGRAPH = 7
 EPG_TYPE_VERTICAL = 8
 
 MAX_TIMELINES = 6
+
+sf = 1
 
 class Rect:
 	def __init__(self, x, y, width, height):
@@ -47,9 +49,10 @@ class Rect:
 
 class EPGList(HTMLComponent, GUIComponent):
 	def __init__(self, type = EPG_TYPE_SINGLE, selChangedCB = None, timer = None, time_epoch = 120, overjump_empty = False, graphic=False):
-		sf = getSkinFactor()
-		self.screenwidth = int(1280 * sf) # important for compatibility to other plugins (e.g. partnerbox)
-		if sf == 1.5:
+		global sf
+		self.screenwidth = getDesktop(0).size().width()
+		if self.screenwidth and self.screenwidth == 1920:
+			sf = 1.5
 			self.posx, self.posy , self.picx, self.picy, self.gap = skinparameter.get("EpgListIcon", (2,13,25,25,2))
 			self.column_service, self.column_time , self.column_remaining, self.column_gap = skinparameter.get("EpgListMulti", (240,180,120,30))
 			self.progress_width, self.progress_height , self.progress_borderwidth = skinparameter.get("EpgListMultiProgressBar", (120,15,1))
@@ -505,7 +508,6 @@ class EPGList(HTMLComponent, GUIComponent):
 	GUI_WIDGET = eListbox
 
 	def setItemsPerPage(self):
-		sf = getSkinFactor()
 		if self.type == EPG_TYPE_GRAPH or self.type == EPG_TYPE_INFOBARGRAPH:
 			if self.type == EPG_TYPE_GRAPH:
 				if self.listHeight > 0:
@@ -1275,25 +1277,41 @@ class EPGList(HTMLComponent, GUIComponent):
 		return res
 
 	def getSelectionPosition(self,serviceref, activeList = 1):
-		if self.type == EPG_TYPE_GRAPH or self.type == EPG_TYPE_INFOBARGRAPH:
+		if self.type == EPG_TYPE_GRAPH:
 			indx = int(self.getIndexFromService(serviceref))
-			selx = self.select_rect.x + self.select_rect.w
-		elif (self.type == EPG_TYPE_ENHANCED or self.type == EPG_TYPE_SINGLE or self.type == EPG_TYPE_SIMILAR or
-				self.type == EPG_TYPE_MULTI or self.type == EPG_TYPE_INFOBAR or self.type == EPG_TYPE_VERTICAL):
+			selx = self.select_rect.x+self.select_rect.w
+			while indx+1 > config.epgselection.graph_itemsperpage.value:
+				indx = indx - config.epgselection.graph_itemsperpage.value
+		elif self.type == EPG_TYPE_INFOBARGRAPH:
+			indx = int(self.getIndexFromService(serviceref))
+			selx = self.select_rect.x+self.select_rect.w
+			while indx+1 > config.epgselection.infobar_itemsperpage.value:
+				indx = indx - config.epgselection.infobar_itemsperpage.value
+		elif self.type == EPG_TYPE_ENHANCED or self.type == EPG_TYPE_SINGLE or self.type == EPG_TYPE_SIMILAR:
 			indx = int(self.l.getCurrentSelectionIndex())
-			if self.type == EPG_TYPE_VERTICAL:
-				selx = self.listWidth * activeList - self.listWidth * (activeList-1)
-			else:
-				selx = self.listWidth
-		else:
-			indx = 1
 			selx = self.listWidth
-		ipp = self.listHeight / self.itemHeight
-		while indx+1 > ipp:
-			indx -= ipp
-		sf = getSkinFactor()
-		sely = min(self.instance.position().y() + self.itemHeight * indx, 720*sf)
-		selx = min(self.instance.position().x() + selx, 1280*sf)
+			while indx+1 > config.epgselection.enhanced_itemsperpage.value:
+				indx = indx - config.epgselection.enhanced_itemsperpage.value
+		elif self.type == EPG_TYPE_MULTI:
+			indx = int(self.l.getCurrentSelectionIndex())
+			selx = self.listWidth
+			while indx+1 > config.epgselection.multi_itemsperpage.value:
+				indx = indx - config.epgselection.multi_itemsperpage.value
+		elif self.type == EPG_TYPE_INFOBAR:
+			indx = int(self.l.getCurrentSelectionIndex())
+			selx = self.listWidth
+			while indx+1 > config.epgselection.infobar_itemsperpage.value:
+				indx = indx - config.epgselection.infobar_itemsperpage.value
+		elif self.type == EPG_TYPE_VERTICAL:
+			indx = int(self.l.getCurrentSelectionIndex())
+			selx = self.listWidth * activeList
+			while indx+1 > config.epgselection.vertical_itemsperpage.value:
+				indx = indx - config.epgselection.vertical_itemsperpage.value
+		pos = self.instance.position().y()
+		sely = int(pos)+(int(self.itemHeight)*int(indx))
+		temp = int(self.instance.position().y())+int(self.listHeight)
+		if int(sely) >= temp:
+			sely = int(sely) - int(self.listHeight)
 		return int(selx), int(sely)
 
 	def selEntry(self, dir, visible = True):
@@ -1588,7 +1606,7 @@ class TimelineText(HTMLComponent, GUIComponent):
 		self.time_base = 0
 		self.time_epoch = 0
 		self.timelineFontName = "Regular"
-		self.timelineFontSize = int(20 * getSkinFactor())
+		self.timelineFontSize = int(20 * sf)
 		self.timelineAlign = 'left'
 		self.datefmt = ""
 
@@ -1789,7 +1807,7 @@ class EPGBouquetList(HTMLComponent, GUIComponent):
 		self.graphicsloaded = False
 
 		self.bouquetFontName = "Regular"
-		self.bouquetFontSize = int(20 * getSkinFactor())
+		self.bouquetFontSize = int(20 * sf)
 
 		self.itemHeight = 31
 		self.listHeight = None

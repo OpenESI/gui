@@ -38,7 +38,6 @@ class Navigation:
 
 		Screens.Standby.TVstate()
 		self.skipWakeup = False
-		self.skipTVWakeup = False
 
 		self.RecordTimer = None
 		self.isRecordTimerImageStandard = False
@@ -120,7 +119,6 @@ class Navigation:
 
 		if hasFakeTime and self.wakeuptime > 0: # check for NTP-time sync, if no sync, wait for transponder time
 			if Screens.Standby.TVinStandby.getTVstandby('waitfortimesync') and not wasTimerWakeup:
-				self.skipTVWakeup = True
 				Screens.Standby.TVinStandby.setTVstate('power')
 			self.savedOldTime = now
 			self.timesynctimer = eTimer()
@@ -234,7 +232,7 @@ class Navigation:
 		self.wakeupCheck()
 
 	def gotopower(self):
-		if not self.skipTVWakeup:
+		if not Screens.Standby.TVinStandby.getTVstate('on'):
 			Screens.Standby.TVinStandby.setTVstate('power')
 		if Screens.Standby.inStandby:
 			print '[NAVIGATION] now entering normal operation'

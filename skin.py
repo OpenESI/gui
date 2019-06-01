@@ -47,20 +47,6 @@ def dump(x, i=0):
 	except:
 		None
 
-skinfactor = 0
-def getSkinFactor(refresh = False):
-	global skinfactor
-	if refresh or not skinfactor:
-		try:
-			skinfactor = getDesktop(0).size().width() / 1280.0
-			if not skinfactor in [1, 1.5, 3]:
-				print '[SKIN] getSkinFactor unknown result (%s) -> set skinfactor to 1' %skinfactor
-				skinfactor = 1
-		except Exception, err:
-			skinfactor = 1
-			print '[SKIN] getSkinFactor failed: ', err
-	return skinfactor
-
 class SkinError(Exception):
 	def __init__(self, message):
 		self.msg = message
@@ -95,7 +81,7 @@ def addSkin(name, scope = SCOPE_SKIN):
 def get_modular_files(name, scope = SCOPE_SKIN):
 	dirname = resolveFilename(scope, name + 'mySkin/')
 	file_list = []
-	if fileExists(dirname) and config.skin.primary_skin.value != DEFAULT_SKIN:
+	if fileExists(dirname):
 		skin_files = (os.listdir(dirname))
 		if len(skin_files):
 			for f in skin_files:
@@ -161,9 +147,7 @@ def skinExists(skin = False):
 skinExists()
 
 def getSkinPath():
-	#primary_skin_path = config.skin.primary_skin.value.replace('skin.xml', '')
-	p = config.skin.primary_skin.value
-	primary_skin_path = p[:p.rfind('/')+1]
+	primary_skin_path = config.skin.primary_skin.value.replace('skin.xml', '')
 	if not primary_skin_path.endswith('/'):
 		primary_skin_path = primary_skin_path + '/'
 	return primary_skin_path
@@ -207,32 +191,18 @@ except:
 
 addSkin('skin_subtitles.xml')
 
-if config.skin.primary_skin.value != DEFAULT_SKIN:
-	skinpath = resolveFilename(SCOPE_SKIN, primary_skin_path)
-	if os.path.isdir(skinpath):
-		for file in sorted(os.listdir(skinpath)):
-			if file.startswith('skin_user_') and file.endswith('.xml'):
-				try:
-					addSkin(primary_skin_path + file, SCOPE_SKIN)
-					print "[SKIN] loading user defined %s skin file: %s" %(file.replace('skin_user_','')[:-4], primary_skin_path + file)
-				except (SkinError, IOError, OSError, AssertionError), err:
-					print "[SKIN] not loading user defined %s skin file: %s - error: %s" %(file.replace('skin_user_','')[:-4], primary_skin_path + file, err)
 
-'''
 try:
-	if config.skin.primary_skin.value != DEFAULT_SKIN:
-		addSkin(primary_skin_path + 'skin_user_colors.xml', SCOPE_SKIN)
-		print "[SKIN] loading user defined colors for skin", (primary_skin_path + 'skin_user_colors.xml')
+	addSkin(primary_skin_path + 'skin_user_colors.xml', SCOPE_SKIN)
+	print "[SKIN] loading user defined colors for skin", (primary_skin_path + 'skin_user_colors.xml')
 except (SkinError, IOError, AssertionError), err:
 	print "[SKIN] not loading user defined colors for skin"
 
 try:
-	if config.skin.primary_skin.value != DEFAULT_SKIN:
-		addSkin(primary_skin_path + 'skin_user_header.xml', SCOPE_SKIN)
-		print "[SKIN] loading user defined header file for skin", (primary_skin_path + 'skin_user_header.xml')
+	addSkin(primary_skin_path + 'skin_user_header.xml', SCOPE_SKIN)
+	print "[SKIN] loading user defined header file for skin", (primary_skin_path + 'skin_user_header.xml')
 except (SkinError, IOError, AssertionError), err:
 	print "[SKIN] not loading user defined header file for skin"
-'''
 
 def load_modular_files():
 	modular_files = get_modular_files(primary_skin_path, SCOPE_SKIN)
@@ -352,19 +322,6 @@ def parseColor(s):
 		except:
 			raise SkinError("color '%s' must be #aarrggbb or valid named color" % s)
 	return gRGB(int(s[1:], 0x10))
-
-def parseParameter(s):
-	"""This function is responsible for parsing parameters in the skin, it can parse integers, floats, hex colors, hex integers, named colors and strings."""
-	if s[0] == '#':
-		return int(s[1:], 16)
-	elif s[:2] == '0x':
-		return int(s, 16)
-	elif '.' in s:
-		return float(s)
-	elif s in colorNames:
-		return colorNames[s].argb()
-	else:
-		return int(s)
 
 def collectAttributes(skinAttributes, node, context, skin_path_prefix=None, ignore=(), filenames=frozenset(("pixmap", "pointer", "seek_pointer", "backgroundPixmap", "selectionPixmap", "sliderPixmap", "scrollbarbackgroundPixmap"))):
 	# walk all attributes
@@ -876,7 +833,7 @@ def loadSingleSkinData(desktop, skin, path_prefix):
 					if isinstance(font, list) and len(font) == 2:
 						parameters[name] = (str(font[0]), int(font[1]))
 				else:
-					parameters[name] = map(parseParameter, value.split(","))
+					parameters[name] = map(int, value.split(","))
 			except Exception, ex:
 				print "[SKIN] bad parameter", ex
 
@@ -1371,13 +1328,13 @@ def readSkin(screen, skin, names, desktop):
 				print "[SKIN] SKIN ERROR in screen '%s' widget '%s':" % (name, w.tag), e
 
 		cw = widget.findall("constant-widget")
-		if cw:					
+		if cw:					#prozess non-openatv skins
 			for w in cw:
 				process(w)
 			for w in myscreen.findall("widget"):
 				process(w)
 		for w in widget.getchildren():
-			if cw and w.tag in ("constant-widget","widget"):
+			if cw and w.tag in ("constant-widget","widget"):	#for non-openatv skins
 				continue
 			process(w)
 

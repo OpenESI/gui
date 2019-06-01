@@ -2,7 +2,7 @@ import os
 import struct
 import random
 
-from enigma import eListboxPythonMultiContent, eListbox, gFont, iServiceInformation, eSize, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, eServiceReference, eServiceReferenceFS, eServiceCenter, eTimer, getDesktop, loadPNG, BT_SCALE, BT_KEEP_ASPECT_RATIO
+from enigma import eListboxPythonMultiContent, eListbox, gFont, iServiceInformation, eSize, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, eServiceReference, eServiceCenter, eTimer, getDesktop, loadPNG, BT_SCALE, BT_KEEP_ASPECT_RATIO
 
 from GUIComponent import GUIComponent
 from Tools.FuzzyDate import FuzzyTime
@@ -154,12 +154,13 @@ class MovieList(GUIComponent):
 	def __init__(self, root, sort_type=None, descr_state=None):
 		GUIComponent.__init__(self)
 		self.list = []
+		self.screenwidth = getDesktop(0).size().width()
 		self.descr_state = descr_state or self.HIDE_DESCRIPTION
 		self.sort_type = sort_type or self.SORT_GROUPWISE
 		self.firstFileEntry = 0
 		self.parentDirectory = 0
 		self.fontName = "Regular"
-		if skin.getSkinFactor() == 1.5:
+		if self.screenwidth and self.screenwidth == 1920:
 			self.fontSize = 28
 		else:
 			self.fontSize = 20
@@ -312,7 +313,7 @@ class MovieList(GUIComponent):
 		else:
 			ih = self.itemHeight
 
-		if skin.getSkinFactor() == 1.5:
+		if self.screenwidth and self.screenwidth == 1920:
 			listBeginX = 3
 			listEndX = 3
 			listMarginX = 12
@@ -603,11 +604,10 @@ class MovieList(GUIComponent):
 				# enigma wants an extra '/' appended
 				if not parent.endswith('/'):
 					parent += '/'
-			ref = eServiceReference(eServiceReference.idFile, eServiceReference.flagDirectory, eServiceReferenceFS.directory)
-			ref.setPath(parent)
-			ref.flags = eServiceReference.flagDirectory
-			self.list.append((ref, None, 0, -1))
-			numberOfDirs += 1
+				ref = eServiceReference("2:0:1:0:0:0:0:0:0:0:" + parent)
+				ref.flags = eServiceReference.flagDirectory
+				self.list.append((ref, None, 0, -1))
+				numberOfDirs += 1
 		while 1:
 			serviceref = reflist.getNext()
 			if not serviceref.valid():

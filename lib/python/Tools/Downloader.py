@@ -35,10 +35,7 @@ class HTTPProgressDownloader(client.HTTPDownloader):
 		return client.HTTPDownloader.pagePart(self, packet)
 
 	def pageEnd(self):
-		ret = client.HTTPDownloader.pageEnd(self)
-		if self.end_callback:
-			self.end_callback()
-		return ret
+		return client.HTTPDownloader.pageEnd(self)
 
 class downloadWithProgress:
 	def __init__(self, url, outputfile, contextFactory=None, *args, **kwargs):
@@ -67,14 +64,9 @@ class downloadWithProgress:
 
 	def stop(self):
 		if self.connection:
-			self.factory.progress_callback = self.factory.end_callback = self.factory.error_callback = None
+			print "[stop]"
 			self.connection.disconnect()
 
 	def addProgress(self, progress_callback):
+		print "[addProgress]"
 		self.factory.progress_callback = progress_callback
-
-	def addEnd(self, end_callback):
-		self.factory.end_callback = end_callback
-
-	def addError(self, error_callback):
-		self.factory.error_callback = error_callback

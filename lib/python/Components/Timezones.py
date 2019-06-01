@@ -3,7 +3,6 @@ import xml.etree.cElementTree
 from os import environ, unlink, symlink, path
 import time
 from Tools.StbHardware import setRTCoffset
-from boxbranding import getMachineBrand
 
 class Timezones:
 	def __init__(self):
@@ -50,10 +49,7 @@ class Timezones:
 
 	def getDefaultTimezone(self):
 		# TODO return something more useful - depending on country-settings?
-		if getMachineBrand() == "Beyonwiz":
-			t = "(GMT+10:00) Canberra, Melbourne, Sydney"
-		else:
-			t = "(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Vienna"
+		t = "(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Vienna"
 		for (a,b) in self.timezones:
 			if a == t:
 				return a

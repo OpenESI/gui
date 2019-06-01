@@ -157,9 +157,9 @@ class AVSwitch:
 			f.close()
 		except IOError:
 			print "[AVSwitch] couldn't read available videomodes."
-			modes = [ ]
-			return modes
-		return modes.split(' ')
+			self.modes_available = [ ]
+			return
+		self.modes_available = modes.split(' ')
 
 	def readPreferredModes(self):
 		if config.av.edid_override.value == False:
@@ -179,14 +179,14 @@ class AVSwitch:
 					print "[AVSwitch] reading _preferred modes: ", self.modes_preferred
 				except IOError:
 					print "[AVSwitch] reading preferred modes failed, using all modes"
-					self.modes_preferred = self.readAvailableModes()
+					self.modes_preferred = self.modes_available
 		else:
-			self.modes_preferred = self.readAvailableModes()
+			self.modes_preferred = self.modes_available
 			print "[AVSwitch] used default modes: ", self.modes_preferred
 			
 		if len(self.modes_preferred) <= 2:
 			print "[AVSwitch] preferend modes not ok, possible driver failer, len=", len(self.modes_preferred)
-			self.modes_preferred = self.readAvailableModes()
+			self.modes_preferred = self.modes_available
 
 		if self.modes_preferred != self.last_modes_preferred:
 			self.last_modes_preferred = self.modes_preferred
@@ -205,12 +205,12 @@ class AVSwitch:
 		rate = self.rates[mode][rate]
 		for mode in rate.values():
 			if port == "DVI":
-				if getBrandOEM() in ('azbox',):
+				if getBrandOEM() in ('azbox'):
 					if mode not in self.modes_preferred and not config.av.edid_override.value:
 						print "[AVSwitch] no, not preferred"
 						return False
 			if port != "HDMI":
-				if mode not in self.readAvailableModes():
+				if mode not in self.modes_available:
 					return False
 			elif mode not in self.modes_preferred:
 				return False
@@ -495,8 +495,9 @@ def InitAVSwitch():
 		config.av.yuvenabled = ConfigBoolean(default=False)
 	else:
 		config.av.yuvenabled = ConfigBoolean(default=True)
-	config.av.osd_alpha = ConfigSlider(default=255, increment = 5, limits=(20,255)) 
+	config.av.osd_alpha = ConfigSlider(default=255, increment = 5, limits=(20,255)) # Make openESI compatible with some plugins who still use config.av.osd_alpha
 	colorformat_choices = {"cvbs": _("CVBS"), "rgb": _("RGB"), "svideo": _("S-Video")}
+	# when YUV is not enabled, don't let the user select it
 	if config.av.yuvenabled.value:
 		colorformat_choices["yuv"] = _("YPbPr")
 
@@ -567,6 +568,7 @@ def InitAVSwitch():
 			"auto": _("Automatic")},
 			default = "16:9")
 
+	# Some boxes have a redundant proc entry for policy2 choices, but some don't (The choices are from a 16:9 point of view anyways)
 	if os.path.exists("/proc/stb/video/policy2_choices"):
 		policy2_choices_proc="/proc/stb/video/policy2_choices"
 	else:
@@ -1211,45 +1213,6 @@ def InitAVSwitch():
 		config.av.transcodeaac.addNotifier(setAACTranscode)
 	else:
 		config.av.transcodeaac = ConfigNothing()
-
-	if os.path.exists("/proc/stb/audio/btaudio"):
-		f = open("/proc/stb/audio/btaudio", "r")
-		can_btaudio = f.read().strip().split(" ")
-		f.close()
-	else:
-		can_btaudio = False
-
-	SystemInfo["CanBTAudio"] = can_btaudio
-
-	if can_btaudio:
-		def setBTAudio(configElement):
-			f = open("/proc/stb/audio/btaudio", "w")
-			f.write(configElement.value)
-			f.close()
-		choice_list = [("off", _("off")), ("on", _("on"))]
-		config.av.btaudio = ConfigSelection(choices = choice_list, default = "off")
-		config.av.btaudio.addNotifier(setBTAudio)
-	else:
-		config.av.btaudio = ConfigNothing()
-
-	if os.path.exists("/proc/stb/audio/btaudio_delay"):
-		f = open("/proc/stb/audio/btaudio_delay", "r")
-		can_btaudio_delay = f.read().strip().split(" ")
-		f.close()
-	else:
-		can_btaudio_delay = False
-
-	SystemInfo["CanBTAudioDelay"] = can_btaudio_delay
-
-	if can_btaudio_delay:
-		def setBTAudioDelay(configElement):
-			f = open("/proc/stb/audio/btaudio_delay", "w")
-			f.write(format(configElement.value * 90,"x"))
-			f.close()
-		config.av.btaudiodelay = ConfigSelectionNumber(-1000, 1000, 5, default = 0)
-		config.av.btaudiodelay.addNotifier(setBTAudioDelay)
-	else:
-		config.av.btaudiodelay = ConfigNothing()
 
 	if os.path.exists("/proc/stb/vmpeg/0/pep_scaler_sharpness"):
 		def setScaler_sharpness(config):

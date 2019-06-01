@@ -662,20 +662,18 @@ class TimerLog(Screen):
 			self["logentry"].setText("")
 
 class InstantRecordTimerEntry(TimerEntry):
-	def __init__(self, session, timer, zap, zaprecord):
+	def __init__(self, session, timer, zap):
 		Screen.__init__(self, session)
 		self.setup_title = ""
 		self.timer = timer
 		self.timer.justplay = zap
-		self.timer.always_zap = zaprecord
 		self.entryDate = None
 		self.entryService = None
 		self.keyGo()
 
 	def keyGo(self, result = None):
 		if self.timer.justplay:
-			self.timer.begin = self.timer.begin + (config.recording.margin_before.value * 60)
-			self.timer.end = self.timer.begin + 1
+			self.timer.end = self.timer.begin + (config.recording.margin_before.value * 60) + 1
 		self.timer.resetRepeated()
 		self.saveTimer()
 

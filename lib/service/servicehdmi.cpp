@@ -171,14 +171,7 @@ int eServiceHDMI::getInfo(int w)
 
 std::string eServiceHDMI::getInfoString(int w)
 {
-	switch (w)
-	{
-	case sServiceref:
-		return m_ref.toString();
-	default:
-		break;
-	}
-	return iServiceInformation::getInfoString(w);
+	return "";
 }
 
 ePtr<iServiceInfoContainer> eServiceHDMI::getInfoObject(int w)
