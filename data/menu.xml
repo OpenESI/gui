@@ -34,12 +34,6 @@ self.session.open(EsiPanel)
 from Plugins.Extensions.ExtraAddonss.plugin import *
 self.session.open(AddonsGroups)
 </code>
-        </item>  
-	    <item weight="5" level="0" text="FlashOnline" entryID="FlashOnline">  
-    <code>
-from Plugins.SystemPlugins.SoftwareManager.plugin import *
-self.session.open(FlashOnline)
-</code>
         </item> 
 	    <item weight="5" level="0" text="ImageBackup" entryID="ImageBackup">  
     <code>
