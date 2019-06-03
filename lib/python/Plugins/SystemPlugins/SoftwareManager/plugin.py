@@ -38,7 +38,6 @@ from twisted.web import client
 from twisted.internet import reactor
 
 from ImageBackup import ImageBackup
-from Flash_online import FlashOnline
 from ImageWizard import ImageWizard
 from BackupRestore import BackupSelection, RestoreMenu, BackupScreen, RestoreScreen, getBackupPath, getOldBackupPath, getBackupFilename
 from BackupRestore import InitConfig as BackupRestore_InitConfig
