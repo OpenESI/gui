@@ -657,7 +657,7 @@ class doFlashImage(Screen):
                          flashTmp))
                     else:
                         cmdlist.append('%s -n -r -k -m%s %s > /dev/null 2>&1' % (ofgwritePath, self.multi, flashTmp))
-                elif getMachineBuild() in ('h9combo', 'u51', 'u52', 'u53', 'u54', 'u5', 'u5pvr', 'cc1', 'sf8008', 'sf8008s', 'sf8008t', 'ustym4kpro', 'hd60', 'hd61', 'v8plus', 'multibox'):
+                elif getMachineBuild() in ('h9combo', 'h10', 'u51', 'u52', 'u53', 'u54', 'u5', 'u5pvr', 'cc1', 'sf8008', 'sf8008s', 'sf8008t', 'ustym4kpro', 'hd60', 'hd61', 'v8plus', 'multibox'):
                     cmdlist.append('%s -n -r%s -k%s %s > /dev/null 2>&1' % (ofgwritePath,
                      MTDROOTFS,
                      MTDKERNEL,
@@ -682,7 +682,7 @@ class doFlashImage(Screen):
                          flashTmp))
                     else:
                         cmdlist.append('%s -r -k -m%s %s > /dev/null 2>&1' % (ofgwritePath, self.multi, flashTmp))
-                elif getMachineBuild() in ('h9combo', 'u51', 'u52', 'u53', 'u54', 'u5', 'u5pvr', 'cc1', 'sf8008', 'sf8008s', 'ustym4kpro', 'hd60', 'hd61', 'v8plus', 'multibox'):
+                elif getMachineBuild() in ('h9combo', 'h10', 'u51', 'u52', 'u53', 'u54', 'u5', 'u5pvr', 'cc1', 'sf8008', 'sf8008s', 'ustym4kpro', 'hd60', 'hd61', 'v8plus', 'multibox'):
                     cmdlist.append('%s -r%s -k%s %s > /dev/null 2>&1' % (ofgwritePath,
                      MTDROOTFS,
                      MTDKERNEL,
