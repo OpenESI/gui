@@ -126,7 +126,10 @@ def getAboutText():
 		f = open('/boot/bootname', 'r')
 		bootname = f.readline().split('=')[1]
 		f.close()
-	if getMachineBuild() in ('gbmv200','cc1','sf8008','ustym4kpro'):
+	if SystemInfo["HasRootSubdir"]:
+		image = find_rootfssubdir("STARTUP")
+		AboutText += _("Selected Image:\t\t%s") % "STARTUP_" + image[-1:] + bootname + "\n"
+	elif getMachineBuild() in ('gbmv200','cc1','sf8008','ustym4kpro'):
 		if path.exists('/boot/STARTUP'):
 			f = open('/boot/STARTUP', 'r')
 			f.seek(5)
