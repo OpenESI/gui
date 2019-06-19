@@ -68,7 +68,7 @@ self.session.open(ImageBackup)
 from Plugins.Extensions.EsiPanel.plugin import *
 self.session.open(HddMount)
 </code>
-<item weight="6" level="0" text="Multiboot Image Selector" entryID="restart" requires="canMultiBoot"><screen module="MultiBootSelector" screen="MultiBootSelector">1</screen></item>
+<item weight="6" level="0" text="Multiboot Image Selector" entryID="restart" requires="canMultiBoot"><screen module="MultiBootSelector" screen="MultiBootSelector"/></item>
 
 	</menu>
     
