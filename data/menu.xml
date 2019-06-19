@@ -42,14 +42,6 @@ self.session.open(AddonsGroups)
 from Plugins.Extensions.EsiPanel.tvSettings.plugin import * 
 self.session.open(MainSetting)
 </code>
-        </item>  		
-        
-        <!-- UpdatePluginMenu -->
-	    <item weight="15" level="0" text="Software Manager" entryID="SoftwareManager">  
-    <code>
-from Plugins.SystemPlugins.SoftwareManager.plugin import * 
-self.session.open(UpdatePluginMenu)
-</code>
         </item>
             <item weight="5" level="0" text="FlashOnline" entryID="FlashOnline">  
     <code>
@@ -68,7 +60,15 @@ self.session.open(ImageBackup)
 from Plugins.Extensions.EsiPanel.plugin import *
 self.session.open(HddMount)
 </code>
-</item>
+</item>  		
+        
+        <!-- Multiboot Manager -->
+	    <item weight="5" level="0" text="Multiboot Manager" entryID="MultiBootWizard">  
+    <code>
+from Plugins.SystemPlugins.SoftwareManager.plugin import * 
+self.session.open(MultiBootWizard)
+</code>
+        </item>
 <item weight="6" level="0" text="Multiboot Image Selector" entryID="restart" requires="canMultiBoot"><screen module="MultiBootSelector" screen="MultiBootSelector"/></item>
 
 	</menu>
