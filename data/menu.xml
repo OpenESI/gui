@@ -34,6 +34,20 @@ self.session.open(EsiPanel)
 from Plugins.Extensions.ExtraAddonss.plugin import *
 self.session.open(AddonsGroups)
 </code>
+        </item>  
+		
+        <!-- settingsPanel -->		
+	    <item weight="13" level="0" text="tvSettings" entryID="tvSettings">  
+    <code>
+from Plugins.Extensions.EsiPanel.tvSettings.plugin import * 
+self.session.open(MainSetting)
+</code>
+        </item>
+            <item weight="5" level="0" text="FlashOnline" entryID="FlashOnline">  
+    <code>
+from Plugins.SystemPlugins.SoftwareManager.plugin import *
+self.session.open(FlashOnline)
+</code>
         </item> 
 	    <item weight="5" level="0" text="ImageBackup" entryID="ImageBackup">  
     <code>
@@ -46,15 +60,16 @@ self.session.open(ImageBackup)
 from Plugins.Extensions.EsiPanel.plugin import *
 self.session.open(HddMount)
 </code>
-</item>
-<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootHD" entryID="deep_standby"><screen module="MultiBootStartup" screen="MultiBootStartup" /></item>
-<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootXC" entryID="deep_standby"><screen module="MultiBootStartupXC" screen="MultiBootStartup" /></item>
-<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootGB" entryID="deep_standby"><screen module="MultiBootStartupGB" screen="MultiBootStartup" /></item>
-<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootCY" entryID="deep_standby"><screen module="MultiBootStartupCY" screen="MultiBootStartup" /></item>
-<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootDS" entryID="deep_standby"><screen module="MultiBootStartupDS" screen="MultiBootStartup" /></item>
-<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootOS" entryID="deep_standby"><screen module="MultiBootStartupOS" screen="MultiBootStartup" /></item>
-<item weight="6" level="0" text="MultiBoot" requires="HaveMultiBootADV" entryID="deep_standby"><screen module="MultiBootStartupADV" screen="MultiBootStartup" /></item>
-<item weight="35" level="0" text="Recovery Mode" requires="RecoveryMode" entryID="maintenance_mode"><screen module="Standby" screen="TryQuitMainloop">16</screen></item>
+</item>  		
+        
+        <!-- Multiboot Manager -->
+	    <item weight="5" level="0" text="Multiboot Manager" entryID="MultiBootWizard">  
+    <code>
+from Plugins.SystemPlugins.SoftwareManager.plugin import * 
+self.session.open(MultiBootWizard)
+</code>
+        </item>
+<item weight="6" level="0" text="Multiboot Image Selector" entryID="restart" requires="canMultiBoot"><screen module="MultiBootSelector" screen="MultiBootSelector"/></item>
 
 	</menu>
     
@@ -125,7 +140,7 @@ self.session.open(HddMount)
 			<!-- Menu / Settings / System / Extended System / OSD settings -->
 			<menu weight="40" level="1" text="Display e OSD" entryID="osd_setup">
 				<id val="osd_menu" />
-                               <item weight="10" level="1" text="OSD Position" entryID="osdsetup" requires="CanChangeOsdPosition"><screen module="UserInterfacePositioner" screen="UserInterfacePositioner2"/></item>
+                                 <item weight="10" level="1" text="OSD Position" entryID="osdsetup" requires="CanChangeOsdPosition"><screen module="UserInterfacePositioner" screen="UserInterfacePositioner2"/></item>
                                  <item weight="0" level="0" entryID="display_setup"><setup id="display" /></item>
                                 <item weight="50" level="2" text="OSD 3D Setup" entryID="osd3dsetup" requires="CanChange3DOsd"><screen module="UserInterfacePositioner" screen="OSD3DSetupScreen"/></item>
 				<item weight="5" level="0" text="Skin setup" entryID="lcd_skin_setup" requires="LCDSKINSetup"><screen module="SkinSelector" screen="LcdSkinSelector"/></item>
@@ -303,6 +318,7 @@ else:
 		<item weight="20" level="0" text="Sleep Timer" requires="DeepstandbySupport" entryID="sleep"><screen module="SleepTimerEdit" screen="SleepTimerEdit" /></item>
 		<item weight="25" level="0" text="Restart" entryID="restart"><screen module="Standby" screen="TryQuitMainloop">2</screen></item>
 		<item weight="30" level="0" text="Restart Gui" entryID="restart_enigma"><screen module="Standby" screen="TryQuitMainloop">3</screen></item>
-			</menu>
+		<item weight="35" level="0" text="Recovery Mode" requires="RecoveryMode" entryID="maintenance_mode"><screen module="Standby" screen="TryQuitMainloop">16</screen></item>
+	</menu>
 
 </menu>
