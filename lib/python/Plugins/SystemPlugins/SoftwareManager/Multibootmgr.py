@@ -17,7 +17,7 @@ from Tools.Multiboot import GetImagelist, GetCurrentImage, GetCurrentImageMode, 
 class MultiBootWizard(Screen):
 
 	skin = """
-	<screen name="MultiBoot maintenance" position="center,center" size="750,900" flags="wfNoBorder" backgroundColor="transparent">
+	<screen name="MultiBoot Image Manager" position="center,center" size="750,900" flags="wfNoBorder" backgroundColor="transparent">
 		<eLabel name="b" position="0,0" size="750,700" backgroundColor="#00ffffff" zPosition="-2" />
 		<eLabel name="a" position="1,1" size="748,698" backgroundColor="#00000000" zPosition="-1" />
 		<widget source="Title" render="Label" position="60,10" foregroundColor="#00ffffff" size="480,50" halign="left" font="Regular; 28" backgroundColor="#00000000" />
@@ -29,15 +29,15 @@ class MultiBootWizard(Screen):
 		<widget source="key_red" render="Label" position="30,200" size="150,30" noWrap="1" zPosition="1" valign="center" font="Regular; 20" halign="left" backgroundColor="#00000000" foregroundColor="#00ffffff" />
 		<widget source="key_green" render="Label" position="200,200" size="150,30" noWrap="1" zPosition="1" valign="center" font="Regular; 20" halign="left" backgroundColor="#00000000" foregroundColor="#00ffffff" />
 		<widget source="key_yellow" render="Label" position="370,200" size="150,30" noWrap="1" zPosition="1" valign="center" font="Regular; 20" halign="left" backgroundColor="#00000000" foregroundColor="#00ffffff" />
-		<eLabel position="20,200" size="6,40" backgroundColor="#00e61700" /> <!-- Should be a pixmap -->
-		<eLabel position="190,200" size="6,40" backgroundColor="#0061e500" /> <!-- Should be a pixmap -->
+		<eLabel position="20,200" size="6,40" backgroundColor="#00e61700" /> <!-- Should be a pixmap red  -->
+		<eLabel position="190,200" size="6,40" backgroundColor="#0061e500" /> <!-- Should be a pixmap green  -->
 		<eLabel position="360,200" size="6,40" backgroundColor="#ffff00" /> <!-- Should be a pixmap  yellow-->
 	</screen>
 	"""
 
 	def __init__(self, session,menu_path=""):
 		Screen.__init__(self, session)
-		Screen.setTitle(self, _("MultiBoot image manager"))
+		Screen.setTitle(self, _("MultiBoot Image Manager"))
 		if SystemInfo["HasSDmmc"] and not pathExists('/dev/sda4'):
 			self["key_red"] = StaticText(_("Cancel"))
 			self["description"] = StaticText(_("Press Init to format SDcard."))
@@ -63,13 +63,13 @@ class MultiBootWizard(Screen):
 		else:
 			self["key_red"] = StaticText(_("Cancel"))
 			self["description"] = StaticText(_("Use the cursor keys to select an installed image and then Erase button."))
-			self["options"] = StaticText(_("Note: startup list does not show current image or empty startups."))
+			self["options"] = StaticText(_("Note: slot list does not show current image or empty slots."))
 			self["key_green"] = StaticText(_("Erase"))
 			if SystemInfo["HasSDmmc"]:
 				self["key_yellow"] = StaticText(_("Init SDcard"))
 			else:
 				self["key_yellow"] = StaticText("")
-			self["config"] = ChoiceList(list=[ChoiceEntryComponent('',((_("Retrieving image startups - Please wait...")), "Queued"))])
+			self["config"] = ChoiceList(list=[ChoiceEntryComponent('',((_("Retrieving image slots - Please wait...")), "Queued"))])
 			imagedict = []
 			self.getImageList = None
 			self.startit()
@@ -106,19 +106,19 @@ class MultiBootWizard(Screen):
 		if SystemInfo["HasSDmmc"]:
 			currentimageslot += 1
 		for x in sorted(imagedict.keys()):
-			if imagedict[x]["imagename"] != _("Empty startup") and x != currentimageslot:
-				list.append(ChoiceEntryComponent('',((_("startup %s - %s ")) % (x, imagedict[x]['imagename']), x)))
+			if imagedict[x]["imagename"] != _("Empty slot") and x != currentimageslot:
+				list.append(ChoiceEntryComponent('',((_("slot%s - %s ")) % (x, imagedict[x]['imagename']), x)))
 		self["config"].setList(list)
 
 	def erase(self):
 		self.currentSelected = self["config"].l.getCurrentSelection()
 		if self.currentSelected[0][1] != "Queued":
 			if SystemInfo["HasRootSubdir"]:
-				message = _("Removal of this startup will not show in %s Gui.  Are you sure you want to delete image startup %s ?") %(getMachineBuild(), self.currentSelected[0][1])
+				message = _("Removal of this slot will not show in %s Gui.  Are you sure you want to delete image slot %s ?") %(getMachineBuild(), self.currentSelected[0][1])
 				ybox = self.session.openWithCallback(self.doErase, MessageBox, message, MessageBox.TYPE_YESNO, default=True)
 				ybox.setTitle(_("Remove confirmation"))
 			else:
-				message = _("Are you sure you want to delete image startup %s ?") %self.currentSelected[0][1]
+				message = _("Are you sure you want to delete image slot %s ?") %self.currentSelected[0][1]
 				ybox = self.session.openWithCallback(self.doErase, MessageBox, message, MessageBox.TYPE_YESNO, default=True)
 				ybox.setTitle(_("Remove confirmation"))
 
