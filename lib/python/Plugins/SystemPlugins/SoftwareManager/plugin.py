@@ -39,6 +39,7 @@ from twisted.web import client
 from twisted.internet import reactor
 
 from ImageBackup import ImageBackup
+from Flash_online import FlashOnline
 from ImageWizard import ImageWizard
 from Multibootmgr import MultiBootWizard
 from BackupRestore import BackupSelection, RestoreMenu, BackupScreen, RestoreScreen, getBackupPath, getOldBackupPath, getBackupFilename, RestoreMyMetrixHD
@@ -320,6 +321,8 @@ class UpdatePluginMenu(Screen):
 					self.session.open(PluginManager, self.skin_path)
 				elif (currentEntry == "multiboot-manager"):
 					self.session.open(MultiBootWizard)
+                                elif (currentEntry == "flash-online"):
+					self.session.open(FlashOnline)
 				elif (currentEntry == "backup-image"):
 					if DFLASH == True:
 						self.session.open(dFlash)

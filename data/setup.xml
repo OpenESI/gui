@@ -5,6 +5,11 @@
 		<item level="0" text="Sync time using" description="Synchronize systemtime using transponder or internet.">config.misc.SyncTimeUsing</item>
 		<item level="0" text="NTP server" description="Configure your NTP server.">config.misc.NTPserver</item>
 		<item level="0" text="Sync NTP every (minutes)" description="Setup network time synchronization interval." requires="config.misc.SyncTimeUsing" >config.misc.useNTPminutes</item>
+		<item level="0" text="Date style" description="Choose the display formatting style for dates. 'D' / 'DD' is the date and 'M' / 'MM' is the month in digits.  ('DD' and 'MM' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin." requires="config.usage.date.enabled">config.usage.date.dayfull</item>
+		<item level="0" text="Time style" description="Choose the display formatting style for times. 'H' / 'HH' is the hour for a 24 hour clock, 'h' / 'hh' is the hour for a 12 hour clock, 'mm' is the minutes and 'ss' is the seconds.  ('HH' and 'hh' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin." requires="config.usage.time.enabled">config.usage.time.long</item>
+	</setup>
+	<setup key="timezone" title="Time zone settings">
+		<item level="0" text="Timezone" description="Setup your timezone.">config.timezone.val</item>
 	</setup>
 	<setup key="audio_setup">
 		<!-- this is just a placeholder, the Videomode plugin implements this submenu -->
@@ -211,6 +216,7 @@
 		<item level="1" text="Recordings abort PIP" description="When enabled, a recording is allowed to abort picture-in-picture mode, when there are no free tuners.">config.recording.ask_to_abort_pip</item>
 		<item level="1" text="Recordings abort pseudo recordings" description="When enabled, a recording is allowed to abort pseudo recordings, when there are no free tuners.">config.recording.ask_to_abort_pseudo_rec</item>
 		<item level="1" text="Recordings abort streaming" description="When enabled, a recording is allowed to abort streaming, when there are no free tuners.">config.recording.ask_to_abort_streaming</item>
+		<item level="0" text="Preparation time for recording (seconds)" description="During this time, the transmitter and the recording destination are checked. If the recording destination (eg NAS) does not ready in time for recording, this time can be increased.">config.recording.prepare_time</item>
 		<item level="0" text="Margin before recording (minutes)" description="When nonzero, a recording will start earlier than the starting time indicated by the EPG.">config.recording.margin_before</item>
 		<item level="0" text="Margin after recording (minutes)" description="When nonzero, a recording will stop later than the ending time indicated by the EPG.">config.recording.margin_after</item>
 		<item level="2" text="Show message when recording starts" description="When enabled, a popup message will be shown when a recording starts.">config.usage.show_message_when_recording_starts</item>
@@ -299,8 +305,15 @@
 		<item level="0" text="LED Normal" description="LED brightness during normal operations.">config.lcd.ledbrightness</item>
 		<item level="0" text="LED Standby" description="LED brightness during standby.">config.lcd.ledbrightnessstandby</item>
 		<item level="0" text="LED Deep Standby" description="LED brightness during deep standby.">config.lcd.ledbrightnessdeepstandby</item>
+		<item level="0" requires="PowerLed" text="Turn on the power LED." description="Power LED can be turned on or off here.">config.usage.lcd_powerled</item>
 		<item level="0" requires="StandbyPowerLed" text="Power LED State in Standby" description="Power LED state during standby.">config.usage.lcd_standbypowerled</item>
 		<item level="0" requires="SuspendPowerLed" text="Power LED State in Deep-Standby" description="Power LED state during deep-standby.">config.usage.lcd_deepstandbypowerled</item>
+		<item level="0" requires="LedPowerColor" text="Operating LED status while running" description="With this option you can switch the LED color or deactivate the LED.">config.usage.lcd_ledpowercolor</item>
+		<item level="0" requires="LedStandbyColor" text="Operating LED status in standby mode" description="With this option you can switch the LED color or deactivate the LED.">config.usage.lcd_ledstandbycolor</item>
+		<item level="0" requires="LedSuspendColor" text="Operating LED status in deep standby mode" description="With this option you can switch the LED color or deactivate the LED.">config.usage.lcd_ledsuspendcolor</item>
+		<item level="0" requires="Power4x7On" text="Status of the display during operation" description="With this option you can switch off the display during operation.">config.usage.lcd_power4x7on</item>
+		<item level="0" requires="Power4x7Standby" text="Status of the display in standby mode" description="With this option you can switch off the display in Standby Mode.">config.usage.lcd_power4x7standby</item>
+		<item level="0" requires="Power4x7Suspend" text="Status of the display in deep standby" description="With this option you can switch off the display in Deep Standby Mode.">config.usage.lcd_power4x7suspend</item>
 		<item level="0" requires="7segment" text="Show in Standby" description="This option allows you choose how to display the Time or nothing in Standby">config.usage.show_in_standby</item>
 		<item level="2" requires="VFD_initial_scroll_delay" text="Initial scroll delay" description="Delay in miliseconds before start of scrolling text on display.">config.usage.vfd_initial_scroll_delay</item>
 		<item level="2" requires="VFD_final_scroll_delay" text="Final scroll delay" description="Delay in miliseconds after finish scrolling text on display.">config.usage.vfd_final_scroll_delay</item>
@@ -326,6 +339,8 @@
 		<item level="0" requires="ConfigDisplay" text="Show on Display" description="Disable all VFD Symbols">config.vfd.show</item>
 		<item level="1" requires="ConfigDisplay" text="Scrolling speed (software renderer)" description="Set the scrolling speed of text on the front display, this is used by software renderer in some skins.">config.lcd.scroll_speed</item>
 		<item level="1" requires="ConfigDisplay" text="Scrolling delay (software renderer)" description="Set the delay time between repeated loops, this is used by software renderer in some skins.">config.lcd.scroll_delay</item>
+		<item level="0" text="Date style" description="Choose the front panel display formatting style for dates. 'D' / 'DD' is the date and 'M' / 'MM' is the month in digits.  ('DD' and 'MM' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin." requires="config.usage.date.enabled_display">config.usage.date.display</item>
+		<item level="0" text="Time style" description="Choose the front panel display formatting style for times. 'H' / 'HH' is the hour for a 24 hour clock, 'h' / 'hh' is the hour for a 12 hour clock, 'mm' is the minutes.  ('HH' and 'hh' have leading zeros for single digit values.) The front panel display will be based on your choice but can be influenced any applicable skin." requires="config.usage.time.enabled_display">config.usage.time.display</item>
 	</setup>
 	<setup key="specialfeatures" title="Special Features">
 		<!-- this is just a placeholder, the 'specialfeatures' menu is currently disabled -->
@@ -375,6 +390,7 @@
 		<item level="2" text="Show crash info on screen and write crash log for x times" description="If 'never', will write crash log despite that for the first crash." requires="config.crash.bsodpython">config.crash.bsodhide</item>
 		<item level="2" text="Restart GUI after x crashes" description="If 'never', will force restart despite that after 100 crashes." requires="config.crash.bsodpython">config.crash.bsodmax</item>
 		<item level="2" text="Enable debug log *" description="Allows you to enable the debug log. They contain very detailed information of everything the system does.">config.crash.enabledebug</item>
+		<item level="2" text="Enable twisted log *" description="Allows you to enable the twisted log. They contain very detailed information of everything the twisted does. ('/tmp/twisted.log')">config.misc.enabletwistedlog</item>
 		<item level="2" text="Limit debug log size (MB)" description="Allows you to set the maximum size of the Debug log size (MB). When that size is reached, a new file will be created.">config.crash.debugloglimit</item>
 		<item level="2" text="Show Log Manager in extensions list ?" description="Allows you to show/hide Log Manager in extensions (blue button).">config.logmanager.showinextensions</item>
 		<!--<item level="2" text="User name" description="Enter your forum user name, to make it easier trace logs.">config.logmanager.user</item>
@@ -454,6 +470,7 @@
 		<item level="2" text="Position of recording icons" description="Set the position of the recording icons">config.epgselection.graph_rec_icon_height</item>
 		<item level="2" text="Timeline font size" description="Configure the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.epgselection.infobar_timelinefs</item>
 		<item level="2" text="Timeline 24 Hour" description="Show time in 24 hour clock format.">config.epgselection.infobar_timeline24h</item>
+		<item level="2" text="Time history" description="Configure the history of time that will be presented.">config.epgselection.infobar_histminutes</item>
 		<item level="2" text="Time scale" description="Configure the amount of time that will be presented.">config.epgselection.infobar_prevtimeperiod</item>
 	</setup>
 	<setup level="2" key="epggraphical" title="GraphicalEPG settings">

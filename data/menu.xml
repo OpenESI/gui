@@ -42,7 +42,13 @@ self.session.open(AddonsGroups)
 from Plugins.Extensions.EsiPanel.tvSettings.plugin import * 
 self.session.open(MainSetting)
 </code>
-        </item> 
+        </item>  
+	    <item weight="5" level="0" text="FlashOnline" entryID="FlashOnline">  
+    <code>
+from Plugins.SystemPlugins.SoftwareManager.plugin import *
+self.session.open(FlashOnline)
+</code>
+        </item>  
 	    <item weight="5" level="0" text="ImageBackup" entryID="ImageBackup">  
     <code>
 from Plugins.SystemPlugins.SoftwareManager.plugin import *
