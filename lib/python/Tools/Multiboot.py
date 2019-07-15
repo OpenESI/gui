@@ -125,11 +125,11 @@ class GetImagelist():
 	def appClosed(self, data, retval, extra_args):
 		if retval == 0 and self.phase == self.MOUNT:
 			BuildVersion = "  "	
-			Build = " "	#ViX Build No.#
-			Dev = " "	#ViX Dev No.#
-			Creator = " " 	#Openpli Openvix Openatv etc #
+			Build = " "
+			Dev = " "
+			Creator = " "
 			Date = " "	
-			BuildType = " "	#release etc #
+			BuildType = " "
 			self.OsPath = "NoPath"
 			if SystemInfo["HasRootSubdir"]:
 				if self.slot == 1 and os.path.isfile("/tmp/testmount/linuxrootfs1/usr/bin/enigma2"):
@@ -146,13 +146,7 @@ class GetImagelist():
 					Creator = open("%s/etc/issue" %self.OsPath).readlines()[-2].capitalize().strip()[:-6].replace("-release", " rel")
 				except:
 					Creator = _("unknow")
-				if Creator.startswith("Openesi"):
-					reader = boxbranding_reader(self.OsPath)
-					BuildType = reader.getImageType()
-					Build = reader.getImageBuild()
-					Dev = BuildType != "release" and " %s" % reader.getImageDevBuild() or ''
-					BuildVersionESI = "%s %s %s" % (Creator, BuildType[0:3], Build)
-					BuildVersionESI = BuildVersionESI.replace("rel", "#")
+				print "Tools/Multiboot Creator %s" %Creator 
 				if Creator.startswith("Openpli"):
 					build = [x.split("-")[-2:-1][0][-8:] for x in open("%s/var/lib/opkg/info/openpli-bootlogo.control" %self.OsPath).readlines() if x.startswith("Version:")]
 					Date = "%s-%s-%s" % (build[0][6:], build[0][4:6], build[0][2:4])
@@ -167,10 +161,8 @@ class GetImagelist():
 					st = os.stat('%s/var/lib/opkg/status' %self.OsPath)
 					tm = time.localtime(st.st_mtime)
 					if tm.tm_year >= 2011:
-						Date = time.strftime("%d.%m.%Y", tm)
-					BuildVersion = _("%s release %s") % (Creator, Date)
-					if Creator.startswith("Openesi"):
-						BuildVersion = _("%s release %s") % (BuildVersionESI, Date)
+						Date = time.strftime("%d-%m-%Y", tm)
+					BuildVersion = _("%s build date %s") % (Creator, Date)
 				self.imagelist[self.slot2] =  { 'imagename': '%s' %BuildVersion, 'part': '%s' %self.part2 }
 			self.phase = self.UNMOUNT
 			self.run()
@@ -311,6 +303,7 @@ class EmptySlot():
 		else:
 			self.container.ePopen('mount /dev/%s /tmp/testmount' %self.part if self.phase == self.MOUNT else 'umount /tmp/testmount', self.appClosed)
 
+	
 	def appClosed(self, data, retval, extra_args):
 		if retval == 0 and self.phase == self.MOUNT:
 			if SystemInfo["HasRootSubdir"]:

@@ -2,7 +2,7 @@ import os
 import time
 import cPickle as pickle
 
-from enigma import eServiceReference, eServiceCenter, eTimer, eSize, iPlayableService, iServiceInformation, getPrevAsciiCode, eRCInput, pNavigation
+from enigma import eServiceReference, eServiceReferenceFS, eServiceCenter, eTimer, eSize, iPlayableService, iServiceInformation, getPrevAsciiCode, eRCInput, pNavigation
 
 from Screen import Screen
 from Components.Button import Button
@@ -371,9 +371,12 @@ class MovieContextMenu(Screen, ProtectedScreen):
 		menu = [(_("Settings") + "...", csel.configure),
 				(_("Device mounts") + "...", csel.showDeviceMounts),
 				(_("Network mounts") + "...", csel.showNetworkMounts),
-				(_("Add bookmark"), csel.do_addbookmark),
 				(_("Create directory"), csel.do_createdir),
 				(_("Sort by") + "...", csel.selectSortby)]
+		if csel.exist_bookmark():
+			menu.append((_("Remove bookmark"), csel.do_addbookmark))
+		else:
+			menu.append((_("Add bookmark"), csel.do_addbookmark))
 		if service:
 			if service.flags & eServiceReference.mustDescent:
 				if isTrashFolder(service):
@@ -1413,7 +1416,8 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 		self["list"].setSortType(type)
 
 	def setCurrentRef(self, path):
-		self.current_ref = eServiceReference("2:0:1:0:0:0:0:0:0:0:" + path)
+		self.current_ref = eServiceReference(eServiceReference.idFile, eServiceReference.noFlags, eServiceReferenceFS.directory)
+		self.current_ref.setPath(path)
 		# Magic: this sets extra things to show
 		self.current_ref.setName('16384:jpg 16384:png 16384:gif 16384:bmp')
 
@@ -1495,7 +1499,9 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 				if selItem:
 					self.reloadList(home = True, sel = selItem)
 				else:
-					self.reloadList(home = True, sel = eServiceReference("2:0:1:0:0:0:0:0:0:0:" + currentDir))
+					ref = eServiceReference(eServiceReference.idFile, eServiceReference.noFlags, eServiceReferenceFS.directory)
+					ref.setPath(currentDir)
+					self.reloadList(home=True, sel=ref)
 			else:
 				mbox=self.session.open(
 					MessageBox,
@@ -1637,7 +1643,9 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 			os.mkdir(path)
 			if not path.endswith('/'):
 				path += '/'
-			self.reloadList(sel = eServiceReference("2:0:1:0:0:0:0:0:0:0:" + path))
+			ref = eServiceReference(eServiceReference.idFile, eServiceReference.noFlags, eServiceReferenceFS.directory)
+			ref.setPath(path)
+			self.reloadList(sel=ref)
 		except OSError, e:
 			print "Error %s:" % e.errno, e
 			if e.errno == 17:
@@ -1717,7 +1725,9 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 				msg = None
 				print "[ML] rename", path, "to", newpath
 				os.rename(path, newpath)
-				self.reloadList(sel = eServiceReference("2:0:1:0:0:0:0:0:0:0:" + newpath))
+				ref = eServiceReference(eServiceReference.idFile, eServiceReference.noFlags, eServiceReferenceFS.directory)
+				ref.setPath(newpath)
+				self.reloadList(sel=ref)
 			except OSError, e:
 				print "Error %s:" % e.errno, e
 				if e.errno == 17:
