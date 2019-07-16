@@ -2,7 +2,6 @@ from Components.Console import Console
 from os import listdir as os_listdir, path as os_path
 from re import compile as re_compile
 from enigma import eEnv
-from boxbranding import getMachineBrand
 
 class Keyboard:
 	def __init__(self):
@@ -41,12 +40,6 @@ class Keyboard:
 		return self.keyboardmaps
 
 	def getDefaultKeyboardMap(self):
-		if getMachineBrand() == 'Zgemma':
-			defaultKeyboardMap = "us.kmap"
-		elif getMachineBrand() == 'Beyonwiz':
-			defaultKeyboardMap = "eng.kmap"
-		else:
-			defaultKeyboardMap = "de.kmap"
-		return defaultKeyboardMap
+		return 'de.kmap'
 
 keyboard = Keyboard()

@@ -218,16 +218,16 @@ def getButtonSetupFunctions():
 		ButtonSetupFunctions.append((_("Move PIP"), "Infobar/movePiP", "InfoBar"))
 		ButtonSetupFunctions.append((_("Toggle PIPzap"), "Infobar/togglePipzap", "InfoBar"))
 	ButtonSetupFunctions.append((_("Activate HbbTV (Redbutton)"), "Infobar/activateRedButton", "InfoBar"))
-	if getHaveHDMIinHD() == 'True' or getHaveHDMIinFHD() == 'True':
+	if getHaveHDMIinHD() in ('True') or getHaveHDMIinFHD() in ('True'):
 		ButtonSetupFunctions.append((_("Toggle HDMI-In full screen"), "Infobar/HDMIInFull", "InfoBar"))
 		ButtonSetupFunctions.append((_("Toggle HDMI-In PiP"), "Infobar/HDMIInPiP", "InfoBar"))
 	if SystemInfo["LcdLiveTV"]:
 		ButtonSetupFunctions.append((_("Toggle LCD LiveTV"), "Infobar/ToggleLCDLiveTV", "InfoBar"))
 	if SystemInfo["canMultiBoot"]:
-		ButtonSetupFunctions.append((_("Multiboot Image Selector"), "Module/Screens.MultiBootSelector/MultiBootSelector", "InfoBar"))
+		ButtonSetupFunctions.append((_("MultiBootSelector"), "Module/Screens.MultiBootSelector/MultiBootSelector", "InfoBar"))
 	ButtonSetupFunctions.append((_("Hotkey Setup"), "Module/Screens.ButtonSetup/ButtonSetup", "Setup"))
 	ButtonSetupFunctions.append((_("Software update"), "Module/Screens.SoftwareUpdate/UpdatePlugin", "Setup"))
-	if getHaveCI() == 'True':
+	if getHaveCI() in ('True'):
 		ButtonSetupFunctions.append((_("CI (Common Interface) Setup"), "Module/Screens.Ci/CiSelection", "Setup"))
 	ButtonSetupFunctions.append((_("Videosetup"), "Module/Screens.VideoMode/VideoSetup", "Setup"))
 	ButtonSetupFunctions.append((_("Tuner Configuration"), "Module/Screens.Satconfig/NimSelection", "Scanning"))
@@ -488,7 +488,7 @@ class ButtonSetupSelect(Screen):
 
 	def cancel(self):
 		if self.selected != self.prevselected:
-			self.session.openWithCallback(self.cancelCallback, MessageBox, _("Are you sure to cancel all changes?"), default=False)
+			self.session.openWithCallback(self.cancelCallback, MessageBox, _("Are you sure to cancel all changes"), default=False)
 		else:
 			self.close()
 
@@ -608,13 +608,13 @@ class InfoBarButtonSetup():
 					return 0
 			elif selected[0] == "Module":
 				try:
-					exec "from %s import %s" % (selected[1], selected[2])
-					exec "self.session.open(%s)" %  ",".join(selected[2:])
+					exec "from " + selected[1] + " import *"
+					exec "self.session.open(" + ",".join(selected[2:]) + ")"
 				except:
 					print "[ButtonSetup] error during executing module %s, screen %s" % (selected[1], selected[2])
 			elif selected[0] == "Setup":
-				from Screens.Setup import Setup
-				exec "self.session.open(Setup, \"%s\")" % selected[1]
+				exec "from Screens.Setup import *"
+				exec "self.session.open(Setup, \"" + selected[1] + "\")"
 			elif selected[0].startswith("Zap"):
 				if selected[0] == "ZapPanic":
 					self.servicelist.history = []

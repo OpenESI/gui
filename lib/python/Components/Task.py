@@ -503,7 +503,7 @@ class AbortedPostcondition(Condition):
 		pass
 
 	def getErrorMessage(self, task):
-		return _("Cancelled upon user request")
+		return "Cancelled upon user request"
 
 class ReturncodePostcondition(Condition):
 	def __init__(self):

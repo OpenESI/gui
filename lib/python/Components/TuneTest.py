@@ -26,14 +26,12 @@ class Tuner:
 				parm.pls_code = transponder[12]
 			else:
 				parm.is_id = eDVBFrontendParametersSatellite.No_Stream_Id_Filter
-				parm.pls_mode = eDVBFrontendParametersSatellite.PLS_Gold
-				parm.pls_code = eDVBFrontendParametersSatellite.PLS_Default_Gold_Code
-			if len(transponder) > 14:
+				parm.pls_mode = 0
+				parm.pls_code = 1
+			if len(transponder) > 13:
 				parm.t2mi_plp_id = transponder[13]
-				parm.t2mi_pid = transponder[14]
 			else:
 				parm.t2mi_plp_id = eDVBFrontendParametersSatellite.No_T2MI_PLP_Id
-				parm.t2mi_pid = eDVBFrontendParametersSatellite.T2MI_Default_Pid
 			self.tuneSatObj(parm)
 
 	def tuneSatObj(self, transponderObj):
@@ -188,9 +186,9 @@ class TuneTest:
 				pidsFailed = False
 				if self.checkPIDs:
 					if self.currTuned is not None:
-						if self.tsid != self.currTuned[15] or self.onid != self.currTuned[16]:
-							self.failedTune.append([self.currTuned, self.oldTuned, "pids_failed", {"real": (self.tsid, self.onid), "expected": (self.currTuned[15], self.currTuned[16])}, dict])  # last parameter is the frontend status
-							pidsFailed = True
+						if self.tsid != self.currTuned[14] or self.onid != self.currTuned[15]:
+							self.failedTune.append([self.currTuned, self.oldTuned, "pids_failed", {"real": (self.tsid, self.onid), "expected": (self.currTuned[14], self.currTuned[15])}, dict])  # last parameter is the frontend status
+ 							pidsFailed = True
 						else:
 							self.successfullyTune.append([self.currTuned, self.oldTuned, dict])  # 3rd parameter is the frontend status
 							if self.stopOnSuccess != -1 and self.stopOnSuccess <= len(self.successfullyTune):
@@ -226,7 +224,7 @@ class TuneTest:
 			# check for tsid != -1 and onid != -1
 			print "index:", index
 			print "len(self.transponderlist):", len(self.transponderlist)
-			while (index < len(self.transponderlist) and (self.transponderlist[index][15] == -1 or self.transponderlist[index][16] == -1)):
+			while index < len(self.transponderlist) and (self.transponderlist[index][14] == -1 or self.transponderlist[index][15] == -1):
 				index += 1
 		print "FirstTransponder final index:", index
 		return index
@@ -239,7 +237,7 @@ class TuneTest:
 			# check for tsid != -1 and onid != -1
 			print "index:", index
 			print "len(self.transponderlist):", len(self.transponderlist)
-			while (index < len(self.transponderlist) and (self.transponderlist[index][15] == -1 or self.transponderlist[index][16] == -1)):
+			while index < len(self.transponderlist) and (self.transponderlist[index][14] == -1 or self.transponderlist[index][15] == -1):
 				index += 1
 
 		print "next transponder index:", index

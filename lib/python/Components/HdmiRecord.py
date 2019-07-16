@@ -73,8 +73,8 @@ def InitHdmiRecord():
     # Intentionally not a boolean because the API expects an integer parsed from the string
     config.hdmirecord.interlaced = ConfigSelection(
         choices=[
-            ("0", _("No")),
-            ("1", _("Yes")),
+            ("0", "No"),
+            ("1", "Yes"),
         ], default="0")
 
     config.hdmirecord.aspectratio = ConfigSelection(

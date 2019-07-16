@@ -26,8 +26,17 @@
 
 <!-- main-->
 	<screen name="InfoBarSummary" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
+		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
+			<convert type="VfdDisplay"></convert>
+		</widget>
+		<widget source="session.RecordState" render="FixedLabel" position="0,0" size="1,1" text="REC">
+			<convert type="ConfigEntryTest">config.usage.blinking_rec_symbol_during_recording,True,CheckSourceBoolean</convert>
+			<convert type="ConditionalShowHide">Blink,3000</convert>
+		</widget>
+		<widget source="session.RecordState" render="FixedLabel" position="0,0" size="1,1" text="REC">
+			<convert type="ConfigEntryTest">config.usage.blinking_rec_symbol_during_recording,False,CheckSourceBoolean</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
 	</screen>
 
 <!-- movieplayer-->
@@ -38,9 +47,10 @@
 	</screen>
 
 <!-- menus-->
-	<screen name="MenuSummary" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
+	<screen name="MenuSummary" position="0,0" size="16,1">
+		<widget source="parent.menu" render="Label" position="0,0" size="132,1" font="Regular;16" halign="left" valign="top">
+			<convert type="StringListSelection" />
+		</widget>
 	</screen>
 	<screen name="GeneralMenuSummary" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />

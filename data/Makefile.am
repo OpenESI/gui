@@ -22,15 +22,15 @@ dist_pkgdata_DATA = \
 	groupedservices
 
 
+if HAVE_TEXTLCD
 if HAVE_7SEGMENT
 SUBDIRS += 7segment
-endif
-
-if HAVE_TEXTLCD
+else
 if SPARK
 SUBDIRS += displaydualtext
 else
 SUBDIRS += displaytext
+endif
 endif
 endif
 

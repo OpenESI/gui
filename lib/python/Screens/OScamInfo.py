@@ -21,14 +21,16 @@ import urllib2
 import skin
 
 ###global
-sf = skin.getSkinFactor()
+f = 1
 sizeH = 700
 HDSKIN = False
 screenwidth = getDesktop(0).size().width()
 if screenwidth and screenwidth == 1920:
+	f = 1.5
 	sizeH = screenwidth - 150
 	HDSKIN = True
 elif screenwidth and screenwidth > 1920:
+	f = 3
 	HDSKIN = True
 	sizeH = screenwidth - 300
 elif screenwidth and screenwidth > 1024:
@@ -57,44 +59,38 @@ class OscamInfo:
 		oport = None
 		opath = None
 		ipcompiled = False
-		conffile = ""
 
 		# Find and parse running oscam
-		for file in ["/tmp/.ncam/ncam.version", "/tmp/.oscam/oscam.version"]:
-			if fileExists(file):
-				with open(file, 'r') as data:
-					conffile = file.split('/')[-1].replace("version","conf")
-					for i in data:
-						if "web interface support:" in i.lower():
-							owebif = i.split(":")[1].strip()
-							if owebif == "no":
-								owebif = False
-							elif owebif == "yes":
-								owebif = True
-						elif "webifport:" in i.lower():
-							oport = i.split(":")[1].strip()
-							if oport == "0":
-								oport = None
-						elif "configdir:" in i.lower():
-							opath = i.split(":")[1].strip()
-						elif "ipv6 support:" in i.lower():
-							ipcompiled = i.split(":")[1].strip()
-							if ipcompiled == "no":
-								ipcompiled = False
-							elif ipcompiled == "yes":
-								ipcompiled = True
-						else:
-							continue
-		return owebif, oport, opath, ipcompiled, conffile
+		if fileExists("/tmp/.oscam/oscam.version"):
+			with open('/tmp/.oscam/oscam.version', 'r') as data:
+				for i in data:
+					if "web interface support:" in i.lower():
+						owebif = i.split(":")[1].strip()
+						if owebif == "no":
+							owebif = False
+						elif owebif == "yes":
+							owebif = True
+					elif "webifport:" in i.lower():
+						oport = i.split(":")[1].strip()
+						if oport == "0":
+							oport = None
+					elif "configdir:" in i.lower():
+						opath = i.split(":")[1].strip()
+					elif "ipv6 support:" in i.lower():
+						ipcompiled = i.split(":")[1].strip()
+						if ipcompiled == "no":
+							ipcompiled = False
+						elif ipcompiled == "yes":
+							ipcompiled = True
+					else:
+						continue
+		return owebif, oport, opath, ipcompiled
 
 	def getUserData(self):
-		[webif, port, conf, ipcompiled, conffile] = self.confPath()
+		[webif, port, conf, ipcompiled] = self.confPath()
 		if conf == None:
 			conf = ""
-		if conffile == "":
-			conffile = "oscam.conf"
-		conf += "/" + conffile
-		api = conffile.replace(".conf","api")
+		conf += "/oscam.conf"
 
 		# Assume that oscam webif is NOT blocking localhost, IPv6 is also configured if it is compiled in,
 		# and no user and password are required
@@ -127,14 +123,12 @@ class OscamInfo:
 								ipconfigured = False
 
 			if not blocked:
-				ret = [user, pwd, port, ipconfigured, api]
+				ret = [user, pwd, port, ipconfigured]
 
 		return ret
 
 	def openWebIF(self, part = None, reader = None):
 		self.proto = "http"
-		self.api = "oscamapi"
-
 		if config.oscaminfo.userdatafromconf.value:
 			udata = self.getUserData()
 			if isinstance(udata, str):
@@ -144,7 +138,6 @@ class OscamInfo:
 				self.username = udata[0]
 				self.password = udata[1]
 				self.ipaccess = udata[3]
-				self.api = udata[4]
 
 			if self.ipaccess == "yes":
 				self.ip = "::1"
@@ -161,11 +154,11 @@ class OscamInfo:
 			self.port.replace("+","")
 
 		if part is None:
-			self.url = "%s://%s:%s/%s.html?part=status" % ( self.proto, self.ip, self.port, self.api )
+			self.url = "%s://%s:%s/oscamapi.html?part=status" % ( self.proto, self.ip, self.port )
 		else:
-			self.url = "%s://%s:%s/%s.html?part=%s" % ( self.proto, self.ip, self.port, self.api, part )
+			self.url = "%s://%s:%s/oscamapi.html?part=%s" % ( self.proto, self.ip, self.port, part )
 		if part is not None and reader is not None:
-			self.url = "%s://%s:%s/%s.html?part=%s&label=%s" % ( self.proto, self.ip, self.port, self.api, part, reader )
+			self.url = "%s://%s:%s/oscamapi.html?part=%s&label=%s" % ( self.proto, self.ip, self.port, part, reader )
 
 		opener = urllib2.build_opener( urllib2.HTTPHandler )
 		if not self.username == "":
@@ -375,12 +368,12 @@ class OscamInfo:
 class oscMenuList(MenuList):
 	def __init__(self, list, itemH = 30):
 		MenuList.__init__(self, list, False, eListboxPythonMultiContent)
-		self.l.setItemHeight(int(itemH*sf))
-		self.l.setFont(0, gFont("Regular", int(20*sf)))
-		self.l.setFont(1, gFont("Regular", int(18*sf)))
-		self.clientFont = gFont("Regular", int(16*sf))
+		self.l.setItemHeight(int(itemH*f))
+		self.l.setFont(0, gFont("Regular", int(20*f)))
+		self.l.setFont(1, gFont("Regular", int(18*f)))
+		self.clientFont = gFont("Regular", int(16*f))
 		self.l.setFont(2, self.clientFont)
-		self.l.setFont(3, gFont("Regular", int(12*sf)))
+		self.l.setFont(3, gFont("Regular", int(12*f)))
 
 class OscamInfoMenu(Screen):
 	def __init__(self, session):
@@ -506,24 +499,24 @@ class OscamInfoMenu(Screen):
 				if fileExists(png):
 					png = LoadPixmap(png)
 				if png is not None:
-					x, y, w, h = skin.parameters.get("ChoicelistDash",(0, 2*sf, 800*sf, 2*sf))
+					x, y, w, h = skin.parameters.get("ChoicelistDash",(0, 2*f, 800*f, 2*f))
 					res.append((eListboxPythonMultiContent.TYPE_PIXMAP, x, y, w, h, png))
-					x, y, w, h = skin.parameters.get("ChoicelistName",(45*sf, 2*sf, 800*sf, 25*sf))
+					x, y, w, h = skin.parameters.get("ChoicelistName",(45*f, 2*f, 800*f, 25*f))
 					res.append((eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 0, RT_HALIGN_LEFT, t[2:]))
 					png2 = resolveFilename(SCOPE_ACTIVE_SKIN, "buttons/key_" + keys[k] + ".png")
 					if fileExists(png2):
 						png2 = LoadPixmap(png2)
 					if png2 is not None:
-						x, y, w, h = skin.parameters.get("ChoicelistIcon",(5*sf, 0, 35*sf, 25*sf))
+						x, y, w, h = skin.parameters.get("ChoicelistIcon",(5*f, 0, 35*f, 25*f))
 						res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, x, y, w, h, png2))
 			else:
-				x, y, w, h = skin.parameters.get("ChoicelistName",(45*sf, 2*sf, 800*sf, 25*sf))
+				x, y, w, h = skin.parameters.get("ChoicelistName",(45*f, 2*f, 800*f, 25*f))
 				res.append((eListboxPythonMultiContent.TYPE_TEXT, x, y, w, h, 0, RT_HALIGN_LEFT, t))
 				png2 = resolveFilename(SCOPE_ACTIVE_SKIN, "buttons/key_" + keys[k] + ".png")
 				if fileExists(png2):
 					png2 = LoadPixmap(png2)
 				if png2 is not None:
-					x, y, w, h = skin.parameters.get("ChoicelistIcon",(5*sf, 0, 35*sf, 25*sf))
+					x, y, w, h = skin.parameters.get("ChoicelistIcon",(5*f, 0, 35*f, 25*f))
 					res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, x, y, w, h, png2))
 			menuentries.append(res)
 			if k < len(keys) - 1:
@@ -561,8 +554,8 @@ class oscECMInfo(Screen, OscamInfo):
 	def buildListEntry(self, listentry):
 		return [
 			"",
-			(eListboxPythonMultiContent.TYPE_TEXT, 10*sf, 2*sf, 300*sf, 30*sf, 0, RT_HALIGN_LEFT, listentry[0]),
-			(eListboxPythonMultiContent.TYPE_TEXT, 300*sf, 2*sf, 300*sf, 30*sf, 0, RT_HALIGN_LEFT, listentry[1])
+			(eListboxPythonMultiContent.TYPE_TEXT, 10*f, 2*f, 300*f, 30*f, 0, RT_HALIGN_LEFT, listentry[0]),
+			(eListboxPythonMultiContent.TYPE_TEXT, 300*f, 2*f, 300*f, 30*f, 0, RT_HALIGN_LEFT, listentry[1])
 			]
 
 	def showData(self):
@@ -571,7 +564,7 @@ class oscECMInfo(Screen, OscamInfo):
 		y = 0
 		for i in data:
 			out.append(self.buildListEntry(i))
-		self["output"].l.setItemHeight(int(30*sf))
+		self["output"].l.setItemHeight(int(30*f))
 		self["output"].l.setList(out)
 		self["output"].selectionEnabled(False)
 
@@ -713,8 +706,8 @@ class oscInfo(Screen, OscamInfo):
 			self.startPos = [ 10, 110, 240, 340, 490, 570 ]
 			useFont = 3
 		else:
-			self.fieldsize = [ 150*sf, 150*sf, 150*sf, 300*sf, 150*sf, 200*sf ]
-			self.startPos = [ 50*sf, 200*sf, 350*sf, 500*sf, 800*sf, 950*sf ]
+			self.fieldsize = [ 150*f, 150*f, 150*f, 300*f, 150*f, 200*f ]
+			self.startPos = [ 50*f, 200*f, 350*f, 500*f, 800*f, 950*f ]
 			useFont = 2
 
 		ypos = 2
@@ -737,21 +730,21 @@ class oscInfo(Screen, OscamInfo):
 		for i in listentry[:-1]:
 			xsize = self.fieldsize[x]
 			xpos = self.startPos[x]
-			res.append( (eListboxPythonMultiContent.TYPE_TEXT, xpos, ypos*sf, xsize, self.itemheight*sf, useFont, RT_HALIGN_LEFT, i, int(colour, 16)) )
+			res.append( (eListboxPythonMultiContent.TYPE_TEXT, xpos, ypos*f, xsize, self.itemheight*f, useFont, RT_HALIGN_LEFT, i, int(colour, 16)) )
 			x += 1
 		if heading:
 			png = resolveFilename(SCOPE_ACTIVE_SKIN, "div-h.png")
 			if fileExists(png):
 				png = LoadPixmap(png)
 			if png is not None:
-				res.append( (eListboxPythonMultiContent.TYPE_PIXMAP, 0, (self.itemheight-2)*sf, self.sizeLH, 2*sf, png))
+				res.append( (eListboxPythonMultiContent.TYPE_PIXMAP, 0, (self.itemheight-2)*f, self.sizeLH, 2*f, png))
 		return res
 
 	def buildLogListEntry(self, listentry):
 		res = [""]
 		for i in listentry:
 			if i.strip() != "" or i is not None:
-				res.append( (eListboxPythonMultiContent.TYPE_TEXT, 5*sf, 0, self.sizeLH,self.itemheight*sf, 2, RT_HALIGN_LEFT, i) )
+				res.append( (eListboxPythonMultiContent.TYPE_TEXT, 5*f, 0, self.sizeLH,self.itemheight*f, 2, RT_HALIGN_LEFT, i) )
 		return res
 
 	def showData(self):
@@ -802,9 +795,9 @@ class oscInfo(Screen, OscamInfo):
 
 		if self.listchange:
 			self.listchange = False
-			self["output"].l.setItemHeight(int(self.itemheight*sf))
+			self["output"].l.setItemHeight(int(self.itemheight*f))
 			self["output"].instance.setScrollbarMode(0) #"showOnDemand"
-			self.rows = int(self["output"].instance.size().height() / (self.itemheight*sf))
+			self.rows = int(self["output"].instance.size().height() / (self.itemheight*f))
 			if self.what != "l" and self.rows < len(self.out):
 				self.enableScrolling(True)
 				return
