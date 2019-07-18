@@ -18,6 +18,8 @@ from Screens.HelpMenu import HelpableScreen
 from Screens.TaskView import JobView
 from Tools.Downloader import downloadWithProgress
 from enigma import fbClass
+import urllib
+from urllib2 import Request, urlopen, URLError, HTTPError
 import urllib2
 import os
 import shutil
@@ -36,8 +38,7 @@ MTDROOTFS = getMachineMtdRoot()
 images = []
 global imagesCounter
 imagesCounter = 0
-images.append(["image V9.0", "http://www.openesi.eu/imagestest"])
-images.append(["image V8.6", "http://www.openesi.eu/imagestest"])
+images.append(["ESI Images", "http://www.openesi.eu/imagestest"])
 
 imagePath = '/media/hdd/images'
 flashPath = '/media/hdd/images/flash'
@@ -116,6 +117,7 @@ class FlashOnline(Screen):
 				self.multi = self.find_rootfssubdir(self.list[self.selection])
 			elif getMachineBuild() in ("gb7252"):
 				self.multi = self.read_startup("/boot/" + self.list[self.selection]).split(".",1)[1].split(":",1)[0]
+				self.multi = self.multi[-1:]
 			else:
 				self.multi = self.read_startup("/boot/" + self.list[self.selection]).split(".",1)[1].split(" ",1)[0]
 			self.multi = self.multi[-1:]
@@ -174,6 +176,7 @@ class FlashOnline(Screen):
 				self.multi = self.find_rootfssubdir(self.list[self.selection])
 			elif getMachineBuild() in ("gb7252"):
 				self.multi = self.read_startup("/boot/" + self.list[self.selection]).split(".",1)[1].split(":",1)[0]
+				self.multi = self.multi[-1:]
 			else:
 				self.multi = self.read_startup("/boot/" + self.list[self.selection]).split(".",1)[1].split(" ",1)[0]
 			self.multi = self.multi[-1:]
@@ -397,29 +400,52 @@ class doFlashImage(Screen):
 			box = 'dm520'
 		return box
 
-	def green(self, ret = None):
-		sel = self["imageList"].l.getCurrentSelection()
+	def getSel(self):
+		self.sel = self["imageList"].l.getCurrentSelection()
+		if self.sel == None:
+			print"Nothing to select !!"
+			return False
+		self.filename = self.imagePath + "/" + self.sel
+		return True
+
+	def greenCB(self, ret = None):
+		if self.Online:
+			if ret:
+				from Plugins.SystemPlugins.SoftwareManager.BackupRestore import BackupScreen
+				self.session.openWithCallback(self.startInstallOnline,BackupScreen, runBackup = True)
+			else:
+				self.startInstallOnline()
+		else:
+			self.startInstallLocal(ret)
+
+	def green(self):
+		if self.getSel():
+		        sel = self["imageList"].l.getCurrentSelection()
+			self.hide()
+			self.session.openWithCallback(self.greenCB, MessageBox, _("Do you want to backup your settings now?"), default=True)
+
 		if sel == None:
 			print"Nothing to select !!"
 			return
 		file_name = self.imagePath + "/" + sel
 		self.filename = file_name
-		self.sel = sel
+	def startInstallOnline(self, ret = None):
 		box = self.box()
+		brand = getMachineBrand()
+		box = getBoxType()
 		self.hide()
 		if self.Online:
 			if self.imagesCounter == 0:
-				url = self.feedurl + "/" + box + "/" + sel
-				#url = self.feedurl + "/" + sel
+				url = self.feedurl + "/" + brand + "/" + box + "/" + self.sel
 			else:
-				url = self.feedurl + "/" + box + "/" + sel
-			#print "URL:", url
+				url = self.feedurl + "/" + brand + "/" + box + "/" + sel
+			print "URL:", url
 			u = urllib2.urlopen(url)
-			f = open(file_name, 'wb')
+			f = open(self.filename, 'wb')
 			meta = u.info()
 			file_size = int(meta.getheaders("Content-Length")[0])
-			print "Downloading: %s Bytes: %s" % (sel, file_size)
-			job = ImageDownloadJob(url, file_name, sel)
+			print "Downloading: %s Bytes: %s" % (self.sel, file_size)
+			job = ImageDownloadJob(url, self.filename, self.sel)
 			job.afterEvent = "close"
 			job_manager.AddJob(job)
 			job_manager.failed_jobs = []
@@ -505,8 +531,9 @@ class doFlashImage(Screen):
 			self.close()
 
 	def Start_Flashing(self):
-		print "Start Flashing"		
+		print "Start Flashing"
 		cmdlist = []
+		os.system('rm /sbin/init;ln -sfn /sbin/init.sysvinit /sbin/init')
 		if os.path.exists(ofgwritePath):
 			text = _("Flashing: ")
 			if self.simulate:
@@ -599,7 +626,24 @@ class doFlashImage(Screen):
 
 	def yellow(self):
 		if not self.Online:
-			self.session.openWithCallback(self.DeviceBrowserClosed, DeviceBrowser, None, matchingPattern="^.*\.(zip|bin|jffs2)", showDirectories=True, showMountpoints=True, inhibitMounts=["/autofs/sr0/"])
+			self.session.openWithCallback(self.DeviceBrowserClosed, DeviceBrowser, None, matchingPattern="^.*\.(zip|bin|jffs2|img)", showDirectories=True, showMountpoints=True, inhibitMounts=["/autofs/sr0/"])
+		elif self.getSel():
+			self.greenCB(True)
+
+	def startInstallLocal(self, ret = None):
+		if ret:
+			from Plugins.SystemPlugins.SoftwareManager.BackupRestore import BackupScreen
+			self.flashWithPostFlashActionMode = 'local'
+			self.session.openWithCallback(self.flashWithPostFlashAction,BackupScreen, runBackup = True)
+		else:
+			self.flashWithPostFlashActionMode = 'local'
+			self.flashWithPostFlashAction()
+
+	def startInstallLocalCB(self, ret = None):
+		if self.sel == str(flashTmp):
+			self.Start_Flashing()
+		else:
+			self.unzip_image(self.filename, flashPath)
 
 	def DeviceBrowserClosed(self, path, filename, binorzip):
 		if path:
@@ -616,8 +660,7 @@ class doFlashImage(Screen):
 					if files.endswith(".ubi") or files.endswith(".bin") or files.endswith('.jffs2') or files.endswith('.img'):
 						self.prepair_flashtmp(strPath)
 						break
-				#self.Start_Flashing()
-				self.flashWithRestoreQuestion()
+				self.Start_Flashing()
 			elif binorzip == 1:
 				self.unzip_image(strPath + '/' + filename, flashPath)
 			else:
@@ -628,13 +671,18 @@ class doFlashImage(Screen):
 
 	def layoutFinished(self):
 		box = self.box()
+		brand = getMachineBrand()
+		box = getBoxType()
 		self.imagelist = []
 		if self.Online:
 			self["key_yellow"].setText("")
 			self.feedurl = images[self.imagesCounter][1]
 			self["key_blue"].setText(images[self.imagesCounter][0])
-			#if self.imagesCounter == 0:
-			url = '%s/%s' % (self.feedurl,box)
+			if self.imagesCounter == 0:
+				url = '%s/%s/%s/' % (self.feedurl,brand,box)
+			else:
+				url = '%s/%s/%s/' % (self.feedurl,brand,box)
+			print "URL:", url
 			req = urllib2.Request(url)
 			try:
 				response = urllib2.urlopen(req)
@@ -651,8 +699,9 @@ class doFlashImage(Screen):
 
 			lines = the_page.split('\n')
 			tt = len(box)
+			b = len(brand)
 			for line in lines:
-				if line.find(box + "-") > -1:
+				if line.find("-") > -1:
 					t = line.find('<a href="')
 					if line.find('zip"') > -1:
 						e = line.find('zip"')
@@ -683,6 +732,7 @@ class doFlashImage(Screen):
 		from enigma import eEPGCache
 		epgcache = eEPGCache.getInstance()
 		epgcache.save()
+
 
 class ImageDownloadJob(Job):
 	def __init__(self, url, filename, file):
