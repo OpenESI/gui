@@ -1866,9 +1866,7 @@ class ConfigSubsection(object):
 			value.load()
 
 	def __getattr__(self, name):
-		if name in self.content.items:
-			return self.content.items[name]
-		raise AttributeError(name)
+		return self.content.items[name]
 
 	def getSavedValue(self):
 		res = self.content.stored_values
