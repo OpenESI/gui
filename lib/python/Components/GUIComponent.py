@@ -39,6 +39,7 @@ class GUIComponent(object):
 
 		if config.skin.primary_skin.value.split('/')[0] not in ('DarknessHD'):
 			self.skinAttributes.sort()
+		#//
 		skin.applyAllAttributes(self.instance, desktop, self.skinAttributes, parent.scale)
 		return True
 

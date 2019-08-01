@@ -399,7 +399,7 @@ class PluginDownloadBrowser(Screen):
 
 	def __init__(self, session, type = 0, needupdate = True):
 		Screen.__init__(self, session)
-		Screen.setTitle(self, _("Downloadable plugins"))
+		Screen.setTitle(self, _("Download plugins"))
 
 		self.type = type
 		self.needupdate = needupdate
@@ -815,7 +815,7 @@ class PluginFilter(ConfigListScreen, Screen):
 		Screen.__init__(self, session)
 		self.session = session
 		self.skinName = "Setup"
-		Screen.setTitle(self, _("Plugin Filter..."))
+		Screen.setTitle(self, _("Plugin Filter"))
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
 		self["status"] = StaticText()

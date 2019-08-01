@@ -332,7 +332,7 @@
 		<key id="KEY_YELLOW" mapto="yellow_key" flags="l" />
 		<key id="KEY_AUDIO" mapto="audioSelection" flags="b" />
 		<key id="KEY_AUDIO" mapto="audioSelectionLong" flags="l" />
-		<key id="KEY_OPTION" mapto="audioSelection" flags="m" />
+		<key id="KEY_OPTION" mapto="audioSelection" flags="b" />
 	</map>
 
 	<map context="InfobarAspectSelectionActions">
@@ -1006,8 +1006,8 @@
 		<key id="KEY_RIGHT" mapto="cross_right" flags="b"/>
 		<key id="KEY_LEFT" mapto="cross_left_long" flags="l"/>
 		<key id="KEY_RIGHT" mapto="cross_right_long" flags="l"/>
-		<key id="KEY_UP" mapto="cross_up" flags="b"/>
-		<key id="KEY_DOWN" mapto="cross_down" flags="b"/>
+		<key id="KEY_UP" mapto="cross_up" flags="m"/>
+		<key id="KEY_DOWN" mapto="cross_down" flags="m"/>
 		<key id="KEY_PAGEUP" mapto="pageup" flags="b"/>
 		<key id="KEY_PAGEUP" mapto="pageup_long" flags="l"/>
 		<key id="KEY_PAGEDOWN" mapto="pagedown" flags="b"/>

@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from enigma import iPlayableService
 from Poll import Poll
 from Components.Converter.Converter import Converter
 from Components.Element import cached
