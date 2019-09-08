@@ -38,7 +38,7 @@ MTDROOTFS = getMachineMtdRoot()
 images = []
 global imagesCounter
 imagesCounter = 0
-images.append(["ESI Images", "http://www.openesi.eu/imagestest"])
+images.append(["ESI Images", "http://www.openesi.eu/images"])
 
 imagePath = '/media/hdd/images'
 flashPath = '/media/hdd/images/flash'
