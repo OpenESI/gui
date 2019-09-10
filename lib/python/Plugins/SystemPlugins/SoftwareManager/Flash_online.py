@@ -1,4 +1,4 @@
-# Embedded file name: Nuovo-Flash_online.py
+# edited 08.09.2019 lululla for openesi 9.x
 from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
 from Components.Button import Button
 from Components.Label import Label
@@ -14,7 +14,7 @@ from Screens.Console import Console
 from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 from Screens.Screen import Screen
-from Components.Sources.List import List
+from Components.Sources.List import List                                        
 from Screens.Console import Console
 from Screens.HelpMenu import HelpableScreen
 from Screens.TaskView import JobView
@@ -33,6 +33,9 @@ ROOTFSBIN = getMachineRootFile()
 KERNELBIN = getMachineKernelFile()
 MTDKERNEL = getMachineMtdKernel()
 MTDROOTFS = getMachineMtdRoot()
+
+
+##### edit lululla
 from Components.config import config, getConfigListEntry, ConfigText, ConfigInteger, ConfigSelection, ConfigSubsection, ConfigYesNo
 from Components.ConfigList import ConfigListScreen
 
@@ -41,22 +44,51 @@ def mount_flsh():
     if os.path.isfile('/proc/mounts'):
         for line in open('/proc/mounts'):
             if '/dev/sd' in line or '/dev/disk/by-uuid/' in line or '/dev/mmc' in line or '/dev/mtdblock' in line:
-                drive = line.split()[1].replace('\\040', ' ')
-                if drive not in mnt_flsh:
-                    mnt_flsh.append(drive)
-
-    mnt_flsh.append('/media/hdd')
-    return mnt_flsh
-
-
+                drive = line.split()[1].replace('\\040', ' ') #+ '/'
+                if not drive in mnt_flsh: 
+                      mnt_flsh.append(drive)
+    # mnt_flsh.append('/media/hdd')
+    return mnt_flsh 
+    
 config.plugins.flh_openesi = ConfigSubsection()
-config.plugins.flh_openesi.mnt_flsh = ConfigSelection(default='/media/hdd', choices=mount_flsh())
+# config.plugins.flh_openesi.mnt_flsh = ConfigSelection(default = "/media/hdd",choices = mount_flsh())
+config.plugins.flh_openesi.mnt_flsh = ConfigSelection(choices = mount_flsh())
+
+#edit end
+
 images = []
 imagesCounter = 0
-images.append(['ESI Images', 'http://www.openesi.eu/imagestest'])
+images.append(['ESI Images', 'http://www.openesi.eu/images'])
+
+
+# imagePath = '/media/hdd/images'
+# flashPath = '/media/hdd/images/flash'
+# flashTmp = '/media/hdd/images/tmp'
+
+#edit lululla
 imagePath = str(config.plugins.flh_openesi.mnt_flsh.value) + '/images'
-flashPath = str(config.plugins.flh_openesi.mnt_flsh.value) + '/images/flash'
-flashTmp = str(config.plugins.flh_openesi.mnt_flsh.value) + '/images/tmp'
+flashPath = str(config.plugins.flh_openesi.mnt_flsh.value) +  '/images/flash'
+flashTmp = str(config.plugins.flh_openesi.mnt_flsh.value) +  '/images/tmp'
+
+
+# if not os.path.exists(imagePath):
+    # os.mkdir(imagePath)
+
+try:
+    os.mkdir(imagePath)
+except OSError:
+    print ("Creation of the directory %s failed" % imagePath)
+else:
+    print ("Successfully created the directory %s " % imagePath)
+    
+    
+    
+    
+##### edit end
+
+
+
+
 ofgwritePath = '/usr/bin/ofgwrite'
 
 def Freespace(dev):
@@ -121,57 +153,68 @@ class FlashOnline(Screen, ConfigListScreen):
                 self.multi = self.read_startup('/boot/' + self.list[self.selection]).split('.', 1)[1].split(' ', 1)[0]
             self.multi = self.multi[-1:]
             print '[Flash Online] MULTI:', self.multi
+##### edit lululla
         self['description'] = Label('')
-        self.onChangedEntry = []
+        self.onChangedEntry = [ ]
         self.listx = []
-        ConfigListScreen.__init__(self, self.listx, session=self.session, on_change=self.changedEntry)
+        ConfigListScreen.__init__(self, self.listx, session = self.session, on_change = self.changedEntry)
         self.createSetup()
-        self.setup_title = 'Flash_OnLine-ESI'
-        self.onLayoutFinish.append(self.layoutFinished)
-
+        self.setup_title = ('Flash_OnLine-ESI')
+############end     
+            
+##### edit lululla
+        self.onLayoutFinish.append(self.layoutFinished)                                               
+        
     def layoutFinished(self):
-        self.setTitle(self.setup_title)
-
+            self.setTitle(self.setup_title)        
+               
     def changedEntry(self):
-        for x in self.onChangedEntry:
-            x()
+            for x in self.onChangedEntry:
+                    x()        
 
     def getCurrentEntry(self):
-        return self['config'].getCurrent()[0]
+            return self["config"].getCurrent()[0]
 
     def getCurrentValue(self):
-        return str(self['config'].getCurrent()[1].getText())
+            return str(self["config"].getCurrent()[1].getText())
 
     def createSummary(self):
-        from Screens.Setup import SetupSummary
-        return SetupSummary
+            from Screens.Setup import SetupSummary
+            return SetupSummary
 
     def keyLeft(self):
-        ConfigListScreen.keyLeft(self)
-        print 'current selection:', self['config'].l.getCurrentSelection()
-        self.createSetup()
+            ConfigListScreen.keyLeft(self)
+            print "current selection:", self["config"].l.getCurrentSelection()
+            self.createSetup()
 
     def keyRight(self):
-        ConfigListScreen.keyRight(self)
-        print 'current selection:', self['config'].l.getCurrentSelection()
-        self.createSetup()
-
+            ConfigListScreen.keyRight(self)
+            print "current selection:", self["config"].l.getCurrentSelection()
+            self.createSetup()
+        
     def createSetup(self):
-        self.editListEntry = None
-        self.listx = []
-        self.listx.append(getConfigListEntry(_('Path Flashing'), config.plugins.flh_openesi.mnt_flsh, _('Path Image Flashing')))
-        self['config'].list = self.listx
-        self['config'].setList(self.listx)
-        return
-
+            self.editListEntry = None
+            self.listx = []
+            self.listx.append(getConfigListEntry(_('Path Flashing'), config.plugins.flh_openesi.mnt_flsh, _("Path Image Flashing"))) 
+            self["config"].list = self.listx
+            self["config"].setList(self.listx) 
+#########end         
     def check_hdd(self):
+#edit lululla   
         device_mnt = str(config.plugins.flh_openesi.mnt_flsh.value)
         if not os.path.exists(device_mnt):
             self.session.open(MessageBox, _('No %s!!\nPlease make sure you have mounted.\n\nExit plugin.' % device_mnt), type=MessageBox.TYPE_ERROR)
-            return False
+            return False    
         if Freespace(device_mnt) < 300000:
             self.session.open(MessageBox, _('Not enough free space on %s !!\nYou need at least 300Mb free space.\n\nExit plugin.' % device_mnt), type=MessageBox.TYPE_ERROR)
-            return False
+            return False    
+##### end      
+        # if not os.path.exists('/media/hdd'):
+            # self.session.open(MessageBox, _('No /hdd found !!\nPlease make sure you have a HDD mounted.\n\nExit plugin.'), type=MessageBox.TYPE_ERROR)
+            # return False
+        # if Freespace('/media/hdd') < 300000:
+            # self.session.open(MessageBox, _('Not enough free space on /hdd !!\nYou need at least 300Mb free space.\n\nExit plugin.'), type=MessageBox.TYPE_ERROR)
+            # return False
         if not os.path.exists(ofgwritePath):
             self.session.open(MessageBox, _('ofgwrite not found !!\nPlease make sure you have ofgwrite installed in /usr/bin/ofgwrite.\n\nExit plugin.'), type=MessageBox.TYPE_ERROR)
             return False
@@ -348,10 +391,16 @@ class doFlashImage(Screen):
         Screen.__init__(self, session)
         self.session = session
         Screen.setTitle(self, _('Flash On the fly (select a image)'))
+        # self['key_green'] = Button(_('Flash'))
+        # self['key_red'] = Button(_('Exit'))
+        # self['key_blue'] = Button('')
+        # self['key_yellow'] = Button('') 
+#edit lululla
         self['key_green'] = Label(_('Flash'))
-        self['key_red'] = Label(_('Exit'))
+        self['key_red'] = Label(_('Exit'))        
         self['key_blue'] = Label('')
-        self['key_yellow'] = Label('')
+        self['key_yellow']= Label('')
+        
         self.imagesCounter = imagesCounter
         self.filename = None
         self.imagelist = []
@@ -399,7 +448,6 @@ class doFlashImage(Screen):
             self.filename = sel
             self.session.openWithCallback(self.RemoveCB, MessageBox, _('Do you really want to delete\n%s ?') % sel, MessageBox.TYPE_YESNO)
             return
-            return
 
     def RemoveCB(self, ret):
         if ret:
@@ -445,7 +493,6 @@ class doFlashImage(Screen):
         else:
             self.filename = self.imagePath + '/' + self.sel
             return True
-            return
 
     def greenCB(self, ret = None):
         if self.Online:
@@ -468,7 +515,6 @@ class doFlashImage(Screen):
         else:
             file_name = self.imagePath + '/' + sel
             self.filename = file_name
-            return
             return
 
     def startInstallOnline(self, ret = None):
@@ -510,7 +556,6 @@ class doFlashImage(Screen):
             else:
                 self.session.open(MessageBox, _('Download Failed !!'), type=MessageBox.TYPE_ERROR)
             return
-            return
 
     def askUnzipCB(self, ret):
         if ret:
@@ -533,7 +578,7 @@ class doFlashImage(Screen):
 
     def flashWithRestoreQuestion(self):
         try:
-            if os.path.exists(flashPath + '/images/esirestore'):
+            if os.path.exists(flashPath +'/images/esirestore'):
                 os.unlink(flashPath + '/images/esirestore')
                 print 'AfterFlashAction: delete %s/images/esirestore' % flashPath
         except:
@@ -554,7 +599,7 @@ class doFlashImage(Screen):
                 try:
                     if not os.path.exists(flashPath + '/images'):
                         os.makedirs(flashPath + '/images')
-                    print 'AfterFlashAction: create %s/images/esirestore' % flashPath
+                    print 'AfterFlashAction: create %s/images/esirestore' %flashPath
                     print 'AfterFlashAction: filename:', self.fullbackupfilename
                     backupsourcefile = self.fullbackupfilename
                     backupdestfile = flashPath + '/images/esirestore'
@@ -563,7 +608,7 @@ class doFlashImage(Screen):
                     else:
                         shutil.copyfile(backupsourcefile, backupdestfile)
                 except:
-                    print 'AfterFlashAction: failed to create %s/images/esirestore' % flashPath
+                    print 'AfterFlashAction: failed to create %s/images/esirestore' %flashPath
 
         message = _('Do you want to start flashing now?\nEnigma2 is stopped and then automatically restarted.\nPlease check in advance for ongoing recordings!')
         self.session.openWithCallback(self.initFlashing, MessageBox, message, MessageBox.TYPE_YESNO, timeout=20)
@@ -731,9 +776,9 @@ class doFlashImage(Screen):
         brand = getMachineBrand()
         box = getBoxType()
         self.imagelist = []
-        print 'Self.online= ', self.Online
+        print 'Self.online= ', self.Online                                                      
         if self.Online:
-            self['key_yellow'].setText('Backup&Flash')
+            self['key_yellow'].setText('Backup&Flash') #edit lululla
             self.feedurl = images[self.imagesCounter][1]
             self['key_blue'].setText(images[self.imagesCounter][0])
             if self.imagesCounter == 0:
@@ -864,10 +909,15 @@ class DeviceBrowser(Screen, HelpableScreen):
         Screen.__init__(self, session)
         HelpableScreen.__init__(self)
         Screen.setTitle(self, _('Please select medium'))
+        #edit lululla                                                  
+        # self['key_red'] = StaticText(_('Cancel'))
+        # self['key_green'] = StaticText()
+        # self['message'] = StaticText(message)
         self['key_green'] = Label(_(''))
-        self['key_red'] = Label(_('Cancel'))
-        self['message'] = Label(_(''))
-        self['message'].setText(message)
+        self['key_red'] = Label(_('Cancel'))  
+        self['message'] = Label(_(''))          
+        self['message'].setText(message) 
+        ##############                                                                                                 
         self.filelist = FileList(startdir, showDirectories=showDirectories, showFiles=showFiles, showMountpoints=showMountpoints, matchingPattern=matchingPattern, useServiceRef=useServiceRef, inhibitDirs=inhibitDirs, inhibitMounts=inhibitMounts, isTop=isTop, enableWrapAround=enableWrapAround, additionalExtensions=additionalExtensions)
         self['filelist'] = self.filelist
         self['FilelistActions'] = ActionMap(['SetupActions', 'ColorActions'], {'green': self.use,
@@ -884,10 +934,15 @@ class DeviceBrowser(Screen, HelpableScreen):
 
     def updateButton(self):
         if self['filelist'].getFilename() or self['filelist'].getCurrentDirectory():
+        #edit lululla
+            # self['key_green'].text = _('Flash')
+        # else:
+            # self['key_green'].text = ''
+        #############            
             self['key_green'].setText('Flash')
         else:
-            self['key_green'].setText('')
-
+            self['key_green'].setText('')  
+            
     def removeHotplug(self):
         print '[removeHotplug]'
         hotplugNotifier.remove(self.hotplugCB)
