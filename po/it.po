@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: OpenESI\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-30 20:08+0000\n"
-"PO-Revision-Date: 2019-02-27 18:30+0100\n"
+"PO-Revision-Date: 2019-07-12 18:05+0100\n"
 "Last-Translator: OpenESI <openesi.eu@gmail.com>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -324,6 +324,9 @@ msgstr "%s (%s)\n"
 
 msgid "%s is no longer used. Should it be deleted?"
 msgstr "%s non  più utilizzato. Vuoi cancellarlo?"
+
+msgid "%s not available."
+msgstr "%s non disponibile."
 
 msgid "%s updated package available"
 msgid_plural "%s updated packages available"
@@ -3488,6 +3491,9 @@ msgstr "Diritti"
 msgid "Equal to"
 msgstr "Uguale a"
 
+msgid "Erase"
+msgstr "Cancellare"
+
 msgid "Error"
 msgstr "Errore"
 
@@ -5461,6 +5467,10 @@ msgstr "Non montato"
 
 msgid "Not-Associated"
 msgstr "Non associato"
+
+msgid "Note: slot list does not show current image or empty slots."
+msgstr ""
+"Nota: l'elenco degli slot non mostra l'immagine corrente o gli slot vuoti."
 
 msgid "Nothing"
 msgstr "Non fare nulla"
@@ -9752,6 +9762,22 @@ msgstr "Utilizzare la modalità radio alternativa o  convenzionale."
 
 msgid "Use the alternative screen"
 msgstr "Usa lo schermo alternativo"
+
+msgid "Use the cursor keys to select an installed image and then Erase button."
+msgstr ""
+"Utilizzare i tasti cursore per selezionare un image installata e quindi il "
+"pulsante Cancella."
+
+msgid ""
+"Use the cursor keys to select an installed image and then Reboot button."
+msgstr ""
+"Utilizzare i tasti cursore per selezionare un image installata e quindi il "
+"pulsante Riavvia."
+
+msgid "Use the cursor keys to select an installed image and then Start button."
+msgstr ""
+"Utilizzare i tasti cursore per selezionare un image installata e quindi il "
+"pulsante Start."
 
 msgid "Use the network wizard to configure selected network adapter"
 msgstr "Usare NetworkWizard per configurare l'adattatore di rete selezionato"

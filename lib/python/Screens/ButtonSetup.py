@@ -91,8 +91,8 @@ def getButtonSetupKeys():
 		(_("Playpause"), "playpause", ""),
 		(_("Stop"), "stop", ""),
 		(_("Pause"), "pause", ""),
-		(_("Rewind"), "rewind", ""),
-		(_("Fastforward"), "fastforward", ""),
+		(_("Rewind"), "rewind", "Infobar/seekRwdVod"),
+		(_("Fastforward"), "fastforward", "Infobar/seekFwdVod"),
 		(_("Skip back"), "skip_back", ""),
 		(_("Skip forward"), "skip_forward", ""),
 		(_("activatePiP"), "activatePiP", ""),
@@ -223,16 +223,8 @@ def getButtonSetupFunctions():
 		ButtonSetupFunctions.append((_("Toggle HDMI-In PiP"), "Infobar/HDMIInPiP", "InfoBar"))
 	if SystemInfo["LcdLiveTV"]:
 		ButtonSetupFunctions.append((_("Toggle LCD LiveTV"), "Infobar/ToggleLCDLiveTV", "InfoBar"))
-	if SystemInfo["HaveMultiBootHD"]:
-		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartup/MultiBootStartup", "InfoBar"))
-	if SystemInfo["HaveMultiBootGB"]:
-		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupGB/MultiBootStartup", "InfoBar"))
-	if SystemInfo["HaveMultiBootCY"]:
-		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupCY/MultiBootStartup", "InfoBar"))
-	if SystemInfo["HaveMultiBootDS"]:
-		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupDS/MultiBootStartup", "InfoBar"))
-	if SystemInfo["HaveMultiBootOS"]:
-		ButtonSetupFunctions.append((_("MultiBoot Selector"), "Module/Screens.MultiBootStartupOS/MultiBootStartup", "InfoBar"))
+	if SystemInfo["canMultiBoot"]:
+		ButtonSetupFunctions.append((_("MultiBootSelector"), "Module/Screens.MultiBootSelector/MultiBootSelector", "InfoBar"))
 	ButtonSetupFunctions.append((_("Hotkey Setup"), "Module/Screens.ButtonSetup/ButtonSetup", "Setup"))
 	ButtonSetupFunctions.append((_("Software update"), "Module/Screens.SoftwareUpdate/UpdatePlugin", "Setup"))
 	if getHaveCI() in ('True'):

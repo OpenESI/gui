@@ -1,7 +1,6 @@
-# Edited from Lululla for image OpenEsi 03.05.2019
+# edited 08.09.2019 lululla for openesi 9.x
 from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
 from Components.Button import Button
-from Components.config import config
 from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Components.MenuList import MenuList
@@ -10,11 +9,12 @@ from Components.Task import Task, Job, job_manager, Condition
 from Components.Sources.StaticText import StaticText
 from Components.SystemInfo import SystemInfo
 from Components import Harddisk
+from Components.config import config, getConfigListEntry, ConfigSubsection, ConfigText, ConfigLocations, ConfigYesNo, ConfigSelection
 from Screens.Console import Console
 from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 from Screens.Screen import Screen
-from Components.Sources.List import List
+from Components.Sources.List import List                                        
 from Screens.Console import Console
 from Screens.HelpMenu import HelpableScreen
 from Screens.TaskView import JobView
@@ -47,31 +47,49 @@ def mount_flsh():
                 drive = line.split()[1].replace('\\040', ' ') #+ '/'
                 if not drive in mnt_flsh: 
                       mnt_flsh.append(drive)
-    mnt_flsh.append('/media/hdd')
+    # mnt_flsh.append('/media/hdd')
     return mnt_flsh 
     
 config.plugins.flh_openesi = ConfigSubsection()
-config.plugins.flh_openesi.mnt_flsh = ConfigSelection(default = "/media/hdd",choices = mount_flsh())
+# config.plugins.flh_openesi.mnt_flsh = ConfigSelection(default = "/media/hdd",choices = mount_flsh())
+config.plugins.flh_openesi.mnt_flsh = ConfigSelection(choices = mount_flsh())
 
 #edit end
-        
-        
+
 images = []
 imagesCounter = 0
-images.append(['ESI 8.5', 'http://www.openesi.eu/images'])
+images.append(['ESI Images', 'http://www.openesi.eu/images'])
+
+
 # imagePath = '/media/hdd/images'
 # flashPath = '/media/hdd/images/flash'
 # flashTmp = '/media/hdd/images/tmp'
+
 #edit lululla
 imagePath = str(config.plugins.flh_openesi.mnt_flsh.value) + '/images'
 flashPath = str(config.plugins.flh_openesi.mnt_flsh.value) +  '/images/flash'
 flashTmp = str(config.plugins.flh_openesi.mnt_flsh.value) +  '/images/tmp'
-##### edit lululla
+
+
+# if not os.path.exists(imagePath):
+    # os.mkdir(imagePath)
+
+try:
+    os.mkdir(imagePath)
+except OSError:
+    print ("Creation of the directory %s failed" % imagePath)
+else:
+    print ("Successfully created the directory %s " % imagePath)
+    
+    
+    
+    
+##### edit end
+
+
+
 
 ofgwritePath = '/usr/bin/ofgwrite'
-
-# global online
-# online=True
 
 def Freespace(dev):
     statdev = os.statvfs(dev)
@@ -80,11 +98,20 @@ def Freespace(dev):
     return space
 
 
-# class FlashOnline(Screen):
-##### edit lululla     
+def getBackupPath():
+    backuppath = config.plugins.configurationbackup.backuplocation.value
+    if backuppath.endswith('/'):
+        return backuppath + 'backup_' + getImageDistro() + '_' + getBoxType()
+    else:
+        return backuppath + '/backup_' + getImageDistro() + '_' + getBoxType()
+
+
+def getBackupFilename():
+    return 'enigma2settingsbackup.tar.gz'
+
+
 class FlashOnline(Screen, ConfigListScreen):
-#edit end
-    skin = '\n\t<screen position="center,center" size="560,400" title="Flash_OnLine-ESI">\n\t\t<ePixmap position="0,360"   zPosition="1" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="140,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="280,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="420,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on" />\n\t\t<widget name="key_red" position="0,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_green" position="140,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_yellow" position="280,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_blue" position="420,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="info-online" position="10,80" zPosition="1" size="450,100" font="Regular;20" halign="left" valign="top" transparent="1" />\n\t\t<widget name="info-local" position="10,150" zPosition="1" size="450,200" font="Regular;20" halign="left" valign="top" transparent="1" />\n\t</screen>'
+    skin = '\n\t<screen position="center,center" size="560,400" title="Flash On the Fly">\n\t\t<ePixmap position="0,360"   zPosition="1" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="140,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="280,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="420,360" zPosition="1" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on" />\n\t\t<widget name="key_red" position="0,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_green" position="140,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_yellow" position="280,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_blue" position="420,360" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="info-online" position="10,80" zPosition="1" size="450,100" font="Regular;20" halign="left" valign="top" transparent="1" />\n\t\t<widget name="info-local" position="10,150" zPosition="1" size="450,200" font="Regular;20" halign="left" valign="top" transparent="1" />\n\t</screen>'
 
     def __init__(self, session):
         Screen.__init__(self, session)
@@ -100,42 +127,32 @@ class FlashOnline(Screen, ConfigListScreen):
         self.list = self.list_files('/boot')
         self.MTDKERNEL = getMachineMtdKernel()
         self.MTDROOTFS = getMachineMtdRoot()
-        Screen.setTitle(self, _('Flash_OnLine-ESI'))
-        # if SystemInfo['HaveMultiBoot']:
-            # self['key_blue'] = Button(_('STARTUP'))
-        # else:
-            # self['key_blue'] = Button(_(' '))
-        # self['key_green'] = Button(_('Online'))
-        # self['key_red'] = Button(_('Exit'))
-        # self['key_yellow'] = Button(_('Local'))
-#edit lululla        
-        if SystemInfo['HaveMultiBoot']:        
-            self['key_blue'] = Label(_('STARTUP'))
+        Screen.setTitle(self, _('Flash On the Fly'))
+        if SystemInfo['HaveMultiBoot']:
+            self['key_blue'] = Button(_('Multiboot Select'))
+            self.read_current_multiboot()
         else:
-            self['key_blue'] = Label(_(' '))
-        self['key_green'] = Label(_('Online'))
-        self['key_red'] = Label(_('Exit'))
-        self['key_yellow'] = Label(_('Local'))        
-#edit end        
+            self['key_blue'] = Button(_(' '))
+        self['key_green'] = Button(_('Online'))
+        self['key_red'] = Button(_('Exit'))
+        self['key_yellow'] = Button(_('Local'))
         self['info-local'] = Label(_('Local = Flash a image from local path /hdd/images or /usb/images'))
         self['info-online'] = Label(_('Online = Download a image and flash it'))
         self['actions'] = ActionMap(['OkCancelActions', 'DirectionActions', 'ColorActions'], {'blue': self.blue,
          'yellow': self.yellow,
          'green': self.green,
          'red': self.quit,
-##### edit lululla
-         'left': self.keyLeft,
-         'right': self.keyRight, 
-##########end         
          'cancel': self.quit}, -2)
         if SystemInfo['HaveMultiBoot']:
-            if getMachineBuild() in 'gb7252':
+            if SystemInfo['HasRootSubdir']:
+                self.multi = self.find_rootfssubdir(self.list[self.selection])
+            elif getMachineBuild() in 'gb7252':
                 self.multi = self.read_startup('/boot/' + self.list[self.selection]).split('.', 1)[1].split(':', 1)[0]
                 self.multi = self.multi[-1:]
             else:
                 self.multi = self.read_startup('/boot/' + self.list[self.selection]).split('.', 1)[1].split(' ', 1)[0]
-                self.multi = self.multi[-1:]
-            print '[Flash ESI-Online] MULTI:', self.multi
+            self.multi = self.multi[-1:]
+            print '[Flash Online] MULTI:', self.multi
 ##### edit lululla
         self['description'] = Label('')
         self.onChangedEntry = [ ]
@@ -146,7 +163,7 @@ class FlashOnline(Screen, ConfigListScreen):
 ############end     
             
 ##### edit lululla
-        self.onLayoutFinish.append(self.layoutFinished)
+        self.onLayoutFinish.append(self.layoutFinished)                                               
         
     def layoutFinished(self):
             self.setTitle(self.setup_title)        
@@ -181,10 +198,8 @@ class FlashOnline(Screen, ConfigListScreen):
             self.listx.append(getConfigListEntry(_('Path Flashing'), config.plugins.flh_openesi.mnt_flsh, _("Path Image Flashing"))) 
             self["config"].list = self.listx
             self["config"].setList(self.listx) 
-#########end            
-
+#########end         
     def check_hdd(self):
-    
 #edit lululla   
         device_mnt = str(config.plugins.flh_openesi.mnt_flsh.value)
         if not os.path.exists(device_mnt):
@@ -193,7 +208,7 @@ class FlashOnline(Screen, ConfigListScreen):
         if Freespace(device_mnt) < 300000:
             self.session.open(MessageBox, _('Not enough free space on %s !!\nYou need at least 300Mb free space.\n\nExit plugin.' % device_mnt), type=MessageBox.TYPE_ERROR)
             return False    
-##### end             
+##### end      
         # if not os.path.exists('/media/hdd'):
             # self.session.open(MessageBox, _('No /hdd found !!\nPlease make sure you have a HDD mounted.\n\nExit plugin.'), type=MessageBox.TYPE_ERROR)
             # return False
@@ -227,13 +242,13 @@ class FlashOnline(Screen, ConfigListScreen):
 
     def yellow(self):
         if self.check_hdd():
-            self.session.open(doFlashImage, online=False, list=self.list[self.selection], multi=self.multi, devrootfs=self.devrootfs)
+            self.session.open(doFlashImage, online=False, list=self.list[self.selection], multi=self.multi, devrootfs=self.devrootfs, mtdkernel=self.MTDKERNEL, mtdrootfs=self.MTDROOTFS)
         else:
             self.close()
 
     def green(self):
         if self.check_hdd():
-            self.session.open(doFlashImage, online=True, list=self.list[self.selection], multi=self.multi, devrootfs=self.devrootfs)
+            self.session.open(doFlashImage, online=True, list=self.list[self.selection], multi=self.multi, devrootfs=self.devrootfs, mtdkernel=self.MTDKERNEL, mtdrootfs=self.MTDROOTFS)
         else:
             self.close()
 
@@ -243,64 +258,101 @@ class FlashOnline(Screen, ConfigListScreen):
             if self.selection == len(self.list):
                 self.selection = 0
             self['key_blue'].setText(_(self.list[self.selection]))
-            if getMachineBuild() in 'gb7252':
+            if SystemInfo['HasRootSubdir']:
+                self.multi = self.find_rootfssubdir(self.list[self.selection])
+            elif getMachineBuild() in 'gb7252':
                 self.multi = self.read_startup('/boot/' + self.list[self.selection]).split('.', 1)[1].split(':', 1)[0]
                 self.multi = self.multi[-1:]
             else:
                 self.multi = self.read_startup('/boot/' + self.list[self.selection]).split('.', 1)[1].split(' ', 1)[0]
-                self.multi = self.multi[-1:]
-            print '[Flash ESI-Online] MULTI:', self.multi
+            self.multi = self.multi[-1:]
+            print '[Flash Online] MULTI:', self.multi
             self.devrootfs = self.find_rootfs_dev(self.list[self.selection])
-            print '[Flash ESI-Online] MULTI rootfs ', self.devrootfs
+            print '[Flash Online] MULTI rootfs ', self.devrootfs
             self.read_current_multiboot()
 
     def read_current_multiboot(self):
-        if getMachineBuild() in ('hd51', 'vs1500', 'h7'):
-            if self.list[self.selection] == 'Recovery':
-                cmdline = self.read_startup('/boot/STARTUP').split('=', 3)[3].split(' ', 1)[0]
-            else:
-                cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 3)[3].split(' ', 1)[0]
-        elif getMachineBuild() in '8100s':
-            if self.list[self.selection] == 'Recovery':
-                cmdline = self.read_startup('/boot/STARTUP').split('=', 4)[4].split(' ', 1)[0]
-            else:
-                cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 4)[4].split(' ', 1)[0]
-        elif getMachineBuild() in ('gbmv200', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2'):
-            if self.list[self.selection] == 'Recovery':
-                cmdline = self.read_startup('/boot/STARTUP').split('=', 1)[1].split(' ', 1)[0]
-            else:
-                cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 1)[1].split(' ', 1)[0]
-        elif getMachineBuild() in 'osmio4k':
-            if self.list[self.selection] == 'Recovery':
-                cmdline = self.read_startup('/boot/STARTUP').split('=', 1)[1].split(' ', 1)[0]
-            else:
-                cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 1)[1].split(' ', 1)[0]
-        elif self.list[self.selection] == 'Recovery':
-            cmdline = self.read_startup('/boot/cmdline.txt').split('=', 1)[1].split(' ', 1)[0]
+        if SystemInfo['HasRootSubdir']:
+            self.MTDROOTFS = self.find_rootfs_dev(self.list[self.selection])
+            self.MTDKERNEL = self.find_kernel_dev(self.list[self.selection])
+            self.ROOTFSSUBDIR = self.find_rootfssubdir(self.list[self.selection])
         else:
-            cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 1)[1].split(' ', 1)[0]
-        cmdline = cmdline.lstrip('/dev/')
-        self.MTDROOTFS = cmdline
-        self.MTDKERNEL = cmdline[:-1] + str(int(cmdline[-1:]) - 1)
-        print '[Flash ESI-Online] kernel device: ', self.MTDKERNEL
-        print '[Flash ESI-Online] rootfsdevice: ', self.MTDROOTFS
+            if getMachineBuild() in ('hd51', 'vs1500', 'h7'):
+                if self.list[self.selection] == 'Recovery':
+                    cmdline = self.read_startup('/boot/STARTUP').split('=', 3)[3].split(' ', 1)[0]
+                else:
+                    cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 3)[3].split(' ', 1)[0]
+            elif getMachineBuild() in '8100s':
+                if self.list[self.selection] == 'Recovery':
+                    cmdline = self.read_startup('/boot/STARTUP').split('=', 4)[4].split(' ', 1)[0]
+                else:
+                    cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 4)[4].split(' ', 1)[0]
+            elif getMachineBuild() in ('gbmv200', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2', 'viper4k'):
+                if self.list[self.selection] == 'Recovery':
+                    cmdline = self.read_startup('/boot/STARTUP').split('=', 1)[1].split(' ', 1)[0]
+                else:
+                    cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 1)[1].split(' ', 1)[0]
+            elif getMachineBuild() in ('osmio4k', 'osmio4kplus'):
+                if self.list[self.selection] == 'Recovery':
+                    cmdline = self.read_startup('/boot/STARTUP').split('=', 1)[1].split(' ', 1)[0]
+                else:
+                    cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 1)[1].split(' ', 1)[0]
+            elif self.list[self.selection] == 'Recovery':
+                cmdline = self.read_startup('/boot/cmdline.txt').split('=', 1)[1].split(' ', 1)[0]
+            else:
+                cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 1)[1].split(' ', 1)[0]
+            cmdline = cmdline.lstrip('/dev/')
+            self.MTDROOTFS = cmdline
+            self.MTDKERNEL = cmdline[:-1] + str(int(cmdline[-1:]) - 1)
+        print '[Flash Online] kernel device: ', self.MTDKERNEL
+        print '[Flash Online] rootfsdevice: ', self.MTDROOTFS
 
     def read_startup(self, FILE):
         file = FILE
-        with open(file, 'r') as myfile:
-            data = myfile.read().replace('\n', '')
-        myfile.close()
+        try:
+            with open(file, 'r') as myfile:
+                data = myfile.read().replace('\n', '')
+            myfile.close()
+        except IOError:
+            print '[ERROR] failed to open file %s' % file
+            data = ' '
+
         return data
 
     def find_rootfs_dev(self, file):
         startup_content = self.read_startup('/boot/' + file)
         return startup_content[startup_content.find('root=') + 5:].split()[0]
 
+    def find_kernel_dev(self, file):
+        startup_content = self.read_startup('/boot/' + file)
+        return startup_content[startup_content.find('kernel=') + 7:].split()[0]
+
+    def find_rootfssubdir(self, file):
+        startup_content = self.read_startup('/boot/' + file)
+        rootsubdir = startup_content[startup_content.find('rootsubdir=') + 11:].split()[0]
+        if rootsubdir.startswith('linuxrootfs'):
+            return rootsubdir
+
     def list_files(self, PATH):
         files = []
         if SystemInfo['HaveMultiBoot']:
             path = PATH
-            if getMachineBuild() in ('gbmv200', 'ustym4kpro', 'hd51', 'vs1500', 'h7', '8100s', 'gb7252', 'cc1', 'sf8008', 'osmio4k', 'beyonwizv2'):
+            if SystemInfo['HasRootSubdir']:
+                for name in os.listdir(path):
+                    if os.path.isfile(os.path.join(path, name)):
+                        try:
+                            cmdline = self.find_rootfssubdir(name)
+                            if cmdline == None:
+                                continue
+                        except IndexError:
+                            continue
+
+                        cmdline_startup = self.find_rootfssubdir('STARTUP')
+                        if cmdline != cmdline_startup and name != 'STARTUP':
+                            files.append(name)
+
+                files.insert(0, 'STARTUP')
+            elif getMachineBuild() in ('gbmv200', 'ustym4kpro', 'hd51', 'vs1500', 'h7', '8100s', 'gb7252', 'cc1', 'sf8008', 'osmio4k', 'osmio4kplus', 'beyonwizv2', 'viper4k'):
                 for name in os.listdir(path):
                     if name != 'bootname' and os.path.isfile(os.path.join(path, name)):
                         try:
@@ -332,29 +384,31 @@ class FlashOnline(Screen, ConfigListScreen):
 
 
 class doFlashImage(Screen):
-    skin = '\n\t<screen position="center,center" size="700,500" title="Flash_OnLine-ESI (select a image)">\n\t\t<ePixmap position="0,460"   zPosition="1" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="140,460" zPosition="1" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="280,460" zPosition="1" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="420,460" zPosition="1" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on" />\n\t\t<widget name="key_red" position="0,460" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_green" position="140,460" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_yellow" position="280,460" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_blue" position="420,460" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="imageList" position="10,10" zPosition="1" size="680,450" font="Regular;20" scrollbarMode="showOnDemand" transparent="1" />\n\t</screen>'
+    skin = '\n\t<screen position="center,center" size="700,500" title="Flash On the fly (select a image)">\n\t\t<ePixmap position="0,460"   zPosition="1" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="140,460" zPosition="1" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="280,460" zPosition="1" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on" />\n\t\t<ePixmap position="420,460" zPosition="1" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on" />\n\t\t<widget name="key_red" position="0,460" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_green" position="140,460" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_yellow" position="280,460" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="key_blue" position="420,460" zPosition="2" size="140,40" valign="center" halign="center" font="Regular;21" transparent="1" shadowColor="black" shadowOffset="-1,-1" />\n\t\t<widget name="imageList" position="10,10" zPosition="1" size="680,450" font="Regular;20" scrollbarMode="showOnDemand" transparent="1" />\n\t</screen>'
 
     def __init__(self, session, online, list = None, multi = None, devrootfs = None, mtdkernel = None, mtdrootfs = None):
         global imagesCounter
         Screen.__init__(self, session)
         self.session = session
-        Screen.setTitle(self, _('Flash_OnLine-ESI (select a image)'))
+        Screen.setTitle(self, _('Flash On the fly (select a image)'))
         # self['key_green'] = Button(_('Flash'))
         # self['key_red'] = Button(_('Exit'))
         # self['key_blue'] = Button('')
-        # self['key_yellow']= Button('')        
-        
+        # self['key_yellow'] = Button('') 
 #edit lululla
         self['key_green'] = Label(_('Flash'))
         self['key_red'] = Label(_('Exit'))        
         self['key_blue'] = Label('')
         self['key_yellow']= Label('')
-#edit end
+        
         self.imagesCounter = imagesCounter
         self.filename = None
         self.imagelist = []
         self.simulate = False
         self.Online = online
+        self.backuppath = getBackupPath()
+        self.backupfile = getBackupFilename()
+        self.fullbackupfilename = self.backuppath + '/' + self.backupfile
         self.List = list
         self.multi = multi
         self.devrootfs = devrootfs
@@ -407,11 +461,13 @@ class doFlashImage(Screen):
         machinename = getMachineName()
         if box in ('uniboxhd1', 'uniboxhd2', 'uniboxhd3'):
             box = 'ventonhdx'
+        elif box in ('sf8008s', 'sf8008t'):
+            box = 'sf8008'
         elif box == 'odinm6':
             box = getMachineName().lower()
-        elif box == 'xpeedlx3':
-            box = 'xpeedlx3'
-        elif box == 'xpeedlx1' or box == 'xpeedlx2':
+        elif box == 'inihde' and machinename.lower() == 'xpeedlx':
+            box = 'xpeedlx'
+        elif box in ('xpeedlx1', 'xpeedlx2'):
             box = 'xpeedlx'
         elif box == 'inihde' and machinename.lower() == 'hd-1000':
             box = 'sezam-1000hd'
@@ -425,6 +481,8 @@ class doFlashImage(Screen):
             box = box[0:3] + 'x00'
         elif box == 'odinm9':
             box = 'maram9'
+        elif box == 'dm525':
+            box = 'dm520'
         return box
 
     def getSel(self):
@@ -480,8 +538,10 @@ class doFlashImage(Screen):
             job_manager.AddJob(job)
             job_manager.failed_jobs = []
             self.session.openWithCallback(self.ImageDownloadCB, JobView, job, backgroundable=False, afterEventChangeable=False)
+        elif sel == str(flashTmp):
+            self.flashWithRestoreQuestion()
         else:
-            self.session.openWithCallback(self.startInstallLocal, MessageBox, _('Do you want to backup your settings now?'), default=False)
+            self.unzip_image(self.filename, flashPath)
 
     def ImageDownloadCB(self, ret):
         if ret:
@@ -492,154 +552,73 @@ class doFlashImage(Screen):
             return
         else:
             if len(job_manager.failed_jobs) == 0:
-                self.flashWithPostFlashActionMode = 'online'
-                self.flashWithPostFlashAction()
+                self.session.openWithCallback(self.askUnzipCB, MessageBox, _('The image is downloaded. Do you want to flash now?'), MessageBox.TYPE_YESNO)
             else:
                 self.session.open(MessageBox, _('Download Failed !!'), type=MessageBox.TYPE_ERROR)
             return
 
-    def flashWithPostFlashAction(self, ret = True):
+    def askUnzipCB(self, ret):
         if ret:
-#########edit lululla            
-            device_pst = str(config.plugins.flh_openesi.mnt_flsh.value)
-            print 'flashWithPostFlashAction'
-            title = _('Please select what to do after flashing the image:\n(In addition, if it exists, a local script will be executed as well at /%s/images/config/myrestore.sh)' % device_pst)
-#end edited            
-            list = ((_('Flash and start installation wizard'), 'wizard'),
-             (_('Flash and restore settings and no plugins'), 'restoresettingsnoplugin'),
-             (_('Flash and restore settings and selected plugins (ask user)'), 'restoresettings'),
-             (_('Flash and restore settings and all saved plugins'), 'restoresettingsandallplugins'),
-             (_('Do not flash image'), 'abort'))
-            self.session.openWithCallback(self.postFlashActionCallback, ChoiceBox, title=title, list=list, selection=self.SelectPrevPostFashAction())
+            self.unzip_image(self.filename, flashPath)
         else:
             self.show()
-
-    def SelectPrevPostFashAction(self):
-        index = 0
-        Settings = False
-        AllPlugins = False
-        noPlugins = False
-#########edit lululla         
-        device_cfg = str(config.plugins.flh_openesi.mnt_flsh.value)
-        if os.path.exists(device_cfg + '/images/config/settings'):
-            Settings = True
-        if os.path.exists(device_cfg + '/images/config/plugins'):
-            AllPlugins = True
-        if os.path.exists(device_cfg + '/images/config/noplugins'):
-            noPlugins = True        
- #########end        
-        # if os.path.exists('/media/hdd/images/config/settings'):
-            # Settings = True
-        # if os.path.exists('/media/hdd/images/config/plugins'):
-            # AllPlugins = True
-        # if os.path.exists('/media/hdd/images/config/noplugins'):
-            # noPlugins = True
-        if Settings and noPlugins:
-            index = 1
-        elif Settings and not AllPlugins and not noPlugins:
-            index = 2
-        elif Settings and AllPlugins:
-            index = 3
-        return index
-
-    def postFlashActionCallback(self, answer):
-        print 'postFlashActionCallback'
-        restoreSettings = False
-        restoreAllPlugins = False
-        restoreSettingsnoPlugin = False
-        if answer is not None:
-            if answer[1] == 'restoresettings':
-                restoreSettings = True
-            if answer[1] == 'restoresettingsnoplugin':
-                restoreSettings = True
-                restoreSettingsnoPlugin = True
-            if answer[1] == 'restoresettingsandallplugins':
-                restoreSettings = True
-                restoreAllPlugins = True
-            if restoreSettings:
-                self.SaveEPG()
-            if answer[1] != 'abort':
-#edit lululla            
-                restore_cfg = str(config.plugins.flh_openesi.mnt_flsh.value)
-                if restoreSettings:
-                    try:
-                        if not os.path.exists(restore_cfg +'/images/config'):
-                            os.makedirs(restore_cfg +'/images/config')
-                        open(restore_cfg +'/images/config/settings', 'w').close()
-                    except:
-                        print 'postFlashActionCallback: failed to create %s/images/config/settings' % restore_cfg
-                elif os.path.exists(restore_cfg +'/images/config/settings'):
-                    os.unlink(restore_cfg +'images/config/settings')
-                if restoreAllPlugins:
-                    try:
-                        if not os.path.exists(restore_cfg +'/images/config'):
-                            os.makedirs(restore_cfg +'/images/config')
-                        open(restore_cfg +'/images/config/plugins', 'w').close()
-                    except:
-                        print 'postFlashActionCallback: failed to create %s/images/config/plugins' % restore_cfg
-                elif os.path.exists(restore_cfg +'/images/config/plugins'):
-                    os.unlink(restore_cfg +'/images/config/plugins')
-                if restoreSettingsnoPlugin:
-                    try:
-                        if not os.path.exists(restore_cfg +'/images/config'):
-                            os.makedirs(restore_cfg +'/images/config')
-                        open(restore_cfg +'/images/config/noplugins', 'w').close()
-                    except:
-                        print 'postFlashActionCallback: failed to create %s/images/config/noplugins' %restore_cfg
-                elif os.path.exists(restore_cfg +'/images/config/noplugins'):
-                    os.unlink(restore_cfg +'/images/config/noplugins')
-                if self.flashWithPostFlashActionMode == 'online':
-                    self.unzip_image(self.filename, flashPath)
-                else:
-                    self.startInstallLocalCB()            
-#########edit end             
-                # if restoreSettings:
-                    # try:
-                        # if not os.path.exists('/media/hdd/images/config'):
-                            # os.makedirs('/media/hdd/images/config')
-                        # open('/media/hdd/images/config/settings', 'w').close()
-                    # except:
-                        # print 'postFlashActionCallback: failed to create /media/hdd/images/config/settings'
-
-                # elif os.path.exists('/media/hdd/images/config/settings'):
-                    # os.unlink('/media/hdd/images/config/settings')
-                # if restoreAllPlugins:
-                    # try:
-                        # if not os.path.exists('/media/hdd/images/config'):
-                            # os.makedirs('/media/hdd/images/config')
-                        # open('/media/hdd/images/config/plugins', 'w').close()
-                    # except:
-                        # print 'postFlashActionCallback: failed to create /media/hdd/images/config/plugins'
-
-                # elif os.path.exists('/media/hdd/images/config/plugins'):
-                    # os.unlink('/media/hdd/images/config/plugins')
-                # if restoreSettingsnoPlugin:
-                    # try:
-                        # if not os.path.exists('/media/hdd/images/config'):
-                            # os.makedirs('/media/hdd/images/config')
-                        # open('/media/hdd/images/config/noplugins', 'w').close()
-                    # except:
-                        # print 'postFlashActionCallback: failed to create /media/hdd/images/config/noplugins'
-
-                # elif os.path.exists('/media/hdd/images/config/noplugins'):
-                    # os.unlink('/media/hdd/images/config/noplugins')
-                # if self.flashWithPostFlashActionMode == 'online':
-                    # self.unzip_image(self.filename, flashPath)
-                # else:
-                    # self.startInstallLocalCB()
-            else:
-                self.show()
-        else:
-            self.show()
-        return
 
     def unzip_image(self, filename, path):
-        print 'Unzip %s to %s' % (filename, path)
-        self.session.openWithCallback(self.cmdFinished, Console, title=_('Unzipping files, Please wait ...'), cmdlist=['unzip ' + filename + ' -o -d ' + path, 'sleep 3'], closeOnSuccess=True)
+        if getBoxType() in 'dm7080dm820dm520dm525':
+            print 'Untaring %s to %s' % (filename, path)
+            os.system('mkdir /dbackup.new')
+            self.session.openWithCallback(self.cmdFinished, Console, title=_('Untaring files, Please wait ...'), cmdlist=['tar -xJf ' + filename + ' -C ' + '/dbackup.new', 'sleep 3'], closeOnSuccess=True)
+        else:
+            print 'Unzip %s to %s' % (filename, path)
+            self.session.openWithCallback(self.cmdFinished, Console, title=_('Unzipping files, Please wait ...'), cmdlist=['unzip ' + filename + ' -o -d ' + path, 'sleep 3'], closeOnSuccess=True)
 
     def cmdFinished(self):
         self.prepair_flashtmp(flashPath)
-        self.Start_Flashing()
+        self.flashWithRestoreQuestion()
+
+    def flashWithRestoreQuestion(self):
+        try:
+            if os.path.exists(flashPath +'/images/esirestore'):
+                os.unlink(flashPath + '/images/esirestore')
+                print 'AfterFlashAction: delete %s/images/esirestore' % flashPath
+        except:
+            print 'AfterFlashAction: failed to delete %s/images/esirestore' % flashPath
+
+        title = _('Please select what to do after first booting the image:\n')
+        list = ((_('Automatic restore of all settings and plugins?'), 'completerestore'), (_("Don't restore settings and plugins!"), 'norestore'))
+        self.session.openWithCallback(self.AfterFlashAction, ChoiceBox, title=title, list=list)
+
+    def AfterFlashAction(self, answer):
+        print 'starting AfterFlashAction'
+        norestore = False
+        completerestore = False
+        if answer is not None:
+            if answer[1] == 'norestore':
+                print 'norestore: no action required'
+            if answer[1] == 'completerestore':
+                try:
+                    if not os.path.exists(flashPath + '/images'):
+                        os.makedirs(flashPath + '/images')
+                    print 'AfterFlashAction: create %s/images/esirestore' %flashPath
+                    print 'AfterFlashAction: filename:', self.fullbackupfilename
+                    backupsourcefile = self.fullbackupfilename
+                    backupdestfile = flashPath + '/images/esirestore'
+                    if not os.path.exists(backupsourcefile):
+                        print 'AfterFlashAction: No settings found.'
+                    else:
+                        shutil.copyfile(backupsourcefile, backupdestfile)
+                except:
+                    print 'AfterFlashAction: failed to create %s/images/esirestore' %flashPath
+
+        message = _('Do you want to start flashing now?\nEnigma2 is stopped and then automatically restarted.\nPlease check in advance for ongoing recordings!')
+        self.session.openWithCallback(self.initFlashing, MessageBox, message, MessageBox.TYPE_YESNO, timeout=20)
+        return
+
+    def initFlashing(self, answer):
+        if answer is True:
+            self.Start_Flashing()
+        else:
+            self.close()
 
     def Start_Flashing(self):
         print 'Start Flashing'
@@ -650,19 +629,21 @@ class doFlashImage(Screen):
             if self.simulate:
                 text += _('Simulate (no write)')
                 if SystemInfo['HaveMultiBoot']:
-                    if getMachineBuild() in ('cc1', 'sf8008', 'sf8008s', 'sf8008t', 'ustym4kpro'):
+                    if getMachineBuild() in ('gbmv200', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2', 'viper4k'):
                         cmdlist.append('%s -r%s -k%s %s > /dev/null 2>&1' % (ofgwritePath,
                          self.MTDROOTFS,
                          self.MTDKERNEL,
                          flashTmp))
+                    elif SystemInfo['HasRootSubdir']:
+                        cmdlist.append('%s -n -f -r -k -m%s %s > /dev/null 2>&1' % (ofgwritePath, self.multi, flashTmp))
                     else:
                         cmdlist.append('%s -n -r -k -m%s %s > /dev/null 2>&1' % (ofgwritePath, self.multi, flashTmp))
-                elif getMachineBuild() in ('h9combo', 'u51', 'u52', 'u53', 'u54', 'u5', 'u5pvr', 'cc1', 'sf8008', 'sf8008s', 'sf8008t', 'ustym4kpro', 'hd60', 'hd61', 'v8plus', 'multibox'):
+                elif getMachineBuild() in ('gbmv200', 'h9combo', 'u51', 'u52', 'u53', 'u54', 'u56', 'u5', 'u5pvr', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2', 'viper4k', 'hd60', 'hd61', 'v8plus', 'multibox'):
                     cmdlist.append('%s -n -r%s -k%s %s > /dev/null 2>&1' % (ofgwritePath,
                      MTDROOTFS,
                      MTDKERNEL,
                      flashTmp))
-                elif getMachineBuild() in ('h9', 'i55plus', 'u55'):
+                elif getMachineBuild() in ('h9', 'i55plus', 'u55', 'u41'):
                     cmdlist.append('%s -n -f -r -k %s > /dev/null 2>&1' % (ofgwritePath, flashTmp))
                 else:
                     cmdlist.append('%s -n -r -k %s > /dev/null 2>&1' % (ofgwritePath, flashTmp))
@@ -673,26 +654,28 @@ class doFlashImage(Screen):
             else:
                 text += _('root and kernel')
                 if SystemInfo['HaveMultiBoot']:
-                    if self.List not in ('STARTUP', 'cmdline.txt'):
+                    if self.List not in ('STARTUP', 'cmdline.txt') and not SystemInfo['HasRootSubdir']:
                         os.system('mkfs.ext4 -F ' + self.devrootfs)
-                    if getMachineBuild() in ('cc1', 'sf8008', 'sf8008s', 'sf8008t', 'ustym4kpro'):
+                    if getMachineBuild() in ('gbmv200', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2', 'viper4k'):
                         cmdlist.append('%s -r%s -k%s %s > /dev/null 2>&1' % (ofgwritePath,
                          self.MTDROOTFS,
                          self.MTDKERNEL,
                          flashTmp))
+                    elif SystemInfo['HasRootSubdir']:
+                        cmdlist.append('%s -f -r -k -m%s %s > /dev/null 2>&1' % (ofgwritePath, self.multi, flashTmp))
                     else:
                         cmdlist.append('%s -r -k -m%s %s > /dev/null 2>&1' % (ofgwritePath, self.multi, flashTmp))
-                elif getMachineBuild() in ('h9combo', 'u51', 'u52', 'u53', 'u54', 'u5', 'u5pvr', 'cc1', 'sf8008', 'sf8008s', 'ustym4kpro', 'hd60', 'hd61', 'v8plus', 'multibox'):
+                elif getMachineBuild() in ('gbmv200', 'h9combo', 'u51', 'u52', 'u53', 'u54', 'u56', 'u5', 'u5pvr', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2', 'viper4k', 'hd60', 'hd61', 'v8plus', 'multibox'):
                     cmdlist.append('%s -r%s -k%s %s > /dev/null 2>&1' % (ofgwritePath,
                      MTDROOTFS,
                      MTDKERNEL,
                      flashTmp))
-                elif getMachineBuild() in ('h9', 'i55plus', 'u55'):
+                elif getMachineBuild() in ('h9', 'i55plus', 'u55', 'u41'):
                     cmdlist.append('%s -f -r -k %s > /dev/null 2>&1' % (ofgwritePath, flashTmp))
                 else:
                     cmdlist.append('%s -r -k %s > /dev/null 2>&1' % (ofgwritePath, flashTmp))
                 message = "echo -e '\n"
-                if self.List not in ('STARTUP', 'cmdline.txt') and SystemInfo['HaveMultiBoot']:
+                if self.List not in ('STARTUP', 'cmdline.txt') and SystemInfo['HaveMultiBoot'] and not SystemInfo['HasRootSubdir']:
                     message += _('ofgwrite flashing ready.\n')
                     message += _('please press exit to go back to the menu.\n')
                 else:
@@ -793,11 +776,9 @@ class doFlashImage(Screen):
         brand = getMachineBrand()
         box = getBoxType()
         self.imagelist = []
-        
-        print 'Self.online= ', self.Online
-        
+        print 'Self.online= ', self.Online                                                      
         if self.Online:
-            self['key_yellow'].setText('Backup&Flash')
+            self['key_yellow'].setText('Backup&Flash') #edit lululla
             self.feedurl = images[self.imagesCounter][1]
             self['key_blue'].setText(images[self.imagesCounter][0])
             if self.imagesCounter == 0:
@@ -827,6 +808,10 @@ class doFlashImage(Screen):
                     if line.find('zip"') > -1:
                         e = line.find('zip"')
                         self.imagelist.append(line[t + 9:e + 3])
+                    if SystemInfo['HasRootSubdir']:
+                        if line.find('recovery_emmc.zip"') > -1:
+                            x = line.find('recovery_emmc.zip"')
+                            self.imagelist.remove(line[t + 9:e + 3])
                     if line.find('.xz"') > -1:
                         e = line.find('xz"')
                         self.imagelist.append(line[t + 9:e + 2])
@@ -924,7 +909,7 @@ class DeviceBrowser(Screen, HelpableScreen):
         Screen.__init__(self, session)
         HelpableScreen.__init__(self)
         Screen.setTitle(self, _('Please select medium'))
-        #edit lululla        
+        #edit lululla                                                  
         # self['key_red'] = StaticText(_('Cancel'))
         # self['key_green'] = StaticText()
         # self['message'] = StaticText(message)
@@ -932,7 +917,7 @@ class DeviceBrowser(Screen, HelpableScreen):
         self['key_red'] = Label(_('Cancel'))  
         self['message'] = Label(_(''))          
         self['message'].setText(message) 
-##############
+        ##############                                                                                                 
         self.filelist = FileList(startdir, showDirectories=showDirectories, showFiles=showFiles, showMountpoints=showMountpoints, matchingPattern=matchingPattern, useServiceRef=useServiceRef, inhibitDirs=inhibitDirs, inhibitMounts=inhibitMounts, isTop=isTop, enableWrapAround=enableWrapAround, additionalExtensions=additionalExtensions)
         self['filelist'] = self.filelist
         self['FilelistActions'] = ActionMap(['SetupActions', 'ColorActions'], {'green': self.use,
@@ -949,17 +934,15 @@ class DeviceBrowser(Screen, HelpableScreen):
 
     def updateButton(self):
         if self['filelist'].getFilename() or self['filelist'].getCurrentDirectory():
-        
         #edit lululla
             # self['key_green'].text = _('Flash')
         # else:
             # self['key_green'].text = ''
-#############
+        #############            
             self['key_green'].setText('Flash')
         else:
-            self['key_green'].setText('')            
+            self['key_green'].setText('')  
             
-
     def removeHotplug(self):
         print '[removeHotplug]'
         hotplugNotifier.remove(self.hotplugCB)

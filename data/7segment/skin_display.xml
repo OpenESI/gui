@@ -3,7 +3,7 @@
 <!-- MyClockPanel -->	
 	<screen name="MyClockPanel">
 		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
-			<convert type="VfdDisplay">Clock</convert>
+			<convert type="VfdDisplay"></convert>
 		</widget>
 	</screen>
 	
@@ -19,20 +19,40 @@
 		</widget>
 	</screen>
 
+<!-- Wizard -->
+	<screen name="WizardSummary" position="0,0" size="1,1">
+		<eLabel position="0,0" size="1,1" text=" HI " />
+	</screen>
+
 <!-- main-->
 	<screen name="InfoBarSummary" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
+		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
+			<convert type="VfdDisplay"></convert>
+		</widget>
+		<widget source="session.RecordState" render="FixedLabel" position="0,0" size="1,1" text="REC">
+			<convert type="ConfigEntryTest">config.usage.blinking_rec_symbol_during_recording,True,CheckSourceBoolean</convert>
+			<convert type="ConditionalShowHide">Blink,3000</convert>
+		</widget>
+		<widget source="session.RecordState" render="FixedLabel" position="0,0" size="1,1" text="REC">
+			<convert type="ConfigEntryTest">config.usage.blinking_rec_symbol_during_recording,False,CheckSourceBoolean</convert>
+			<convert type="ConditionalShowHide" />
+		</widget>
 	</screen>
 
 <!-- movieplayer-->
 	<screen name="InfoBarMoviePlayerSummary" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
+		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
+			<convert type="ServicePosition">Remaining,7segment</convert>
+		</widget>
 	</screen>
 
 <!-- menus-->
-	<screen name="MenuSummary" position="0,0" size="1,1">
+	<screen name="MenuSummary" position="0,0" size="16,1">
+		<widget source="parent.menu" render="Label" position="0,0" size="132,1" font="Regular;16" halign="left" valign="top">
+			<convert type="StringListSelection" />
+		</widget>
+	</screen>
+	<screen name="GeneralMenuSummary" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
@@ -47,6 +67,12 @@
 		<panel name="MyRecPanel" />
 	</screen>
 
+<!-- About -->
+	<screen name="AboutSummary" position="0,0" size="1,1">
+		<panel name="MyClockPanel" />
+		<panel name="MyRecPanel" />
+	</screen>
+
 <!-- Blindscan -->
 	<screen name="SetupSummary2" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
@@ -55,10 +81,14 @@
 
 <!-- Numberzap -->    
 	<screen name="NumberZap_summary" position="0,0" size="1,1">
-		<widget source="parent.number_summary" render="Label" position="0,0" size="1,1" />
+		<widget source="parent.number_summary" render="Label" position="0,0" size="1,1">
+			<convert type="VfdDisplay">Number;nozero</convert>
+		</widget>
 	</screen> 
 	<screen name="NumberZapPicon_summary" position="0,0" size="1,1">
-		<widget source="parent.number_summary" render="Label" position="0,0" size="1,1" />
+		<widget source="parent.number_summary" render="Label" position="0,0" size="1,1">
+			<convert type="VfdDisplay">Number;nozero</convert>
+		</widget>
 	</screen>
 
 <!-- misc-->
@@ -82,6 +112,10 @@
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
+	<screen name="PluginBrowserSummary" position="0,0" size="1,1">
+		<panel name="MyClockPanel" />
+		<panel name="MyRecPanel" />
+	</screen>
 	<screen name="JobView_summary" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
@@ -89,14 +123,16 @@
 
 <!-- DVD -->
 	<screen name="DVDSummary" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
+		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
+			<convert type="ServicePosition">Remaining,7segment</convert>
+		</widget>
 	</screen>
 
 <!-- MediaPlayer -->
 	<screen name="MediaPlayerLCDScreen" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
+		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
+			<convert type="ServicePosition">Remaining,7segment</convert>
+		</widget>
 	</screen>
 
 <!-- AutoTimer -->
@@ -115,8 +151,9 @@
 		<panel name="MyRecPanel" />
 	</screen>
 	<screen name="EMCMoviePlayerSummary" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
+		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
+			<convert type="ServicePosition">Remaining,7segment</convert>
+		</widget>
 	</screen>
 
 <!-- standby -->
@@ -128,6 +165,10 @@
 		<widget source="session.CurrentService" render="FixedLabel" position="0,0" size="1,1" text="    ">
 			<convert type="ConfigEntryTest">config.usage.show_in_standby,nothing,CheckSourceBoolean</convert>
 			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
+			<convert type="ConfigEntryTest">config.usage.blinking_display_clock_during_recording,time,CheckSourceBoolean</convert>
+			<convert type="VfdDisplay">Clock</convert>
 		</widget>
 		<widget source="session.RecordState" render="FixedLabel" position="0,0" size="1,1" text="REC ">
 			<convert type="ConfigEntryTest">config.usage.blinking_display_clock_during_recording,RecBlink,CheckSourceBoolean</convert>
