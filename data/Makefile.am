@@ -19,22 +19,18 @@ dist_pkgdata_DATA = \
 	unicable.xml \
 	hd-testcard.mvi \
 	distro-logo.png \
-	groupedservices \
-	otv_011a0000_0002_07d4.dict \
-	otv_00820000_fbff_16a8.dict \
-	otv_06180000_1000_0011.dict \
-	otv_06400000_00a9_0003.dict
+	groupedservices
 
-
-if HAVE_7SEGMENT
-SUBDIRS += 7segment
-endif
 
 if HAVE_TEXTLCD
+if HAVE_7SEGMENT
+SUBDIRS += 7segment
+else
 if SPARK
 SUBDIRS += displaydualtext
 else
 SUBDIRS += displaytext
+endif
 endif
 endif
 
