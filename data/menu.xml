@@ -42,13 +42,13 @@ self.session.open(AddonsGroups)
 from Plugins.Extensions.EsiPanel.tvSettings.plugin import * 
 self.session.open(MainSetting)
 </code>
-        </item>
-            <item weight="5" level="0" text="FlashOnline" entryID="FlashOnline">  
+        </item>  
+	    <item weight="5" level="0" text="FlashOnline" entryID="FlashOnline">  
     <code>
 from Plugins.SystemPlugins.SoftwareManager.plugin import *
 self.session.open(FlashOnline)
 </code>
-        </item> 
+        </item>  
 	    <item weight="5" level="0" text="ImageBackup" entryID="ImageBackup">  
     <code>
 from Plugins.SystemPlugins.SoftwareManager.plugin import *
@@ -70,6 +70,7 @@ self.session.open(MultiBootWizard)
 </code>
         </item>
 <item weight="6" level="0" text="Multiboot Image Selector" entryID="restart" requires="canMultiBoot"><screen module="MultiBootSelector" screen="MultiBootSelector"/></item>
+<item weight="35" level="0" text="Recovery Mode" requires="RecoveryMode" entryID="maintenance_mode"><screen module="Standby" screen="TryQuitMainloop">16</screen></item>
 
 	</menu>
     
@@ -130,25 +131,19 @@ self.session.open(MultiBootWizard)
 		<!-- Menu / Settings / Video Menu -->
 		<menu weight="0" level="0" text="Video-Audio-Osd-Display" entryID="video_menu">
 			<id val="video_menu" />
-			<item weight="0" level="0" text="Basic settings video" entryID="video_setup"><screen module="VideoMode" screen="VideoSetup" /></item>
-                    		
-			<id val="audio_menu" />
-			<item weight="0" level="1" text="Basic settings audio" entryID="audio_setup"><screen module="VideoMode" screen="AudioSetup" /></item>
-			<!--item weight="20" level="0" entryID="specialfeatures_menu"><setup id="specialfeatures" /></item-->
+			<item weight="0" level="0" text="Basic Settings Video" entryID="video_setup"><screen module="VideoMode" screen="VideoSetup" /></item>
+<!--item weight="20" level="0" entryID="specialfeatures_menu"><setup id="specialfeatures" /></item-->
 			<item weight="25" level="0" text="Skin Setup" entryID="skin_setup"><screen module="SkinSelector" screen="SkinSelector"/></item>
+                        <item weight="10" level="1" text="OSD Position" entryID="osdsetup" requires="CanChangeOsdPosition"><screen module="UserInterfacePositioner" screen="UserInterfacePositioner2"/></item>
+                        <item weight="50" level="2" text="OSD 3D Setup" entryID="osd3dsetup" requires="CanChange3DOsd"><screen module="UserInterfacePositioner" screen="OSD3DSetupScreen"/></item>
+			<item weight="0" level="0" entryID="display_setup"><setup id="display" /></item>
+				<item weight="5" level="0" text="LCD Skin Setup" entryID="lcd_skin_setup" requires="LCDSKINSetup"><screen module="SkinSelector" screen="LcdSkinSelector"/></item>
+                        <item weight="0" level="0" entryID="user_interface"><setup id="userinterface" /></item>
+<item weight="0" level="1" text="Basic Settings Audio" entryID="audio_setup"><screen module="VideoMode" screen="AudioSetup" /></item>
 				
-			<!-- Menu / Settings / System / Extended System / OSD settings -->
-			<menu weight="40" level="1" text="Display e OSD" entryID="osd_setup">
-				<id val="osd_menu" />
-                                 <item weight="10" level="1" text="OSD Position" entryID="osdsetup" requires="CanChangeOsdPosition"><screen module="UserInterfacePositioner" screen="UserInterfacePositioner2"/></item>
-                                 <item weight="0" level="0" entryID="display_setup"><setup id="display" /></item>
-                                <item weight="50" level="2" text="OSD 3D Setup" entryID="osd3dsetup" requires="CanChange3DOsd"><screen module="UserInterfacePositioner" screen="OSD3DSetupScreen"/></item>
-				<item weight="5" level="0" text="Skin setup" entryID="lcd_skin_setup" requires="LCDSKINSetup"><screen module="SkinSelector" screen="LcdSkinSelector"/></item>
-                                <item weight="0" level="0" entryID="user_interface"><setup id="userinterface" /></item>
-                               	                      				
+			                            	                      				
 
-				</menu>
-			
+						
 </menu>
 
 		<!-- Menu / Settings / System -->
@@ -318,7 +313,7 @@ else:
 		<item weight="20" level="0" text="Sleep Timer" requires="DeepstandbySupport" entryID="sleep"><screen module="SleepTimerEdit" screen="SleepTimerEdit" /></item>
 		<item weight="25" level="0" text="Restart" entryID="restart"><screen module="Standby" screen="TryQuitMainloop">2</screen></item>
 		<item weight="30" level="0" text="Restart Gui" entryID="restart_enigma"><screen module="Standby" screen="TryQuitMainloop">3</screen></item>
-		<item weight="35" level="0" text="Recovery Mode" requires="RecoveryMode" entryID="maintenance_mode"><screen module="Standby" screen="TryQuitMainloop">16</screen></item>
+		
 	</menu>
 
 </menu>

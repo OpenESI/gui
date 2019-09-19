@@ -79,29 +79,29 @@ def getAboutText():
 		AboutText += _("Chipset:\t\t%s") % about.getChipSetString() + "\n"
 
 	cpuMHz = ""
-	if getMachineBuild() in ('u41','u42'):
-		cpuMHz = "   (1,0 GHz)"
+	if getMachineBuild() in ('u41','u42','u43'):
+		cpuMHz = _("   (1.0 GHz)")
 	elif getMachineBuild() in ('vusolo4k','vuultimo4k','vuzero4k'):
-		cpuMHz = "   (1,5 GHz)"
+		cpuMHz = _("   (1.5 GHz)")
 	elif getMachineBuild() in ('formuler1tc','formuler1', 'triplex', 'tiviaraplus'):
-		cpuMHz = "   (1,3 GHz)"
-	elif getMachineBuild() in ('gbmv200','u51','u5','u53','u52','u54','u55','u56','u5pvr','h9','h9combo','h10','cc1','sf8008','hd60','hd61','i55plus','ustym4kpro','beyonwizv2','viper4k','v8plus','multibox'):
-		cpuMHz = "   (1,6 GHz)"
+		cpuMHz = _("   (1.3 GHz)")
+	elif getMachineBuild() in ('gbmv200','u51','u5','u53','u532','u533','u52','u54','u55','u56','u5pvr','h9','h9combo','h10','cc1','sf8008','hd60','hd61','i55plus','ustym4kpro','beyonwizv2','viper4k','v8plus','multibox'):
+		cpuMHz = _("   (1.6 GHz)")
 	elif getMachineBuild() in ('vuuno4kse','vuuno4k','dm900','dm920', 'gb7252', 'dags7252','xc7439','8100s'):
-		cpuMHz = "   (1,7 GHz)"
+		cpuMHz = _("   (1.7 GHz)")
 	elif getMachineBuild() in ('alien5',):
-		cpuMHz = "   (2,0 GHz)"
+		cpuMHz = _("   (2.0 GHz)")
 	elif getMachineBuild() in ('vuduo4k',):
-		cpuMHz = "   (2,1 GHz)"
+		cpuMHz = _("   (2.1 GHz)")
 	elif getMachineBuild() in ('sf5008','et13000','et1x000','hd52','hd51','sf4008','vs1500','h7','osmio4k','osmio4kplus'):
 		try:
 			import binascii
 			f = open('/sys/firmware/devicetree/base/cpus/cpu@0/clock-frequency', 'rb')
 			clockfrequency = f.read()
 			f.close()
-			cpuMHz = "   (%s MHz)" % str(round(int(binascii.hexlify(clockfrequency), 16)/1000000,1))
+			cpuMHz = _("   (%s MHz)") % str(round(int(binascii.hexlify(clockfrequency), 16)/1000000,1))
 		except:
-			cpuMHz = "   (1,7 GHz)"
+			cpuMHz = _("   (1.7 GHz)")
 	else:
 		if path.exists('/proc/cpuinfo'):
 			f = open('/proc/cpuinfo', 'r')
@@ -128,7 +128,7 @@ def getAboutText():
 		f.close()
 	if SystemInfo["HasRootSubdir"]:
 		image = find_rootfssubdir("STARTUP")
-		AboutText += _("Selected Image:\t\t%s") % "STARTUP_" + image[-1:] + bootname + "\n"
+		AboutText += _("Selected Image:\t\t%s") % _("STARTUP_") + image[-1:] + bootname + "\n"
 	elif getMachineBuild() in ('gbmv200','cc1','sf8008','ustym4kpro','beyonwizv2',"viper4k"):
 		if path.exists('/boot/STARTUP'):
 			f = open('/boot/STARTUP', 'r')
@@ -149,7 +149,7 @@ def getAboutText():
 					image = "5"
 			f.close()
 			if bootname: bootname = "   (%s)" %bootname 
-			AboutText += _("Selected Image:\t\t%s") % "STARTUP_" + image + bootname + "\n"
+			AboutText += _("Selected Image:\t\t%s") % _("STARTUP_") + image + bootname + "\n"
 	elif getMachineBuild() in ('osmio4k','osmio4kplus'):
 		if path.exists('/boot/STARTUP'):
 			f = open('/boot/STARTUP', 'r')
@@ -157,21 +157,21 @@ def getAboutText():
 			image = f.read(1) 
 			f.close()
 			if bootname: bootname = "   (%s)" %bootname 
-			AboutText += _("Selected Image:\t\t%s") % "STARTUP_" + image + bootname + "\n"
+			AboutText += _("Selected Image:\t\t%s") % _("STARTUP_") + image + bootname + "\n"
 	elif path.exists('/boot/STARTUP'):
 		f = open('/boot/STARTUP', 'r')
 		f.seek(22)
 		image = f.read(1) 
 		f.close()
 		if bootname: bootname = "   (%s)" %bootname 
-		AboutText += _("Selected Image:\t\t%s") % "STARTUP_" + image + bootname + "\n"
+		AboutText += _("Selected Image:\t\t%s") % _("STARTUP_") + image + bootname + "\n"
 	elif path.exists('/boot/cmdline.txt'):
 		f = open('/boot/cmdline.txt', 'r')
 		f.seek(38)
 		image = f.read(1) 
 		f.close()
 		if bootname: bootname = "   (%s)" %bootname 
-		AboutText += _("Selected Image:\t\t%s") % "STARTUP_" + image + bootname + "\n"
+		AboutText += _("Selected Image:\t\t%s") % _("STARTUP_") + image + bootname + "\n"
 
 	AboutText += _("Version:\t\t%s") % getImageVersion() + "\n"
 	AboutText += _("Build:\t\t%s") % getImageBuild() + "\n"
@@ -242,6 +242,8 @@ def getAboutText():
 					temp = line[1].split("=")
 					temp = line[1].split(" ")
 					tempinfo = temp[2]
+					if getMachineBuild() in ('u41','u42','u43'):
+						tempinfo = str(int(tempinfo) - 15)
 		except:
 			tempinfo = ""
 	if tempinfo and int(tempinfo.replace('\n', '')) > 0:
@@ -302,7 +304,7 @@ class About(Screen):
 			if fp_version is None:
 				fp_version = ""
 			else:
-				fp_version = _("Frontprocessor version: %d") % fp_version
+				fp_version = _("Frontprocessor version: %s") % str(fp_version)
 
 			self["FPVersion"] = StaticText(fp_version)
 
@@ -755,7 +757,7 @@ class SystemNetworkInfo(Screen):
 				self.AboutText += '{:<35}'.format(_("Netmask:")) + "\t" + eth1['netmask'] + "\n"
 			if eth1.has_key('hwaddr'):
 				self.AboutText += '{:<35}'.format(_("MAC:")) + "\t" + eth1['hwaddr'] + "\n"
-			self.AboutText += '{:<35}'.format(_("Network Speed:")) + "\t" + netspeed() + "\n"
+			self.AboutText += '{:<35}'.format(_("Network Speed:")) + "\t" + netspeed_eth1() + "\n"
 			self.iface = 'eth1'
 
 		ra0 = about.getIfConfig('ra0')
