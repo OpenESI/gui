@@ -287,7 +287,7 @@ class FlashOnline(Screen, ConfigListScreen):
                     cmdline = self.read_startup('/boot/STARTUP').split('=', 4)[4].split(' ', 1)[0]
                 else:
                     cmdline = self.read_startup('/boot/' + self.list[self.selection]).split('=', 4)[4].split(' ', 1)[0]
-            elif getMachineBuild() in ('gbmv200', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2', 'viper4k'):
+            elif getMachineBuild() in ('gbmv200', 'cc1', 'sf8008', 'sf8008m', 'ustym4kpro', 'beyonwizv2', 'viper4k'):
                 if self.list[self.selection] == 'Recovery':
                     cmdline = self.read_startup('/boot/STARTUP').split('=', 1)[1].split(' ', 1)[0]
                 else:
@@ -352,7 +352,7 @@ class FlashOnline(Screen, ConfigListScreen):
                             files.append(name)
 
                 files.insert(0, 'STARTUP')
-            elif getMachineBuild() in ('gbmv200', 'ustym4kpro', 'hd51', 'vs1500', 'h7', '8100s', 'gb7252', 'cc1', 'sf8008', 'osmio4k', 'osmio4kplus', 'beyonwizv2', 'viper4k'):
+            elif getMachineBuild() in ('gbmv200', 'ustym4kpro', 'hd51', 'vs1500', 'h7', '8100s', 'gb7252', 'cc1', 'sf8008', 'sf8008m', 'osmio4k', 'osmio4kplus', 'beyonwizv2', 'viper4k'):
                 for name in os.listdir(path):
                     if name != 'bootname' and os.path.isfile(os.path.join(path, name)):
                         try:
@@ -461,7 +461,7 @@ class doFlashImage(Screen):
         machinename = getMachineName()
         if box in ('uniboxhd1', 'uniboxhd2', 'uniboxhd3'):
             box = 'ventonhdx'
-        elif box in ('sf8008s', 'sf8008t'):
+        elif box in ('sf8008s', 'sf8008t', 'sf8008m'):
             box = 'sf8008'
         elif box == 'odinm6':
             box = getMachineName().lower()
@@ -629,7 +629,7 @@ class doFlashImage(Screen):
             if self.simulate:
                 text += _('Simulate (no write)')
                 if SystemInfo['HaveMultiBoot']:
-                    if getMachineBuild() in ('gbmv200', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2', 'viper4k'):
+                    if getMachineBuild() in ('gbmv200', 'cc1', 'sf8008', 'sf8008m', 'ustym4kpro', 'beyonwizv2', 'viper4k'):
                         cmdlist.append('%s -r%s -k%s %s > /dev/null 2>&1' % (ofgwritePath,
                          self.MTDROOTFS,
                          self.MTDKERNEL,
@@ -638,7 +638,7 @@ class doFlashImage(Screen):
                         cmdlist.append('%s -n -f -r -k -m%s %s > /dev/null 2>&1' % (ofgwritePath, self.multi, flashTmp))
                     else:
                         cmdlist.append('%s -n -r -k -m%s %s > /dev/null 2>&1' % (ofgwritePath, self.multi, flashTmp))
-                elif getMachineBuild() in ('gbmv200', 'h9combo', 'u51', 'u52', 'u53', 'u54', 'u56', 'u5', 'u5pvr', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2', 'viper4k', 'hd60', 'hd61', 'v8plus', 'multibox'):
+                elif getMachineBuild() in ('gbmv200', 'h9combo', 'u51', 'u52', 'u53', 'u54', 'u56', 'u5', 'u5pvr', 'cc1', 'sf8008', 'sf8008m', 'ustym4kpro', 'beyonwizv2', 'viper4k', 'hd60', 'hd61', 'v8plus', 'multibox'):
                     cmdlist.append('%s -n -r%s -k%s %s > /dev/null 2>&1' % (ofgwritePath,
                      MTDROOTFS,
                      MTDKERNEL,
@@ -656,7 +656,7 @@ class doFlashImage(Screen):
                 if SystemInfo['HaveMultiBoot']:
                     if self.List not in ('STARTUP', 'cmdline.txt') and not SystemInfo['HasRootSubdir']:
                         os.system('mkfs.ext4 -F ' + self.devrootfs)
-                    if getMachineBuild() in ('gbmv200', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2', 'viper4k'):
+                    if getMachineBuild() in ('gbmv200', 'cc1', 'sf8008', 'sf8008m', 'ustym4kpro', 'beyonwizv2', 'viper4k'):
                         cmdlist.append('%s -r%s -k%s %s > /dev/null 2>&1' % (ofgwritePath,
                          self.MTDROOTFS,
                          self.MTDKERNEL,
@@ -665,7 +665,7 @@ class doFlashImage(Screen):
                         cmdlist.append('%s -f -r -k -m%s %s > /dev/null 2>&1' % (ofgwritePath, self.multi, flashTmp))
                     else:
                         cmdlist.append('%s -r -k -m%s %s > /dev/null 2>&1' % (ofgwritePath, self.multi, flashTmp))
-                elif getMachineBuild() in ('gbmv200', 'h9combo', 'u51', 'u52', 'u53', 'u54', 'u56', 'u5', 'u5pvr', 'cc1', 'sf8008', 'ustym4kpro', 'beyonwizv2', 'viper4k', 'hd60', 'hd61', 'v8plus', 'multibox'):
+                elif getMachineBuild() in ('gbmv200', 'h9combo', 'u51', 'u52', 'u53', 'u54', 'u56', 'u5', 'u5pvr', 'cc1', 'sf8008', 'sf8008m', 'ustym4kpro', 'beyonwizv2', 'viper4k', 'hd60', 'hd61', 'v8plus', 'multibox'):
                     cmdlist.append('%s -r%s -k%s %s > /dev/null 2>&1' % (ofgwritePath,
                      MTDROOTFS,
                      MTDKERNEL,

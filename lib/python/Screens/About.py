@@ -81,11 +81,11 @@ def getAboutText():
 	cpuMHz = ""
 	if getMachineBuild() in ('u41','u42','u43'):
 		cpuMHz = _("   (1.0 GHz)")
-	elif getMachineBuild() in ('vusolo4k','vuultimo4k','vuzero4k'):
+	elif getMachineBuild() in ('dags72604','vusolo4k','vuultimo4k','vuzero4k','gb72604'):
 		cpuMHz = _("   (1.5 GHz)")
 	elif getMachineBuild() in ('formuler1tc','formuler1', 'triplex', 'tiviaraplus'):
 		cpuMHz = _("   (1.3 GHz)")
-	elif getMachineBuild() in ('gbmv200','u51','u5','u53','u532','u533','u52','u54','u55','u56','u5pvr','h9','h9combo','h10','cc1','sf8008','hd60','hd61','i55plus','ustym4kpro','beyonwizv2','viper4k','v8plus','multibox'):
+	elif getMachineBuild() in ('gbmv200','u51','u5','u53','u532','u533','u52','u54','u55','u56','u5pvr','h9','h9combo','h10','cc1','sf8008','sf8008m','hd60','hd61','i55plus','ustym4kpro','beyonwizv2','viper4k','v8plus','multibox'):
 		cpuMHz = _("   (1.6 GHz)")
 	elif getMachineBuild() in ('vuuno4kse','vuuno4k','dm900','dm920', 'gb7252', 'dags7252','xc7439','8100s'):
 		cpuMHz = _("   (1.7 GHz)")
@@ -93,7 +93,7 @@ def getAboutText():
 		cpuMHz = _("   (2.0 GHz)")
 	elif getMachineBuild() in ('vuduo4k',):
 		cpuMHz = _("   (2.1 GHz)")
-	elif getMachineBuild() in ('sf5008','et13000','et1x000','hd52','hd51','sf4008','vs1500','h7','osmio4k','osmio4kplus'):
+	elif getMachineBuild() in ('sf5008','et13000','et1x000','hd52','hd51','sf4008','vs1500','h7','osmio4k','osmio4kplus','osmini4k'):
 		try:
 			import binascii
 			f = open('/sys/firmware/devicetree/base/cpus/cpu@0/clock-frequency', 'rb')
@@ -129,7 +129,7 @@ def getAboutText():
 	if SystemInfo["HasRootSubdir"]:
 		image = find_rootfssubdir("STARTUP")
 		AboutText += _("Selected Image:\t\t%s") % _("STARTUP_") + image[-1:] + bootname + "\n"
-	elif getMachineBuild() in ('gbmv200','cc1','sf8008','ustym4kpro','beyonwizv2',"viper4k"):
+	elif getMachineBuild() in ('gbmv200','cc1','sf8008','sf8008m','ustym4kpro','beyonwizv2',"viper4k"):
 		if path.exists('/boot/STARTUP'):
 			f = open('/boot/STARTUP', 'r')
 			f.seek(5)
@@ -150,7 +150,7 @@ def getAboutText():
 			f.close()
 			if bootname: bootname = "   (%s)" %bootname 
 			AboutText += _("Selected Image:\t\t%s") % _("STARTUP_") + image + bootname + "\n"
-	elif getMachineBuild() in ('osmio4k','osmio4kplus'):
+	elif getMachineBuild() in ('osmio4k','osmio4kplus','osmini4k'):
 		if path.exists('/boot/STARTUP'):
 			f = open('/boot/STARTUP', 'r')
 			f.seek(38)
