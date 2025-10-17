@@ -83,7 +83,7 @@ class SkinSelectorBase:
 			skinfile = self["SkinList"].getCurrent()
 			skinfile = os.path.join(skinfile, self.SKINXML)
 
-		print "Skinselector: Selected Skin: "+self.root+skinfile
+		print("Skinselector: Selected Skin: ")+self.root+skinfile
 		self.config.value = skinfile
 		self.config.save()
 		configfile.save()

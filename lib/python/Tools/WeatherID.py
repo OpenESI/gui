@@ -41,7 +41,7 @@ def get_woeid_from_yahoo(search_string):
 
 	woeid_data = {}
 	woeid_data['count'] = yahoo_woeid_result['query']['count']
-	for i in xrange(yahoo_woeid_result['query']['count']):
+	for i in range(yahoo_woeid_result['query']['count']):
 		try:
 			place_data = result[i]
 		except KeyError:

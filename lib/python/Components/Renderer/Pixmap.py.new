@@ -1,0 +1,153 @@
+"""
+OpenESI Pixmap Renderer - Versione Ottimizzata
+Renderer per immagini con cache e precaricamento
+"""
+
+from Components.Renderer.Renderer import Renderer
+from Tools.Directories import resolveFilename, SCOPE_SKIN
+from enigma import ePixmap, ePicLoad
+import os
+import time
+
+class Pixmap(Renderer):
+    """Renderer Pixmap ottimizzato con cache immagini"""
+    
+    def __init__(self):
+        Renderer.__init__(self)
+        self._pixmap_cache = {}
+        self._current_path = None
+        self._default_pixmap = None
+        self._picload = None
+        self._load_in_progress = False
+        
+    def createInstance(self, parent):
+        return ePixmap(parent)
+        
+    def setPixmap(self, pixmap):
+        """Imposta pixmap con cache"""
+        if not pixmap:
+            self.setDefaultPixmap()
+            return
+            
+        resolved_path = self.resolvePixmapPath(pixmap)
+        if resolved_path and resolved_path != self._current_path:
+            self._current_path = resolved_path
+            
+            # Controlla cache
+            if resolved_path in self._pixmap_cache:
+                self.instance.setPixmap(self._pixmap_cache[resolved_path])
+            else:
+                self.loadPixmap(resolved_path)
+                
+    def resolvePixmapPath(self, pixmap_path):
+        """Risolve il percorso della pixmap"""
+        if not pixmap_path:
+            return None
+            
+        # Cerca in vari scope
+        scopes = [SCOPE_SKIN, SCOPE_SKIN]
+        for scope in scopes:
+            resolved = resolveFilename(scope, pixmap_path)
+            if os.path.exists(resolved):
+                return resolved
+                
+        return pixmap_path if os.path.exists(pixmap_path) else None
+        
+    def loadPixmap(self, pixmap_path):
+        """Carica la pixmap con gestione asincrona"""
+        if not pixmap_path or not os.path.exists(pixmap_path):
+            self.setDefaultPixmap()
+            return
+            
+        try:
+            # Usa ePicLoad per caricamento ottimizzato
+            if not self._picload:
+                self._picload = ePicLoad()
+                
+            self._load_in_progress = True
+            self._picload.PictureData.get().append(self._pixmapLoaded)
+            self._picload.setPara((self.instance.size().width(), 
+                                 self.instance.size().height(), 
+                                 1, 1, False, 1, '#00000000'))
+            self._picload.startDecode(pixmap_path)
+            
+        except Exception as e:
+            print(f'[-] Errore caricamento pixmap {pixmap_path}: {e}')
+            self.setDefaultPixmap()
+            
+    def _pixmapLoaded(self, picInfo=None):
+        """Callback quando la pixmap è caricata"""
+        self._load_in_progress = False
+        if self._picload:
+            ptr = self._picload.getData()
+            if ptr:
+                self.instance.setPixmap(ptr)
+                # Salva in cache
+                if self._current_path:
+                    self._pixmap_cache[self._current_path] = ptr
+                    
+    def setDefaultPixmap(self, default_path=None):
+        """Imposta pixmap di default"""
+        if not self._default_pixmap and default_path:
+            resolved_default = self.resolvePixmapPath(default_path)
+            if resolved_default:
+                self.loadPixmap(resolved_default)
+                self._default_pixmap = resolved_default
+        elif self._default_pixmap:
+            self.loadPixmap(self._default_pixmap)
+            
+    def clearCache(self):
+        """Pulisce la cache pixmap"""
+        self._pixmap_cache = {}
+        
+    def preloadPixmaps(self, pixmap_list):
+        """Precarica una lista di pixmap"""
+        for pixmap_path in pixmap_list:
+            resolved = self.resolvePixmapPath(pixmap_path)
+            if resolved and resolved not in self._pixmap_cache:
+                self.loadPixmap(resolved)
+
+class AnimatedPixmap(Pixmap):
+    """Pixmap con supporto animazioni"""
+    
+    def __init__(self):
+        Pixmap.__init__(self)
+        from enigma import eTimer
+        self.animation_timer = eTimer()
+        self.animation_frames = []
+        self.current_frame = 0
+        self.animation_speed = 100  # ms
+        self.animation_loop = True
+        
+    def setAnimation(self, frame_list, speed=100, loop=True):
+        """Imposta animazione con lista frame"""
+        self.animation_frames = frame_list
+        self.animation_speed = speed
+        self.animation_loop = loop
+        self.current_frame = 0
+        
+        if frame_list:
+            self.animation_timer.timeout.get().append(self._nextFrame)
+            self.animation_timer.start(self.animation_speed)
+            self.setPixmap(frame_list[0])
+            
+    def _nextFrame(self):
+        """Passa al frame successivo"""
+        if not self.animation_frames:
+            return
+            
+        self.current_frame += 1
+        if self.current_frame >= len(self.animation_frames):
+            if self.animation_loop:
+                self.current_frame = 0
+            else:
+                self.stopAnimation()
+                return
+                
+        self.setPixmap(self.animation_frames[self.current_frame])
+        
+    def stopAnimation(self):
+        """Ferma l'animazione"""
+        self.animation_timer.stop()
+        self.animation_frames = []
+        self.current_frame = 0

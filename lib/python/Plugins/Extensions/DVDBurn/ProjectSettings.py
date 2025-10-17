@@ -174,9 +174,9 @@ class ProjectSettings(Screen,ConfigListScreen):
 		
 		self["config"].setList(self.list)
 		self.keydict = {}
-		for key, val in self.settings.dict().iteritems():
+		for key, val in self.settings.dict().items():
 			self.keydict[val] = key
-		for key, val in self.project.menutemplate.settings.dict().iteritems():
+		for key, val in self.project.menutemplate.settings.dict().items():
 			self.keydict[val] = key
 
 	def keyLeft(self):
@@ -225,14 +225,14 @@ class ProjectSettings(Screen,ConfigListScreen):
 	def FileBrowserClosed(self, path, scope, configRef):
 		if scope == "menutemplate":
 			if self.project.menutemplate.loadTemplate(path):
-				print "[ProjectSettings] menu template loaded"
+				print("[ProjectSettings] menu template loaded")
 				configRef.setValue(path)
 				self.initConfigList()
 			else:
 				self.session.open(MessageBox,self.project.error,MessageBox.TYPE_ERROR)
 		elif scope == "project":
 			self.path = path
-			print "len(self.titles)", len(self.project.titles)
+			print("len(self.titles)"), len(self.project.titles)
 			if len(self.project.titles):
 				self.session.openWithCallback(self.askLoadCB, MessageBox,text = _("Your current collection will get lost!") + "\n" + _("Do you want to restore your settings?"), type = MessageBox.TYPE_YESNO)
 			else:

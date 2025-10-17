@@ -101,7 +101,7 @@ class TitleProperties(Screen,ConfigListScreen):
 		self.parent.editTitle()
 
 	def update(self):
-		print "[onShown]"
+		print("[onShown]")
 		self.initConfigList()
 		self.loadThumb()
 
@@ -129,7 +129,7 @@ class TitleProperties(Screen,ConfigListScreen):
 		current_pos = self.title_idx+1
 		new_pos = self.properties.position.getValue()
 		if new_pos != current_pos:
-			print "title got repositioned from ", current_pos, "to", new_pos
+			print("title got repositioned from ", current_pos, "to"), new_pos
 			swaptitle = self.project.titles.pop(current_pos-1)
 			self.project.titles.insert(new_pos-1, swaptitle)
 
