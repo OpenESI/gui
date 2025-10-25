@@ -1,10 +1,10 @@
-from enigma import iPlayableService
-from Source import Source
+from enigma import iPlayableService, eDVBResourceManager, iServiceInformation
 from Components.PerServiceDisplay import PerServiceBase
-from enigma import eDVBResourceManager
+from Components.Sources.Source import Source
+
 
 class FrontendInfo(Source, PerServiceBase):
-	def __init__(self, service_source = None, frontend_source = None, navcore = None):
+	def __init__(self, service_source=None, frontend_source=None, navcore=None):
 		self.navcore = None
 		Source.__init__(self)
 		if navcore:
@@ -33,20 +33,28 @@ class FrontendInfo(Source, PerServiceBase):
 			self.slot_number = self.frontend_type = None
 		else:
 			self.slot_number = data.get("tuner_number")
-			self.frontend_type = data.get("tuner_type")
+			if not self.frontend_source:
+				self.frontend_type = self.getFrontendTransponderType()
+			if not self.frontend_type:
+				self.frontend_type = data.get("tuner_type")
 		self.changed((self.CHANGED_ALL, ))
 
 	def updateTunerMask(self, mask):
 		self.tuner_mask = mask
+		if mask:
+			self.updateFrontendData()
 		self.changed((self.CHANGED_ALL, ))
 
 	def getFrontendData(self):
 		if self.frontend_source:
-			frontend = self.frontend_source()
-			dict = { }
-			if frontend:
-				frontend.getFrontendData(dict)
-			return dict
+			feinfo = {}
+			try:
+				frontend = self.frontend_source()
+				if frontend:
+					frontend.getFrontendData(feinfo)
+			except AttributeError:
+				pass
+			return feinfo
 		elif self.service_source:
 			service = self.navcore and self.service_source()
 			feinfo = service and service.frontendInfo()
@@ -57,6 +65,18 @@ class FrontendInfo(Source, PerServiceBase):
 			return feinfo and feinfo.getFrontendData()
 		else:
 			return None
+
+	def getFrontendTransponderType(self):
+		service = None
+		if self.service_source:
+			service = self.navcore and self.service_source()
+		elif self.navcore:
+			service = self.navcore.getCurrentService()
+		info = service and service.info()
+		data = info and info.getInfoObject(iServiceInformation.sTransponderData)
+		if data and data != -1:
+			return data.get("tuner_type")
+		return None
 
 	def destroy(self):
 		if not self.frontend_source and not self.service_source:

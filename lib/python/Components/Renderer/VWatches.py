@@ -12,17 +12,17 @@
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
-#    
+#
 #######################################################################
 
 import math
-from Renderer import Renderer
+from enigma import eCanvas, eRect, eSize, gRGB
+from Components.Renderer.Renderer import Renderer
 from skin import parseColor
-from enigma import eCanvas, eSize, gRGB, eRect
-from Components.VariableText import VariableText
-from Components.config import config
+
 
 class VWatches(Renderer):
+	GUI_WIDGET = eCanvas
 
 	def __init__(self):
 		Renderer.__init__(self)
@@ -30,14 +30,12 @@ class VWatches(Renderer):
 		self.bColor = gRGB(0, 0, 0, 255)
 		self.numval = -1
 
-	GUI_WIDGET = eCanvas
-
 	def applySkin(self, desktop, parent):
 		attribs = []
 		for (attrib, what) in self.skinAttributes:
-			if (attrib == 'foregroundColor'):
+			if (attrib == "foregroundColor"):
 				self.fColor = parseColor(what)
-			elif (attrib == 'backgroundColor'):
+			elif (attrib == "backgroundColor"):
 				self.bColor = parseColor(what)
 			else:
 				attribs.append((attrib, what))
@@ -47,8 +45,8 @@ class VWatches(Renderer):
 	def calculate(self, w, r, m):
 		a = (w * 6)
 		z = (math.pi / 180)
-		x = int(round((r * math.sin((a * z)))))
-		y = int(round((r * math.cos((a * z)))))
+		x = int(round(r * math.sin(a * z)))
+		y = int(round(r * math.cos(a * z)))
 		return ((m + x), (m - y))
 
 	def hand(self):
@@ -61,49 +59,40 @@ class VWatches(Renderer):
 	def draw_line(self, x0, y0, x1, y1):
 		steep = abs(y1 - y0) > abs(x1 - x0)
 		if steep:
-			x0, y0 = y0, x0  
+			x0, y0 = y0, x0
 			x1, y1 = y1, x1
 		if x0 > x1:
 			x0, x1 = x1, x0
 			y0, y1 = y1, y0
-		if y0 < y1: 
-			ystep = 1
-		else:
-			ystep = -1
+		ystep = 1 if y0 < y1 else -1
 		deltax = x1 - x0
 		deltay = abs(y1 - y0)
 		error = -deltax / 2
-		y = y0
-		for x in range(x0, x1 + 1):
+		y = int(y0)
+		for x in range(int(x0), int(x1 + 1)):
 			if steep:
 				self.instance.fillRect(eRect(y, x, 1, 3), self.fColor)
-			else:          
+			else:
 				self.instance.fillRect(eRect(x, y, 1, 3), self.fColor)
 			error = error + deltay
 			if error > 0:
 				y = y + ystep
 				error = error - deltax
-        
-	def changed(self, what):
-		sss = self.source.value
-		if what[0] == self.CHANGED_CLEAR:
-			pass
-		else:
-			if self.instance:
-				if self.numval != sss:
-					self.numval = sss
-					self.instance.clear(self.bColor)
-					self.hand()
-					
-	def postWidgetCreate(self, instance):
 
+	def changed(self, what):
+		if what[0] != self.CHANGED_CLEAR:
+			value = self.source.value
+			if self.instance and self.numval != value:
+				self.numval = value
+				self.instance.clear(self.bColor)
+				self.hand()
+
+	def postWidgetCreate(self, instance):
 		def parseSize(str):
-			(x, y,) = str.split(',')
+			(x, y,) = str.split(",")
 			return eSize(int(x), int(y))
 
 		for (attrib, value,) in self.skinAttributes:
-			if ((attrib == 'size') and self.instance.setSize(parseSize(value))):
+			if ((attrib == "size") and self.instance.setSize(parseSize(value))):
 				pass
 		self.instance.clear(self.bColor)
-
-        

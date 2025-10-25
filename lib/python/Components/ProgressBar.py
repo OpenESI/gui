@@ -1,28 +1,26 @@
-from HTMLComponent import HTMLComponent
-from GUIComponent import GUIComponent
-from VariableValue import VariableValue
-
 from enigma import eSlider
+from Components.GUIComponent import GUIComponent
+from Components.VariableValue import VariableValue
 
-# a general purpose progress bar
-class ProgressBar(VariableValue, HTMLComponent, GUIComponent, object):
+
+class ProgressBar(VariableValue, GUIComponent):  # A general purpose progress bar
+
 	def __init__(self):
 		GUIComponent.__init__(self)
 		VariableValue.__init__(self)
-		self.__start = 0
-		self.__end = 100
+		self.__range = (0, 100)
 
 	GUI_WIDGET = eSlider
 
 	def postWidgetCreate(self, instance):
-		instance.setRange(self.__start, self.__end)
+		instance.setRange(*self.__range)
 
 	def setRange(self, range):
-		(__start, __end) = range
+		self.__range = range
 		if self.instance is not None:
-			self.instance.setRange(__start, __end)
+			self.instance.setRange(*self.__range)
 
 	def getRange(self):
-		return self.__start, self.__end
+		return self.__range
 
 	range = property(getRange, setRange)

@@ -1,12 +1,13 @@
-from datetime import datetime
-
 from enigma import iPlayableService
-from Poll import Poll
+
+from datetime import datetime
+from Components.Converter.Poll import Poll
 from Components.Converter.Converter import Converter
 from Components.Element import cached
+from Components.config import configfile
 
 
-class VfdDisplay(Poll, Converter, object):
+class VfdDisplay(Poll, Converter):
 	def __init__(self, type):
 		Converter.__init__(self, type)
 		Poll.__init__(self)
@@ -15,6 +16,21 @@ class VfdDisplay(Poll, Converter, object):
 		self.delay = 5000
 		self.loop = -1
 		self.type = type.lower().split(';')
+		configValue = None
+		for value in self.type:
+			if value.startswith("config."):
+				configValue = configfile.getResolvedKey(value, silent=True)  # Invalid/non-existent keys will return None.
+				break
+
+		if configValue == "nothing":
+			self.delay = 0
+			self.type = ["nothing"]
+			return
+		elif configValue == "time":
+			self.type = []
+		elif configValue == "number":
+			self.type = ["number"]
+
 		if 'number' in self.type and 'clock' not in self.type:  # Only channel number
 			self.delay = 0
 			self.poll_enabled = False
@@ -41,6 +57,8 @@ class VfdDisplay(Poll, Converter, object):
 
 	@cached
 	def getText(self):
+		if "nothing" in self.type:
+			return "    "
 		if hasattr(self.source, 'text'):
 			if 'nozero' in self.type:
 				return self.source.text.rjust(4)
@@ -76,7 +94,7 @@ class VfdDisplay(Poll, Converter, object):
 	text = property(getText)
 
 	def changed(self, what):
-		if what[0] is self.CHANGED_SPECIFIC and self.delay >= 0:
+		if what[0] is self.CHANGED_SPECIFIC and (what[1] in (iPlayableService.evStart, iPlayableService.evEnd, iPlayableService.evNewProgramInfo)) and self.delay >= 0:
 			self.showclock = 0
 			if self.loop != -1:
 				self.loop = self.delay
@@ -87,4 +105,3 @@ class VfdDisplay(Poll, Converter, object):
 			Converter.changed(self, what)
 		elif what[0] is self.CHANGED_ALL:
 			Converter.changed(self, what)
- 

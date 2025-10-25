@@ -1,61 +1,51 @@
-from Screens.Screen import Screen
-from Components.ConfigList import ConfigListScreen
-from Components.config import config, ConfigSubsection, ConfigSelection, getConfigListEntry
-from Components.ActionMap import ActionMap
-from Components.Pixmap import Pixmap, MovingPixmap
-from Screens.MessageBox import MessageBox
-from Components.Sources.StaticText import StaticText
-from Plugins.Plugin import PluginDescriptor
-from Tools.Directories import fileExists
-from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+from pickle import dump, load
+from os import access, F_OK, R_OK
+from enigma import eServiceReference, eTimer
 
-from Components.Sources.List import List
+from Components.ActionMap import ActionMap, HelpableActionMap
+from Components.config import config, ConfigSubsection, ConfigNumber
 from Components.Label import Label
-from Components.ActionMap import HelpableActionMap
 from Components.MenuList import MenuList
+from Components.Slider import Slider
+from Components.Sources.List import List
+from Components.SystemInfo import BoxInfo
 
 from Screens.ChannelSelection import ChannelSelectionBase
-from enigma import eServiceReference
-from enigma import eListboxPythonMultiContent
-from enigma import eTimer
-from ServiceReference import ServiceReference
-from Components.FileList import FileList
-from Components.Button import Button
 from Screens.ChoiceBox import ChoiceBox
+from Screens.MessageBox import MessageBox
 from Screens.QuadPiP import QuadPiP
-
+from Screens.Screen import Screen
 from Screens.VirtualKeyBoard import VirtualKeyBoard
-from Screens.HelpMenu import HelpableScreen
+from ServiceReference import ServiceReference
 
-import pickle
-import os
-
-from Components.config import config, ConfigSubsection, ConfigNumber
-from Components.Slider import Slider
-
-from Components.SystemInfo import SystemInfo
 
 config.plugins.quadpip = ConfigSubsection()
-config.plugins.quadpip.lastchannel = ConfigNumber(default = 1)
+config.plugins.quadpip.lastchannel = ConfigNumber(default=1)
 
 ENABLE_QPIP_PROCPATH = "/proc/stb/video/decodermode"
 
+
 def setDecoderMode(value):
-	if os.access(ENABLE_QPIP_PROCPATH, os.F_OK):
-		open(ENABLE_QPIP_PROCPATH,"w").write(value)
-		return open(ENABLE_QPIP_PROCPATH,"r").read().strip() == value
+	if access(ENABLE_QPIP_PROCPATH, F_OK):
+		newval = None
+		with open(ENABLE_QPIP_PROCPATH, "w") as fd:
+			fd.write(value)
+		with open(ENABLE_QPIP_PROCPATH) as fd:
+			newval = fd.read().strip()
+		return newval == value
+
 
 class QuadPipChannelEntry:
 	def __init__(self, name, idx, ch1, ch2, ch3, ch4):
 		self.name = name
 		self.idx = idx
-		self.channel = {"1" : ch1, "2" : ch2, "3" : ch1, "4" : ch1,}
+		self.channel = {"1": ch1, "2": ch2, "3": ch1, "4": ch1, }
 
 	def __str__(self):
 		return "idx : %d, name : %s, ch0 : %s, ch1 : %s, ch2 : %s, ch3 : %s"\
 					% (self.idx, self.name, self.channel.get("1"), self.channel.get("2"), self.channel.get("3"), self.channel.get("4"))
 
-	def __cmp__(self, other):
+	def __lt__(self, other):
 		return self.idx - other.idx
 
 	def getName(self):
@@ -65,14 +55,14 @@ class QuadPipChannelEntry:
 		return self.idx
 
 	def setChannel(self, idx, chName, sref):
-		if self.channel.has_key(idx):
+		if idx in self.channel:
 			self.channel[idx] = (chName, sref)
 			return True
 
 		return False
 
 	def deleteChannel(self, idx):
-		if self.channel.has_key(idx):
+		if idx in self.channel:
 			self.channel[idx] = None
 			return True
 
@@ -105,6 +95,7 @@ class QuadPipChannelEntry:
 	def setName(self, name):
 		self.name = name
 
+
 class QuadPipChannelData:
 	def __init__(self):
 		self.PipChannelList = []
@@ -112,19 +103,17 @@ class QuadPipChannelData:
 		self.dataLoad()
 
 	def dataSave(self):
-		fd = open(self.pipChannelDataPath, "w")
-		pickle.dump(self.PipChannelList, fd)
-		fd.close()
-		#print "[*] dataSave"
+		with open(self.pipChannelDataPath, "wb") as fd:
+			dump(self.PipChannelList, fd)
+		# print("[*] dataSave")
 
 	def dataLoad(self):
-		if not os.access(self.pipChannelDataPath, os.R_OK):
+		if not access(self.pipChannelDataPath, R_OK):
 			return
 
-		fd = open(self.pipChannelDataPath, "r")
-		self.PipChannelList = pickle.load(fd)
-		fd.close()
-		#print "[*] dataLoad"
+		with open(self.pipChannelDataPath, "rb") as fd:
+			self.PipChannelList = load(fd)
+		# print("[*] dataLoad")
 
 	def getPipChannels(self):
 		return self.PipChannelList
@@ -132,10 +121,11 @@ class QuadPipChannelData:
 	def length(self):
 		return len(self.PipChannelList)
 
+
 class QuadPipChannelList(QuadPipChannelData):
 	def __init__(self):
 		QuadPipChannelData.__init__(self)
-		self._curIdx = config.plugins.quadpip.lastchannel.value # starting from 1
+		self._curIdx = config.plugins.quadpip.lastchannel.value  # starting from 1
 		self.defaultEntryPreName = _("Quad PiP channel ")
 
 	def saveAll(self):
@@ -167,7 +157,7 @@ class QuadPipChannelList(QuadPipChannelData):
 
 	def removeChannel(self, _channel):
 		if self.getIdx() == _channel.getIndex():
-			self.setIdx(0) # set invalid index
+			self.setIdx(0)  # set invalid index
 
 		self.PipChannelList.remove(_channel)
 
@@ -184,14 +174,16 @@ class QuadPipChannelList(QuadPipChannelData):
 	def getDefaultPreName(self):
 		return self.defaultEntryPreName
 
+
 quad_pip_channel_list_instance = QuadPipChannelList()
+
 
 class CreateQuadPipChannelEntry(ChannelSelectionBase):
 	skin_default_1080p = """
 		<screen name="CreateQuadPipChannelEntry" position="center,center" size="1500,850" flags="wfNoBorder">
 			<widget source="Title" render="Label" position="100,60" size="1300,60" zPosition="3" font="Semiboldit;52" halign="left" valign="center" backgroundColor="#25062748" transparent="1" />
 			<ePixmap pixmap="skin_default/buttons/red.png" position="137,140" size="140,40" alphatest="blend" />
- 			<ePixmap pixmap="skin_default/buttons/green.png" position="492,140" size="140,40" alphatest="blend" />
+			<ePixmap pixmap="skin_default/buttons/green.png" position="492,140" size="140,40" alphatest="blend" />
 			<ePixmap pixmap="skin_default/buttons/yellow.png" position="837,140" size="140,40" alphatest="blend" />
 			<ePixmap pixmap="skin_default/buttons/blue.png" position="1192,140" size="140,40" alphatest="blend" />
 			<widget name="key_red" position="137,140" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" foregroundColor="#ffffff" transparent="1" />
@@ -208,7 +200,7 @@ class CreateQuadPipChannelEntry(ChannelSelectionBase):
 		<screen name="CreateQuadPipChannelEntry" position="center,center" size="1000,610" flags="wfNoBorder">
 			<widget source="Title" render="Label" position="40,40" size="910,40" zPosition="3" font="Semiboldit;32" backgroundColor="#25062748" transparent="1" />
 			<ePixmap pixmap="skin_default/buttons/red.png" position="75,80" size="140,40" alphatest="blend" />
- 			<ePixmap pixmap="skin_default/buttons/green.png" position="325,80" size="140,40" alphatest="blend" />
+			<ePixmap pixmap="skin_default/buttons/green.png" position="325,80" size="140,40" alphatest="blend" />
 			<ePixmap pixmap="skin_default/buttons/yellow.png" position="575,80" size="140,40" alphatest="blend" />
 			<ePixmap pixmap="skin_default/buttons/blue.png" position="825,80" size="140,40" alphatest="blend" />
 			<widget name="key_red" position="75,80" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" foregroundColor="#ffffff" transparent="1" />
@@ -225,7 +217,7 @@ class CreateQuadPipChannelEntry(ChannelSelectionBase):
 		<screen name="CreateQuadPipChannelEntry" position="center,center" size="680,520" flags="wfNoBorder">
 			<widget source="Title" render="Label" position="30,20" size="600,30" zPosition="3" font="Regular;22" backgroundColor="#25062748" transparent="1" />
 			<ePixmap pixmap="skin_default/buttons/red.png" position="15,60" size="140,40" alphatest="blend" />
- 			<ePixmap pixmap="skin_default/buttons/green.png" position="185,60" size="140,40" alphatest="blend" />
+			<ePixmap pixmap="skin_default/buttons/green.png" position="185,60" size="140,40" alphatest="blend" />
 			<ePixmap pixmap="skin_default/buttons/yellow.png" position="355,60" size="140,40" alphatest="blend" />
 			<ePixmap pixmap="skin_default/buttons/blue.png" position="525,60" size="140,40" alphatest="blend" />
 			<widget name="key_red" position="15,60" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" foregroundColor="#ffffff" transparent="1" />
@@ -238,24 +230,24 @@ class CreateQuadPipChannelEntry(ChannelSelectionBase):
 			<widget name="description" position="360,390" size="310,140" font="Regular;20" halign="left" transparent="1" />
 		</screen>
 		"""
-	def __init__(self, session, defaultEntryName, channel = None):
+
+	def __init__(self, session, defaultEntryName, channel=None):
 		ChannelSelectionBase.__init__(self, session)
 
 		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions", "QuadPipChannelEditActions"],
 		{
 			"cancel": self.Exit,
 			"ok": self.channelSelected,
-			"toggleList" : self.toggleCurrList,
-			"editName" : self.editEntryName,
+			"toggleList": self.toggleCurrList,
+			"editName": self.editEntryName,
 			"up": self.goUp,
 			"down": self.goDown,
 		}, -1)
 
-		self.session = session
 		dh = self.session.desktop.size().height()
-		self.skin = {1080:CreateQuadPipChannelEntry.skin_default_1080p, \
-						720:CreateQuadPipChannelEntry.skin_default_720p, \
-						576:CreateQuadPipChannelEntry.skin_default_576p}.get(dh, CreateQuadPipChannelEntry.skin_default_1080p)
+		self.skin = {1080: CreateQuadPipChannelEntry.skin_default_1080p,
+						720: CreateQuadPipChannelEntry.skin_default_720p,
+						576: CreateQuadPipChannelEntry.skin_default_576p}.get(dh, CreateQuadPipChannelEntry.skin_default_1080p)
 
 		self.defaultEntryName = defaultEntryName
 		self["textChannels"] = Label(" ")
@@ -281,7 +273,7 @@ class CreateQuadPipChannelEntry(ChannelSelectionBase):
 		self["textChannels"].setText("%s :" % self.newChannel.getName())
 
 	def editEntryName(self):
-		self.session.openWithCallback(self.editEntryNameCB, VirtualKeyBoard, title = (_("Input channel name.")), text = self.newChannel.getName())
+		self.session.openWithCallback(self.editEntryNameCB, VirtualKeyBoard, title=(_("Input channel name.")), text=self.newChannel.getName())
 
 	def editEntryNameCB(self, newName):
 		if newName:
@@ -304,14 +296,14 @@ class CreateQuadPipChannelEntry(ChannelSelectionBase):
 
 	def updateDescChannels(self):
 		self.descChannels = []
-		for idx in range(1,5):
+		for idx in range(1, 5):
 			sIdx = str(idx)
 			_isEmpty = False
 			chName = self.newChannel.getChannelName(sIdx)
 			if chName is None:
 				chName = _(" <empty>")
 				_isEmpty = True
-			self.descChannels.append(("%d)  %s" % (idx, chName), sIdx, _isEmpty))	
+			self.descChannels.append(("%d)  %s" % (idx, chName), sIdx, _isEmpty))
 
 	def updateDescChannelList(self):
 		self["selectedList"].setList(self.descChannels)
@@ -346,7 +338,7 @@ class CreateQuadPipChannelEntry(ChannelSelectionBase):
 		self.currList = "selectedList"
 		self.updateDescription()
 
-	def channelSelected(self): # just return selected service
+	def channelSelected(self):  # just return selected service
 		if self.currList == "channelList":
 			ref = self.getCurrentSelection()
 			if (ref.flags & 7) == 7:
@@ -358,7 +350,7 @@ class CreateQuadPipChannelEntry(ChannelSelectionBase):
 				#self.addChannel(serviceName, sref)
 				_title = _('Choice where to put "%s"') % serviceName
 				_list = []
-				for idx in range(1,5):
+				for idx in range(1, 5):
 					sIdx = str(idx)
 					_isEmpty = False
 					chName = self.newChannel.getChannelName(sIdx)
@@ -387,7 +379,7 @@ class CreateQuadPipChannelEntry(ChannelSelectionBase):
 				self.updateDescChannelList()
 
 	def getNewChannel(self):
-		for idx in range(1,5):
+		for idx in list(range(1, 5)):
 			sIdx = str(idx)
 			ch = self.newChannel.getChannel(sIdx)
 			if ch is not None:
@@ -398,7 +390,8 @@ class CreateQuadPipChannelEntry(ChannelSelectionBase):
 	def Exit(self):
 		self.close(self.getNewChannel())
 
-class QuadPiPChannelSelection(Screen, HelpableScreen):
+
+class QuadPiPChannelSelection(Screen):
 	skin = """
 		<screen position="%s,%s" size="%d,%d">
 			<ePixmap pixmap="skin_default/buttons/red.png" position="%d,%d" size="140,40" alphatest="on" />
@@ -426,38 +419,37 @@ class QuadPiPChannelSelection(Screen, HelpableScreen):
 			</widget>
 		</screen>
 		"""
+
 	def __init__(self, session):
-		self.session = session
-		Screen.__init__(self, session)
-		HelpableScreen.__init__(self)
+		Screen.__init__(self, session, enableHelp=True)
 		self.setTitle(_("Quad PiP Channel Selection"))
 
 		dw = self.session.desktop.size().width()
 		dh = self.session.desktop.size().height()
-		pw, ph = {1080:("center", "center"), 720:("center", "center"), 576:("center", "20%")}.get(dh, ("center", "center"))
-		(sw, sh) = {1080:(dw/3, dh/2), 720:(int(dw/2), int(dh/1.5)), 576:(int(dw/1.3), int(dh/1.5))}.get(dh, (28, 24))
+		pw, ph = {1080: ("center", "center"), 720: ("center", "center"), 576: ("center", "20%")}.get(dh, ("center", "center"))
+		(sw, sh) = {1080: (dw / 3, dh / 2), 720: (int(dw / 2), int(dh / 1.5)), 576: (int(dw / 1.3), int(dh / 1.5))}.get(dh, (28, 24))
 		button_margin = 5
 		button_h = 40
-		list_y = 40+button_margin*3
-		self.fontSize = {1080:(28, 24), 720:(24,20), 576:(20,18)}.get(dh, (28, 24))
-		self.skin = QuadPiPChannelSelection.skin % (pw, ph, \
-														sw, sh+list_y, \
-														sw/8-70, button_margin, \
-														sw/8-70+sw/4, button_margin, \
-														sw/8-70+sw/4*2, button_margin, \
-														sw/8-70+sw/4*3, button_margin, \
-														sw/8-70, button_margin, \
-														sw/8-70+sw/4, button_margin, \
-														sw/8-70+sw/4*2, button_margin, \
-														sw/8-70+sw/4*3, button_margin, \
-														0, list_y, sw, sh, \
-														sw/16, 1, sw-sw/16*2, sh/13, \
-														sw/11, 1+sh/13, 			sw-sw/16*2-sw/8, sh/18, \
-														sw/11, 1+sh/13+sh/18, 	sw-sw/16*2-sw/8, sh/18, \
-														sw/11, 1+sh/13+sh/18*2, 	sw-sw/16*2-sw/8, sh/18, \
-														sw/11, 1+sh/13+sh/18*3, 	sw-sw/16*2-sw/8, sh/18, \
-														self.fontSize[0], self.fontSize[1], \
-														sh/3)
+		list_y = 40 + button_margin * 3
+		self.fontSize = {1080: (28, 24), 720: (24, 20), 576: (20, 18)}.get(dh, (28, 24))
+		self.skin = QuadPiPChannelSelection.skin % (pw, ph,
+														sw, sh + list_y,
+														sw / 8 - 70, button_margin,
+														sw / 8 - 70 + sw / 4, button_margin,
+														sw / 8 - 70 + sw / 4 * 2, button_margin,
+														sw / 8 - 70 + sw / 4 * 3, button_margin,
+														sw / 8 - 70, button_margin,
+														sw / 8 - 70 + sw / 4, button_margin,
+														sw / 8 - 70 + sw / 4 * 2, button_margin,
+														sw / 8 - 70 + sw / 4 * 3, button_margin,
+														0, list_y, sw, sh,
+														sw / 16, 1, sw - sw / 16 * 2, sh / 13,
+														sw / 11, 1 + sh / 13, sw - sw / 16 * 2 - sw / 8, sh / 18,
+														sw / 11, 1 + sh / 13 + sh / 18, sw - sw / 16 * 2 - sw / 8, sh / 18,
+														sw / 11, 1 + sh / 13 + sh / 18 * 2, sw - sw / 16 * 2 - sw / 8, sh / 18,
+														sw / 11, 1 + sh / 13 + sh / 18 * 3, sw - sw / 16 * 2 - sw / 8, sh / 18,
+														self.fontSize[0], self.fontSize[1],
+														sh / 3)
 		self["key_red"] = Label(_("Select"))
 		self["key_green"] = Label(_("Add"))
 		self["key_yellow"] = Label(_("Remove"))
@@ -482,10 +474,10 @@ class QuadPiPChannelSelection(Screen, HelpableScreen):
 
 		self.oldPosition = None
 
-		global quad_pip_channel_list_instance
+#		global quad_pip_channel_list_instance
 		self.qpipChannelList = quad_pip_channel_list_instance
 
-		self.oldPosition = self.qpipChannelList.getIdx()-1
+		self.oldPosition = self.qpipChannelList.getIdx() - 1
 
 		self.onLayoutFinish.append(self.layoutFinishedCB)
 
@@ -552,7 +544,7 @@ class QuadPiPChannelSelection(Screen, HelpableScreen):
 		if newChannel:
 			self.qpipChannelList.addNewChannel(newChannel)
 			self.qpipChannelList.sortPipChannelList()
-			self.oldPosition = newChannel.getIndex()-1
+			self.oldPosition = newChannel.getIndex() - 1
 			self.updateDisplay()
 			self.updatePosition()
 
@@ -592,6 +584,7 @@ class QuadPiPChannelSelection(Screen, HelpableScreen):
 	def getChannelList(self):
 		return self.qpipChannelList.getPipChannels()
 
+
 class FocusShowHide:
 	STATE_HIDDEN = 0
 	STATE_SHOWN = 1
@@ -628,24 +621,25 @@ class FocusShowHide:
 		elif self.__state == self.STATE_HIDDEN:
 			self.showFocus()
 
-class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
+
+class QuadPipScreen(Screen, FocusShowHide):
 	skin = """
 		<screen position="0,0" size="%d,%d" backgroundColor="transparent" flags="wfNoBorder">
-			<widget name="ch1" position="240,240" zPosition="1" size="480,60" font="Regular; %d" halign="center" valign="center" foregroundColor="white" backgroundColor="#ffffffff" alphatest="on" borderWidth="2"/>
-			<widget name="ch2" position="1200,240" zPosition="1" size="480,60" font="Regular; %d" halign="center" valign="center" foregroundColor="white" backgroundColor="#ffffffff" alphatest="on" borderWidth="2"/>
-			<widget name="ch3" position="240,780" zPosition="1" size="480,60" font="Regular; %d" halign="center" valign="center" foregroundColor="white" backgroundColor="#ffffffff" alphatest="on" borderWidth="2"/>
-			<widget name="ch4" position="1200,780" zPosition="1" size="480,60" font="Regular; %d" halign="center" valign="center" foregroundColor="white" backgroundColor="#ffffffff" alphatest="on" borderWidth="2"/>
-			<widget name="text1" position="%d,%d" zPosition="2" size="%d,%d" font="Regular; %d" halign="left" valign="center" alphatest="on" borderWidth="2"/>
-			<widget name="text2" position="%d,%d" zPosition="2" size="%d,%d" font="Regular; %d" halign="left" valign="center" alphatest="on" borderWidth="2"/>
+			<widget name="ch1" position="240,240" zPosition="1" size="480,60" font="Regular; %d" halign="center" valign="center" foregroundColor="white" backgroundColor="#ffffffff" borderWidth="2"/>
+			<widget name="ch2" position="1200,240" zPosition="1" size="480,60" font="Regular; %d" halign="center" valign="center" foregroundColor="white" backgroundColor="#ffffffff" borderWidth="2"/>
+			<widget name="ch3" position="240,780" zPosition="1" size="480,60" font="Regular; %d" halign="center" valign="center" foregroundColor="white" backgroundColor="#ffffffff" borderWidth="2"/>
+			<widget name="ch4" position="1200,780" zPosition="1" size="480,60" font="Regular; %d" halign="center" valign="center" foregroundColor="white" backgroundColor="#ffffffff" borderWidth="2"/>
+			<widget name="text1" position="%d,%d" zPosition="2" size="%d,%d" font="Regular; %d" halign="left" valign="center" borderWidth="2"/>
+			<widget name="text2" position="%d,%d" zPosition="2" size="%d,%d" font="Regular; %d" halign="left" valign="center" borderWidth="2"/>
 			<widget name="focus" position="0,0" zPosition="-1" size="960,540" backgroundColor="#ffffffff" borderWidth="5" borderColor="#e61616" alphatest="on" />
 		</screen>
 		"""
+
 	def __init__(self, session):
 		self.session = session
 		self.session.qPips = None
-		Screen.__init__(self, session)
+		Screen.__init__(self, session, enableHelp=True)
 		FocusShowHide.__init__(self)
-		HelpableScreen.__init__(self)
 		self.setTitle(_("Quad PiP Screen"))
 
 		self["actions"] = HelpableActionMap(self, "QuadPipSetupActions",
@@ -656,12 +650,12 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 			"right": (self.keyRight, _("Select channel audio")),
 			"up": (self.keyUp, _("Select channel audio")),
 			"down": (self.keyDown, _("Select channel audio")),
-			"channelup" : (self.KeyChannel, _("Show channel selection")),
-			"channeldown" : (self.KeyChannel, _("Show channel selection")),
-			"menu" : (self.KeyChannel, _("Show channel selection")),
-			"channelPrev" : (self.KeyPrev, _("Prev quad PiP channel")),
-			"channelNext" : (self.KeyNext, _("Next quad PiP channel")),
-			"red" : (self.KeyRed, _("Show/Hide focus bar")),
+			"channelup": (self.KeyChannel, _("Show channel selection")),
+			"channeldown": (self.KeyChannel, _("Show channel selection")),
+			"menu": (self.KeyChannel, _("Show channel selection")),
+			"channelPrev": (self.KeyPrev, _("Prev quad PiP channel")),
+			"channelNext": (self.KeyNext, _("Next quad PiP channel")),
+			"red": (self.KeyRed, _("Show/Hide focus bar")),
 		}, -1)
 
 		self["ch1"] = Label(_(" "))
@@ -672,18 +666,18 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 		self["text2"] = Label(_("  Menu key : Select quad channel"))
 		self["focus"] = Slider(-1, -1)
 
-		self.currentPosition = 1 # 1~4
+		self.currentPosition = 1  # 1~4
 		self.updatePositionList()
 
-		self.skin = QuadPipScreen.skin % (self.session.desktop.size().width(), self.session.desktop.size().height(), \
-												self.fontSize, self.fontSize, self.fontSize, self.fontSize, \
-												self.text1Pos[0], self.text1Pos[1], self.text1Pos[2], self.text1Pos[3], self.fontSize, \
+		self.skin = QuadPipScreen.skin % (self.session.desktop.size().width(), self.session.desktop.size().height(),
+												self.fontSize, self.fontSize, self.fontSize, self.fontSize,
+												self.text1Pos[0], self.text1Pos[1], self.text1Pos[2], self.text1Pos[3], self.fontSize,
 												self.text2Pos[0], self.text2Pos[1], self.text2Pos[2], self.text2Pos[3], self.fontSize)
 		self.oldService = None
 		self.curChannel = None
 		self.curPlayAudio = -1
 
-		global quad_pip_channel_list_instance
+#		global quad_pip_channel_list_instance
 		self.qpipChannelList = quad_pip_channel_list_instance
 
 		self.oldFccEnable = False
@@ -704,29 +698,29 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 		self.session.openWithCallback(self.close, MessageBox, _("Quad PiP is not available."), MessageBox.TYPE_ERROR)
 
 	def showNotSupport(self):
-		self.session.openWithCallback(self.close, MessageBox, _("Box or driver is not support Quad PiP."), MessageBox.TYPE_ERROR)
+		self.session.openWithCallback(self.close, MessageBox, _("Receiver does not support Quad PiP."), MessageBox.TYPE_ERROR)
 
 	def noChannelTimerCB(self):
 		self.session.openWithCallback(self.ChannelSelectCB, QuadPiPChannelSelection)
 
 	def layoutFinishedCB(self):
-		if not os.access(ENABLE_QPIP_PROCPATH, os.F_OK):
+		if not access(ENABLE_QPIP_PROCPATH, F_OK):
 			self.notSupportTimer.start(100, True)
 			return
 
 		self.onClose.append(self.__onClose)
 
-		if self.session.pipshown: # try to disable pip
+		if self.session.pipshown:  # try to disable pip
 			self.session.pipshown = False
 			del self.session.pip
 
 		self.oldService = self.session.nav.getCurrentlyPlayingServiceReference()
 		self.session.nav.stopService()
 
-		if SystemInfo.get("FastChannelChange", False):
+		if BoxInfo.getItem("FastChannelChange", False):
 			self.disableFCC()
 
-		if SystemInfo.get("MiniTV", False):
+		if BoxInfo.getItem("MiniTV", False):
 			self.disableMiniTV()
 
 		ret = setDecoderMode("mosaic")
@@ -745,10 +739,10 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 		self.disableQuadPip()
 		setDecoderMode("normal")
 
-		if SystemInfo.get("FastChannelChange", False):
+		if BoxInfo.getItem("FastChannelChange", False):
 			self.enableFCC()
 
-		if SystemInfo.get("MiniTV", False):
+		if BoxInfo.getItem("MiniTV", False):
 			self.enableMiniTV()
 
 		self.qpipChannelList.saveAll()
@@ -756,10 +750,10 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 
 	def getChannelPosMap(self, w, h):
 		rectMap = {}
-		ch1 = (0, 0, int(w*0.5), int(h*0.5))
-		ch2 = (int(w*0.5), 0, int(w*0.5), int(h*0.5))
-		ch3 = (0, int(h*0.5), int(w*0.5), int(h*0.5))
-		ch4 = (int(w*0.5), int(h*0.5), int(w*0.5), int(h*0.5))
+		ch1 = (0, 0, int(w * 0.5), int(h * 0.5))
+		ch2 = (int(w * 0.5), 0, int(w * 0.5), int(h * 0.5))
+		ch3 = (0, int(h * 0.5), int(w * 0.5), int(h * 0.5))
+		ch4 = (int(w * 0.5), int(h * 0.5), int(w * 0.5), int(h * 0.5))
 		rectMap = (None, ch1, ch2, ch3, ch4)
 
 		return rectMap
@@ -776,17 +770,20 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 		self.movePositionMap["up"] = [-1, 3, 4, 1, 2]
 		self.movePositionMap["down"] = [-1, 3, 4, 1, 2]
 
+		h18 = int(h / 18)
 		self.labelPositionMap = {}
-		self.labelPositionMap["ch1"] = (w/8,		h/4-h/36,		w/4,	h/18)
-		self.labelPositionMap["ch2"] = (w/8+w/2,	h/4-h/36,		w/4,	h/18)
-		self.labelPositionMap["ch3"] = (w/8,		h/4-h/36+h/2,	w/4,	h/18)
-		self.labelPositionMap["ch4"] = (w/8+w/2,	h/4-h/36+h/2,	w/4,	h/18)
+		self.labelPositionMap["ch1"] = (w / 8, h / 4 - h / 36, w / 4, h18)
+		self.labelPositionMap["ch2"] = (w / 8 + w / 2, h / 4 - h / 36, w / 4, h18)
+		self.labelPositionMap["ch3"] = (w / 8, h / 4 - h / 36 + h / 2, w / 4, h18)
+		self.labelPositionMap["ch4"] = (w / 8 + w / 2, h / 4 - h / 36 + h / 2, w / 4, h18)
 
 		self.decoderIdxMap = [None, 0, 1, 2, 3]
 
-		self.fontSize = {1080:40, 720:28, 576:18}.get(h, 40)
-		self.text1Pos = (w-w/3, h-h/18-h/18, w/3, h/18)
-		self.text2Pos = (w-w/3, h-h/18, w/3, h/18)
+		self.fontSize = {1080: 40, 720: 28, 576: 18}.get(h, 40)
+		ww = int(w / 2 - 10)
+		l = int(w / 2 + 5)
+		self.text1Pos = (l, h - h18 - h18, ww, h18)
+		self.text2Pos = (l, h - h18, ww, h18)
 
 	def moveFrame(self):
 		self.showFocus()
@@ -910,7 +907,7 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 		return channel
 
 	def playChannel(self, channel):
-		print "[playChannel] channel : ", channel
+		print("[playChannel] channel : %s " % channel)
 
 		if self.curChannel and self.curChannel == channel.channel:
 			return
@@ -921,7 +918,7 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 		self.curChannel = channel.channel.copy()
 
 		self.session.qPips = []
-		for idx in range(1,5):
+		for idx in list(range(1, 5)):
 			chInfo = channel.getChannel(str(idx))
 			if chInfo is None:
 				continue
@@ -932,14 +929,9 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 
 			decoderIdx = self.decoderIdxMap[idx]
 			pos = self.eVideoPosMap[idx]
-			#print "===================================================================="
-			#print "sname : ", sname
-			#print "sref : ", sref
-			#print "decoderIdx : " , decoderIdx
-			#print "pos : ", pos
-			#print "===================================================================="
+			# print("====================================================================\nsname : %s \nsref : %s\ndecoderIdx : %s\npos : %s\n====================================================================") % (sname, sref, decoderIdx, pos))
 
-			qPipInstance =  self.session.instantiateDialog(QuadPiP, decoderIdx, pos)
+			qPipInstance = self.session.instantiateDialog(QuadPiP, decoderIdx, pos)
 			qPipInstance.setAnimationMode(0)
 			qPipInstance.show()
 
@@ -951,14 +943,14 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 			if qPipInstance.playService(eServiceReference(sref), isPlayAudio):
 				self.session.qPips.append(qPipInstance)
 			else:
-				print "play failed, ", sref
+				print("play failed, %s" % sref)
 				del qPipInstance
 
 		self.updateChannelName(channel)
 		self.showFocus()
 
 	def playAudio(self, idx, value):
-		qPipInstance = self.session.qPips[idx-1]
+		qPipInstance = self.session.qPips[idx - 1]
 		qPipInstance.setQpipMode(True, value)
 
 		if value:
@@ -967,7 +959,7 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 			self.curPlayAudio = -1
 
 	def updateChannelName(self, channel):
-		for idx in range(1,5):
+		for idx in list(range(1, 5)):
 			self["ch%d" % idx].setText((channel and channel.getChannelName(str(idx))) or _("No channel"))
 
 	def disableFCC(self):
@@ -1003,4 +995,3 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 				config.plugins.minitv.enable.value = self.oldMinitvEanble
 			except:
 				pass
-

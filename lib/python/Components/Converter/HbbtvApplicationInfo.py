@@ -1,7 +1,8 @@
 from Components.Converter.Converter import Converter
 from Components.Element import cached
 
-class HbbtvApplicationInfo(Converter, object):
+
+class HbbtvApplicationInfo(Converter):
 	NAME = 0
 
 	def __init__(self, type):
@@ -12,9 +13,6 @@ class HbbtvApplicationInfo(Converter, object):
 
 	@cached
 	def getText(self):
-		if self.type == self.NAME:
-			return self.source.name
-		else:
-			return ""
+		return self.source.name if self.type == self.NAME else ""
 
 	text = property(getText)

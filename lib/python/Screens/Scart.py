@@ -1,7 +1,8 @@
-from Screen import Screen
-from MessageBox import MessageBox
+from Screens.Screen import Screen
+from Screens.MessageBox import MessageBox
 from Components.AVSwitch import AVSwitch
-from Tools import Notifications
+import Tools.Notifications
+
 
 class Scart(Screen):
 	def __init__(self, session, start_visible=True):
@@ -24,12 +25,12 @@ class Scart(Screen):
 
 		if not self.msgVisible:
 			self.msgVisible = True
-			self.avswitch.setInput("SCART")
+			self.avswitch.setInput("scart")
 			if not self.session.in_exec:
 				self.notificationVisible = True
-				Notifications.AddNotificationWithCallback(self.MsgBoxClosed, MessageBox, _("If you see this, something is wrong with\nyour scart connection. Press OK to return."), MessageBox.TYPE_ERROR, msgBoxID = "scart_msgbox")
+				Tools.Notifications.AddNotificationWithCallback(self.MsgBoxClosed, MessageBox, _("If you see this, something is wrong with\nyour SCART connection. Press OK to return."), MessageBox.TYPE_ERROR, msgBoxID="scart_msgbox")
 			else:
-				self.msgBox = self.session.openWithCallback(self.MsgBoxClosed, MessageBox, _("If you see this, something is wrong with\nyour scart connection. Press OK to return."), MessageBox.TYPE_ERROR)
+				self.msgBox = self.session.openWithCallback(self.MsgBoxClosed, MessageBox, _("If you see this, something is wrong with\nyour SCART connection. Press OK to return."), MessageBox.TYPE_ERROR)
 
 	def MsgBoxClosed(self, *val):
 		self.msgBox = None
@@ -38,14 +39,14 @@ class Scart(Screen):
 	def switchToTV(self, *val):
 		if self.msgVisible:
 			if self.msgBox:
-				self.msgBox.close() # ... MsgBoxClosed -> switchToTV again..
+				self.msgBox.close()  # ... MsgBoxClosed -> switchToTV again..
 				return
-			self.avswitch.setInput("ENCODER")
+			self.avswitch.setInput("encoder")
 			self.msgVisible = False
 		if self.notificationVisible:
-			self.avswitch.setInput("ENCODER")
+			self.avswitch.setInput("encoder")
 			self.notificationVisible = False
-			for notification in Notifications.current_notifications:
+			for notification in Tools.Notifications.current_notifications:
 				try:
 					if notification[1].msgBoxID == "scart_msgbox":
 						notification[1].close()

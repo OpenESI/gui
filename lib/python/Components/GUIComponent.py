@@ -1,191 +1,126 @@
-"""
-OpenESI GUIComponent - Versione migliorata
-Sistema componenti GUI moderno e ottimizzato
-Mantiene piena compatibilità con codice esistente
-"""
+from enigma import ePoint, eSize
 
-from enigma import ePoint, eSize, eRect, gRGB
+from skin import applyAllAttributes
+
 
 class GUIComponent:
-    """
-    Componente base per elementi GUI - Versione migliorata
-    """
-    
-    def __init__(self):
-        # Sistema di connessioni eventi migliorato
-        self.connections = []
-        self.onVisibilityChange = []
-        self.onPositionChange = []
-        self.onSizeChange = []
-        
-        # Gestione istanza e rendering
-        self.instance = None
-        self._visible = True
-        self._enabled = True
-        self._zPosition = 0
-        
-        # Cache per performance
-        self._cached_position = None
-        self._cached_size = None
-        
-    def createInstance(self, parent):
-        """Crea l'istanza del componente - metodo base da sovrascrivere"""
-        pass
-        
-    def getInstance(self):
-        """Restituisce l'istanza del componente"""
-        return self.instance
-        
-    def show(self):
-        """Mostra il componente"""
-        if self.instance and not self._visible:
-            self.instance.show()
-            self._visible = True
-            for callback in self.onVisibilityChange:
-                callback(True)
-                
-    def hide(self):
-        """Nasconde il componente"""
-        if self.instance and self._visible:
-            self.instance.hide()
-            self._visible = False
-            for callback in self.onVisibilityChange:
-                callback(False)
-                
-    def setVisible(self, visible):
-        """Imposta visibilità"""
-        if visible:
-            self.show()
-        else:
-            self.hide()
-            
-    def isVisible(self):
-        """Verifica se il componente è visibile"""
-        return self._visible
-        
-    def setEnabled(self, enabled):
-        """Abilita/disabilita il componente"""
-        self._enabled = enabled
-        if self.instance:
-            self.instance.setEnable(enabled)
-            
-    def isEnabled(self):
-        """Verifica se il componente è abilitato"""
-        return self._enabled
-        
-    def setPosition(self, position):
-        """Imposta posizione con caching"""
-        if self._cached_position != position:
-            self._cached_position = position
-            if self.instance:
-                self.instance.move(position)
-            for callback in self.onPositionChange:
-                callback(position)
-                
-    def setSize(self, size):
-        """Imposta dimensione con caching"""
-        if self._cached_size != size:
-            self._cached_size = size
-            if self.instance:
-                self.instance.resize(size)
-            for callback in self.onSizeChange:
-                callback(size)
-                
-    def getPosition(self):
-        """Ottiene posizione"""
-        if self.instance and not self._cached_position:
-            return self.instance.position()
-        return self._cached_position or ePoint(0, 0)
-        
-    def getSize(self):
-        """Ottiene dimensione"""
-        if self.instance and not self._cached_size:
-            return self.instance.size()
-        return self._cached_size or eSize(0, 0)
-        
-    def getBounds(self):
-        """Ottiene rettangolo del componente"""
-        pos = self.getPosition()
-        size = self.getSize()
-        return eRect(pos.x(), pos.y(), size.width(), size.height())
-        
-    def setZPosition(self, zpos):
-        """Imposta posizione Z (profondità)"""
-        self._zPosition = zpos
-        if self.instance:
-            self.instance.setZPosition(zpos)
-            
-    def getZPosition(self):
-        """Ottiene posizione Z"""
-        return self._zPosition
-        
-    def connect(self, signal, callback):
-        """Connette un segnale a un callback - sistema migliorato"""
-        connection = (signal, callback)
-        self.connections.append(connection)
-        return connection
-        
-    def disconnect(self, connection):
-        """Disconnette un segnale"""
-        if connection in self.connections:
-            self.connections.remove(connection)
-            
-    def destroy(self):
-        """Distrugge il componente e pulisce le connessioni"""
-        for connection in self.connections[:]:
-            self.disconnect(connection)
-        self.connections = []
-        self.onVisibilityChange = []
-        self.onPositionChange = []
-        self.onSizeChange = []
-        
-        if self.instance:
-            self.instance = None
-            
-    # Metodi di compatibilità
-    def getWidth(self):
-        return self.getSize().width()
-        
-    def getHeight(self):
-        return self.getSize().height()
-        
-    def move(self, position):
-        self.setPosition(position)
-        
-    def resize(self, size):
-        self.setSize(size)
+	"""GUI Component."""
 
-class BlinkingComponent(GUIComponent):
-    """Componente con effetto blinking - nuovo concetto"""
-    
-    def __init__(self):
-        GUIComponent.__init__(self)
-        from enigma import eTimer
-        self.blinkTimer = eTimer()
-        self.blinkState = False
-        self.blinkInterval = 500  # ms
-        
-    def startBlinking(self, interval=None):
-        """Avvia l'effetto blinking"""
-        if interval:
-            self.blinkInterval = interval
-            
-        self.blinkTimer.timeout.get().append(self._blink)
-        self.blinkTimer.start(self.blinkInterval)
-        
-    def stopBlinking(self):
-        """Ferma l'effetto blinking"""
-        self.blinkTimer.stop()
-        self.blinkTimer.timeout.get().remove(self._blink)
-        if self.blinkState:
-            self._setBlinkState(False)
-            
-    def _blink(self):
-        """Callback per blinking"""
-        self._setBlinkState(not self.blinkState)
-        
-    def _setBlinkState(self, state):
-        """Imposta stato blinking - da sovrascrivere"""
-        self.blinkState = state
-        # Implementazione specifica per ogni componente
-        pass
+	def __init__(self):
+		self.onVisibilityChange = []
+		self.instance = None
+		self.visiblity = False
+		self.visible = True
+		self.skinAttributes = None
+		self.deprecationInfo = None
+
+	def execBegin(self):
+		pass
+
+	def execEnd(self):
+		pass
+
+	def onShow(self):
+		pass
+
+	def onHide(self):
+		pass
+
+	def destroy(self):
+		self.__dict__.clear()
+
+	def applySkin(self, desktop, parent):  # This only works with normal widgets, if you don't have a self.instance override this method.
+		if not self.visible:
+			self.instance.hide()
+		if self.skinAttributes is None:
+			result = False
+		else:
+			# // Workaround for values from attributes the not be set.
+			#
+			# The order of some attributes is crucial if they are applied. Also, an attribute may be responsible that another does not take effect and occurs at different skins.
+			# It was noticed at "scrollbarSliderBorderWidth" and "scrollbarSliderForegroundColor".
+			#
+			# if config.skin.primary_skin.value.split("/")[0] not in ("DMConcinnity-HD"):
+			# 	self.skinAttributes.sort()
+			#
+			# NOTE: The code above is invalid. It always returns False! It is being removed until it's need is confirmed.
+			# To be correct the code could/should be one of, depending on the original intention:
+			# 	if config.skin.primary_skin.value.split("/")[0] != "DMConcinnity-HD":
+			# 	if config.skin.primary_skin.value.split("/")[0] == "DMConcinnity-HD":
+			#
+			# //
+			applyAllAttributes(self.instance, desktop, self.skinAttributes, parent.scale)
+			result = True
+		return result
+
+	def move(self, xPos, yPos=None):  # Assuming that xPos is already an ePoint.
+		self.instance.move(xPos if yPos is None else ePoint(int(xPos), int(yPos)))
+
+	def resize(self, width, height=None):
+		self.width = width
+		self.height = height
+		self.instance.resize(width if height is None else eSize(int(width), int(height)))
+
+	def setZPosition(self, zPosition):
+		self.instance.setZPosition(zPosition)
+
+	def show(self):
+		current = self.visiblity
+		self.visiblity = True
+		if self.instance is not None:
+			self.instance.show()
+		if current != self.visiblity:
+			for callback in self.onVisibilityChange:
+				callback(True)
+
+	def hide(self):
+		current = self.visiblity
+		self.visiblity = False
+		if self.instance is not None:
+			self.instance.hide()
+		if current != self.visiblity:
+			for callback in self.onVisibilityChange:
+				callback(False)
+
+	def getVisible(self):
+		return self.visiblity
+
+	def setVisible(self, visible):
+		if visible:
+			self.show()
+		else:
+			self.hide()
+
+	visible = property(getVisible, setVisible)
+
+	def setPosition(self, xPos, yPos):
+		self.instance.move(ePoint(int(xPos), int(yPos)))
+
+	def getPosition(self):
+		position = self.instance.position()
+		return position.x(), position.y()
+
+	def getWidth(self):
+		return self.width
+
+	def getHeight(self):
+		return self.height
+
+	position = property(getPosition)
+
+	def GUIcreate(self, parent):  # Default implementation for only one widget per component.  Feel free to override!
+		self.instance = self.createWidget(parent)
+		self.postWidgetCreate(self.instance)
+
+	def GUIdelete(self):
+		self.preWidgetRemove(self.instance)
+		self.instance = None
+
+	def createWidget(self, parent):  # Default for argument less widget constructor.
+		return self.GUI_WIDGET(parent)
+
+	def postWidgetCreate(self, instance):
+		pass
+
+	def preWidgetRemove(self, instance):
+		pass

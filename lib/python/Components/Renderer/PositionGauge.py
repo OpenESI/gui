@@ -1,16 +1,17 @@
-from Renderer import Renderer
 from enigma import ePositionGauge
+from Components.Renderer.Renderer import Renderer
+
 
 class PositionGauge(Renderer):
+	GUI_WIDGET = ePositionGauge
+
 	def __init__(self):
 		Renderer.__init__(self)
 		self.__position = 0
 		self.__seek_position = 0
 		self.__length = 0
 		self.__seek_enable = 0
-		self.__cutlist = [ ]
-
-	GUI_WIDGET = ePositionGauge
+		self.__cutlist = []
 
 	def postWidgetCreate(self, instance):
 		self.changed((self.CHANGED_DEFAULT,))
@@ -19,12 +20,12 @@ class PositionGauge(Renderer):
 
 	def changed(self, what):
 		if what[0] == self.CHANGED_CLEAR:
-			(self.length, self.position) = 0
+			(self.length, self.position) = (0, 0)
 		else:
 			(self.length, self.position) = (self.source.length or 0, self.source.position or 0)
 
 	def cutlist_changed(self):
-		self.cutlist = self.source.cutlist or [ ]
+		self.cutlist = self.source.cutlist or []
 
 	def getPosition(self):
 		return self.__position
@@ -51,7 +52,8 @@ class PositionGauge(Renderer):
 
 	def setCutlist(self, cutlist):
 		if self.__cutlist != cutlist:
-			self.__cutlist = cutlist
+			# E2 Bug: Use a list copy instead of a reference
+			self.__cutlist = cutlist[:]
 			if self.instance is not None:
 				self.instance.setInOutList(cutlist)
 

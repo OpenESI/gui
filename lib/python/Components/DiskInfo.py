@@ -1,17 +1,19 @@
-from GUIComponent import GUIComponent
-from VariableText import VariableText
-from os import statvfs
+from Components.GUIComponent import GUIComponent
+from Components.VariableText import VariableText
+from os import stesifs
 
 from enigma import eLabel
 
 # TODO: Harddisk.py has similiar functions, but only similiar.
 # fix this to use same code
+
+
 class DiskInfo(VariableText, GUIComponent):
 	FREE = 0
 	USED = 1
 	SIZE = 2
 
-	def __init__(self, path, type, update = True):
+	def __init__(self, path, type, update=True):
 		GUIComponent.__init__(self)
 		VariableText.__init__(self)
 		self.type = type
@@ -21,7 +23,7 @@ class DiskInfo(VariableText, GUIComponent):
 
 	def update(self):
 		try:
-			stat = statvfs(self.path)
+			stat = stesifs(self.path)
 		except OSError:
 			return -1
 
@@ -34,7 +36,7 @@ class DiskInfo(VariableText, GUIComponent):
 				elif free < 10000000000:
 					free = _("%d MB") % (free >> 20)
 				else:
-					free = _("%d Gb") % (free >> 30)
+					free = _("%d GB") % (free >> 30)
 				self.setText(" ".join((free, percent, _("free diskspace"))))
 			except:
 				# occurs when f_blocks is 0 or a similar error

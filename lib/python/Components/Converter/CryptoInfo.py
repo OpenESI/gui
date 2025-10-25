@@ -1,31 +1,35 @@
 from Components.Converter.Converter import Converter
+from Components.Converter.Poll import Poll
 from Components.Element import cached
 from Components.config import config
 from Tools.GetEcmInfo import GetEcmInfo
-from Poll import Poll
 
 
-class CryptoInfo(Poll, Converter, object):
+class CryptoInfo(Poll, Converter):
 	def __init__(self, type):
 		Converter.__init__(self, type)
 		Poll.__init__(self)
 
 		self.type = type
-		self.active = False
-		if int(config.usage.show_cryptoinfo.value) > 0:
-			self.visible = True
-		else:
-			self.visible = False
-		self.textvalue = ""
-		self.poll_interval = 1000
-		self.poll_enabled = True
+		self.active = False  # TODO what's this
+		self.visible = config.usage.show_cryptoinfo.value > 0
+		self.textvalue = ""  # TODO what's this
 		self.ecmdata = GetEcmInfo()
+
+		def ShowCryptoInfo(configElement):
+			if configElement.value > 0:
+				self.poll_interval = 1000
+				self.poll_enabled = True
+			else:
+				self.poll_enabled = False
+
+		config.usage.show_cryptoinfo.addNotifier(ShowCryptoInfo)
 
 	@cached
 	def getText(self):
-		if int(config.usage.show_cryptoinfo.value) < 1:
+		if config.usage.show_cryptoinfo.value < 1:
 			self.visible = False
-			data = ''
+			data = ""
 		else:
 			self.visible = True
 			if self.type == "VerboseInfo":

@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <skin>
+<!--
+############################################################################################################
+to show the display-skin on some other older OSD-Skins, we need "windowstyle"
+If it has not been declared, there will otherwise be an error
+and the display skin will not be displayed
+[ E ] gui/ewindowstyle.cpp:35 getStyle [eWindowStyleManager] getStyle(style_id=1): NOT FOUND -->
+
+	<windowstyle id="1" type="skinned">
+		<color name="Background" color="#0060eb"/>
+		<color name="LabelForeground" color="#ffffff"/>
+	</windowstyle>
+
+<!-- ####################################################################################################### -->
+
 <!-- MyClockPanel -->	
 	<screen name="MyClockPanel">
 		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
-			<convert type="VfdDisplay"></convert>
+			<convert type="VfdDisplay">config.usage.show_in_operation</convert>
 		</widget>
 	</screen>
 	
@@ -46,7 +60,7 @@
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
-	<screen name="QuickMenu_summary" position="0,0" size="1,1">
+	<screen name="QuickMenuSummary" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
@@ -57,25 +71,13 @@
 		<panel name="MyRecPanel" />
 	</screen>
 
-<!-- About -->
-	<screen name="AboutSummary" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
-	</screen>
-
-<!-- Blindscan -->
-	<screen name="SetupSummary2" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
-	</screen>
-
 <!-- Numberzap -->    
-	<screen name="NumberZap_summary" position="0,0" size="1,1">
+	<screen name="NumberZapSummary" position="0,0" size="1,1">
 		<widget source="parent.number_summary" render="Label" position="0,0" size="1,1">
 			<convert type="VfdDisplay">Number;nozero</convert>
 		</widget>
 	</screen> 
-	<screen name="NumberZapPicon_summary" position="0,0" size="1,1">
+	<screen name="NumberZapPiconSummary" position="0,0" size="1,1">
 		<widget source="parent.number_summary" render="Label" position="0,0" size="1,1">
 			<convert type="VfdDisplay">Number;nozero</convert>
 		</widget>
@@ -86,27 +88,26 @@
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
-	<screen name="SimpleSummary" position="0,0" size="1,1">
+	<screen name="ScreenSummary" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
-	<screen name="ChoiceBox_summary" position="0,0" size="1,1">
+	<screen name="ChoiceBoxSummary" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
-	<screen name="MessageBox_summary" position="0,0" size="1,1">
+	<screen name="MessageBoxSummary" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
-	<screen name="MessageBoxSimple_summary" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
+	<screen name="MessageBoxSimpleSummary" position="0,0" size="1,1">
+		<panel name="MessageBoxSummary" />
 	</screen>
 	<screen name="PluginBrowserSummary" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
-	<screen name="JobView_summary" position="0,0" size="1,1">
+	<screen name="TaskViewSummary" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
@@ -132,7 +133,7 @@
 	</screen>
 
 <!-- EMC  -->
-	<screen name="EMCSelection_summary" position="0,0" size="1,1">
+	<screen name="EMCSelectionSummary" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>
@@ -149,16 +150,12 @@
 <!-- standby -->
 	<screen name="StandbySummary" position="0,0" size="1,1">
 		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
-			<convert type="ConfigEntryTest">config.usage.show_in_standby,time,CheckSourceBoolean</convert>
+			<convert type="ConfigEntryTest">config.usage.show_in_standby,time</convert>
 			<convert type="VfdDisplay">Clock</convert>
 		</widget>
 		<widget source="session.CurrentService" render="FixedLabel" position="0,0" size="1,1" text="    ">
-			<convert type="ConfigEntryTest">config.usage.show_in_standby,nothing,CheckSourceBoolean</convert>
+			<convert type="ConfigEntryTest">config.usage.show_in_standby,nothing</convert>
 			<convert type="ConditionalShowHide" />
-		</widget>
-		<widget source="session.CurrentService" render="Label" position="0,0" size="1,1">
-			<convert type="ConfigEntryTest">config.usage.blinking_display_clock_during_recording,time,CheckSourceBoolean</convert>
-			<convert type="VfdDisplay">Clock</convert>
 		</widget>
 		<widget source="session.RecordState" render="FixedLabel" position="0,0" size="1,1" text="REC ">
 			<convert type="ConfigEntryTest">config.usage.blinking_display_clock_during_recording,RecBlink,CheckSourceBoolean</convert>
@@ -168,7 +165,7 @@
 			<convert type="ConfigEntryTest">config.usage.blinking_display_clock_during_recording,Rec,CheckSourceBoolean</convert>
 			<convert type="ConditionalShowHide" />
 		</widget>
-		<widget source="session.CurrentService" render="FixedLabel" position="0,0" size="1,1" text="    ">
+		<widget source="session.RecordState" render="FixedLabel" position="0,0" size="1,1" text="    ">
 			<convert type="ConfigEntryTest">config.usage.blinking_display_clock_during_recording,Nothing,CheckSourceBoolean</convert>
 			<convert type="ConditionalShowHide" />
 		</widget>
@@ -176,6 +173,12 @@
 
 <!-- webradioFS  -->
 	<screen name="webradioFSdisplay13" position="0,0" size="1,1">
+		<panel name="MyClockPanel" />
+		<panel name="MyRecPanel" />
+	</screen>
+
+<!-- IMdb  -->
+	<screen name="IMDbLCDScreen" position="0,0" size="1,1">
 		<panel name="MyClockPanel" />
 		<panel name="MyRecPanel" />
 	</screen>

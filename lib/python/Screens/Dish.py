@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from Screens.Screen import Screen
 from Components.BlinkingPixmap import BlinkingPixmapConditional
-from Components.Pixmap import Pixmap
 from Components.config import config, ConfigInteger
 from Components.Label import Label
 from Components.ServiceEventTracker import ServiceEventTracker
@@ -9,14 +8,15 @@ from Components.Sources.Boolean import Boolean
 from enigma import eDVBSatelliteEquipmentControl, eTimer, iPlayableService, eServiceCenter, iServiceInformation
 from Components.NimManager import nimmanager
 from Components.Sources.FrontendStatus import FrontendStatus
-from ServiceReference import ServiceReference
 
 INVALID_POSITION = 9999
 config.misc.lastrotorposition = ConfigInteger(INVALID_POSITION)
 
+
 class Dish(Screen):
 	STATE_HIDDEN = 0
-	STATE_SHOWN  = 1
+	STATE_SHOWN = 1
+
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		self["Dishpixmap"] = BlinkingPixmapConditional()
@@ -52,7 +52,7 @@ class Dish(Screen):
 		self.onHide.append(self.__onHide)
 
 		self.__event_tracker = ServiceEventTracker(screen=self,
-			eventmap= {
+			eventmap={
 				iPlayableService.evStart: self.__serviceStarted,
 				iPlayableService.evTunedIn: self.__serviceTunedIn,
 			})
@@ -77,9 +77,9 @@ class Dish(Screen):
 		if self.total_time:
 			self.turn_time -= 1
 			self["turnTime"].setText(self.FormatTurnTime(self.turn_time))
-			self.close_timeout -=1
+			self.close_timeout -= 1
 			if self.close_timeout < 0:
-				print "[Dish] timeout!"
+				print("[Dish] timeout!")
 				self.__toHide()
 
 	def __onShow(self):
@@ -89,7 +89,7 @@ class Dish(Screen):
 		self.rotor_pos = self.cur_orbpos
 		self.total_time = self.getTurnTime(prev_rotor_pos, self.rotor_pos, self.cur_polar)
 		self.turn_time = self.total_time
-		self.close_timeout = round(self.total_time * 1.25) # aded 25%
+		self.close_timeout = round(self.total_time * 1.25)  # aded 25%
 
 		self["posFrom"].setText(self.OrbToStr(prev_rotor_pos))
 		self["posGoto"].setText(self.OrbToStr(self.rotor_pos))
@@ -125,7 +125,7 @@ class Dish(Screen):
 			cur_orbpos = data.get("orbital_position", INVALID_POSITION)
 			if cur_orbpos in self.available_sat:
 				self.cur_orbpos = cur_orbpos
-				self.cur_polar  = data.get("polarization", 0)
+				self.cur_polar = data.get("polarization", 0)
 				self.rotorTimer.start(500, False)
 
 	def __toHide(self):
@@ -143,15 +143,15 @@ class Dish(Screen):
 		if self.pmt_timeout >= 0:
 			service = self.session.nav.getCurrentService()
 			info = service and service.info()
-			pmt = info and info.getInfo(iServiceInformation.sPMTPID)
+			pmt = info and info.getInfo(iServiceInformation.sPMTPID) or -1
 			if pmt >= 0:
-				print "[Dish] tuned, closing..."
+				print("[Dish] tuned, closing...")
 				self.__toHide()
 			else:
 				self.pmt_timeout -= 0.5
 		else:
 			self.__toHide()
-			print "[Dish] tuning failed"
+			print("[Dish] tuning failed")
 
 	def dishState(self):
 		return self.__state
@@ -166,11 +166,11 @@ class Dish(Screen):
 	def DishpixmapVisibilityChanged(self, state):
 		if self.showdish == "flashing":
 			if state:
-				self["Dishpixmap"].show() # show dish picture
+				self["Dishpixmap"].show()  # show dish picture
 			else:
-				self["Dishpixmap"].hide() # hide dish picture
+				self["Dishpixmap"].hide()  # hide dish picture
 		else:
-			self["Dishpixmap"].show() # show dish picture
+			self["Dishpixmap"].show()  # show dish picture
 
 	def rotorPositionChanged(self, configElement=None):
 		if self.cur_orbpos != config.misc.lastrotorposition.value != INVALID_POSITION:
@@ -183,7 +183,7 @@ class Dish(Screen):
 				mrt = 3600 - mrt
 			if mrt % 10:
 				mrt += 10
-			mrt = round((mrt * 1000 / self.getTurningSpeed(pol) ) / 10000) + 3
+			mrt = round((mrt * 1000 / self.getTurningSpeed(pol)) / 10000) + 3
 		return mrt
 
 	def getTurningSpeed(self, pol=0):
@@ -193,19 +193,19 @@ class Dish(Screen):
 			if nimConfig.configMode.value == "simple":
 				if "positioner" in nimConfig.diseqcMode.value:
 					nim = config.Nims[tuner].dvbs
-					if pol in (1, 3): # vertical
+					if pol in (1, 3):  # vertical
 						return nim.turningspeedV.float
 					return nim.turningspeedH.float
 			elif nimConfig.configMode.value == "advanced":
 				if self.cur_orbpos != INVALID_POSITION:
-					satlist = nimConfig.advanced.sat.keys()
+					satlist = list(nimConfig.advanced.sat.keys())
 					if self.cur_orbpos in satlist:
 						currSat = nimConfig.advanced.sat[self.cur_orbpos]
 						lnbnum = int(currSat.lnb.value)
 						currLnb = lnbnum and nimConfig.advanced.lnb[lnbnum]
 						diseqcmode = currLnb and currLnb.diseqcMode.value or ""
 						if diseqcmode == "1_2":
-							if pol in (1, 3): # vertical
+							if pol in (1, 3):  # vertical
 								return currLnb.turningspeedV.float
 							return currLnb.turningspeedH.float
 		if pol in (1, 3):
@@ -226,9 +226,9 @@ class Dish(Screen):
 			nims = nimmanager.nimList()
 			if nr < len(nims) and nr >= 0:
 				return "".join(nims[nr].split(':')[:1])
-			print "[Dish.py] bug hunting nr: %s\n" %nr
-			print "[Dish.py] bug hunting nims:\n"
-			print nims
+			print("[Dish.py] bug hunting nr: %s\n" % nr)
+			print("[Dish.py] bug hunting nims:\n")
+			print(nims)
 			raise
 #			return " ".join((_("Tuner"),str(nr)))
 		return ""
@@ -238,16 +238,18 @@ class Dish(Screen):
 			return "N/A"
 		if orbpos > 1800:
 			orbpos = 3600 - orbpos
-			return "%d.%d°W" % (orbpos/10, orbpos%10)
-		return "%d.%d°E" % (orbpos/10, orbpos%10)
+			return "%d.%d%sW" % (orbpos / 10, orbpos % 10, "\u00B0")
+		return "%d.%d%sE" % (orbpos / 10, orbpos % 10, "\u00B0")
 
 	def FormatTurnTime(self, time):
 		t = abs(time)
-		return "%s%02d:%02d" % (time < 0 and "- " or "", t/60%60, t%60)
+		return "%s%02d:%02d" % (time < 0 and "- " or "", t / 60 % 60, t % 60)
+
 
 class Dishpip(Dish, Screen):
 	STATE_HIDDEN = 0
-	STATE_SHOWN  = 1
+	STATE_SHOWN = 1
+
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		self["Dishpixmap"] = Boolean(fixed=True, poll=1500)
@@ -256,11 +258,12 @@ class Dishpip(Dish, Screen):
 		self["posGoto"] = Label("")
 		self["From"] = Label(_("From :"))
 		self["Goto"] = Label(_("Goto :"))
+		self["Tuner"] = Label(_("Tuner :"))
 		self["tunerName"] = Label("")
 		self["turnSpeed"] = Label("")
 		self.updateRotorSatList()
 		self.frontend = None
-		self["Frontend"] = FrontendStatus(service_source = lambda: self.frontend, update_interval=1000)
+		self["Frontend"] = FrontendStatus(service_source=lambda: self.frontend, update_interval=1000)
 		self.rotorTimer = eTimer()
 		self.rotorTimer.timeout.get().append(self.updateRotorMovingState)
 		self.turnTimer = eTimer()
@@ -272,6 +275,7 @@ class Dishpip(Dish, Screen):
 		self.turn_time = self.total_time = None
 		self.close_timeout = self.moving_timeout = self.cur_polar = 0
 		self.__state = self.STATE_HIDDEN
+		self.noSkinReload = True
 
 		self.onShow.append(self.__onShow)
 		self.onHide.append(self.__onHide)
@@ -301,7 +305,7 @@ class Dishpip(Dish, Screen):
 		if self.total_time:
 			self.turn_time -= 1
 			self["turnTime"].setText(self.FormatTurnTime(self.turn_time))
-			self.close_timeout -=1
+			self.close_timeout -= 1
 			if self.close_timeout <= 3:
 				self.__toHide()
 			#elif not self.getRotorMovingState():
@@ -326,7 +330,7 @@ class Dishpip(Dish, Screen):
 			cur_orbpos = data.get("orbital_position", INVALID_POSITION)
 			if cur_orbpos in self.available_sat:
 				self.cur_orbpos = cur_orbpos
-				self.cur_polar  = data.get("polarization", 0)
+				self.cur_polar = data.get("polarization", 0)
 				self.moving_timeout = 3
 				if not self.rotorTimer.isActive():
 					self.rotorTimer.start(500, True)
@@ -337,7 +341,7 @@ class Dishpip(Dish, Screen):
 		self.rotor_pos = self.cur_orbpos
 		self.total_time = self.getTurnTime(prev_rotor_pos, self.rotor_pos, self.cur_polar)
 		self.turn_time = self.total_time
-		self.close_timeout = round(self.total_time * 1.25) # aded 25%
+		self.close_timeout = round(self.total_time * 1.25)  # aded 25%
 		self["posFrom"].setText(self.OrbToStr(prev_rotor_pos))
 		self["posGoto"].setText(self.OrbToStr(self.rotor_pos))
 		self["tunerName"].setText(self.getTunerName())

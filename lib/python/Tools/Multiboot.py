@@ -136,11 +136,11 @@ class GetImagelist():
 					self.OsPath = "/tmp/testmount/linuxrootfs1"
 				elif os.path.isfile("/tmp/testmount/linuxrootfs%s/usr/bin/enigma2" % self.slot):
 					self.OsPath = "/tmp/testmount/linuxrootfs%s" % self.slot
-					print("multiboot tools 1 slots"), self.slot, self.slot2
+					print "multiboot tools 1 slots", self.slot, self.slot2
 			else:
 				if os.path.isfile("/tmp/testmount/usr/bin/enigma2"):
 					self.OsPath = '/tmp/testmount'
-			print("Tools/Multiboot OsPath %s ") %self.OsPath
+			print "Tools/Multiboot OsPath %s " %self.OsPath
 			if self.OsPath != "NoPath":
 				try:
 					Creator = open("%s/etc/issue" %self.OsPath).readlines()[-2].capitalize().strip()[:-6].replace("-release", " rel")
