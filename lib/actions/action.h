@@ -2,13 +2,12 @@
 #define __lib_driver_action_h
 
 #include <lib/base/object.h>
+#include <lib/gui/ewidget.h>
 
 #include <lib/python/python.h>
 #include <string>
-#include <map>    
+#include <map>
 #include <vector>
-
-class eWidget;
 
 SWIG_IGNORE(eActionMap);
 class eActionMap: public iObject
@@ -37,15 +36,18 @@ public:
 	void unbindKeyDomain(const std::string &domain);
 
 	void keyPressed(const std::string &device, int key, int flags);
+	void setLongPressedEmulationKey(int key) { m_long_press_emulation_key = key; }
 
 #ifndef SWIG
 	static RESULT getInstance(ePtr<eActionMap> &);
+	int getLongPressedEmulationKey() const { return m_long_press_emulation_key; }
 private:
 	static eActionMap *instance;
+	int m_long_press_emulation_key = 0;
 	struct eActionBinding
 	{
 		eActionBinding()
-			:m_prev_seen_make_key(-1)
+			:m_prev_seen_make_key(-1), m_long_key_pressed(false)
 		{}
 //		eActionContext *m_context;
 		std::string m_context; // FIXME
@@ -56,6 +58,7 @@ private:
 		eWidget *m_widget;
 		int m_id;
 		int m_prev_seen_make_key;
+		bool m_long_key_pressed;
 	};
 
 	std::multimap<int64_t, eActionBinding> m_bindings;
