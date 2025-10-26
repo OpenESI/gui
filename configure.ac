@@ -913,9 +913,7 @@ lib/python/Plugins/SystemPlugins/FrontprocessorUpgrade/Makefile
 lib/python/Plugins/SystemPlugins/FrontprocessorUpgrade/meta/Makefile
 lib/python/Plugins/SystemPlugins/FSBLUpdater/Makefile
 lib/python/Plugins/SystemPlugins/HdmiCEC/Makefile
-lib/python/Plugins/SystemPlugins/Hotplug/Makefile
-lib/python/Plugins/SystemPlugins/Hotplug/meta/Makefile
-lib/python/Plugins/SystemPlugins/LCNScanner/Makefile
+ib/python/Plugins/SystemPlugins/LCNScanner/Makefile
 lib/python/Plugins/SystemPlugins/NetworkWizard/Makefile
 lib/python/Plugins/SystemPlugins/NetworkWizard/meta/Makefile
 lib/python/Plugins/SystemPlugins/NFIFlash/Makefile
