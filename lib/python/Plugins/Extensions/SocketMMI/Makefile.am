@@ -2,7 +2,7 @@ SUBDIRS = src
 
 installdir = $(pkglibdir)/python/Plugins/Extensions/SocketMMI
 
-plugin_LTLIBRARIES = socketmmi.la
+pkglib_LTLIBRARIES = socketmmi.la
 
 socketmmi_la_SOURCES = src/socket_mmi.cpp
 socketmmi_la_CPPFLAGS = $(PYTHON_CPPFLAGS)
@@ -13,3 +13,4 @@ install_PYTHON = \
     __init__.py \
     plugin.py \
     SocketMMI.py
+
