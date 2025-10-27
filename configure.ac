@@ -1,4 +1,4 @@
-AC_INIT([enigma2],[9.0],[http://www.openesi.eu])
+AC_INIT([enigma2],[10],[http://www.openesi.eu])
 AM_INIT_AUTOMAKE([dist-bzip2 no-define tar-pax -Wno-portability])
 AC_CONFIG_HEADERS([enigma2_config.h])
 
@@ -12,6 +12,7 @@ AC_SYS_LARGEFILE
 AC_PROG_CC
 AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX_17
+m4_ifdef([LT_INIT], [LT_INIT], [AC_PROG_LIBTOOL])
 AC_CONFIG_MACRO_DIR([m4])
 AC_OPENMP()
 

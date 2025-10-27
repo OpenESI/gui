@@ -26,14 +26,6 @@ if HAVE_7SEGMENT
 SUBDIRS += 7segment
 endif
 
-if HAVE_TEXTLCD
-if SPARK
-SUBDIRS += displaydualtext
-else
-SUBDIRS += displaytext
-endif
-endif
-
 if HAVE_COLORLCD3
 SUBDIRS += display128dm
 endif
