@@ -1,6 +1,12 @@
 #ifndef __volume_h
 #define __volume_h
 
+#ifdef DREAMNEXTGEN
+#ifdef HAVE_ALSA
+#undef HAVE_ALSA
+#endif
+#endif
+
 #ifdef HAVE_ALSA
 #include <alsa/asoundlib.h>
 #endif
@@ -22,27 +28,35 @@ private:
 	int openMixer();
 	void closeMixer(int fd);
 
+	bool mute_zero;
 	bool muted;
 	int leftVol, rightVol;
 	int m_volsteps;
+	int m_BaseVolume;
+	int m_VolumeOffset;
 
 	int checkVolume(int vol);
 
 public:
-	static eDVBVolumecontrol* getInstance();
+	static eDVBVolumecontrol *getInstance();
 
-	void setVolumeSteps(int steps);
-	void volumeUp(int left = 0, int right = 0);
-	void volumeDown(int left = 0, int right = 0);
+	void setVolumeSteps(int steps) { m_volsteps = steps; }
+	int volumeUp(int left = 0, int right = 0);
+	int volumeDown(int left = 0, int right = 0);
 
-	void setVolume(int left, int right);
+	int setVolume(int left, int right);
+	int setVolumeOffset(int offset);
 
 	void volumeMute();
 	void volumeUnMute();
-	void volumeToggleMute();
+	bool volumeToggleMute();
 
-	int getVolume();
-	bool isMuted();
+	int getBaseVolume() { return m_BaseVolume; }
+	int getVolumeOffset() { return m_VolumeOffset; }
+	int getVolume() { return leftVol; }
+	int getVolumeLeft() { return leftVol; }
+	int getVolumeRight() { return rightVol; }
+	bool isMuted(bool force=false) { return muted || (force && mute_zero); }
 };
 
 #endif //__volume_h

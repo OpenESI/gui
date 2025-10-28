@@ -10,7 +10,7 @@
 #include <lib/base/smartptr.h>
 #include <lib/base/eerror.h>
 #include <lib/gdi/gpixmap.h>
-#include <lib/base/nconfig.h>
+#include <lib/base/esettings.h>
 
 void bitstream_init(bitstream *bit, const void *buffer, int size)
 {
@@ -51,7 +51,7 @@ static int extract_pts(pts_t &pts, uint8_t *pkt)
 
 void eDVBSubtitleParser::subtitle_process_line(subtitle_region *region, subtitle_region_object *object, int line, uint8_t *data, int len)
 {
-	bool subcentered = eConfigManager::getConfigBoolValue("config.subtitles.dvb_subtitles_centered");
+	bool subcentered = eSubtitleSettings::dvb_subtitles_centered;
 	int x = subcentered ? (region->width - len) /2 : object->object_horizontal_position;
 	int y = object->object_vertical_position + line;
 	if (x + len > region->width)
@@ -254,13 +254,12 @@ int eDVBSubtitleParser::subtitle_process_pixel_data(subtitle_region *region, sub
 	default:
 		return -1;
 	}
-	return 0;
 }
 
-int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment)
+int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment, bool isBufferProcess)
 {
 	int segment_type, page_id, segment_length, processed_length;
-	if (*segment++ !=  0x0F)
+	if (*segment++ != DVB_SUB_SYNC_BYTE)
 	{
 		eDebug("[eDVBSubtitleParser] out of sync.");
 		return -1;
@@ -270,9 +269,9 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment)
 	page_id |= *segment++;
 	segment_length  = *segment++ << 8;
 	segment_length |= *segment++;
-	if (segment_type == 0xFF)
+	if (segment_type == DVB_SUB_SEGMENT_STUFFING)
 		return segment_length + 6;
-	if (page_id != m_composition_page_id && page_id != m_ancillary_page_id)
+	if (page_id != m_composition_page_id && page_id != m_ancillary_page_id && !isBufferProcess)
 		return segment_length + 6;
 
 	subtitle_page *page, **ppage;
@@ -291,7 +290,7 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment)
 
 	switch (segment_type)
 	{
-	case 0x10: // page composition segment
+	case DVB_SUB_SEGMENT_PAGE_COMPOSITION:
 	{
 		int page_time_out = *segment++; processed_length++;
 		int page_version_number = *segment >> 4;
@@ -308,7 +307,8 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment)
 			page->cluts = 0;
 			page->next = 0;
 			*ppage = page;
-		} else
+		}
+		else
 		{
 			if (page->pcs_size != segment_length)
 				page->page_version_number = -1;
@@ -384,7 +384,7 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment)
 			eDebug("[eDVBSubtitleParser] %d != %d", processed_length, segment_length);
 		break;
 	}
-	case 0x11: // region composition segment
+	case DVB_SUB_SEGMENT_REGION_COMPOSITION:
 	{
 		int region_id = *segment++; processed_length++;
 		int version_number = *segment >> 4;
@@ -522,7 +522,7 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment)
 
 		break;
 	}
-	case 0x12: // CLUT definition segment
+	case DVB_SUB_SEGMENT_CLUT_DEFINITION:
 	{
 		int CLUT_id, CLUT_version_number;
 		subtitle_clut *clut, **pclut;
@@ -624,7 +624,7 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment)
 		}
 		break;
 	}
-	case 0x13: // object data segment
+	case DVB_SUB_SEGMENT_OBJECT_DATA:
 	{
 		int object_id;
 		int object_coding_method;
@@ -721,7 +721,7 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment)
 		}
 		break;
 	}
-	case 0x14: // display definition segment
+	case DVB_SUB_SEGMENT_DISPLAY_DEFINITION:
 	{
 		if (segment_length > 4)
 		{
@@ -753,15 +753,17 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment)
 			eDebug("[eDVBSubtitleParser] display definition segment to short %d!", segment_length);
 		break;
 	}
-	case 0x80: // end of display set segment
+	case DVB_SUB_SEGMENT_END_OF_DISPLAY_SET:
 	{
 		subtitle_redraw_all();
 		m_seen_eod = true;
+		break;
 	}
-	case 0xFF: // stuffing
+	case DVB_SUB_SEGMENT_STUFFING:
 		break;
 	default:
 		eDebug("[eDVBSubtitleParser] unhandled segment type %02x", segment_type);
+		break;
 	}
 
 	return segment_length + 6;
@@ -791,7 +793,7 @@ void eDVBSubtitleParser::subtitle_process_pes(uint8_t *pkt, int len)
 
 		m_seen_eod = false;
 
-		while (len && *pkt == 0x0F)
+		while (len && *pkt == DVB_SUB_SYNC_BYTE)
 		{
 			int l = subtitle_process_segment(pkt);
 			if (l < 0)
@@ -817,6 +819,35 @@ void eDVBSubtitleParser::subtitle_redraw_all()
 		subtitle_redraw(page->page_id);
 		page = page->next;
 	}
+}
+
+
+void eDVBSubtitleParser::processBuffer(uint8_t *data, size_t len, pts_t pts)
+{
+	m_show_time = pts;
+
+	if (*data != 0x20) {
+		eWarning("[eDVBSubtitleParser] Tried to handle a PES packet private data that isn't a subtitle packet (does not start with 0x20)");
+		return;
+	}
+
+	data++; len--; // data identifier
+	data++; len--; // stream id;
+
+
+	m_seen_eod = false;
+	while (len && *data == DVB_SUB_SYNC_BYTE)
+	{
+		int l = subtitle_process_segment(data, true);
+		if (l < 0)
+			break;
+		data += l;
+		len -= l;
+	}
+
+	if (len && *data != DVB_SUB_SEGMENT_STUFFING)
+		eDebug("[eDVBSubtitleParser] strange data at the end");
+
 }
 
 void eDVBSubtitleParser::subtitle_reset()
@@ -923,7 +954,7 @@ void eDVBSubtitleParser::subtitle_redraw(int page_id)
 				case subtitle_region::bpp2:
 					if (clut)
 						entries = clut->entries_2bit;
-					memset(palette, 0, 4 * sizeof(gRGB));
+					memset(static_cast<void*>(palette), 0, 4 * sizeof(gRGB));
 					// this table is tested on cyfra .. but in EN300743 the table palette[2] and palette[1] is swapped.. i dont understand this ;)
 					palette[0].a = 0xFF;
 					palette[2].r = palette[2].g = palette[2].b = 0xFF;
@@ -932,7 +963,7 @@ void eDVBSubtitleParser::subtitle_redraw(int page_id)
 				case subtitle_region::bpp4: // tested on cyfra... but the map is another in EN300743... dont understand this...
 					if (clut)
 						entries = clut->entries_4bit;
-					memset(palette, 0, 16*sizeof(gRGB));
+					memset(static_cast<void*>(palette), 0, 16*sizeof(gRGB));
 					for (int i=0; i < 16; ++i)
 					{
 						if (!i)
@@ -960,7 +991,7 @@ void eDVBSubtitleParser::subtitle_redraw(int page_id)
 				case subtitle_region::bpp8:  // completely untested.. i never seen 8bit DVB subtitles
 					if (clut)
 						entries = clut->entries_8bit;
-					memset(palette, 0, 256*sizeof(gRGB));
+					memset(static_cast<void*>(palette), 0, 256*sizeof(gRGB));
 					for (int i=0; i < 256; ++i)
 					{
 						switch (i & 17)
@@ -982,7 +1013,7 @@ void eDVBSubtitleParser::subtitle_redraw(int page_id)
 								}
 								break;
 							}
-							// fallthrough !!
+                    		[[fallthrough]];
 						case 16: // b1 == 0 && b5 == 1
 							if (i & 128) // R = 33% x b8
 								palette[i].r = 0x55;
@@ -1003,7 +1034,7 @@ void eDVBSubtitleParser::subtitle_redraw(int page_id)
 							palette[i].r =
 							palette[i].g =
 							palette[i].b = 0x80; // 50%
-							// fall through!!
+                    		[[fallthrough]];
 						case 17: // b1 == 1 && b5 == 1
 							if (i & 128) // R += 16.7% x b8
 								palette[i].r += 0x2A;
@@ -1023,35 +1054,57 @@ void eDVBSubtitleParser::subtitle_redraw(int page_id)
 					break;
 			}
 
-			int bcktrans = eConfigManager::getConfigIntValue("config.subtitles.dvb_subtitles_backtrans");
-			bool yellow = eConfigManager::getConfigBoolValue("config.subtitles.dvb_subtitles_yellow");
-
-			for (int i=0; i<clut_size; ++i)
+			int backgroundTransparency = eSubtitleSettings::dvb_subtitles_backtrans;
+			int subtitleColor = eSubtitleSettings::dvb_subtitles_color;
+			bool isYellow = subtitleColor == 1;
+			bool isGreen = subtitleColor == 2;
+			bool isCyan = subtitleColor == 4;
+			if (entries)
 			{
-				if (entries && entries[i].valid)
+				for (int i = 0; i < clut_size; ++i)
 				{
-					int y = entries[i].Y,
-						cr = entries[i].Cr,
-						cb = entries[i].Cb;
-					if (y > 0)
+					if (entries[i].valid)
 					{
-						y -= 16;
-						cr -= 128;
-						cb -= 128;
-						palette[i].r = MAX(MIN(((298 * y            + 460 * cr) / 256), 255), 0);
-						palette[i].g = MAX(MIN(((298 * y -  55 * cb - 137 * cr) / 256), 255), 0);
-						palette[i].b = yellow?0:MAX(MIN(((298 * y + 543 * cb  ) / 256), 255), 0);
-						if (palette[i].r || palette[i].g || palette[i].b)
-							palette[i].a = (entries[i].T) & 0xFF;
+						int y = entries[i].Y,
+							cr = entries[i].Cr,
+							cb = entries[i].Cb;
+						if (y > 0)
+						{
+							y -= 16;
+							cr -= 128;
+							cb -= 128;
+							palette[i].r = (isGreen || isCyan) ? 0 : std::max(std::min(((298 * y + 460 * cr) / 256), 255), 0);
+							palette[i].b = (isYellow || isGreen) ? 0 : std::max(std::min(((298 * y + 543 * cb) / 256), 255), 0);
+
+							if (isGreen)
+							{
+								palette[i].g = std::max(std::min(((298 * y) / 256), 255), 0);
+							}
+							else if (subtitleColor == 3) // magenta
+							{
+								palette[i].g = 0;
+							}
+							else if (isCyan)
+							{
+								palette[i].g = std::max(std::min(((298 * y + 543 * cb) / 256), 255), 0);
+							}
+							else // yellow , original
+							{
+								palette[i].g = std::max(std::min(((298 * y - 55 * cb - 137 * cr) / 256), 255), 0);
+							}
+
+							if (backgroundTransparency == -1 || palette[i].r || palette[i].g || palette[i].b)
+								palette[i].a = (entries[i].T) & 0xFF;
+							else
+								palette[i].a = backgroundTransparency;
+						}
 						else
-							palette[i].a = bcktrans;
-					}
-					else
-					{
-						palette[i].r = 0;
-						palette[i].g = 0;
-						palette[i].b = 0;
-						palette[i].a = 0xFF;
+						{
+							palette[i].r = 0;
+							palette[i].g = 0;
+							palette[i].b = 0;
+							palette[i].a = 0xFF;
+						}
 					}
 				}
 			}
@@ -1070,6 +1123,11 @@ void eDVBSubtitleParser::subtitle_redraw(int page_id)
 }
 
 DEFINE_REF(eDVBSubtitleParser);
+
+eDVBSubtitleParser::eDVBSubtitleParser()
+	:m_pages(0), m_display_size(720,576)
+{
+}
 
 eDVBSubtitleParser::eDVBSubtitleParser(iDVBDemux *demux)
 	:m_pages(0), m_display_size(720,576)
@@ -1110,7 +1168,11 @@ int eDVBSubtitleParser::start(int pid, int composition_page_id, int ancillary_pa
 	return -1;
 }
 
+#if SIGCXX_MAJOR_VERSION == 2
 void eDVBSubtitleParser::connectNewPage(const sigc::slot1<void, const eDVBSubtitlePage&> &slot, ePtr<eConnection> &connection)
+#else
+void eDVBSubtitleParser::connectNewPage(const sigc::slot<void(const eDVBSubtitlePage&)> &slot, ePtr<eConnection> &connection)
+#endif
 {
 	connection = new eConnection(this, m_new_subtitle_page.connect(slot));
 }

@@ -11,12 +11,8 @@
 class iFilePushScatterGather
 {
 public:
-	virtual void getNextSourceSpan(off_t current_offset, size_t bytes_read, off_t &start, size_t &size, int blocksize)=0;
+	virtual void getNextSourceSpan(off_t current_offset, size_t bytes_read, off_t &start, size_t &size, int blocksize, int &sof)=0;
 	virtual ~iFilePushScatterGather() {}
-#if defined(__sh__)
-	//Changes in this file are cause e2 doesnt tell the player to play reverse
-	virtual int getSkipMode() = 0;
-#endif
 };
 
 class eFilePushThread: public eThread, public sigc::trackable, public iObject
@@ -38,7 +34,11 @@ public:
 	void setScatterGather(iFilePushScatterGather *);
 
 	enum { evtEOF, evtReadError, evtWriteError, evtUser, evtStopped };
+#if SIGCXX_MAJOR_VERSION == 2
 	sigc::signal1<void,int> m_event;
+#else
+	sigc::signal<void(int)> m_event;
+#endif
 
 		/* you can send private events if you want */
 	void sendEvent(int evt);
@@ -52,6 +52,7 @@ private:
 	int m_fd_dest;
 	int m_send_pvr_commit;
 	int m_stream_mode;
+	int m_sof;
 	int m_blocksize;
 	size_t m_buffersize;
 	unsigned char* m_buffer;
@@ -70,21 +71,21 @@ private:
 class eFilePushThreadRecorder: public eThread, public sigc::trackable
 {
 public:
-#if HAVE_AMLOGIC
-	eFilePushThreadRecorder(unsigned char* buffer, size_t buffersize=10*188*1024);
-#else
 	eFilePushThreadRecorder(unsigned char* buffer, size_t buffersize=188*1024);
-#endif
 	void thread();
 	void stop();
 	void start(int sourcefd);
 
 	enum { evtEOF, evtReadError, evtWriteError, evtUser, evtStopped };
+#if SIGCXX_MAJOR_VERSION == 2
 	sigc::signal1<void,int> m_event;
+#else
+	sigc::signal<void(int)> m_event;
+#endif
 
 	int getProtocol() { return m_protocol;}
-        void setProtocol(int i){ m_protocol = i;}
-        void setSession(int se, int st) { m_session_id = se; m_stream_id = st;}
+	void setProtocol(int i){ m_protocol = i;}
+	void setSession(int se, int st) { m_session_id = se; m_stream_id = st;}
 	int read_dmx(int fd, void *m_buffer, int size);
 	int pushReply(void *buf, int len);	
 	void sendEvent(int evt);

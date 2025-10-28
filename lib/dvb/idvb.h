@@ -229,8 +229,9 @@ public:
 		avcHdStereo         = 0x1C, // 28             H.264/AVC frame compatible plano - stereoscopic HD digital television service (see note 3)
 		nvodAvcHdStereoTs   = 0x1D, // 29             H.264/AVC frame compatible plano - stereoscopic HD NVOD time - shifted service (see note 3)
 		nvodAvcHdStereoRef  = 0x1E, // 30             H.264/AVC frame compatible plano - stereoscopic HD NVOD reference service (see note 3)
-		nvecTv              = 0x1F, // 31             HEVC digital television service
-				    //0x20, // 32 to 0x7F/127 reserved for future use
+		nvecTv              = 0x1F, // 31             HEVC digital television service (see note 4) 
+		nvecTv20            = 0x20, // 32             HEVC UHD digital television service with HDR and/or a frame rate of 100 Hz, 120 000/1 001 Hz, or 120 Hz, or any combination of HDR and these frame rates (see note 5) 
+				    //0x21, // 33 to 0x7F/127 reserved for future use
 				    //0x80, //128 to 0xFE/254 user defined
 		user134             = 0x86, //134             ???
 		user195             = 0xC3, //195             ???
@@ -336,16 +337,25 @@ public:
 
 	static const cacheID audioCacheTags[];
 	static const int nAudioCacheTags;
+	std::string m_reference_str;
 	int getCacheEntry(cacheID);
 	void setCacheEntry(cacheID, int);
+	void setServiceRef(std::string sref) { m_reference_str = sref; }
 
 	bool cacheEmpty();
 	bool cacheAudioEmpty();
 
 	eDVBService();
-		/* m_service_name_sort is uppercase, with special chars removed, to increase sort performance. */
+	/* m_service_name_sort is uppercase, with special chars removed, to increase sort performance. */
 	std::string m_service_name, m_service_name_sort;
 	std::string m_provider_name;
+	std::string m_default_authority;
+	uint32_t m_aus_da_flag;
+	int m_lcn;
+	int getLCN() { return m_lcn; }
+
+	std::string m_service_display_name;
+	std::string m_provider_display_name;
 
 	void genSortName();
 
@@ -363,6 +373,14 @@ public:
 		dxIsScrambledPMT=1024,
 		dxCenterDVBSubs=2048,
 		dxNoEIT=4096,
+		dxNoAITranslation=8192
+	};
+
+	enum
+	{
+		dxIntIsinBouquet=16384,
+		dxIntNewServiceName=32768,
+		dxIntNewProvider=65536,
 	};
 
 	bool usePMT() const { return !(m_flags & dxNoDVB); }
@@ -371,6 +389,7 @@ public:
 	bool doHideVBI() const { return m_flags & dxHideVBI; }
 	bool doCenterDVBSubs() const { return m_flags & dxCenterDVBSubs; }
 	bool useEIT() const { return !(m_flags & dxNoEIT); }
+	bool noAITranslation() const { return m_flags & dxNoAITranslation; }
 
 	CAID_LIST m_ca;
 
@@ -583,7 +602,11 @@ public:
 	virtual int closeFrontend(bool force = false, bool no_delayed = false)=0;
 	virtual void reopenFrontend()=0;
 #ifndef SWIG
+#if SIGCXX_MAJOR_VERSION == 2
 	virtual RESULT connectStateChange(const sigc::slot1<void,iDVBFrontend*> &stateChange, ePtr<eConnection> &connection)=0;
+#else
+	virtual RESULT connectStateChange(const sigc::slot<void(iDVBFrontend*)> &stateChange, ePtr<eConnection> &connection)=0;
+#endif
 #endif
 	virtual RESULT getState(int &SWIG_OUTPUT)=0;
 	virtual RESULT setTone(int tone)=0;
@@ -604,7 +627,7 @@ public:
 	virtual RESULT getData(int num, long &data)=0;
 	virtual RESULT setData(int num, long val)=0;
 		/* 0 means: not compatible. other values are a priority. */
-	virtual int isCompatibleWith(ePtr<iDVBFrontendParameters> &feparm)=0;
+	virtual int isCompatibleWith(ePtr<iDVBFrontendParameters> &feparm, bool is_configured_sat = false)=0;
 #endif
 	virtual bool changeType(int type)=0;
 	virtual int getCurrentType()=0;
@@ -621,6 +644,10 @@ public:
 	virtual void prepareTurnOffSatCR(iDVBFrontend &frontend)=0;
 	virtual int canTune(const eDVBFrontendParametersSatellite &feparm, iDVBFrontend *fe, int frontend_id, int *highest_score_lnb=0)=0;
 	virtual void setRotorMoving(int slotid, bool)=0;
+	virtual RESULT resetAdvancedsatposdependsRoot(int link)=0;
+	virtual bool isOrbitalPositionConfigured(int orbital_position)=0;
+	virtual bool tunerLinkedInUse(int root)=0;
+	virtual void forceUpdateRotorPos(int slot, int orbital_position)=0;
 };
 
 struct eDVBCIRouting
@@ -657,8 +684,13 @@ public:
 	{
 		evtPreStart, evtEOF, evtSOF, evtFailed, evtStopped
 	};
+#if SIGCXX_MAJOR_VERSION == 2
 	virtual RESULT connectStateChange(const sigc::slot1<void,iDVBChannel*> &stateChange, ePtr<eConnection> &connection)=0;
 	virtual RESULT connectEvent(const sigc::slot2<void,iDVBChannel*,int> &eventChange, ePtr<eConnection> &connection)=0;
+#else
+	virtual RESULT connectStateChange(const sigc::slot<void(iDVBChannel*)> &stateChange, ePtr<eConnection> &connection)=0;
+	virtual RESULT connectEvent(const sigc::slot<void(iDVBChannel*,int)> &eventChange, ePtr<eConnection> &connection)=0;
+#endif
 
 		/* demux capabilities */
 	enum
@@ -709,12 +741,20 @@ public:
 
 			/* backend */
 	enum { evtSeek, evtSkipmode, evtSpanChanged };
+#if SIGCXX_MAJOR_VERSION == 2
 	RESULT connectEvent(const sigc::slot1<void, int> &event, ePtr<eConnection> &connection);
+#else
+	RESULT connectEvent(const sigc::slot<void(int)> &event, ePtr<eConnection> &connection);
+#endif
 
 	std::list<std::pair<pts_t,pts_t> > m_spans;	/* begin, end */
 	std::list<std::pair<int, pts_t> > m_seek_requests; /* relative, delta */
 	pts_t m_skipmode_ratio;
+#if SIGCXX_MAJOR_VERSION == 2
 	sigc::signal1<void,int> m_event;
+#else
+	sigc::signal<void(int)> m_event;
+#endif
 	ePtr<iDVBDemux> m_decoding_demux;
 	ePtr<iTSMPEGDecoder> m_decoder;
 };
@@ -760,6 +800,7 @@ public:
 	virtual RESULT getCAAdapterID(uint8_t &id)=0;
 	virtual RESULT flush()=0;
 	virtual int openDVR(int flags)=0;
+	virtual int getSource()=0;
 };
 
 class iTSMPEGDecoder: public iObject
@@ -810,6 +851,14 @@ public:
 		/** Display any complete data as fast as possible */
 	virtual RESULT setTrickmode()=0;
 
+	virtual RESULT prepareFCC(int fe_id, int vpid, int vtype, int pcrpid)=0;
+
+	virtual RESULT fccDecoderStart()=0;
+
+	virtual RESULT fccDecoderStop()=0;
+
+	virtual RESULT fccUpdatePids(int fe_id, int vpid, int vtype, int pcrpid)=0;
+
 	virtual RESULT getPTS(int what, pts_t &pts) = 0;
 
 	virtual RESULT showSinglePic(const char *filename) = 0;
@@ -822,7 +871,13 @@ public:
 			eventSizeChanged = VIDEO_EVENT_SIZE_CHANGED,
 			eventFrameRateChanged = VIDEO_EVENT_FRAME_RATE_CHANGED,
 			eventProgressiveChanged = 16,
+#ifdef DREAMNEXTGEN
+			eventGammaChanged = 17,
+			eventPtsValid = 32,
+			eventVideoDiscontDetected = 64
+#else
 			eventGammaChanged = 17
+#endif
 		} type;
 		unsigned char aspect;
 		unsigned short height;
@@ -832,7 +887,11 @@ public:
 		unsigned short gamma;
 	};
 
+#if SIGCXX_MAJOR_VERSION == 2
 	virtual RESULT connectVideoEvent(const sigc::slot1<void, struct videoEvent> &event, ePtr<eConnection> &connection) = 0;
+#else
+	virtual RESULT connectVideoEvent(const sigc::slot<void(struct videoEvent)> &event, ePtr<eConnection> &connection) = 0;
+#endif
 
 	virtual int getVideoWidth() = 0;
 	virtual int getVideoHeight() = 0;

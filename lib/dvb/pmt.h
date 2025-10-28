@@ -54,8 +54,8 @@ public:
 	std::string m_ApplicationName;
 public:
 	HbbTVApplicationInfo(int controlCode, int orgid, int appid, std::string hbbtvUrl, std::string applicationName,int profileCode)
-		: m_ControlCode(controlCode), m_HbbTVUrl(hbbtvUrl), m_ApplicationName(applicationName), m_OrgId(orgid), m_AppId(appid),
-		m_ProfileCode(profileCode)
+		: m_OrgId(orgid), m_AppId(appid), m_ControlCode(controlCode), m_ProfileCode(profileCode),
+		m_HbbTVUrl(hbbtvUrl), m_ApplicationName(applicationName)
 	{}
 };
 typedef std::list<HbbTVApplicationInfo *> HbbTVApplicationInfoList;
@@ -78,7 +78,7 @@ class eDVBServicePMTHandler: public eDVBPMTParser
 	eAUTable<eTable<ApplicationInformationSection> > m_AIT;
 	eAUTable<eTable<OCSection> > m_OC;
 
-	eUsePtr<iDVBChannel> m_channel;
+	eUsePtr<iDVBChannel> m_channel, m_sr_channel;
 	eUsePtr<iDVBPVRChannel> m_pvr_channel;
 	ePtr<eDVBResourceManager> m_resourceManager;
 	ePtr<iDVBDemux> m_demux, m_pvr_demux_tmp;
@@ -108,6 +108,10 @@ class eDVBServicePMTHandler: public eDVBPMTParser
 	int m_use_decode_demux;
 	uint8_t m_decode_demux_num;
 	ePtr<eTimer> m_no_pat_entry_delay;
+
+	bool m_pmt_ready;
+	bool m_ca_disabled;
+	static int m_debug;
 public:
 	eDVBServicePMTHandler();
 	~eDVBServicePMTHandler();
@@ -138,9 +142,14 @@ public:
 		eventHBBTVInfo, /* HBBTV information was detected in the AIT */
 
 		eventStopped,
+		eventChannelAllocated,
 	};
 #ifndef SWIG
+#if SIGCXX_MAJOR_VERSION == 2
 	sigc::signal1<void,int> serviceEvent;
+#else
+	sigc::signal<void(int)> serviceEvent;
+#endif
 
 	int getProgramInfo(program &program);
 	int getDataDemux(ePtr<iDVBDemux> &demux);
@@ -158,6 +167,9 @@ public:
 	void resetCachedProgram() { m_have_cached_program = false; }
 	void sendEventNoPatEntry();
 	void getHBBTVUrl(std::string &ret) const { ret = m_HBBTVUrl; }
+	void setCaDisable(bool disable) { m_ca_disabled = disable; }
+	void addCaHandler();
+	void removeCaHandler();
 
 	enum serviceType
 	{
