@@ -1,4 +1,4 @@
-from os import listdir, makedirs, stat, stesifs
+from os import listdir, makedirs, stat, statvfs
 from os.path import join, isdir
 from re import search
 from shlex import split
@@ -38,7 +38,7 @@ class StartWizard(Wizard, ShowRemoteControl):
 		self.swapDevice = None
 		self.swapDeviceIndex = -1
 		self.console = Console()
-		flashSize = stesifs('/')
+		flashSize = statvfs('/')
 		flashSize = (flashSize.f_frsize * flashSize.f_blocks) // 2 ** 20
 		self.smallFlashSize = BoxInfo.getItem("SmallFlash") and flashSize < 130
 		self.swapExists = "/dev/" in "".join(fileReadLines("/proc/swaps", default=[], source=MODULE_NAME))

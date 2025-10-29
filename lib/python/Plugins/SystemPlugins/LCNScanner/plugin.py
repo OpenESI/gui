@@ -1,5 +1,4 @@
 # Based on a plugin from Sif Team.
-# This version created by IanSav and the OpenESI team.
 
 from os.path import join
 from sys import maxsize

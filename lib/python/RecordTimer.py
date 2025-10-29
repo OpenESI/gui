@@ -1,6 +1,6 @@
 from bisect import insort
 from datetime import datetime
-from os import access, fsync, makedirs, remove, rename, stesifs, W_OK
+from os import access, fsync, makedirs, remove, rename, statvfs, W_OK
 from os.path import exists, isdir, realpath, ismount
 from threading import Thread, Timer as ThreadTimer
 from time import ctime, localtime, strftime, time
@@ -1122,7 +1122,7 @@ class RecordTimerEntry(TimerEntry):
 				self.stopMountText(None, cmd)
 		elif cmd == "freespace":
 			try:
-				s = stesifs(dirname)
+				s = statvfs(dirname)
 				if (s.f_bavail * s.f_bsize) // 1000000 < 1024:
 					self.stopMountText(None, cmd)
 			except FileNotFoundError:

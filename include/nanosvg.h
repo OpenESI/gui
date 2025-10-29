@@ -1043,6 +1043,7 @@ static void nsvg__addPath(NSVGparser* p, char closed)
 	if (closed)
 		nsvg__lineTo(p, p->pts[0], p->pts[1]);
 
+	// Expect 1 + N*3 points (N = number of cubic bezier segments).
 	if ((p->npts % 3) != 1)
 		return;
 
@@ -1232,6 +1233,10 @@ static unsigned int nsvg__parseColorHex(const char* str)
 		return NSVG_RGB(r*17, g*17, b*17);			// same effect as (r<<4|r), (g<<4|g), ..
 	return NSVG_RGB(128, 128, 128);
 }
+
+// Parse rgb color. The pointer 'str' must point at "rgb(" (4+ characters).
+// This function returns gray (rgb(128, 128, 128) == '#808080') on parse errors
+// for backwards compatibility. Note: other image viewers return black instead.
 
 static unsigned int nsvg__parseColorRGB(const char* str)
 {
@@ -1812,6 +1817,8 @@ static int nsvg__parseAttr(NSVGparser* p, const char* name, const char* value)
 		} else {
 			attr->hasFill = 1;
 			attr->fillColor = nsvg__parseColor(value);
+			// if the fillColor has an alpha value then use it to
+			// set the fillOpacity
 			if (attr->fillColor & 0xFF000000) {
 				attr->fillOpacity = ((attr->fillColor >> 24) & 0xFF) / 255.0;
 				// remove the alpha value from the color
@@ -1831,6 +1838,8 @@ static int nsvg__parseAttr(NSVGparser* p, const char* name, const char* value)
 		} else {
 			attr->hasStroke = 1;
 			attr->strokeColor = nsvg__parseColor(value);
+			// if the strokeColor has an alpha value then use it to
+			// set the strokeOpacity
 			if (attr->strokeColor & 0xFF000000) {
 				attr->strokeOpacity = ((attr->strokeColor >> 24) & 0xFF) / 255.0;
 				// remove the alpha value from the color
@@ -2255,6 +2264,7 @@ static void nsvg__pathArcTo(NSVGparser* p, double* cpx, double* cpy, double* arg
 	// The loop assumes an iteration per end point (including start and end), this +1.
 	ndivs = static_cast<int>(fabs(da) / (NSVG_PI*0.5) + 1.0);
 	hda = (da / static_cast<double>(ndivs)) / 2.0;
+	// Fix division by 0: avoid cotangens around 0 (infinite)
 	if ((hda < 1e-3) && (hda > -1e-3))
 		hda *= 0.5;
 	else
@@ -3045,6 +3055,7 @@ NSVGimage* nsvgParse(char* input, const char* units, double dpi)
 
 	nsvg__parseXML(input, nsvg__startElement, nsvg__endElement, nsvg__content, p);
 
+	// Create gradients after all definitions have been parsed
 	nsvg__createGradients(p);
 
 	// Scale to viewBox

@@ -66,20 +66,25 @@ public:
 	virtual ~eServiceDVD();
 		// not implemented (yet)
 	RESULT setTarget(int target, bool noaudio = false) { return -1; }
-	RESULT audioChannel(ePtr<iAudioChannelSelection> &ptr) { ptr = 0; return -1; }
+	RESULT audioChannel(ePtr<iAudioChannelSelection> &ptr) { ptr = nullptr; return -1; }
 	RESULT audioTracks(ePtr<iAudioTrackSelection> &ptr);
-	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr) { ptr = 0; return -1; }
-	RESULT subServices(ePtr<iSubserviceList> &ptr) { ptr = 0; return -1; }
-	RESULT timeshift(ePtr<iTimeshiftService> &ptr) { ptr = 0; return -1; }
-	RESULT audioDelay(ePtr<iAudioDelay> &ptr) { ptr = 0; return -1; }
-	RESULT rdsDecoder(ePtr<iRdsDecoder> &ptr) { ptr = 0; return -1; }
-	RESULT stream(ePtr<iStreamableService> &ptr) { ptr = 0; return -1; }
-	RESULT streamed(ePtr<iStreamedService> &ptr) { ptr = 0; return -1; }
+	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr) { ptr = nullptr; return -1; }
+	RESULT subServices(ePtr<iSubserviceList> &ptr) { ptr = nullptr; return -1; }
+	RESULT timeshift(ePtr<iTimeshiftService> &ptr) { ptr = nullptr; return -1; }
+	RESULT tap(ePtr<iTapService> &ptr) { ptr = nullptr; return -1; };
+	RESULT audioDelay(ePtr<iAudioDelay> &ptr) { ptr = nullptr; return -1; }
+	RESULT rdsDecoder(ePtr<iRdsDecoder> &ptr) { ptr = nullptr; return -1; }
+	RESULT stream(ePtr<iStreamableService> &ptr) { ptr = nullptr; return -1; }
+	RESULT streamed(ePtr<iStreamedService> &ptr) { ptr = nullptr; return -1; }
 	RESULT cueSheet(ePtr<iCueSheet> &ptr);
 	void setQpipMode(bool value, bool audio) { }
 
 		// iPlayableService
+#if SIGCXX_MAJOR_VERSION == 2
 	RESULT connectEvent(const sigc::slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection);
+#else
+	RESULT connectEvent(const sigc::slot<void(iPlayableService*,int)> &event, ePtr<eConnection> &connection);
+#endif
 	RESULT start();
 	RESULT stop();
 	RESULT info(ePtr<iServiceInformation> &ptr);
@@ -142,7 +147,11 @@ private:
 
 	eServiceReference m_ref;
 
+#if SIGCXX_MAJOR_VERSION == 2
 	sigc::signal2<void,iPlayableService*,int> m_event;
+#else
+	sigc::signal<void(iPlayableService*,int)> m_event;
+#endif
 
 	struct ddvd *m_ddvdconfig;
 	ePtr<gPixmap> m_pixmap;

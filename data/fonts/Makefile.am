@@ -12,7 +12,8 @@ dist_install_DATA = \
 	LiberationSans-BoldItalic.ttf \
 	LiberationSans-Italic.ttf \
 	LiberationSans-Regular.ttf \
-	wqy-microhei.ttc
+	wqy-microhei.ttc \
+	AbyssinicaSIL-Regular.ttf
 
 install-data-hook:
 	cd $(DESTDIR)$(datadir)/fonts && \
@@ -54,10 +55,18 @@ if VUDUO4K
 dist_install_DATA += analog.ttf MyriadPro-Regular.otf MyriadPro-Semibold.otf MyriadPro-SemiboldIt.otf
 endif
 
+if VUDUO4KSE
+dist_install_DATA += analog.ttf MyriadPro-Regular.otf MyriadPro-Semibold.otf MyriadPro-SemiboldIt.otf
+endif
+
 if ET8500
 dist_install_DATA += verdana.ttf
 endif
 
 if ET8500S
 dist_install_DATA += verdana.ttf
+endif
+
+if OSMIO4KPLUS
+dist_install_DATA += analog.ttf MyriadPro-Regular.otf MyriadPro-Semibold.otf MyriadPro-SemiboldIt.otf
 endif

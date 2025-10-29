@@ -8,7 +8,9 @@
 
 #include <lib/base/ebase.h>
 #include <libsig_comp.h>
+#include <lib/python/python.h>
 #include <string>
+#include <unordered_map>
 
 class eRCInput;
 class eRCDriver;
@@ -35,7 +37,7 @@ public:
 	 * \param input The \ref eRCDriver where this remote gets its codes from.
 	 */
 	eRCDevice(std::string id, eRCDriver *input);
-	~eRCDevice();
+	virtual ~eRCDevice();
 	/**
 	 * \brief Handles a device specific code.
 	 *
@@ -56,6 +58,12 @@ public:
 	 * \result User readable description of given key.
 	 */
 	virtual void setExclusive(bool b) { };
+	/**
+	 * \brief set key remappngs.
+	 * \param remaps The the keyy remappings.
+	 * \result The status indicators defined in eRCInput.
+	 */
+	virtual int setKeyMapping(const std::unordered_map<unsigned int, unsigned int>& remaps);
 };
 
 /**
@@ -139,13 +147,14 @@ public:
 	}
 	enum
 	{
-			/* there are not really flags.. */
+		/* there are not really flags.. */
 		flagMake=0,
 		flagBreak=1,
 		flagRepeat=2,
 		flagLong=3,
-			/* but this is. */
+		/* but this is. */
 		flagAscii=4,
+		flagStop=5
 	};
 
 	bool operator<(const eRCKey &r) const
@@ -204,7 +213,11 @@ public:
 protected:
 	std::map<std::string,eRCDevice*,lstr> devices;
 public:
+#if SIGCXX_MAJOR_VERSION == 2
 	sigc::signal1<void, const eRCKey&> keyEvent;
+#else
+	sigc::signal<void(const eRCKey&)> keyEvent;
+#endif
 	eRCInput();
 	~eRCInput();
 
@@ -244,8 +257,10 @@ public:
 	eRCConfig config;
 #endif
 	enum { kmNone, kmAscii, kmAll };
+	enum { remapOk, remapUnsupported, remapFormatErr, remapNoSuchDevice };
 	void setKeyboardMode(int mode) { keyboardMode = mode; }
 	int  getKeyboardMode() { return keyboardMode; }
+	int setKeyMapping(const std::string &id, SWIG_PYOBJECT(ePyObject) keyRemap);
 	static eRCInput *getInstance() { return instance; }
 	void lock();
 	void unlock();

@@ -11,7 +11,7 @@ def bigStorage(minFree):
 		if not candidate.startswith('/media'):
 			continue
 		try:
-			diskstat = os.stesifs(candidate)
+			diskstat = os.statvfs(candidate)
 			free = diskstat.f_bfree * diskstat.f_bsize
 			if free > minFree:
 				print()

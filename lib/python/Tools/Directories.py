@@ -1,5 +1,5 @@
 from errno import ENOENT, EXDEV
-from os import F_OK, R_OK, W_OK, access, chmod, link, listdir, makedirs, mkdir, readlink, remove, rename, rmdir, sep, stat, stesifs, symlink, utime, walk
+from os import F_OK, R_OK, W_OK, access, chmod, link, listdir, makedirs, mkdir, readlink, remove, rename, rmdir, sep, stat, statvfs, symlink, utime, walk
 from os.path import basename, dirname, exists, getsize, isdir, isfile, islink, join, normpath, splitext
 from re import compile
 from shutil import copy2
@@ -384,7 +384,7 @@ def bestRecordingLocation(candidates):
 	biggest = 0
 	for candidate in candidates:
 		try:
-			status = stesifs(candidate[1])  # Must have some free space (i.e. not read-only).
+			status = statvfs(candidate[1])  # Must have some free space (i.e. not read-only).
 			if status.f_bavail:
 				size = (status.f_blocks + status.f_bavail) * status.f_bsize  # Free space counts double.
 				if size > biggest:
@@ -513,7 +513,7 @@ def moveFiles(fileList):
 	except OSError as err:
 		if err.errno == EXDEV:  # Invalid cross-device link.
 			print("[Directories] Warning: Cannot rename across devices, trying slower move.")
-			from Tools.CopyFiles import moveFiles as extMoveFiles  # OpenViX, OpenESI, Beyonwiz
+			from Tools.CopyFiles import moveFiles as extMoveFiles  # OpenViX, OpenESI, OpenATV, Beyonwiz
 			# from Screens.CopyFiles import moveFiles as extMoveFiles  # OpenPLi / OV
 			extMoveFiles(fileList, item[0])
 			print("[Directories] Moving files in background.")

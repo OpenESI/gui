@@ -219,7 +219,7 @@ LanguageCodes["lah"] = ("Lahnda", "")
 LanguageCodes["lam"] = ("Lamba", "")
 LanguageCodes["lao"] = LanguageCodes["lo"] = ("Lao", "Asian")
 LanguageCodes["lat"] = LanguageCodes["la"] = ("Latin", "Latin/greek")
-LanguageCodes["lav"] = LanguageCodes["lv"] = ("Lesiian", "Baltic")
+LanguageCodes["lav"] = LanguageCodes["lv"] = ("Latvian", "Baltic")
 LanguageCodes["lez"] = ("Lezghian", "")
 LanguageCodes["lin"] = LanguageCodes["ln"] = ("Lingala", "Negro-african")
 LanguageCodes["lit"] = LanguageCodes["lt"] = ("Lithuanian", "Baltic")
@@ -443,7 +443,7 @@ class ISO639Language:
 
 		wanted_languages = []
 		if depth == self.PRIMARY:
-			wanted_languages = ["Undetermined", "English", "German", "Arabic", "Catalan", "Croatian", "Czech", "Danish", "Dutch", "Estonian", "Finnish", "French", "Greek", "Hungarian", "Lithuanian", "Lesiian", "Icelandic", "Italian", "Norwegian", "Polish", "Portuguese", "Russian", "Serbian", "Slovakian", "Slovenian", "Spanish", "Swedish", "Turkish", "Ukrainian"]
+			wanted_languages = ["Undetermined", "English", "German", "Arabic", "Catalan", "Croatian", "Czech", "Danish", "Dutch", "Estonian", "Finnish", "French", "Greek", "Hungarian", "Lithuanian", "Latvian", "Icelandic", "Italian", "Norwegian", "Polish", "Portuguese", "Russian", "Serbian", "Slovakian", "Slovenian", "Spanish", "Swedish", "Turkish", "Ukrainian"]
 		elif depth == self.SECONDARY:
 			for key, val in LanguageCodes.items():
 				if len(key) == 2:

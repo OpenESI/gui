@@ -60,13 +60,13 @@ RESULT eServiceFactoryDVD::play(const eServiceReference &ref, ePtr<iPlayableServ
 
 RESULT eServiceFactoryDVD::record(const eServiceReference &/*ref*/, ePtr<iRecordableService> &ptr)
 {
-	ptr = 0;
+	ptr = nullptr;
 	return -1;
 }
 
 RESULT eServiceFactoryDVD::list(const eServiceReference &, ePtr<iListableService> &ptr)
 {
-	ptr = 0;
+	ptr = nullptr;
 	return -1;
 }
 
@@ -79,7 +79,7 @@ RESULT eServiceFactoryDVD::info(const eServiceReference &/*ref*/, ePtr<iStaticSe
 
 RESULT eServiceFactoryDVD::offlineOperations(const eServiceReference &, ePtr<iServiceOfflineOperations> &ptr)
 {
-	ptr = 0;
+	ptr = nullptr;
 	return -1;
 }
 
@@ -111,14 +111,14 @@ int eStaticServiceDVDInfo::getInfo(const eServiceReference &ref, int w)
 	{
 	case iServiceInformation::sTimeCreate:
 		{
-			struct stat s;
+			struct stat s = {};
 			if (stat(ref.path.c_str(), &s) == 0)
 				return s.st_mtime;
 		}
 		break;
 	case iServiceInformation::sFileSize:
 		{
-			struct stat s;
+			struct stat s = {};
 			if (stat(ref.path.c_str(), &s) == 0)
 				return s.st_size;
 		}
@@ -129,7 +129,7 @@ int eStaticServiceDVDInfo::getInfo(const eServiceReference &ref, int w)
 
 long long eStaticServiceDVDInfo::getFileSize(const eServiceReference &ref)
 {
-	struct stat s;
+	struct stat s = {};
 	if (stat(ref.path.c_str(), &s) == 0)
 		return s.st_size;
 	return 0;
@@ -168,7 +168,7 @@ DEFINE_REF(eServiceDVD);
 
 eServiceDVD::eServiceDVD(eServiceReference ref):
 	m_ref(ref), m_ddvdconfig(ddvd_create()), m_subtitle_widget(0), m_state(stIdle),
-	m_current_trick(0), m_pump(eApp, 1), m_width(-1), m_height(-1),
+	m_current_trick(0), m_pump(eApp, 1,"eServiceDVD"), m_width(-1), m_height(-1),
 	m_aspect(-1), m_framerate(-1), m_progressive(-1)
 {
 	int aspect = DDVD_16_9;
@@ -184,7 +184,7 @@ eServiceDVD::eServiceDVD(eServiceReference ref):
 	ddvd_set_dvd_path(m_ddvdconfig, ref.path.c_str());
 	ddvd_set_ac3thru(m_ddvdconfig, 0);
 
-	std::string ddvd_language = eConfigManager::getConfigValue("config.osd.language");
+	std::string ddvd_language = eConfigManager::getConfigValue("config.misc.locale");
 	if (ddvd_language != "")
 		ddvd_set_language(m_ddvdconfig, (ddvd_language.substr(0, 2)).c_str());
 
@@ -281,13 +281,11 @@ void eServiceDVD::gotMessage(int /*what*/)
 
 				int x_offset = 0, y_offset = 0, width = 720, height = 576;
 
-#ifdef DDVD_SUPPORTS_GET_BLIT_DESTINATION
 				ddvd_get_blit_destination(m_ddvdconfig, &x_offset, &y_offset, &width, &height);
 				eDebug("[eServiceDVD] DVD_SCREEN_UPDATE: values got from ddvd: %d %d %d %d", x_offset, y_offset, width, height);
 				y_offset = -y_offset;
 				width -= x_offset * 2;
 				height -= y_offset * 2;
-#endif
 				eRect dest(x_offset, y_offset, width, height);
 
 				if (dest.width() && dest.height())
@@ -356,8 +354,8 @@ void eServiceDVD::gotMessage(int /*what*/)
 		}
 		case DDVD_SHOWOSD_TIME:
 		{
-			static struct ddvd_time last_info;
-			struct ddvd_time info;
+			static struct ddvd_time last_info = {};
+			struct ddvd_time info = {};
 			// eDebug("[eServiceDVD] DVD_SHOWOSD_TIME");
 			ddvd_get_last_time(m_ddvdconfig, &info);
 			if ( info.pos_chapter != last_info.pos_chapter )
@@ -438,7 +436,11 @@ eServiceDVD::~eServiceDVD()
 	disableSubtitles();
 }
 
+#if SIGCXX_MAJOR_VERSION == 2
 RESULT eServiceDVD::connectEvent(const sigc::slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection)
+#else
+RESULT eServiceDVD::connectEvent(const sigc::slot<void(iPlayableService*,int)> &event, ePtr<eConnection> &connection)
+#endif
 {
 	connection = new eConnection((iPlayableService*)this, m_event.connect(event));
 	return 0;
@@ -629,28 +631,28 @@ int eServiceDVD::getInfo(int w)
 	{
 		case sCurrentChapter:
 		{
-			struct ddvd_time info;
+			struct ddvd_time info = {};
 			ddvd_get_last_time(m_ddvdconfig, &info);
 			eDebugNoNewLine(" current chapter=%d\n", info.pos_chapter);
 			return info.pos_chapter;
 		}
 		case sTotalChapters:
 		{
-			struct ddvd_time info;
+			struct ddvd_time info = {};
 			ddvd_get_last_time(m_ddvdconfig, &info);
 			eDebugNoNewLine(" total chapters=%d\n", info.end_chapter);
 			return info.end_chapter;
 		}
 		case sCurrentTitle:
 		{
-			struct ddvd_time info;
+			struct ddvd_time info = {};
 			ddvd_get_last_time(m_ddvdconfig, &info);
 			eDebugNoNewLine(" current titlepos=%d\n", info.pos_title);
 			return info.pos_title;
 		}
 		case sTotalTitles:
 		{
-			struct ddvd_time info;
+			struct ddvd_time info = {};
 			ddvd_get_last_time(m_ddvdconfig, &info);
 			eDebugNoNewLine(" total titles=%d\n", info.end_title);
 			return info.end_title;
@@ -698,8 +700,26 @@ std::string eServiceDVD::getInfoString(int w)
 		case sServiceref:
 			eDebug("[eServiceDVD] getInfoString ServiceRef %s", m_ref.toString().c_str());
 			return m_ref.toString();
+		case sVideoInfo:
+			{
+#ifdef DDVD_SUPPORTS_PICTURE_INFO
+			std::string videoInfo;
+			char buff[100];
+			snprintf(buff, sizeof(buff), "%d|%d|%d|%d|%d|1",
+					m_width,
+					m_height,
+					m_framerate,
+					m_progressive,
+					m_aspect
+				);
+			videoInfo = buff;
+			return videoInfo;
+#else
+			return std::string("720|576|50|1|0|1");
+#endif
+			}
 		default:
-			eDebug("[eServiceDVD] getInfoString %d unsupported", w);
+			eTrace("[eServiceDVD] getInfoString %d unsupported", w);
 	}
 	return "";
 }
@@ -792,12 +812,7 @@ RESULT eServiceDVD::enableSubtitles(iSubtitleUser *user, SubtitleTrack &track)
 	if (!m_pixmap)
 	{
 		m_pixmap = new gPixmap(size, 32, 1); /* allocate accel surface (if possible) */
-#ifdef DDVD_SUPPORTS_GET_BLIT_DESTINATION
 		ddvd_set_lfb_ex(m_ddvdconfig, (unsigned char *)m_pixmap->surface->data, size.width(), size.height(), 4, size.width()*4, 1);
-#else
-		ddvd_set_lfb(m_ddvdconfig, (unsigned char *)m_pixmap->surface->data, size.width(), size.height(), 4, size.width()*4);
-#warning please update libdreamdvd for fast scaling
-#endif
 		run(); // start the thread
 	}
 
@@ -812,18 +827,30 @@ RESULT eServiceDVD::disableSubtitles()
 	return 0;
 }
 
+/**
+ * Retrieves the list of available subtitle tracks for the current DVD.
+ * @param subtitlelist A vector to be filled with the available subtitle tracks.
+ * @return RESULT indicating success or failure.
+ */
 RESULT eServiceDVD::getSubtitleList(std::vector<struct SubtitleTrack> &subtitlelist)
 {
 	unsigned int spu_count = 0;
 	ddvd_get_spu_count(m_ddvdconfig, &spu_count);
 	eDebug("[eServiceDVD] getSubtitleList: %d spus", spu_count);
 
-	for ( unsigned int spu_id = 0; spu_id < spu_count; spu_id++ )
+	for (unsigned int spu_id = 0; spu_id < spu_count; spu_id++)
 	{
-		struct SubtitleTrack track;
+		struct SubtitleTrack track = {};
 		uint16_t spu_lang;
+
 		ddvd_get_spu_byid(m_ddvdconfig, spu_id, &spu_lang);
-		char spu_string[3]={(char) ((spu_lang >> 8) & 0xff), (char)(spu_lang & 0xff), 0};
+		if (spu_lang == 0xFFFF)
+		{
+			eDebug("[eServiceDVD] getSubtitleList: spu_id=%d: invalid subtitle track", spu_id);
+			continue;
+		}
+
+		char spu_string[3] = {(char)((spu_lang >> 8) & 0xff), (char)(spu_lang & 0xff), 0};
 		eDebug("[eServiceDVD] getSubtitleList: spu_id=%d lang=%s", spu_id, spu_string);
 
 		track.type = 2;
@@ -845,7 +872,7 @@ RESULT eServiceDVD::getCachedSubtitle(struct SubtitleTrack &track)
 RESULT eServiceDVD::getLength(pts_t &len)
 {
 	// eDebug("eServiceDVD::getLength");
-	struct ddvd_time info;
+	struct ddvd_time info = {};
 	ddvd_get_last_time(m_ddvdconfig, &info);
 	len = info.end_hours * 3600;
 	len += info.end_minutes * 60;
@@ -879,7 +906,7 @@ RESULT eServiceDVD::seekRelative(int direction, pts_t to)
 
 RESULT eServiceDVD::getPlayPosition(pts_t &pos)
 {
-	struct ddvd_time info;
+	struct ddvd_time info = {};
 	ddvd_get_last_time(m_ddvdconfig, &info);
 	pos = info.pos_hours * 3600;
 	pos += info.pos_minutes * 60;
@@ -980,7 +1007,7 @@ RESULT eServiceDVD::cueSheet(ePtr<iCueSheet> &ptr)
 		ptr = this;
 		return 0;
 	}
-	ptr = 0;
+	ptr = nullptr;
 	return -1;
 }
 
@@ -989,7 +1016,7 @@ PyObject *eServiceDVD::getCutList()
 	ePyObject list = PyList_New(1);
 	ePyObject tuple = PyTuple_New(2);
 	PyTuple_SetItem(tuple, 0, PyLong_FromLongLong(m_cue_pts));
-	PyTuple_SetItem(tuple, 1, PyInt_FromLong(3));
+	PyTuple_SetItem(tuple, 1, PyLong_FromLong(3));
 	PyList_SetItem(list, 0, tuple);
 	return list;
 }
@@ -1004,7 +1031,7 @@ void eServiceDVD::setCutListEnable(int /*enable*/)
 
 void eServiceDVD::loadCuesheet()
 {
-	struct stat st;
+	struct stat st = {};
 	FILE* f;
 	std::string filename = m_ref.path;
 
@@ -1070,12 +1097,12 @@ void eServiceDVD::saveCuesheet()
 {
 	eDebug("[eServiceDVD] saveCuesheet");
 
-	struct ddvd_resume resume_info;
+	struct ddvd_resume resume_info = {};
 	ddvd_get_resume_pos(m_ddvdconfig, &resume_info);
 
 	if (resume_info.title)
 	{
-		struct ddvd_time info;
+		struct ddvd_time info = {};
 		ddvd_get_last_time(m_ddvdconfig, &info);
 		pts_t pos;
 		pos = info.pos_hours * 3600;
@@ -1092,7 +1119,7 @@ void eServiceDVD::saveCuesheet()
 		m_cue_pts = 0;
 	}
 
-	struct stat st;
+	struct stat st = {};
 	FILE* f = NULL;
 	std::string filename = m_ref.path;
 
@@ -1171,8 +1198,20 @@ void eServiceDVD::saveCuesheet()
 
 eAutoInitPtr<eServiceFactoryDVD> init_eServiceFactoryDVD(eAutoInitNumbers::service+1, "eServiceFactoryDVD");
 
+static struct PyModuleDef servicedvd_moduledef = {
+	PyModuleDef_HEAD_INIT,
+	"servicedvd",	/* m_name */
+	"servicedvd",	/* m_doc */
+	-1,				/* m_size */
+	NULL,			/* m_methods */
+	NULL,			/* m_reload */
+	NULL,			/* m_traverse */
+	NULL,			/* m_clear */
+	NULL,			/* m_free */
+};
+
 PyMODINIT_FUNC
 initservicedvd(void)
 {
-	Py_InitModule("servicedvd", NULL);
+	return PyModule_Create(&servicedvd_moduledef);
 }

@@ -1,5 +1,5 @@
 from datetime import datetime
-from os import remove, stesifs, uname
+from os import remove, statvfs, uname
 from os.path import isfile, join as pathjoin
 from struct import pack
 from sys import maxsize
@@ -1244,7 +1244,7 @@ class HdmiCec:
 			return
 		log_path = config.crash.debug_path.value
 		if pathExists(log_path):
-			stat = stesifs(log_path)
+			stat = statvfs(log_path)
 			disk_free = stat.f_bavail * stat.f_bsize / 1024
 			if self.disk_full:
 				self.start_log = True

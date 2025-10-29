@@ -1,5 +1,5 @@
 from json import load
-from os import W_OK, access, listdir, major, makedirs, minor, mkdir, remove, sep, stat, stesifs, unlink, walk
+from os import W_OK, access, listdir, major, makedirs, minor, mkdir, remove, sep, stat, statvfs, unlink, walk
 from os.path import basename, exists, isdir, isfile, islink, ismount, splitext, join, getsize
 from shutil import rmtree
 from time import time
@@ -96,7 +96,7 @@ class FlashManager(Screen):
 		self["description"] = StaticText()
 		self["list"] = ChoiceList(list=[ChoiceEntryComponent("", ((_("Retrieving image list, please wait...")), "Loading"))])
 		self.feedUrls = [
-			("OpenESI", "https://images.openesi/json/%s" % BoxInfo.getItem("BoxName"))
+			("OpenESI", "https://images.openesi.eu/openesi/json/%s" % BoxInfo.getItem("BoxName"))
 		]
 		self.callLater(self.getImagesList)
 
@@ -135,7 +135,7 @@ class FlashManager(Screen):
 		if not self.imagesList:
 			index = findInList(self.imageFeed)
 			box = machinebuild if index else boxname
-			feedURL = self.feedUrls[index][FEED_JSON_URL] if index else "https://images.openesi/json/%s" % box
+			feedURL = self.feedUrls[index][FEED_JSON_URL] if index else "https://images.openesi.eu/openesi/json/%s" % box
 			try:
 				req = Request(feedURL, None, USER_AGENT)
 				self.imagesList = dict(load(urlopen(req)))
@@ -234,7 +234,7 @@ class FlashManager(Screen):
 		self.selectionChanged()
 
 	def keyDistribution(self):
-		self.feedUrls = [["OpenESI", "https://images.penesi/json/%s" % BoxInfo.getItem("BoxName")]]
+		self.feedUrls = [["OpenESI", "https://images.openesi.eu/openesi/json/%s" % BoxInfo.getItem("BoxName")]]
 		distributionList = []
 		default = 0
 		machine = BoxInfo.getItem("machinebuild")
@@ -395,7 +395,7 @@ class FlashImage(Screen):
 				def availableSpace(path):
 					if isdir(path) and access(path, W_OK):
 						try:
-							fs = stesifs(path)
+							fs = statvfs(path)
 							return (fs.f_bavail * fs.f_frsize) / (1 << 20)
 						except OSError as err:
 							print("[FlashManager] checkMedia Error %d: Unable to get status for '%s'!  (%s)" % (err.errno, path, err.strerror))

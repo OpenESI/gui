@@ -741,7 +741,7 @@ class Network:
 			for p in plugins.getPlugins(PluginDescriptor.WHERE_NETWORKCONFIG_READ):
 				p(reason=self.config_ready)
 
-	def hotplug(self, event):
+	def liveconnect(self, event):
 		interface = event["INTERFACE"]
 		if self.isBlacklisted(interface):
 			return

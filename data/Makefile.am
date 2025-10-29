@@ -1,9 +1,8 @@
-SUBDIRS = fonts keymaps
+SUBDIRS = fonts keymaps icons
 
 dist_pkgdata_DATA = \
 	encoding.conf \
 	keymap.xml \
-	keytranslation.xml \
 	keymap.ntr \
 	keymap.u80 \
 	menu.xml \
@@ -12,18 +11,28 @@ dist_pkgdata_DATA = \
 	setup.xml \
 	skin_subtitles.xml \
 	startwizard.xml \
-	userinterfacepositionerwizard.xml \
 	videowizard.xml \
+	wizardlanguage.xml \
 	freesat.t1 \
 	freesat.t2 \
 	unicable.xml \
 	hd-testcard.mvi \
 	distro-logo.png \
-	groupedservices 
+	groupedservices \
+	otv_011a0000_0002_07d4.dict \
+	otv_00820000_fbff_16a8.dict \
+	otv_06180000_1000_0011.dict \
+	otv_06400000_00a9_0003.dict \
+	networkdaemons.xml \
+	dnsservers.xml
 
 
 if HAVE_7SEGMENT
 SUBDIRS += 7segment
+endif
+
+if HAVE_TEXTLCD
+SUBDIRS += displaytext
 endif
 
 if HAVE_COLORLCD3
@@ -40,6 +49,10 @@ endif
 
 if HAVE_COLORLCD220
 SUBDIRS += display220
+endif
+
+if HAVE_COLORLCD240
+SUBDIRS += display240
 endif
 
 if HAVE_COLORLCD390

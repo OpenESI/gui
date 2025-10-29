@@ -94,8 +94,11 @@ RESULT eDVBServiceRecord::prepare(const char *filename, time_t begTime, time_t e
 	m_filename = filename;
 	m_streaming = 0;
 	m_descramble = config_recording_never_decrypt ? false : descramble;
+	bool write_descramble = m_descramble; // remember descramble flag to fix icam recordings
 	m_record_ecm = config_recording_always_ecm ? true : recordecm;
 	m_packet_size = packetsize;
+
+	// eDebug("[eDVBServiceRecord] prepare filename %s / m_record_ecm = %d / m_descramble = %d", filename, m_record_ecm, m_descramble);
 
 	if (m_state == stateIdle)
 	{
@@ -137,7 +140,7 @@ RESULT eDVBServiceRecord::prepare(const char *filename, time_t begTime, time_t e
 				meta.m_description = descr;
 			if (tags)
 				meta.m_tags = tags;
-			meta.m_scrambled = !m_descramble;
+			meta.m_scrambled = !write_descramble;
 			meta.m_packet_size = m_packet_size;
 			ret = meta.updateMeta(filename) ? -255 : 0;
 			if (!ret)
@@ -266,6 +269,11 @@ int eDVBServiceRecord::doPrepare()
 				f->open(m_ref.path.c_str());
 				source = ePtr<iTsSource>(f);
 			}
+			m_event((iRecordableService*)this, evPvrTuneStart);
+		}
+		else
+		{
+			m_event((iRecordableService*)this, evTuneStart);
 		}
 		return m_service_handler.tuneExt(m_ref, source, m_ref.path.c_str(), 0, m_simulate, NULL, servicetype, m_descramble);
 	}
@@ -417,6 +425,12 @@ int eDVBServiceRecord::doRecord()
 					if (i != program.audioStreams.begin())
 						eDebugNoNewLine(", ");
 					eDebugNoNewLine("%04x", i->pid);
+
+					if (i->rdsPid != -1)
+					{
+						pids_to_record.insert(i->rdsPid);
+						eDebugNoNewLine(", (RDS %04x)", i->rdsPid);
+					}
 				}
 				eDebugNoNewLine(")");
 			}
@@ -506,7 +520,11 @@ RESULT eDVBServiceRecord::frontendInfo(ePtr<iFrontendInformation> &ptr)
 	return 0;
 }
 
+#if SIGCXX_MAJOR_VERSION == 2
 RESULT eDVBServiceRecord::connectEvent(const sigc::slot2<void,iRecordableService*,int> &event, ePtr<eConnection> &connection)
+#else
+RESULT eDVBServiceRecord::connectEvent(const sigc::slot<void(iRecordableService*,int)> &event, ePtr<eConnection> &connection)
+#endif
 {
 	connection = new eConnection((iRecordableService*)this, m_event.connect(event));
 	return 0;
@@ -577,7 +595,12 @@ void eDVBServiceRecord::gotNewEvent(int /*error*/)
 
 void eDVBServiceRecord::saveCutlist()
 {
-			/* XXX: dupe of eDVBServicePlay::saveCuesheet, refactor plz */
+	/* XXX: dupe of eDVBServicePlay::saveCuesheet, refactor plz */
+	
+	/* save cuesheet only when main file is accessible. */
+	if (::access(m_filename.c_str(), R_OK) < 0)
+		return;
+
 	std::string filename = m_filename + ".cuts";
 
 	eDVBTSTools tstools;
@@ -604,7 +627,7 @@ void eDVBServiceRecord::saveCutlist()
 				eDebug("[eDVBServiceRecord] fixing up PTS failed, not saving");
 				continue;
 			}
-			eDebug("[eDVBServiceRecord] fixed up %llx to %llx (offset %llx)", i->second, p, offset);
+			eDebug("[eDVBServiceRecord] fixed up %llx to %llx (offset %jx)", i->second, p, (intmax_t)offset);
 			where = htobe64(p);
 			what = htonl(2); /* mark */
 			fwrite(&where, sizeof(where), 1, f);

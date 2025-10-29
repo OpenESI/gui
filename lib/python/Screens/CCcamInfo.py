@@ -1,6 +1,4 @@
 # -*- coding: UTF-8 -*-
-# CCcam Info by AliAbdul
-# CCcam Line Editor by egami and OpenESI
 from base64 import b64encode
 from glob import glob
 import requests

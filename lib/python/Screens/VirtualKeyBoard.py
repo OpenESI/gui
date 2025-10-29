@@ -339,7 +339,7 @@ class VirtualKeyboard(Screen):
 				self.footer
 			]
 		]
-		self.lesiian = [
+		self.latvian = [
 			[
 				["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "f", "BACKSPACEICON"],
 				["TABICON", "\u016B", "g", "j", "r", "m", "v", "n", "z", "\u0113", "\u010D", "\u017E", "h", "\u0137"],
@@ -478,9 +478,9 @@ class VirtualKeyboard(Screen):
 			"de_CH": [self.germanSwiss(self.german), None],
 			"el_GR": [self.greek, None],
 			"hu_HU": [self.hungarian(self.german), None],
-			"lv_01": [self.lesiianStandard(self.english), _("Alternative 1")],
-			"lv_02": [self.lesiian, _("Alternative 2")],
-			"lv_LV": [self.lesiianQWERTY(self.english), None],
+			"lv_01": [self.latvianStandard(self.english), _("Alternative 1")],
+			"lv_02": [self.latvian, _("Alternative 2")],
+			"lv_LV": [self.latvianQWERTY(self.english), None],
 			"lt_LT": [self.lithuanian(self.english), None],
 			"nb_NO": [self.norwegian(self.scandinavian), None],
 			"pl_01": [self.polish(self.german), _("Alternative")],
@@ -751,14 +751,14 @@ class VirtualKeyboard(Screen):
 		])
 		return keyList
 
-	def lesiianQWERTY(self, base):
-		keyList = self.lesiianStandard(base)
+	def latvianQWERTY(self, base):
+		keyList = self.latvianStandard(base)
 		keyList[0][1][13] = "\u00B0"
 		keyList[2][1][9] = "\u00F5"
 		keyList[3][1][9] = "\u00D5"
 		return keyList
 
-	def lesiianStandard(self, base):
+	def latvianStandard(self, base):
 		keyList = deepcopy(base)
 		keyList[0][3][1] = "\\"
 		keyList[1][3][1] = "|"

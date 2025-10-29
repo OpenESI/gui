@@ -241,8 +241,8 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 		self.onClose.append(self.__onClose)
 
 		try:
-			from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
-			hotplugNotifier.append(self.hotplugCB)
+			from Plugins.SystemPlugins.Liveconnect.plugin import liveconnectNotifier
+			liveconnectNotifier.append(self.liveconnectCB)
 		except Exception:
 			pass
 
@@ -254,7 +254,7 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 		if dvd_device:
 			self.physicalDVD = True
 		else:
-			self.scanHotplug()
+			self.scanLiveconnect()
 
 		self.dvd_filelist = dvd_filelist
 		self.onFirstExecBegin.append(self.opened)
@@ -640,8 +640,8 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 		self.restore_infobar_seek_config()
 		self.session.nav.playService(self.oldService)
 		try:
-			from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
-			hotplugNotifier.remove(self.hotplugCB)
+			from Plugins.SystemPlugins.Liveconnect.plugin import liveconnectNotifier
+			liveconnectNotifier.remove(self.liveconnectCB)
 		except Exception:
 			pass
 
@@ -671,15 +671,15 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 	def calcRemainingTime(self):
 		return 0
 
-	def hotplugCB(self, dev, media_state):
-		print("[DVD] hotplugCB %s %s" % (dev, media_state))
+	def liveconnectCB(self, dev, media_state):
+		print("[DVD] liveconnectCB %s %s" % (dev, media_state))
 		if dev == harddiskmanager.getCD():
 			if media_state == "1":
-				self.scanHotplug()
+				self.scanLiveconnect()
 			else:
 				self.physicalDVD = False
 
-	def scanHotplug(self):
+	def scanLiveconnect(self):
 		devicepath = harddiskmanager.getAutofsMountpoint(harddiskmanager.getCD())
 		if exists(devicepath):
 			from Components.Scanner import scanDevice

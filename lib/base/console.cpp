@@ -1,5 +1,8 @@
+#include <sys/time.h>
+#include <sys/resource.h>
 #include <lib/base/console.h>
 #include <lib/base/eerror.h>
+#include <lib/base/ioprio.h>
 #include <sys/vfs.h> // for statfs
 #include <unistd.h>
 #include <signal.h>
@@ -9,7 +12,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
-int bidirpipe(int pfd[], const char *cmd , const char * const argv[], const char *cwd )
+int bidirpipe(int pfd[], const char *cmd , const char * const argv[], const char *cwd)
 {
 	int pfdin[2];  /* from child to parent */
 	int pfdout[2]; /* from parent to child */
@@ -42,12 +45,12 @@ int bidirpipe(int pfd[], const char *cmd , const char * const argv[], const char
 			eDebug("[eConsoleAppContainer] failed to change directory to %s (%m)", cwd);
 
 		execvp(cmd, (char * const *)argv);
-				/* the vfork will actually suspend the parent thread until execvp is called. thus it's ok to use the shared arg/cmdline pointers here. */
+		/* the vfork will actually suspend the parent thread until execvp is called. thus it's ok to use the shared arg/cmdline pointers here. */
 		eDebug("[eConsoleAppContainer] Finished %s", cmd);
 		_exit(0);
 	}
 	if (close(pfdout[0]) == -1 || close(pfdin[1]) == -1 || close(pfderr[1]) == -1)
-			return(-1);
+		return(-1);
 
 	pfd[0] = pfdin[0];
 	pfd[1] = pfdout[1];
@@ -72,7 +75,7 @@ eConsoleAppContainer::eConsoleAppContainer():
 
 int eConsoleAppContainer::setCWD( const char *path )
 {
-	struct stat dir_stat;
+	struct stat dir_stat = {};
 
 	if (stat(path, &dir_stat) == -1)
 		return -1;
@@ -117,6 +120,24 @@ int eConsoleAppContainer::execute(const char *cmdline, const char * const argv[]
 	if ( pid == -1 ) {
 		eDebug("[eConsoleAppContainer] failed to start %s", cmdline);
 		return -3;
+	}
+
+
+	if( m_nice != -1) {
+		eDebug("[eConsoleAppContainer] use priority %d" , m_nice);
+		if (setpriority(PRIO_PROCESS, pid, m_nice) < 0 )
+			eDebug("[eConsoleAppContainer] failed to set priority to %d" , m_nice);
+	}
+
+	if(m_ionice != -1) {
+		if( m_ionice == 8) {
+			eDebug("[eConsoleAppContainer] use IOPRIO_CLASS_IDLE");
+			setIoPrio(IOPRIO_CLASS_IDLE, 7, pid);
+		}
+		else {
+			eDebug("[eConsoleAppContainer] use IOPRIO_CLASS_BE / %d", m_ionice);
+			setIoPrio(IOPRIO_CLASS_BE, m_ionice, pid);
+		}
 	}
 
 //	eDebug("[eConsoleAppContainer] pipe in = %d, out = %d, err = %d", fd[0], fd[1], fd[2]);
@@ -237,13 +258,16 @@ void eConsoleAppContainer::readyRead(int what)
 //		eDebug("[eConsoleAppContainer] readyRead what = %d", what);
 		char* buf = &buffer[0];
 		int rd;
-		while((rd = read(fd[0], buf, buffer.size())) > 0)
+		while((rd = read(fd[0], buf, buffer.size()-1)) > 0)
 		{
 			buf[rd]=0;
 			/*emit*/ dataAvail(std::make_pair(buf, rd));
 			stdoutAvail(std::make_pair(buf, rd));
 			if ( filefd[1] >= 0 )
-				::write(filefd[1], buf, rd);
+			{
+				ssize_t ret = ::write(filefd[1], buf, rd);
+				if (ret < 0) eDebug("[eConsoleAppContainer] write failed: %m");
+			}
 			if (!hungup)
 				break;
 		}
@@ -269,6 +293,33 @@ void eConsoleAppContainer::readyRead(int what)
 	}
 }
 
+int eConsoleAppContainer::waitPID()
+{
+	int status;
+	int w;
+	// wait for process end
+	do {
+		w = waitpid(pid, &status, 0);
+		if (w == -1) {
+			eDebug("[eConsoleAppContainer] waitPID pid = %d error %d.", pid, w);
+			return w;
+		}
+		if (WIFEXITED(status)) {
+			eTrace("[eConsoleAppContainer] pid = %d exited with status %d.", pid, WEXITSTATUS(status));
+		} else if (WIFSIGNALED(status)) {
+			eDebug("[eConsoleAppContainer] pid = %d killed by signal %d.", pid, WTERMSIG(status));
+		} else if (WIFSTOPPED(status)) {
+			eDebug("[eConsoleAppContainer] pid = %d stopped by signal %d.", pid, WSTOPSIG(status));
+		} else if (WIFCONTINUED(status)) {
+			eDebug("[eConsoleAppContainer] pid = %d continued.", pid);
+		}
+	} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+
+	// force hungup
+	readyRead(eSocketNotifier::Hungup);
+	return 0;
+}
+
 void eConsoleAppContainer::readyErrRead(int what)
 {
 	if (what & (eSocketNotifier::Priority|eSocketNotifier::Read))
@@ -276,7 +327,7 @@ void eConsoleAppContainer::readyErrRead(int what)
 //		eDebug("[eConsoleAppContainer] readyErrRead what = %d", what);
 		char* buf = &buffer[0];
 		int rd;
-		while((rd = read(fd[2], buf, buffer.size())) > 0)
+		while((rd = read(fd[2], buf, buffer.size()-1)) > 0)
 		{
 /*			for ( int i = 0; i < rd; i++ )
 				eDebug("[eConsoleAppContainer] %d = %c (%02x)", i, buf[i], buf[i] );*/

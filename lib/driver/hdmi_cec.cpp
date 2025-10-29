@@ -10,7 +10,7 @@
 #include <lib/base/nconfig.h>
 #include <lib/driver/input_fake.h>
 #include <lib/driver/hdmi_cec.h>
-#include <lib/driver/avswitch.h>
+#include <lib/driver/avcontrol.h>
 /* NOTE: this header will move to linux uapi, once the cec framework is out of staging */
 #include <lib/driver/linux-uapi-cec.h>
 
@@ -23,7 +23,13 @@ eHdmiCEC::eCECMessage::eCECMessage(int addr, int cmd, char *data, int length)
 	address = addr;
 	command = cmd;
 	if (length > (int)sizeof(messageData)) length = sizeof(messageData);
-	if (length && data) memcpy(messageData, data, length);
+	if (length && data) {
+		memcpy(messageData, data, length);
+		control0 = data[0];
+		control1 = data[1];
+		control2 = data[2];
+		control3 = data[3];
+	} 
 	dataLength = length;
 }
 
@@ -170,9 +176,8 @@ eHdmiCEC *eHdmiCEC::getInstance()
 
 void eHdmiCEC::reportPhysicalAddress()
 {
-	struct cec_message txmessage;
+	struct cec_message txmessage = {};
 	memset(&txmessage, 0, sizeof(txmessage));
-
 	txmessage.address = 0x0f; /* broadcast */
 	txmessage.data[0] = 0x84; /* report address */
 	txmessage.data[1] = physicalAddress[0];
@@ -187,7 +192,7 @@ void eHdmiCEC::getAddressInfo()
 	if (hdmiFd >= 0)
 	{
 		bool hasdata = false;
-		struct addressinfo addressinfo;
+		struct addressinfo addressinfo = {};
 
 		if (linuxCEC)
 		{
@@ -313,8 +318,9 @@ int eHdmiCEC::getDeviceType()
 bool eHdmiCEC::getActiveStatus()
 {
 	bool active = true;
-	eAVSwitch *avswitch = eAVSwitch::getInstance();
-	if (avswitch) active = avswitch->isActive();
+	eAVControl *avc = eAVControl::getInstance();
+	if (avc)
+		active = avc->isEncoderActive();
 	return active;
 }
 
@@ -324,7 +330,7 @@ void eHdmiCEC::hdmiEvent(int what)
 	{
 		if (linuxCEC)
 		{
-			struct cec_event cecevent;
+			struct cec_event cecevent = {};
 			::ioctl(hdmiFd, CEC_DQEVENT, &cecevent);
 			if (cecevent.event == CEC_EVENT_STATE_CHANGE)
 			{
@@ -337,10 +343,10 @@ void eHdmiCEC::hdmiEvent(int what)
 	if (what & eSocketNotifier::Read)
 	{
 		bool hasdata = false;
-		struct cec_rx_message rxmessage;
+		struct cec_rx_message rxmessage = {};
 		if (linuxCEC)
 		{
-			struct cec_msg msg;
+			struct cec_msg msg = {};
 			if (::ioctl(hdmiFd, CEC_RECEIVE, &msg) >= 0)
 			{
 				rxmessage.length = msg.len - 1;
@@ -388,6 +394,7 @@ void eHdmiCEC::hdmiEvent(int what)
 					case 0x44: /* key pressed */
 						keypressed = true;
 						pressedkey = rxmessage.data[1];
+						[[fallthrough]];
 					case 0x45: /* key released */
 					{
 						long code = translateKey(pressedkey);
@@ -469,7 +476,7 @@ long eHdmiCEC::translateKey(unsigned char code)
 			key = 0xd0;
 			break;
 		case 0x53:
-			key = 0x166;
+			key = 0x16d;
 			break;
 		case 0x54:
 			key = 0x16a;
@@ -518,6 +525,7 @@ long eHdmiCEC::translateKey(unsigned char code)
 			break;
 		default:
 			key = 0x8b;
+			eDebug("eHdmiCEC: unknown code 0x%02X", (unsigned int)(code & 0xFF));
 			break;
 	}
 	return key;
@@ -548,7 +556,8 @@ void eHdmiCEC::sendMessage(struct cec_message &message)
 			message.flag = 1;
 			::ioctl(hdmiFd, 3, &message);
 #else
-			::write(hdmiFd, &message, 2 + message.length);
+			ssize_t ret = ::write(hdmiFd, &message, 2 + message.length);
+			if (ret < 0) eDebug("[eHdmiCEC] write failed: %m");
 #endif
 		}
 	}
@@ -556,7 +565,7 @@ void eHdmiCEC::sendMessage(struct cec_message &message)
 
 void eHdmiCEC::sendMessage(unsigned char address, unsigned char cmd, char *data, int length)
 {
-	struct cec_message message;
+	struct cec_message message = {};
 	message.address = address;
 	if (length > (int)(sizeof(message.data) - 1)) length = sizeof(message.data) - 1;
 	message.length = length + 1;

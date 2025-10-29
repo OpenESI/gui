@@ -1,5 +1,5 @@
 from datetime import datetime
-from os import stat, stesifs
+from os import stat, statvfs
 from time import localtime, mktime, strftime, time
 
 from enigma import BT_SCALE, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, eEPGCache, eLabel, eListbox, eListboxPythonMultiContent, eSize, eTimer
@@ -1767,7 +1767,7 @@ class RecordTimerEdit(Setup):
 					if device in DEFAULT_INHIBIT_DEVICES:
 						self.setFootnote(_("Warning: Recordings should not be stored on the Flash disk!"))
 					else:
-						status = stesifs(self.timerLocation.value)
+						status = statvfs(self.timerLocation.value)
 						total = status.f_blocks * status.f_bsize
 						free = status.f_bavail * status.f_bsize
 						self.setFootnote(_("Space total %s, used %s, free %s (%0.f%%).") % (scaleNumber(total), scaleNumber(total - free), scaleNumber(free), 100.0 * free / total))

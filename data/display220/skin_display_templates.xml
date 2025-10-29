@@ -173,7 +173,7 @@
 		<widget source="parent.Title" render="Label" position="0,0" foregroundColor="#FFFF00" size="220,95" font="FdLcD;22" halign="center" valign="center" />
 		<widget source="parent.summary_description" render="Label" position="0,97" size="220,80" font="FdLcD;20" halign="center" valign="center" />
 	</screen>
-	<!-- Metrix-Menu -->
+	<!-- Darkness-Menu -->
 	<screen name="MainSettingsViewSummary" position="0,0" size="220,176">
 		<widget source="parent.titleText" render="Label" position="0,0" size="220,176" font="FdLcD;24" halign="center" valign="center" />
 	</screen>

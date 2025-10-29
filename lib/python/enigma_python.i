@@ -44,12 +44,15 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/base/message.h>
 #include <lib/base/modelinformation.h>
 #include <lib/base/e2avahi.h>
+#include <lib/base/internetcheck.h>
+#include <lib/base/profile.h>
 #include <lib/driver/rc.h>
 #include <lib/driver/rcinput_swig.h>
 #include <lib/service/event.h>
 #include <lib/service/iservice.h>
 #include <lib/service/service.h>
 #include <lib/service/servicedvb.h>
+#include <lib/service/servicefs.h>
 #include <lib/service/servicepeer.h>
 #include <lib/gdi/fb.h>
 #include <lib/gdi/font.h>
@@ -59,10 +62,8 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/gdi/gmaindc.h>
 #include <lib/gui/ewidget.h>
 #include <lib/gui/elabel.h>
-#include <lib/gui/einput.h>
-#include <lib/gui/einputstring.h>
-#include <lib/gui/einputnumber.h>
 #include <lib/gui/epixmap.h>
+#include <lib/gui/erectangle.h>
 #include <lib/gui/ebutton.h>
 #include <lib/gui/ewindow.h>
 #include <lib/gui/ewidgetdesktop.h>
@@ -80,6 +81,7 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/gui/elistboxcontent.h>
 #include <lib/gui/esubtitle.h>
 #include <lib/service/listboxservice.h>
+#include <lib/service/elistboxservicecontent.h>
 #include <lib/nav/core.h>
 #include <lib/actions/action.h>
 #include <lib/gdi/gfont.h>
@@ -99,10 +101,13 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/dvb/cablescan.h>
 #include <lib/dvb/encoder.h>
 #include <lib/dvb/streamserver.h>
+#include <lib/dvb/rtspstreamserver.h>
+#include <lib/dvb/metaparser.h>
 #include <lib/components/scan.h>
 #include <lib/components/file_eraser.h>
 #include <lib/components/tuxtxtapp.h>
 #include <lib/driver/avswitch.h>
+#include <lib/driver/avcontrol.h>
 #include <lib/driver/hdmi_cec.h>
 #include <lib/driver/rfmod.h>
 #include <lib/driver/misc_options.h>
@@ -114,6 +119,10 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/python/python.h>
 #include <lib/python/python_helpers.h>
 #include <lib/gdi/picload.h>
+#include <lib/dvb/fcc.h>
+#include <lib/gdi/accel.h>
+#include <include/hardwaredb.h>
+#include <lib/base/esettings.h>
 %}
 
 %feature("ref")   iObject "$this->AddRef(); /* eDebug(\"AddRef (%s:%d)!\", __FILE__, __LINE__); */ "
@@ -164,11 +173,13 @@ typedef long time_t;
 %include <lib/base/smartptr.h>
 %include <lib/service/event.h>
 %include <lib/service/iservice.h>
+%include <lib/service/servicefs.h>
 %include <lib/service/service.h>
 %include <lib/base/e2avahi.h>
 %include <lib/service/servicepeer.h>
 
 // TODO: embed these...
+%immutable eInternetCheck::callback;
 %immutable ePicLoad::PictureData;
 %immutable eButton::selected;
 %immutable eInput::changed;
@@ -184,11 +195,12 @@ typedef long time_t;
 %immutable eDVBCI_UI::ciStateChanged;
 %immutable eSocket_UI::socketStateChanged;
 %immutable eDVBResourceManager::frontendUseMaskChanged;
-%immutable eAVSwitch::vcr_sb_notifier;
+%immutable eAVControl::vcr_sb_notifier;
 %immutable eHdmiCEC::messageReceived;
 %immutable eHdmiCEC::addressChanged;
 %immutable ePythonMessagePump::recv_msg;
 %immutable eDVBLocalTimeHandler::m_timeUpdated;
+%immutable eFCCServiceManager::m_fcc_event;
 %immutable iCryptoInfo::clientname;
 %immutable iCryptoInfo::clientinfo;
 %immutable iCryptoInfo::verboseinfo;
@@ -198,6 +210,7 @@ typedef long time_t;
 %immutable eTuxtxtApp::appClosed;
 %immutable iDVBChannel::receivedTsidOnid;
 %include <lib/base/message.h>
+%include <lib/base/internetcheck.h>
 %include <lib/base/etpm.h>
 %include <lib/driver/rc.h>
 %include <lib/driver/rcinput_swig.h>
@@ -211,10 +224,8 @@ typedef long time_t;
 %include <lib/gdi/esize.h>
 %include <lib/gui/ewidget.h>
 %include <lib/gui/elabel.h>
-%include <lib/gui/einput.h>
-%include <lib/gui/einputstring.h>
-%include <lib/gui/einputnumber.h>
 %include <lib/gui/epixmap.h>
+%include <lib/gui/erectangle.h>
 %include <lib/gui/ecanvas.h>
 %include <lib/gui/ebutton.h>
 %include <lib/gui/ewindow.h>
@@ -230,6 +241,7 @@ typedef long time_t;
 %include <lib/gui/evideo.h>
 %include <lib/gui/esubtitle.h>
 %include <lib/service/listboxservice.h>
+%include <lib/service/elistboxservicecontent.h>
 %include <lib/nav/core.h>
 %include <lib/actions/action.h>
 %include <lib/gdi/gfont.h>
@@ -250,6 +262,7 @@ typedef long time_t;
 %include <lib/components/file_eraser.h>
 %include <lib/components/tuxtxtapp.h>
 %include <lib/driver/avswitch.h>
+%include <lib/driver/avcontrol.h>
 %include <lib/driver/hdmi_cec.h>
 %include <lib/driver/rfmod.h>
 %include <lib/driver/misc_options.h>
@@ -262,7 +275,13 @@ typedef long time_t;
 %include <lib/python/python.h>
 %include <lib/python/pythonconfig.h>
 %include <lib/gdi/picload.h>
+%include <lib/dvb/fcc.h>
 %include <lib/dvb/streamserver.h>
+%include <lib/dvb/rtspstreamserver.h>
+%include <lib/dvb/metaparser.h>
+%include <lib/gdi/accel.h>
+%include <lib/base/esettings.h>
+
 /**************  eptr  **************/
 
 /**************  signals  **************/
@@ -428,15 +447,73 @@ int getLinkedSlotID(int fe)
 }
 %}
 
+void setFCCEnable(int);
+%{
+void setFCCEnable(int enable)
+{
+        eFCCServiceManager *fcc_mng = eFCCServiceManager::getInstance();
+        if (fcc_mng) setFCCEnable(enable);
+}
+%}
+
 bool isFBCLink(int);
 %{
 bool isFBCLink(int fe)
 {
         eFBCTunerManager *mgr = eFBCTunerManager::getInstance();
-        if (mgr) return mgr->isFBCLink(fe);
+        if (mgr) return mgr->IsFBCLink(fe);
         return false;
 }
 %}
+
+PyObject *getFontFaces();
+%{
+PyObject *getFontFaces()
+{
+	std::vector<std::string> v = fontRenderClass::getInstance()->getFontFaces();
+	ePyObject result = PyList_New(v.size());
+	for (size_t i = 0; i < v.size(); i++)
+		PyList_SET_ITEM(result, i, PyUnicode_FromString(v[i].c_str()));
+        return result;
+}
+%}
+
+void setACCELDebug(int);
+%{
+void setACCELDebug(int enable)
+{
+	gAccel::getInstance()->setAccelDebug(enable);
+}
+%}
+
+PyObject *getDeviceDB();
+%{
+PyObject *getDeviceDB()
+{
+	ePyObject result = PyDict_New();
+	for (const auto & [ key, value ] : HardwareDB) {
+		PutToDict(result, key.c_str(), value.c_str());
+	}
+    return result;
+}
+%}
+
+void eProfileDone();
+%{
+void eProfileDone()
+{
+	eProfile::getInstance().close();
+}
+%}
+
+void eProfileWrite(const char*);
+%{
+void eProfileWrite(const char* checkPoint)
+{
+	eProfile::getInstance().write(checkPoint);
+}
+%}
+
 
 /************** temp *****************/
 
@@ -446,10 +523,12 @@ extern void runMainloop();
 extern void quitMainloop(int exit_code);
 extern eApplication *getApplication();
 extern int getPrevAsciiCode();
+extern void setPrevAsciiCode(int code);
 extern int getBsodCounter();
 extern void resetBsodCounter();
 extern void addFont(const char *filename, const char *alias, int scale_factor, int is_replacement, int renderflags = 0);
 extern const char *getEnigmaVersionString();
+extern const char *getE2Rev();
 extern const char *getGStreamerVersionString();
 extern void dump_malloc_stats(void);
 #ifndef HAVE_OSDANIMATION
@@ -459,16 +538,22 @@ extern void setAnimation_current_listbox(int a);
 #endif
 extern void pauseInit(void);
 extern void resumeInit(void);
+extern int checkInternetAccess(const char* host, int timeout = 3);
+extern int getVFDSymbolsPoll();
+extern int getE2Flags();
+extern bool checkLogin(const char *user, const char *pwd);
 %}
 
 extern void addFont(const char *filename, const char *alias, int scale_factor, int is_replacement, int renderflags = 0);
 extern int getPrevAsciiCode();
+extern void setPrevAsciiCode(int code);
 extern int getBsodCounter();
 extern void resetBsodCounter();
 extern void runMainloop();
 extern void quitMainloop(int exit_code);
 extern eApplication *getApplication();
 extern const char *getEnigmaVersionString();
+extern const char *getE2Rev();
 extern const char *getGStreamerVersionString();
 extern void dump_malloc_stats(void);
 #ifndef HAVE_OSDANIMATION
@@ -478,6 +563,10 @@ extern void setAnimation_current_listbox(int a);
 #endif
 extern void pauseInit(void);
 extern void resumeInit(void);
+extern int checkInternetAccess(const char* host, int timeout = 3);
+extern int getVFDSymbolsPoll();
+extern int getE2Flags();
+extern bool checkLogin(const char *user, const char *pwd);
 
 %include <lib/python/python_console.i>
 %include <lib/python/python_base.i>

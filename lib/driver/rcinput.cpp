@@ -13,24 +13,9 @@
 #include <lib/base/init_num.h>
 #include <lib/driver/input_fake.h>
 
-static bool bflag;
-
 void eRCDeviceInputDev::handleCode(long rccode)
 {
 	struct input_event *ev = (struct input_event *)rccode;
-
-#if WETEKRC
-/*
-	eDebug("[eRCDeviceInputDev] ==> BEFORE check for evtype: %x %x %x", ev->value, ev->code, ev->type);
-	eDebug("[eRCDeviceInputDev] ==> BEFORE check for evtype:-->BackspaceFLAG %d", bflag);
-*/
-	if (ev->code == KEY_BACKSPACE && ev->value == 1 ) {
-		bflag = !bflag;
-	}
-/*
-	eDebug("[eRCDeviceInputDev] ==> BEFORE check for evtype after check for evvalue:-->BackspaceFLAG %d", bflag);
-*/
-#endif
 
 	if (ev->type != EV_KEY)
 		return;
@@ -74,10 +59,6 @@ void eRCDeviceInputDev::handleCode(long rccode)
 			case KEY_ESC:
 			case KEY_TAB:
 			case KEY_BACKSPACE:
-/*
-				bflag = !bflag;
-				eDebug("[eRCDeviceInputDev] --> AFTER flip BackspaceFLAG %d", bflag);
-*/
 			case KEY_ENTER:
 			case KEY_INSERT:
 			case KEY_DELETE:
@@ -96,7 +77,7 @@ void eRCDeviceInputDev::handleCode(long rccode)
 			{
 				if (consoleFd >= 0)
 				{
-					struct kbentry ke;
+					struct kbentry ke = {};
 					/* off course caps is not the same as shift, but this will have to do for now */
 					ke.kb_table = (shiftState || capsState) ? K_SHIFTTAB : K_NORMTAB;
 					ke.kb_index = ev->code;
@@ -108,6 +89,56 @@ void eRCDeviceInputDev::handleCode(long rccode)
 			return;
 		}
 	}
+
+	if (!remaps.empty())
+	{
+		std::unordered_map<unsigned int, unsigned int>::iterator i = remaps.find(ev->code);
+		if (i != remaps.end())
+		{
+			eDebug("[eRCDeviceInputDev] map: %u->%u", i->first, i->second);
+			ev->code = i->second;
+		}
+	}
+	else
+	{
+#if KEY_PLAY_ACTUALLY_IS_KEY_PLAYPAUSE
+		if (ev->code == KEY_PLAY)
+		{
+			if ((id == "dreambox advanced remote control (native)")  || (id == "bcm7325 remote control"))
+			{
+				ev->code = KEY_PLAYPAUSE;
+			}
+		}
+#endif
+
+	if (ev->code == KEY_TV2) {
+		ev->code = KEY_TV;
+	}
+
+#if KEY_F6_TO_KEY_VIDEO
+
+	if (ev->code == KEY_F6) {
+		ev->code = KEY_VIDEO;
+	}
+
+#endif
+
+#if KEY_EDIT_TO_KEY_TIME
+
+	if (ev->code == KEY_EDIT) {
+		ev->code = KEY_TIME;
+	}
+
+#endif
+
+#if KEY_HOME_TO_KEY_UNKNOWN
+
+	if (ev->code == KEY_HOME) {
+		ev->code = KEY_UNKNOWN;
+	}
+
+#endif
+
 
 #if TIVIARRC
 	if (ev->code == KEY_EPG) {
@@ -167,50 +198,6 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	else if (ev->code == KEY_TV) {
 		ev->code = KEY_VMODE;
 	}
-#endif
-
-#if WETEKRC
-/*
-	eDebug("[eRCDeviceInputDev] -->BackspaceFLAG %d", bflag);
-	eDebug("[eRCDeviceInputDev] -->before change %x %x %x", ev->value, ev->code, ev->type);
-*/
-/* default is with NO numerc keys !!!*/
-	if (bflag) {
-		if (ev->code == KEY_1) {
-			ev->code = KEY_RED;
-		}
-		if (ev->code == KEY_2) {
-			ev->code = KEY_GREEN;
-		}
-		if (ev->code == KEY_3) {
-			ev->code = KEY_YELLOW;
-		}
-		if (ev->code == KEY_4) {
-			ev->code = KEY_BLUE;
-		}
-		if (ev->code == KEY_5) {
-			ev->code = KEY_PREVIOUS;
-		}
-		if (ev->code == KEY_6) {
-			ev->code = KEY_NEXT;
-		}
-		if (ev->code == KEY_7) {
-			ev->code = KEY_REWIND;
-		}
-		if (ev->code == KEY_8) {
-			ev->code = KEY_STOP;
-		}
-		if (ev->code == KEY_9) {
-			ev->code = KEY_FASTFORWARD;
-		}
-		if (ev->code == KEY_0) {
-			ev->code = KEY_PLAYPAUSE;
-		}
-	}
-/*
-	eDebug("[eRCDeviceInputDev] -->BackspaceFLAG %d", bflag);
-	eDebug("[eRCDeviceInputDev] -->after change %x %x %x", ev->value, ev->code, ev->type);
-*/
 #endif
 
 #if KEY_F6_TO_KEY_FAVORITES
@@ -352,14 +339,6 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	}
 #endif
 
-#if KEY_MODE_TO_KEY_AUDIO
-	if (ev->code == KEY_MODE)
-	{
-		/* ebox Remote rc has a AV key, which sends KEY_MODE events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_AUDIO;
-	}
-#endif
-
 #if KEY_VIDEO_IS_KEY_SCREEN
 	if (ev->code == KEY_VIDEO)
 	{
@@ -384,19 +363,6 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	}
 #endif
 	
-#if KEY_TEXT_TO_KEY_AUDIO
-	if (ev->code == KEY_AUDIO)
-	{
-		/* AZBOX rc has a KEY aux key, which sends KEY_TEXT events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_TEXT;
-	}
-	else if (ev->code == KEY_AUDIO)
-	{
-		/* AZBOX rc has a KEY Check key, which sends KEY_AUDIO events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_TEXT;
-	}
-#endif
-
 #if KEY_CONTEXT_MENU_TO_KEY_AUX
 	if (ev->code == KEY_CONTEXT_MENU)
 	{
@@ -435,58 +401,10 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	}
 #endif
 
-#if KEY_TV_TO_KEY_MODE
-	if (ev->code == KEY_TV)
-	{
-		/* AZBOX rc has a KEY_MODE key, which sends KEY_TV events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_MODE;
-	}
-#endif
-
-#if KEY_VIDEO_TO_KEY_EPG
-	if (ev->code == KEY_VIDEO)
-	{
-		/* AZBOX rc has a KEY_EPG key, which sends KEY_VIDEO events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_EPG;
-	}
-#endif
-
-#if KEY_VIDEO_TO_KEY_SUBTITLE
-	if (ev->code == KEY_VIDEO)
-	{
-		/* AZBOX rc has a KEY_SUBTITLE key, which sends KEY_VIDEO events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_SUBTITLE;
-	}
-#endif
-
-#if KEY_TV_TO_KEY_STOP
-	if (ev->code == KEY_TV)
-	{
-		/* AZBOX rc has a KEY_STOP key, which sends KEY_TV events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_STOP;
-	}
-#endif
-
-#if KEY_RADIO_TO_KEY_RECORD
-	if (ev->code == KEY_RADIO)
-	{
-		/* AZBOX rc has a KEY_RECORD key, which sends KEY_RADIO events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_RECORD;
-	}
-#endif
-
-#if KEY_HOME_TO_KEY_OPEN
-	if (ev->code == KEY_HOME)
-	{
-		/* AZBOX rc has no radio/tv/pvr key, we use KEY_HOME which sends KEY_OPEN events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_OPEN;
-	}
-#endif
-
 #if KEY_HOME_TO_KEY_HOMEPAGE
 	if (ev->code == KEY_HOME)
 	{
-		/* DAGS map HOME Key to show Mediaportal */
+		/* DAGS map HOME Key to show MediaPlugin */
 		ev->code = KEY_HOMEPAGE;
 	}
 #endif
@@ -631,27 +549,11 @@ void eRCDeviceInputDev::handleCode(long rccode)
 	}
 #endif
 
-#if KEY_SCREEN_TO_KEY_ANGLE
-	if (ev->code == KEY_SCREEN)
-	{
-		/* MixOs , which sends KEY_SCREEN events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_ANGLE;
-	}
-#endif
-
 #if KEY_ZOOM_TO_KEY_SCREEN
 	if (ev->code == KEY_ZOOM)
 	{
 		/* Venton rc has a a Key LAN and send KEY_OPTION. Correct this, so we do not have to place hacks in the keymaps. */
 		ev->code = KEY_SCREEN;
-	}
-#endif
-
-#if KEY_TIME_TO_KEY_SLEEP
-	if (ev->code == KEY_SLEEP)
-	{
-		/* MixOs , which sends KEY_SLEEP events. Correct this, so we do not have to place hacks in the keymaps. */
-		ev->code = KEY_PROGRAM;
 	}
 #endif
 
@@ -674,11 +576,13 @@ void eRCDeviceInputDev::handleCode(long rccode)
 #if KEY_VIDEO_TO_KEY_BOOKMARKS
 	if (ev->code == KEY_VIDEO)
 	{
-		/* Axas Ultra have two keys open Movie folder , use Media key to open Mediaportal */
+		/* Axas Ultra have two keys open Movie folder , use Media key to open MediaPlugin */
 		ev->code = KEY_BOOKMARKS;
 	}
 #endif
 
+	}
+	
 	switch (ev->value)
 	{
 		case 0:
@@ -691,6 +595,12 @@ void eRCDeviceInputDev::handleCode(long rccode)
 			input->keyPressed(eRCKey(this, ev->code, eRCKey::flagRepeat)); /*emit*/
 			break;
 	}
+}
+
+int eRCDeviceInputDev::setKeyMapping(const std::unordered_map<unsigned int, unsigned int>& remaps_p)
+{
+	remaps = remaps_p;
+	return eRCInput::remapOk;
 }
 
 eRCDeviceInputDev::eRCDeviceInputDev(eRCInputEventDriver *driver, int consolefd)
@@ -772,6 +682,14 @@ public:
 
 	void add(const char* filename)
 	{
+		for (itemlist::iterator it = items.begin(); it != items.end(); ++it)
+		{
+			if (strcmp((*it)->filename, filename) == 0)
+			{
+				// Ignore if already exists
+				return;
+			}
+		}
 		eDebug("[eInputDeviceInit] adding device %s", filename);
 		eRCInputEventDriver *p = new eRCInputEventDriver(filename);
 		items.push_back(new element(filename, p, new eRCDeviceInputDev(p, consoleFd)));
@@ -813,7 +731,7 @@ public:
 
 	void removeAll(void)
 	{
-		int size = items.size();
+		[[maybe_unused]] size_t size = items.size();
 		for (itemlist::iterator it = items.begin(); it != items.end(); ++it)
 		{
 			delete *it;

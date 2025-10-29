@@ -9,6 +9,8 @@
 #include <lib/gdi/erect.h>
 #include <lib/gdi/fb.h>
 #include <byteswap.h>
+#include <unordered_map>
+#include <vector>
 
 struct gRGB
 {
@@ -22,20 +24,12 @@ struct gRGB
 			unsigned char a, r, g, b;
 		};
 #endif
-#if defined (__aarch64__)
-		unsigned int value;
-#else
-		unsigned long value;
-#endif
+		uint32_t value;
 	};
 	gRGB(int r, int g, int b, int a=0): b(b), g(g), r(r), a(a)
 	{
 	}
-#if defined (__aarch64__)
-	gRGB(unsigned int val): value(val)
-#else
-	gRGB(unsigned long val): value(val)
-#endif
+	gRGB(uint32_t val): value(val)
 	{
 	}
 	gRGB(const gRGB& other): value(other.value)
@@ -43,18 +37,23 @@ struct gRGB
 	}
 	gRGB(const char *colorstring)
 	{
-#if defined (__aarch64__)
-		unsigned int val = 0;
-#else
-		unsigned long val = 0;
-#endif
+		uint32_t val = 0;
+
 		if (colorstring)
 		{
 			for (int i = 0; i < 8; i++)
 			{
-				if (i) val <<= 4;
-				if (!colorstring[i]) break;
-				val |= (colorstring[i]) & 0x0f;
+				char c = colorstring[i];
+				if (!c) break;
+				val <<= 4;
+				if (c >= '0' && c <= '9')
+					val |= c - '0';
+				else if(c >= 'a' && c <= 'f')
+					val |= c - 'a' + 10;
+				else if(c >= 'A' && c <= 'F')
+					val |= c - 'A' + 10;
+				else if(c >= ':' && c <= '?') // Backwards compatibility for old style color strings
+					val |= c & 0x0f;
 			}
 		}
 		value = val;
@@ -63,29 +62,17 @@ struct gRGB
 	{
 	}
 
-#if defined (__aarch64__)
-	unsigned int argb() const
-#else
-	unsigned long argb() const
-#endif
+	uint32_t argb() const
 	{
 		return value;
 	}
 
-#if defined (__aarch64__)
-	void set(unsigned int val)
-#else
-	void set(unsigned long val)
-#endif
+	void set(uint32_t val)
 	{
 		value = val;
 	}
 
-#if defined (__aarch64__)
-	void operator=(unsigned int val)
-#else
-	void operator=(unsigned long val)
-#endif
+	void operator=(uint32_t val)
 	{
 		value = val;
 	}
@@ -117,16 +104,14 @@ struct gRGB
 	}
 	operator const std::string () const
 	{
-#if defined (__aarch64__)
-		unsigned int val = value;
-#else
-		unsigned long val = value;
-#endif
+		uint32_t val = value;
 		std::string escapecolor = "\\c";
 		escapecolor.resize(10);
 		for (int i = 9; i >= 2; i--)
 		{
-			escapecolor[i] = 0x40 | (val & 0xf);
+			int hexbits = val & 0xf;
+			escapecolor[i] = hexbits < 10	? '0' + hexbits
+							: 'a' - 10 + hexbits;
 			val >>= 4;
 		}
 		return escapecolor;
@@ -160,11 +145,8 @@ struct gPalette
 {
 	int start, colors;
 	gRGB *data;
-#if defined (__aarch64__)
-	unsigned int data_phys;
-#else
-	unsigned long data_phys;
-#endif
+	uint32_t data_phys;
+
 	gColor findColor(const gRGB rgb) const;
 	gPalette():	start(0), colors(0), data(0), data_phys(0) {}
 };
@@ -185,6 +167,7 @@ struct gUnmanagedSurface
 	gPalette clut;
 	void *data;
 	int data_phys;
+	bool transparent = true;
 
 	gUnmanagedSurface();
 	gUnmanagedSurface(int width, int height, int bpp);
@@ -223,14 +206,25 @@ public:
 		blitVAlignBottom = 128
 	};
 
+	enum
+	{
+		RADIUS_TOP_LEFT = 1,
+		RADIUS_TOP_RIGHT = 2,
+		RADIUS_BOTTOM_LEFT = 4,
+		RADIUS_BOTTOM_RIGHT = 8,
+	};
+
 	enum {
 		accelNever = -1,
 		accelAuto = 0,
 		accelAlways = 1,
 	};
 
+	typedef void (*gPixmapDisposeCallback)(gPixmap* pixmap);
+
 	gPixmap(gUnmanagedSurface *surface);
 	gPixmap(eSize, int bpp, int accel = 0);
+	gPixmap(int width, int height, int bpp, gPixmapDisposeCallback on_dispose, int accel = accelAuto);
 
 	gUnmanagedSurface *surface;
 
@@ -240,19 +234,146 @@ public:
 	eSize size() const { return eSize(surface->x, surface->y); }
 
 private:
-	bool must_delete_surface;
+	gPixmapDisposeCallback on_dispose;
 
 	friend class gDC;
 	void fill(const gRegion &clip, const gColor &color);
 	void fill(const gRegion &clip, const gRGB &color);
 
-	void blit(const gPixmap &src, const eRect &pos, const gRegion &clip, int flags=0);
+	void blit(const gPixmap &src, const eRect &pos, const gRegion &clip, int cornerRadius, uint8_t edges, int flags=0);
+
+    void blitRounded32Bit(const gPixmap &src, const eRect &pos, const eRect &clip, int cornerRadius, uint8_t edges, int flag);
+    void blitRounded32BitScaled(const gPixmap &src, const eRect &pos, const eRect &clip, int cornerRadius, uint8_t edges, int flag);
+    void blitRounded8Bit(const gPixmap &src, const eRect &pos, const eRect &clip, int cornerRadius, uint8_t edges, int flag);
+    void blitRounded8BitScaled(const gPixmap &src, const eRect &pos, const eRect &clip, int cornerRadius, uint8_t edges, int flag);
 
 	void mergePalette(const gPixmap &target);
 	void line(const gRegion &clip, ePoint start, ePoint end, gColor color);
 	void line(const gRegion &clip, ePoint start, ePoint end, gRGB color);
 	void line(const gRegion &clip, ePoint start, ePoint end, unsigned int color);
+
+	void drawRectangle(const gRegion &region, const eRect &area, const gRGB &backgroundColor, const gRGB &borderColor, int borderWidth, const std::vector<gRGB> &gradientColors, uint8_t direction, int radius, uint8_t edges, bool alphablend, int gradientFullSize = 0);
+
 };
 SWIG_TEMPLATE_TYPEDEF(ePtr<gPixmap>, gPixmapPtr);
+
+#ifndef SWIG
+struct CornerData
+{
+	int width;
+	int height;
+	int topLeftCornerRadius;
+	int topLeftCornerSRadius;
+	int topLeftCornerDRadius;
+	int topRightCornerRadius;
+	int topRightCornerSRadius;
+	int topRightCornerDRadius;
+	int bottomLeftCornerRadius;
+	int bottomLeftCornerSRadius;
+	int bottomLeftCornerDRadius;
+	int bottomRightCornerRadius;
+	int bottomRightCornerSRadius;
+	int bottomRightCornerDRadius;
+	int borderWidth;
+	int cornerRadius;
+	int w_topRightCornerRadius;
+	int h_bottomLeftCornerRadius;
+	int w_bottomRightCornerRadius;
+	int h_bottomRightCornerRadius;
+	uint32_t borderCol;
+
+	bool radiusSet = false;
+	bool isCircle = false;
+
+	std::unordered_map<int, double> RadiusData;
+
+	CornerData(int radius, uint8_t edges, int h, int w, int bw, uint32_t borderColor)
+	{
+		cornerRadius = checkRadiusValue(radius, h, w);
+		radiusSet = cornerRadius > 0;
+		topLeftCornerRadius = (gPixmap::RADIUS_TOP_LEFT & edges) ? cornerRadius: 0;
+		topRightCornerRadius = (gPixmap::RADIUS_TOP_RIGHT & edges) ? cornerRadius: 0;
+		bottomLeftCornerRadius = (gPixmap::RADIUS_BOTTOM_LEFT & edges) ? cornerRadius: 0;
+		bottomRightCornerRadius = (gPixmap::RADIUS_BOTTOM_RIGHT & edges) ? cornerRadius: 0;
+		topLeftCornerSRadius = topLeftCornerRadius * topLeftCornerRadius;
+		topLeftCornerDRadius = (topLeftCornerRadius - 1) * (topLeftCornerRadius - 1);
+		topRightCornerSRadius = topRightCornerRadius * topRightCornerRadius;
+		topRightCornerDRadius = (topRightCornerRadius - 1) * (topRightCornerRadius - 1);
+		bottomLeftCornerSRadius = bottomLeftCornerRadius * bottomLeftCornerRadius;
+		bottomLeftCornerDRadius = (bottomLeftCornerRadius - 1) * (bottomLeftCornerRadius - 1);
+		bottomRightCornerSRadius = bottomRightCornerRadius * bottomRightCornerRadius;
+		bottomRightCornerDRadius = (bottomRightCornerRadius - 1) * (bottomRightCornerRadius - 1);
+		width = h;
+		height = w;
+		borderWidth = bw;
+		borderCol = borderColor;
+
+		w_topRightCornerRadius = w - topRightCornerRadius;
+		if(width > height)
+			w_topRightCornerRadius += (width - height);
+		else if (height > width)
+			w_topRightCornerRadius -= (height - width);
+
+		h_bottomLeftCornerRadius = h - bottomLeftCornerRadius;
+		if(width > height)
+			h_bottomLeftCornerRadius -= (width - height);
+		else if (height > width)
+			h_bottomLeftCornerRadius += (height - width);
+
+		w_bottomRightCornerRadius = w - bottomRightCornerRadius;
+		if(width > height)
+			w_bottomRightCornerRadius += (width - height);
+		else if (height > width)
+			w_bottomRightCornerRadius -= (height - width);
+
+		h_bottomRightCornerRadius = h - bottomRightCornerRadius;
+		if(width > height)
+			h_bottomRightCornerRadius -= (width - height);
+		else if (height > width)
+			h_bottomRightCornerRadius += (height - width);
+
+		isCircle = ((edges == 15) && (width == height) && (cornerRadius == width / 2));
+		caclCornerAlpha();
+	}
+
+	int checkRadiusValue(int r, const int w, const int h)
+	{
+		int minDimension = (w < h) ? w : h;
+		if (r > minDimension / 2) {
+			r = minDimension / 2;
+		}
+		return r;
+	}
+
+	void caclCornerAlpha()
+	{
+		int dx = 0, dy = 0, squared_dst = 0;
+		double alpha = 0.0, distance = 0.0;
+		int r = cornerRadius;
+		for (int y = 0; y < r; y++)
+		{
+			for (int x = 0; x < r; x++)
+			{
+				dx = r - x - 1;
+				dy = r - y - 1;
+				squared_dst = dx * dx + dy * dy;
+				if (squared_dst <= (r - 1) * (r - 1))
+					continue;
+				else if (squared_dst >= r * r)
+					continue;
+				else
+				{
+					if (RadiusData.find(squared_dst) == RadiusData.end())
+					{
+						distance = sqrt(squared_dst);
+						alpha = (r - distance);
+						RadiusData[squared_dst] = alpha;
+					}
+				}
+			}
+		}
+	}
+};
+#endif
 
 #endif

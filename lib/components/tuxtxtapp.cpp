@@ -14,16 +14,12 @@ extern "C" void tuxtxt_start(int tpid, int demux);
 extern "C" int tuxtxt_stop();
 extern "C" void tuxtxt_close();
 extern "C" void tuxtxt_handlePressedKey(int key);
+extern "C" void tuxtxt_enabledebug();
 
 eAutoInitP0<eTuxtxtApp> init_eTuxtxtApp(eAutoInitNumbers::lowlevel, "Tuxtxt");
 eTuxtxtApp *eTuxtxtApp::instance = NULL;
 
-#if HAVE_AMLOGIC
-eTuxtxtApp::eTuxtxtApp() : pid(0), demux(0), enableTtCaching(false), uiRunning(false), messagePump(eApp, 0)
-#else
-eTuxtxtApp::eTuxtxtApp() : pid(0), enableTtCaching(false), uiRunning(false), messagePump(eApp, 0)
-#endif
-
+eTuxtxtApp::eTuxtxtApp() : pid(0), enableTtCaching(false), uiRunning(false), messagePump(eApp, 0, "eTuxtxtApp")
 {
 	CONNECT(messagePump.recv_msg, eTuxtxtApp::recvEvent);
 	pthread_mutex_init( &cacheChangeLock, 0 );
@@ -76,9 +72,11 @@ void eTuxtxtApp::thread_finished()
 	messagePump.send(0);
 }
 
-void eTuxtxtApp::initCache()
+void eTuxtxtApp::initCache(bool debug)
 {
 	tuxtxt_init();
+	if(debug)
+		tuxtxt_enabledebug();
 }
 
 void eTuxtxtApp::freeCache()

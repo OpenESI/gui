@@ -1,6 +1,6 @@
 from Components.GUIComponent import GUIComponent
 from Components.VariableText import VariableText
-from os import stesifs
+from os import statvfs
 
 from enigma import eLabel
 
@@ -23,7 +23,7 @@ class DiskInfo(VariableText, GUIComponent):
 
 	def update(self):
 		try:
-			stat = stesifs(self.path)
+			stat = statvfs(self.path)
 		except OSError:
 			return -1
 

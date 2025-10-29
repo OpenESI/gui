@@ -12,7 +12,11 @@ class eServiceMP3Record:
 {
 	DECLARE_REF(eServiceMP3Record);
 public:
+#if SIGCXX_MAJOR_VERSION == 2
 	RESULT connectEvent(const sigc::slot2<void,iRecordableService*,int> &event, ePtr<eConnection> &connection);
+#else
+	RESULT connectEvent(const sigc::slot<void(iRecordableService*,int)> &event, ePtr<eConnection> &connection);
+#endif
 	RESULT prepare(const char *filename, time_t begTime, time_t endTime, int eit_event_id, const char *name, const char *descr, const char *tags, bool descramble, bool recordecm, int packetsize);
 	RESULT prepareStreaming(bool descramble, bool includeecm);
 	RESULT start(bool simulate=false);
@@ -33,7 +37,7 @@ private:
 	std::string m_filename;
 	eServiceReference m_ref;
 	ePtr<eConnection> m_con_record_event;
-	ePtr<eTimer> m_streamingsrc_timeout;
+	//ePtr<eTimer> m_streamingsrc_timeout;
 	std::string m_useragent;
 	std::string m_extra_headers;
 	eFixedMessagePump<ePtr<GstMessageContainer> > m_pump;
@@ -54,7 +58,11 @@ private:
 	static gboolean handleAutoPlugCont(GstElement *bin, GstPad *pad, GstCaps *caps, gpointer user_data);
 
 			/* events */
+#if SIGCXX_MAJOR_VERSION == 2
 	sigc::signal2<void,iRecordableService*,int> m_event;
+#else
+	sigc::signal<void(iRecordableService*,int)> m_event;
+#endif
 };
 
 #endif

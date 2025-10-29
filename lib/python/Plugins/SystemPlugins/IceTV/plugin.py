@@ -1237,7 +1237,7 @@ class IceTVMain(ChoiceBox):
                 (_("Disable IceTV"), "CALLFUNC", self.disable),
                ]
         try:
-            # Use windowTitle for compatibility betwwen OpenESI & OpenViX
+            # Use windowTitle for compatibility between OpenATV, OpenViX & OpenESI
             super(IceTVMain, self).__init__(session, title=(_("IceTV version %s\n") + text) % ice._version_string, list=menu, skin_name=self.skinName, windowTitle=_("IceTV - Setup"))
         except TypeError:
             # Fallback for Beyonwiz

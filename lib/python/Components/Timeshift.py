@@ -1,4 +1,4 @@
-from os import link, listdir, makedirs, rename, stat, stesifs, system as ossystem
+from os import link, listdir, makedirs, rename, stat, statvfs, system as ossystem
 from os.path import exists, getsize, join as pathjoin, splitext
 from random import randint
 from time import localtime, strftime, time
@@ -760,7 +760,7 @@ class InfoBarTimeshift:
 			# Let's try to copy the file in background now! This might take a while ...
 			if not timeshift_saved:
 				try:
-					status = stesifs(recordingPath)
+					status = statvfs(recordingPath)
 					freespace = status.f_bfree / 1000 * status.f_bsize / 1000
 					randomint = randint(1, 999)
 					if timeshiftfile is None:
@@ -930,7 +930,7 @@ class InfoBarTimeshift:
 					lockedFiles.append(("pts_livebuffer_%s") % self.pts_currplaying)
 		if freespace:
 			try:
-				status = stesifs(config.timeshift.path.value)
+				status = statvfs(config.timeshift.path.value)
 				freespace = status.f_bavail * status.f_bsize / 1024 / 1024
 			except Exception:
 				print("[Timeshift] Error reading disk space - function 'checking for free space' can't used.")

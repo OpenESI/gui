@@ -86,7 +86,7 @@ class eDVBServicePlay: public eDVBServiceBase,
 		public iPlayableService, public iPauseableService,
 		public iSeekableService, public sigc::trackable, public iServiceInformation,
 		public iAudioTrackSelection, public iAudioChannelSelection,
-		public iSubserviceList, public iTimeshiftService,
+		public iSubserviceList, public iTimeshiftService, public iTapService,
 		public iCueSheet, public iSubtitleOutput, public iAudioDelay,
 		public iRdsDecoder, public iStreamableService,
 		public iStreamedService
@@ -96,7 +96,11 @@ public:
 	virtual ~eDVBServicePlay();
 
 		// iPlayableService
+#if SIGCXX_MAJOR_VERSION == 2
 	RESULT connectEvent(const sigc::slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection);
+#else
+	RESULT connectEvent(const sigc::slot<void(iPlayableService*,int)> &event, ePtr<eConnection> &connection);
+#endif
 	RESULT start();
 	RESULT stop();
 	RESULT setTarget(int target, bool noaudio);
@@ -109,11 +113,12 @@ public:
 	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr);
 	RESULT subServices(ePtr<iSubserviceList> &ptr);
 	RESULT timeshift(ePtr<iTimeshiftService> &ptr);
+	RESULT tap(ePtr<iTapService> &ptr);
 	RESULT cueSheet(ePtr<iCueSheet> &ptr);
 	RESULT subtitle(ePtr<iSubtitleOutput> &ptr);
 	RESULT audioDelay(ePtr<iAudioDelay> &ptr);
 	RESULT rdsDecoder(ePtr<iRdsDecoder> &ptr);
-	RESULT keys(ePtr<iServiceKeys> &ptr) { ptr = 0; return -1; }
+	RESULT keys(ePtr<iServiceKeys> &ptr) { ptr = nullptr; return -1; }
 
 		// iStreamedService
 	RESULT streamed(ePtr<iStreamedService> &ptr);
@@ -174,7 +179,11 @@ public:
 	RESULT setNextPlaybackFile(const char *fn);
 	RESULT saveTimeshiftFile();
 	std::string getTimeshiftFilename();
-	void switchToLive();
+	virtual void switchToLive();
+
+		// iTapService
+	bool startTapToFD(int fd, const std::vector<int> &pids, int packetsize = 188);
+	void stopTapToFD();
 
 		// iCueSheet
 	PyObject *getCutList();
@@ -196,7 +205,6 @@ public:
 		// iStreamableService
 	RESULT stream(ePtr<iStreamableService> &ptr);
 	ePtr<iStreamData> getStreamingData();
-
 	void setQpipMode(bool value, bool audio);
 
 protected:
@@ -206,25 +214,30 @@ protected:
 	ePtr<eDVBService> m_dvb_service;
 
 	ePtr<iTSMPEGDecoder> m_decoder;
+	int m_is_primary;
 	int m_decoder_index;
 	int m_have_video_pid;
 	int m_tune_state;
 	bool m_noaudio;
 
-		/* in timeshift mode, we essentially have two channels, and thus pmt handlers. */
+		/* in time shift mode, we essentially have two channels, and thus pmt handlers. */
 	eDVBServicePMTHandler m_service_handler_timeshift;
 	eDVBServiceEITHandler m_event_handler;
 	int m_current_audio_pid;
 	int m_current_video_pid_type;
 
-	eDVBServicePlay(const eServiceReference &ref, eDVBService *service);
+	eDVBServicePlay(const eServiceReference &ref, eDVBService *service, bool connect_event=true);
 
 		/* events */
 	void gotNewEvent(int error);
 
 	void serviceEvent(int event);
 	void serviceEventTimeshift(int event);
+#if SIGCXX_MAJOR_VERSION == 2
 	sigc::signal2<void,iPlayableService*,int> m_event;
+#else
+	sigc::signal<void(iPlayableService*,int)> m_event;
+#endif
 
 	bool m_is_stream;
 
@@ -241,7 +254,7 @@ protected:
 	int selectAudioStream(int n = -1);
 	RESULT setFastForward_internal(int ratio, bool final_seek=false);
 
-		/* timeshift */
+		/* time shift */
 	ePtr<iDVBTSRecorder> m_record;
 	std::set<int> m_pids_active;
 
@@ -255,6 +268,10 @@ protected:
 	int m_skipmode;
 	int m_fastforward;
 	int m_slowmotion;
+
+		/* tap */
+
+	ePtr<iDVBTSRecorder> m_tap_recorder;
 
 		/* cuesheet */
 

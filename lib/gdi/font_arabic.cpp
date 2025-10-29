@@ -151,33 +151,33 @@ static shapestruct chartable[] = {
 static short
 shapecount (unsigned long s)
 {
-  int l, r, m;
-  if ((s >= 0x0621) && (s <= 0x06D3))
-    {
-      l = 0;
-      r = sizeof (chartable) / sizeof (shapestruct);
-      while (l <= r)
-        {
-          m = (l + r) / 2;
-          if (s == chartable[m].basechar)
-            {
-              return chartable[m].count;
-            }
-          else if (s < chartable[m].basechar)
-            {
-              r = m - 1;
-            }
-          else
-            {
-              l = m + 1;
-            }
-        }
-    }
-  else if (s == ZWJ)
-    {
-      return 4;
-    }
-  return 1;
+	int l, r, m;
+	if ((s >= 0x0621) && (s <= 0x06D3))
+	{
+		l = 0;
+		r = sizeof (chartable) / sizeof (shapestruct);
+		while (l <= r)
+		{
+			m = (l + r) / 2;
+			if (s == chartable[m].basechar)
+			{
+				return chartable[m].count;
+			}
+			else if (s < chartable[m].basechar)
+			{
+				r = m - 1;
+			}
+			else
+			{
+				l = m + 1;
+			}
+		}
+	}
+	else if (s == ZWJ)
+	{
+		return 4;
+	}
+	return 1;
 }
 
 static unsigned long
@@ -230,6 +230,8 @@ shape (std::vector<unsigned long> &string, const std::vector<unsigned long> &tex
 			i != text.end(); ++i)
 	{
 		nextletter = *i;
+		if ((nextletter >= 0x064E) && (nextletter <= 0x0652))
+			continue;
 		int nc = shapecount (nextletter);
 
 		if (nc == 1)

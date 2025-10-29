@@ -6,6 +6,7 @@
 #include <lib/dvb/pmt.h>
 #include <lib/dvb/subtitle.h>
 #include <lib/dvb/teletext.h>
+#include <lib/dvb/metaparser.h>
 #include <gst/gst.h>
 /* for subtitles */
 #include <lib/gui/esubtitle.h>
@@ -36,6 +37,7 @@ class eStaticServiceMP3Info: public iStaticServiceInformation
 	DECLARE_REF(eStaticServiceMP3Info);
 	friend class eServiceFactoryMP3;
 	eStaticServiceMP3Info();
+	eDVBMetaParser m_parser;
 public:
 	RESULT getName(const eServiceReference &ref, std::string &name);
 	int getLength(const eServiceReference &ref);
@@ -73,9 +75,7 @@ class eServiceMP3InfoContainer: public iServiceInfoContainer
 
 	unsigned char *bufferData;
 	unsigned int bufferSize;
-#if GST_VERSION_MAJOR >= 1
 	GstMapInfo map;
-#endif
 
 public:
 	eServiceMP3InfoContainer();
@@ -118,7 +118,7 @@ public:
 typedef struct _GstElement GstElement;
 
 typedef enum { atUnknown, atMPEG, atMP3, atAC3, atDTS, atAAC, atPCM, atOGG, atFLAC, atWMA, atDRA } audiotype_t;
-typedef enum { stUnknown, stPlainText, stSSA, stASS, stSRT, stVOB, stPGS } subtype_t;
+typedef enum { stUnknown, stPlainText, stSSA, stASS, stSRT, stVOB, stPGS, stDVB } subtype_t;
 typedef enum { ctNone, ctMPEGTS, ctMPEGPS, ctMKV, ctAVI, ctMP4, ctVCD, ctCDA, ctASF, ctOGG, ctWEBM, ctDRA } containertype_t;
 
 class eServiceMP3: public iPlayableService, public iPauseableService,
@@ -129,8 +129,13 @@ class eServiceMP3: public iPlayableService, public iPauseableService,
 public:
 	virtual ~eServiceMP3();
 
+	void setCacheEntry(bool isAudio, int pid);
 		// iPlayableService
-	RESULT connectEvent(const sigc::slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection);
+#if SIGCXX_MAJOR_VERSION == 2
+	RESULT connectEvent(const sigc::slot2<void, iPlayableService*, int> &event, ePtr<eConnection> &connection);
+#else
+	RESULT connectEvent(const sigc::slot<void(iPlayableService*,int)> &event, ePtr<eConnection> &connection);
+#endif
 	RESULT start();
 	RESULT stop();
 
@@ -147,19 +152,20 @@ public:
 
 		// not implemented (yet)
 	RESULT setTarget(int target, bool noaudio = false) { return -1; }
-	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr) { ptr = 0; return -1; }
-	RESULT subServices(ePtr<iSubserviceList> &ptr) { ptr = 0; return -1; }
-	RESULT timeshift(ePtr<iTimeshiftService> &ptr) { ptr = 0; return -1; }
-//	RESULT cueSheet(ePtr<iCueSheet> &ptr) { ptr = 0; return -1; }
+	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr) { ptr = nullptr; return -1; }
+	RESULT subServices(ePtr<iSubserviceList> &ptr) { ptr = nullptr; return -1; }
+	RESULT timeshift(ePtr<iTimeshiftService> &ptr) { ptr = nullptr; return -1; }
+	RESULT tap(ePtr<iTapService> &ptr) { ptr = nullptr; return -1; };
+//	RESULT cueSheet(ePtr<iCueSheet> &ptr) { ptr = nullptr; return -1; }
 
 		// iCueSheet
 	PyObject *getCutList();
 	void setCutList(SWIG_PYOBJECT(ePyObject));
 	void setCutListEnable(int enable);
 
-	RESULT rdsDecoder(ePtr<iRdsDecoder> &ptr) { ptr = 0; return -1; }
-	RESULT keys(ePtr<iServiceKeys> &ptr) { ptr = 0; return -1; }
-	RESULT stream(ePtr<iStreamableService> &ptr) { ptr = 0; return -1; }
+	RESULT rdsDecoder(ePtr<iRdsDecoder> &ptr) { ptr = nullptr; return -1; }
+	RESULT keys(ePtr<iServiceKeys> &ptr) { ptr = nullptr; return -1; }
+	RESULT stream(ePtr<iStreamableService> &ptr) { ptr = nullptr; return -1; }
 
 	void setQpipMode(bool value, bool audio) { }
 
@@ -211,11 +217,6 @@ public:
 	void setAC3Delay(int);
 	void setPCMDelay(int);
 
-#if HAVE_AMLOGIC
-	void AmlSwitchAudio(int index);
-	unsigned int get_pts_pcrscr(void);
-#endif
-
 	struct audioStream
 	{
 		GstPad* pad;
@@ -226,16 +227,21 @@ public:
 			:pad(0), type(atUnknown)
 		{
 		}
+		bool operator==(const audioStream &lhs) const { return (lhs.type == type) && (lhs.language_code == language_code) && (lhs.codec == codec); }
+		bool operator!=(const audioStream &lhs) const { return (lhs.type != type) || (lhs.language_code != language_code) || (lhs.codec != codec); }
 	};
 	struct subtitleStream
 	{
 		GstPad* pad;
 		subtype_t type;
 		std::string language_code; /* iso-639, if available. */
+		std::string title;
 		subtitleStream()
 			:pad(0)
 		{
 		}
+		bool operator==(const subtitleStream &lhs) const { return (lhs.type == type) && (lhs.language_code == language_code) && (lhs.title == title); }
+		bool operator!=(const subtitleStream &lhs) const { return (lhs.type != type) || (lhs.language_code != language_code) || (lhs.title != title); }
 	};
 	struct sourceStream
 	{
@@ -316,7 +322,6 @@ private:
 	bool m_cuesheet_loaded;
 	bool m_audiosink_not_running;
 	/* servicemMP3 chapter TOC support CVR */
-#if GST_VERSION_MAJOR >= 1
 	bool m_use_chapter_entries;
 	/* last used seek position gst-1 only */
 	gint64 m_last_seek_pos;
@@ -326,20 +331,25 @@ private:
 	gint m_last_seek_count;
 	bool m_seeking_or_paused;
 	bool m_to_paused;
-#endif
 	bufferInfo m_bufferInfo;
 	errorInfo m_errorInfo;
 	std::string m_download_buffer_path;
 	eServiceMP3(eServiceReference ref);
+#if SIGCXX_MAJOR_VERSION == 2
 	sigc::signal2<void,iPlayableService*,int> m_event;
+#else
+	sigc::signal<void(iPlayableService*,int)> m_event;
+#endif
 	enum
 	{
 		stIdle, stRunning, stStopped,
 	};
 	int m_state;
+	bool m_gstdot;
 	GstElement *m_gst_playbin;
 	GstTagList *m_stream_tags;
 	bool m_coverart;
+	std::list<eDVBSubtitlePage> m_dvb_subtitle_pages;
 
 	eFixedMessagePump<ePtr<GstMessageContainer> > m_pump;
 
@@ -353,13 +363,9 @@ private:
 	GstPad* gstCreateSubtitleSink(eServiceMP3* _this, subtype_t type);
 	void gstPoll(ePtr<GstMessageContainer> const &);
 	static void playbinNotifySource(GObject *object, GParamSpec *unused, gpointer user_data);
-#if GST_VERSION_MAJOR < 1
-	static gint match_sinktype(GstElement *element, gpointer type);
-#else
 /* TOC processing CVR */
 	void HandleTocEntry(GstMessage *msg);
 	static gint match_sinktype(const GValue *velement, const gchar *type);
-#endif
 	static void handleElementAdded(GstBin *bin, GstElement *element, gpointer user_data);
 
 	struct subtitle_page_t
@@ -378,10 +384,15 @@ private:
 	typedef std::pair<uint32_t, subtitle_page_t> subtitle_pages_map_pair_t;
 	subtitle_pages_map_t m_subtitle_pages;
 	ePtr<eTimer> m_subtitle_sync_timer;
+	ePtr<eTimer> m_dvb_subtitle_sync_timer;
+	ePtr<eDVBSubtitleParser> m_dvb_subtitle_parser;
+	ePtr<eConnection> m_new_dvb_subtitle_page_connection;
+	void newDVBSubtitlePage(const eDVBSubtitlePage &p);
 
 	pts_t m_prev_decoder_time;
 	int m_decoder_time_valid_state;
 
+	void pushDVBSubtitles();
 	void pushSubtitles();
 	void pullSubtitle(GstBuffer *buffer);
 	void sourceTimeout();
@@ -395,6 +406,11 @@ private:
 	std::string m_extra_headers;
 	RESULT trickSeek(gdouble ratio);
 	ePtr<iTSMPEGDecoder> m_decoder; // for showSinglePic when radio
+
+	std::string m_external_subtitle_path;
+	std::string m_external_subtitle_language;
+	std::string m_external_subtitle_extension;
+
 };
 
 #endif

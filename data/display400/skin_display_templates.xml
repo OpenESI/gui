@@ -272,7 +272,7 @@
 		<widget source="entry" render="Label" position="0,99" size="400,132" font="FdLcD;38" halign="center" valign="center"/>
 	</screen>
 
-	<!-- setup - OK pressed on a timer entry - or YELLOW or AUDIO key pressed - or PVR/VIDEO then MENU then OK - or MyMetrixLite (that without a headline) -->
+	<!-- setup - OK pressed on a timer entry - or YELLOW or AUDIO key pressed - or PVR/VIDEO then MENU then OK -->
 	<screen name="SetupSummary" position="0,0" size="400,240">
 		<widget source="Title" render="Label" position="5,5" size="380,35" font="FdLcD;30" foregroundColor="#87CEFA" halign="center" noWrap="1"/>
 		<eLabel position="5,40" size="390,2" backgroundColor="#FFFFFF" zPosition="3"/>
@@ -288,7 +288,7 @@
 		<widget source="parent.summary_description" render="Label" position="10,50" size="380,156" font="FdLcD;34" halign="left" valign="center"/>
 	</screen>
 
-	<!-- Metrix-Menu - GREEN - MyMetrixLite OK -->
+	<!-- OpenESI Settings Menu -->
 	<screen name="MainSettingsViewSummary" position="0,0" size="400,240">
 		<widget source="parent.titleText" render="Label" position="0,0" size="400,234" font="FdLcD;34" foregroundColor="#87CEFA" halign="center" valign="center"/>
 		<panel name="SummaryClockPanel"/>

@@ -4,6 +4,7 @@
 #include <lib/base/httpstream.h>
 #include <lib/base/eerror.h>
 #include <lib/base/wrappers.h>
+#include <lib/base/esettings.h>
 
 DEFINE_REF(eHttpStream);
 
@@ -16,6 +17,14 @@ eHttpStream::eHttpStream()
 	partialPktSz = 0;
 	tmpBufSize = 32;
 	tmpBuf = (char*)malloc(tmpBufSize);
+	startDelay = 0;
+	if (eSettings::remote_fallback_enabled)
+		startDelay = 500000;
+	else {
+		int _startDelay = eSettings::http_startdelay;
+		if (_startDelay > 0)
+			startDelay = _startDelay * 1000;
+	}
 }
 
 eHttpStream::~eHttpStream()
@@ -43,7 +52,7 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 
 	close();
 
-	std::string user_agent = "Enigma2 HbbTV/1.1.1 (+PVR+RTSP+DL;openESI;;;)";
+	std::string user_agent = "HbbTV/1.1.1 (+PVR+RTSP+DL; Sonic; TV44; 1.32.455; 2.002) Bee/3.5";
 	std::string extra_headers = "";
 	size_t pos = uri.find('#');
 	if (pos != std::string::npos)
@@ -174,11 +183,12 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 		goto error;
 
 	result = sscanf(linebuf, "%99s %d %99s", proto, &statuscode, statusmsg);
-	if (result != 3 || (statuscode != 200 && statuscode != 206 && statuscode != 302))
-	{
-		eDebug("[eHttpStream] %s: wrong http response code: %d", __func__, statuscode);
-		goto error;
-	}
+	if (statuscode != 301)
+		if (result != 3 || (statuscode != 200 && statuscode != 206 && statuscode != 302))
+		{
+			eDebug("[eHttpStream] %s: wrong http response code: %d", __func__, statuscode);
+			goto error;
+		}
 
 	while (1)
 	{
@@ -252,7 +262,7 @@ int eHttpStream::open(const char *url)
 void eHttpStream::thread()
 {
 	hasStarted();
-	usleep(500000); // wait half a second in general as not only fallback receiver needs this.
+	usleep(startDelay); // wait up to half a second
 	std::string currenturl, newurl;
 	currenturl = streamUrl;
 	for (unsigned int i = 0; i < 5; i++)
@@ -406,4 +416,10 @@ off_t eHttpStream::length()
 off_t eHttpStream::offset()
 {
 	return 0;
+}
+
+int eHttpStream::reconnect()
+{
+	close();
+	return open(streamUrl.c_str());
 }

@@ -1006,7 +1006,7 @@ class AVSwitchBase:
 
 	def __init__(self):
 		self.last_modes_preferred = []
-		self.on_hotplug = CList()
+		self.on_liveconnect = CList()
 		self.current_mode = None
 		self.current_port = None
 		print(f"[AVSwitch] getAvailableModes: '{eAVControl.getInstance().getAvailableModes()}'.")
@@ -1041,7 +1041,7 @@ class AVSwitchBase:
 			return self.modes_preferred
 		if self.modes_preferred != self.last_modes_preferred:
 			self.last_modes_preferred = self.modes_preferred
-			self.on_hotplug("HDMI")  # must be HDMI
+			self.on_liveconnect("HDMI")  # must be HDMI
 
 	def getWindowsAxis(self):
 		port = config.av.videoport.value
@@ -1302,23 +1302,23 @@ class AVSwitch:
 		return (1, 1)
 
 
-def InitiVideomodeHotplug(**kwargs):
-	global hotplug
-	hotplug = VideomodeHotplug()
+def InitiVideomodeLiveconnect(**kwargs):
+	global liveconnect
+	liveconnect = VideomodeLiveconnect()
 
 
-class VideomodeHotplug:
+class VideomodeLiveconnect:
 	def __init__(self):
 		self.start()
 
 	def start(self):
-		avSwitch.on_hotplug.append(self.hotplug)
+		avSwitch.on_liveconnect.append(self.liveconnect)
 
 	def stop(self):
-		avSwitch.on_hotplug.remove(self.hotplug)
+		avSwitch.on_liveconnect.remove(self.liveconnect)
 
-	def hotplug(self, what):
-		print(f"[AVSwitch] Hot-plug detected on port '{what}'.")
+	def liveconnect(self, what):
+		print(f"[AVSwitch] Liveconnect detected on port '{what}'.")
 		port = config.av.videoport.value
 		mode = config.av.videomode[port].value
 		rate = config.av.videorate[mode].value
@@ -1340,4 +1340,4 @@ class VideomodeHotplug:
 
 avSwitch = AVSwitchBase()
 iAVSwitch = avSwitch
-hotplug = None
+liveconnect = None

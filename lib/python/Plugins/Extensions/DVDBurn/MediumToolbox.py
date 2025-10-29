@@ -6,7 +6,7 @@ from Components.Task import Task, Job, job_manager, Condition
 from Components.ScrollLabel import ScrollLabel
 from Components.Harddisk import harddiskmanager
 from Components.Console import Console
-from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
+from Plugins.SystemPlugins.Liveconnect.plugin import liveconnectNotifier
 
 
 class MediumToolbox(Screen):
@@ -49,7 +49,7 @@ class MediumToolbox(Screen):
 			"pageDown": self.pageDown
 		})
 		self.update()
-		hotplugNotifier.append(self.update)
+		liveconnectNotifier.append(self.update)
 		self.onLayoutFinish.append(self.layoutFinished)
 
 	def layoutFinished(self):
@@ -159,7 +159,7 @@ class MediumToolbox(Screen):
 
 	def exit(self):
 		del self.Console
-		hotplugNotifier.remove(self.update)
+		liveconnectNotifier.remove(self.update)
 		self.close()
 
 

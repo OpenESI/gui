@@ -19,7 +19,11 @@ public:
 		styleListboxSelected,
 		styleListboxNormal,
 		styleListboxMarked,
-		styleListboxMarkedAndSelected
+		styleListboxMarkedAndSelected,
+		styleScollbar,
+		styleScollbarBorder,
+		styleSlider,
+		styleSliderBorder
 	};
 
 	enum {
@@ -30,7 +34,11 @@ public:
 	enum {
 		fontStatic,
 		fontButton,
-		fontTitlebar
+		fontTitlebar,
+		fontListbox,
+		fontEntry,
+		fontValue,
+		fontHeader
 	};
 };
 
@@ -48,6 +56,8 @@ public:
 	virtual void setStyle(gPainter &painter, int what) = 0;
 	virtual void drawFrame(gPainter &painter, const eRect &frame, int type) = 0;
 	virtual RESULT getFont(int what, ePtr<gFont> &font) = 0;
+	virtual gRGB getColor(int what) = 0;
+	virtual int getValue(int what) = 0;
 #endif
 	virtual ~eWindowStyle() = 0;
 };
@@ -98,6 +108,8 @@ public:
 	void setStyle(gPainter &painter, int what);
 	void drawFrame(gPainter &painter, const eRect &frame, int what);
 	RESULT getFont(int what, ePtr<gFont> &font);
+	gRGB getColor(int what);
+	int getValue(int what) { return 0; }
 };
 #endif
 

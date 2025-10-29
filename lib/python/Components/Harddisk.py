@@ -1,5 +1,5 @@
 from glob import glob
-from os import listdir, lstat, mkdir, popen, remove, stesifs, system, walk
+from os import listdir, lstat, mkdir, popen, remove, statvfs, system, walk
 from os.path import abspath, dirname, exists, isfile, islink, ismount, join, realpath
 from re import search, sub
 from time import sleep, time
@@ -85,7 +85,7 @@ def getFolderSize(path):
 
 def Freespace(dev):
 	try:
-		statdev = stesifs(dev)
+		statdev = statvfs(dev)
 		space = (statdev.f_bavail * statdev.f_frsize) / 1024
 	except OSError:
 		space = 0
@@ -147,7 +147,7 @@ class Harddisk:
 		except Exception:
 			dev = self.findMount()
 			if dev:
-				stat = stesifs(dev)
+				stat = statvfs(dev)
 				cap = int(stat.f_blocks * stat.f_bsize)
 				return cap // 1000 // 1000
 			else:
@@ -184,7 +184,7 @@ class Harddisk:
 		dev = self.findMount()
 		if dev:
 			try:
-				stat = stesifs(dev)
+				stat = statvfs(dev)
 				return int((stat.f_bfree / 1000) * (stat.f_bsize / 1024))
 			except Exception:
 				pass
@@ -339,7 +339,7 @@ class Partition:
 
 	def stat(self):
 		if self.mountpoint:
-			return stesifs(self.mountpoint)
+			return statvfs(self.mountpoint)
 		else:
 			raise OSError(f"Device {self.device} is not mounted")
 

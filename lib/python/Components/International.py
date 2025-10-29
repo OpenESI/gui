@@ -25,8 +25,6 @@ textdomain("enigma2")
 
 
 class International:
-	# This is the list of all locales built for OpenESI. If any locales are added or removed then this list should be updated!
-	# The list of available locales rarely changes so this has been done to optimize the speed of starting Enigma2.
 	DEFINED_LOCALES = ["ar", "bg", "ca", "cs", "da", "de", "el", "en", "en_AU", "en_GB", "es", "et", "fa", "fi", "fr", "fy", "he", "hr", "hu", "id", "is", "it", "ku", "lt", "lv", "nb", "nl", "nn", "pl", "pt", "pt_BR", "ro", "ru", "sk", "sl", "sq", "sr", "sv", "ta", "th", "tr", "uk", "vi", "zh_CN", "zh_HK"]
 	LOCALE_TEMPLATE = "enigma2-locale-%s"
 	PERMANENT_LOCALES = ["de_DE", "en_US", "fr_FR"]
@@ -165,7 +163,7 @@ class International:
 		"lo": ("Lao", _("Lao"), "ພາສາລາວ", "", "", ("LA",)),
 		"lt": ("Lithuanian", _("Lithuanian"), "Lietuvių Kalba", "ISO-8859-15", "", ("LT",)),
 		"lu": ("Luba-Katanga", _("Luba-Katanga"), "Kiluba", "", "", ()),
-		"lv": ("Lesiian", _("Lesiian"), "Lesiiešu Valoda", "ISO-8859-15", "", ("LV",)),
+		"lv": ("Latvian", _("Latvian"), "Latviešu Valoda", "ISO-8859-15", "", ("LV",)),
 		"mg": ("Malagasy", _("Malagasy"), "Fiteny Malagasy", "", "", ("MG",)),
 		"mh": ("Marshallese", _("Marshallese"), "Kajin M̧ajeļ", "", "", ("MH",)),
 		"mi": ("Maori", _("Maori"), "te reo Māori", "", "", ("NZ",)),
@@ -402,7 +400,7 @@ class International:
 		"LS": ("LSO", "426", "Lesotho", _("Lesotho"), "Lesotho"),
 		"LT": ("LTU", "440", "Lithuania", _("Lithuania"), "Lietuva"),
 		"LU": ("LUX", "442", "Luxembourg", _("Luxembourg"), "Lëtzebuerg"),
-		"LV": ("LVA", "428", "Lesiia", _("Lesiia"), "Lesiija"),
+		"LV": ("LVA", "428", "Latvia", _("Latvia"), "Latvija"),
 		"LY": ("LBY", "434", "Libya", _("Libya"), "ليبيا‎"),
 		"MA": ("MAR", "504", "Morocco", _("Morocco"), "المغرب‎"),
 		"MC": ("MCO", "492", "Monaco", _("Monaco"), "Monaco"),

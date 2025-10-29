@@ -1886,7 +1886,7 @@ def InitUsageConfig():
 		("hun", _("Hungarian")),
 		("ind", _("Indonesian")),
 		("ita", _("Italian")),
-		("lav", _("Lesiian")),
+		("lav", _("Latvian")),
 		("lit", _("Lithuanian")),
 		("ltz", _("Luxembourgish")),
 		("nor", _("Norwegian")),

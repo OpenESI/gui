@@ -2,7 +2,7 @@ from datetime import datetime
 from glob import glob
 from json import loads
 from locale import format_string
-from os import listdir, remove, stesifs
+from os import listdir, remove, statvfs
 from os.path import basename, getmtime, isdir, isfile, join
 from select import select
 from subprocess import PIPE, Popen
@@ -845,7 +845,7 @@ class MemoryInformation(InformationBase):
 		info.append(formatLine("S", _("FLASH")))
 		if self.extraSpacing:
 			info.append("")
-		stat = stesifs("/")
+		stat = statvfs("/")
 		diskSize = stat.f_blocks * stat.f_frsize
 		diskFree = stat.f_bfree * stat.f_frsize
 		diskUsed = diskSize - diskFree
@@ -1505,7 +1505,7 @@ class ReceiverInformation(InformationBase):
 		info.append(formatLine("S", _("Storage / Drive information")))
 		if self.extraSpacing:
 			info.append("")
-		stat = stesifs("/")
+		stat = statvfs("/")
 		diskSize = stat.f_blocks * stat.f_frsize
 		info.append(formatLine("P1", _("Internal flash"), f"{scaleNumber(diskSize)}  ({scaleNumber(diskSize, 'Iec')})"))
 		# hddList = storageManager.HDDList()
@@ -1954,7 +1954,7 @@ class StorageInformation(InformationBase):
 		for partition in partitions:
 			if partition.mountpoint == "/":
 				info.append(formatLine("S1", "/dev/root", partition.description))
-				stat = stesifs("/")
+				stat = statvfs("/")
 				diskSize = stat.f_blocks * stat.f_frsize
 				diskFree = stat.f_bfree * stat.f_frsize
 				diskUsed = diskSize - diskFree
@@ -1977,7 +1977,7 @@ class StorageInformation(InformationBase):
 				for partition in partitions:
 					if partition.device and join("/dev", partition.device).startswith(hdd.getDeviceName()):
 						info.append(formatLine("P2", _("Partition"), partition.device))
-						stat = stesifs(partition.mountpoint)
+						stat = statvfs(partition.mountpoint)
 						diskSize = stat.f_blocks * stat.f_frsize
 						diskFree = stat.f_bfree * stat.f_frsize
 						diskUsed = diskSize - diskFree

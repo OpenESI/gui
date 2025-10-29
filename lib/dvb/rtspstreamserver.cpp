@@ -1168,19 +1168,20 @@ void eRTSPStreamClient::notifier(int what)
 		getFontends(tuner_t, tuner_t2, tuner_s2, tuner_c, tuner_c2);
 
 		ss << "<?xml version=\"1.0\"?>";
-		ss << "<root xmlns=\"urn:schemas-upnp-org:device-1-0\" configId=\"0\">";
-		ss << "<specVersion><major>1</major><minor>1</minor></specVersion>";
-		ss << "<device><deviceType>urn:ses-com:device:SatIPServer:1</deviceType>";
-		ss << "<friendlyName>" << app_name << "</friendlyName>";
-		ss << "<manufacturer>" << modelinformation.getValue("displaybrand") << "</manufacturer>";
-		ss << "<manufacturerURL>http://www.opena.tv</manufacturerURL>";
-		ss << "<modelDescription>" << modelinformation.getValue("displaydistro") << "</modelDescription>";
-		ss << "<modelName>" << modelinformation.getValue("displaymodel") << "</modelName>";
-		ss << "<modelNumber>1.1</modelNumber>";
-		ss << "<modelURL>http://www.opena.tv</modelURL>";
-		ss << "<serialNumber>1</serialNumber>";
-		ss << "<UDN>uuid:11223344-9999-0001-b7ae-" << modelinformation.getValue("compiledate") << "</UDN>";
-		ss << "<iconList>";
+        ss << "<root xmlns=\"urn:schemas-upnp-org:device-1-0\" configId=\"0\">";
+        ss << "<specVersion><major>1</major><minor>1</minor></specVersion>";
+        ss << "<device><deviceType>urn:ses-com:device:SatIPServer:1</deviceType>";
+        ss << "<friendlyName>" << app_name << "</friendlyName>";
+        ss << "<manufacturer>" << modelinformation.getValue("displaybrand") << "</manufacturer>";
+        ss << "<manufacturerURL>https://www.openesi.eu</manufacturerURL>";
+        ss << "<modelDescription>" << modelinformation.getValue("displaydistro") << "</modelDescription>";
+        ss << "<modelName>" << modelinformation.getValue("displaymodel") << "</modelName>";
+        ss << "<modelNumber>1.1</modelNumber>";
+        ss << "<modelURL>https://www.openesi.eu</modelURL>";
+        ss << "<serialNumber>1</serialNumber>";
+        ss << "<UDN>uuid:11223344-9999-0001-b7ae-" << modelinformation.getValue("compiledate") << "</UDN>";
+        ss << "<iconList>";
+
 		//ss << "<icon><mimetype>image/png</mimetype><width>48</width><height>48</height><depth>24</depth><url>/sm.png</url></icon>";
 		//ss << "<icon><mimetype>image/png</mimetype><width>120</width><height>120</height><depth>24</depth><url>/lr.png</url></icon>";
 		//ss <<"<icon><mimetype>image/jpeg</mimetype><width>48</width><height>48</height><depth>24</depth><url>/sm.jpg</url></icon>";

@@ -18,7 +18,7 @@ int Select(int maxfd, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, stru
 {
 	int retval;
 	fd_set rset, wset, xset;
-	timeval interval;
+	timeval interval = {};
 
 	/* make a backup of all fd_set's and timeval struct */
 	if (readfds) rset = *readfds;
@@ -46,7 +46,7 @@ int Select(int maxfd, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, stru
 			if (exceptfds) *exceptfds = xset;
 			if (timeout) *timeout = interval;
 			if (errno == EINTR) continue;
-			eDebug("Select] error: %m");
+			eDebug("[Select] error: %m");
 			break;
 		}
 
@@ -64,7 +64,7 @@ ssize_t singleRead(int fd, void *buf, size_t count)
 		if (retval < 0)
 		{
 			if (errno == EINTR) continue;
-			eDebug("[singleRead] error: %m");
+			eDebug("[singleRead] error: %d (%m)", errno);
 		}
 		return retval;
 	}
@@ -73,7 +73,7 @@ ssize_t singleRead(int fd, void *buf, size_t count)
 ssize_t timedRead(int fd, void *buf, size_t count, int initialtimeout, int interbytetimeout)
 {
 	fd_set rset;
-	struct timeval timeout;
+	struct timeval timeout = {};
 	int result;
 	size_t totalread = 0;
 
@@ -125,7 +125,6 @@ ssize_t readLine(int fd, char** buffer, size_t* bufsize)
 		}
 		if ((*buffer)[i] != '\r') i++;
 	}
-	return -1;
 }
 
 int Connect(const char *hostname, int port, int timeoutsec)
@@ -133,7 +132,7 @@ int Connect(const char *hostname, int port, int timeoutsec)
 	int sd = -1;
 	std::vector<struct addrinfo *> addresses;
 	struct addrinfo *info = NULL;
-	struct addrinfo hints;
+	struct addrinfo hints = {};
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC; /* both ipv4 and ipv6 */
 	hints.ai_socktype = SOCK_STREAM;
@@ -189,7 +188,7 @@ int Connect(const char *hostname, int port, int timeoutsec)
 				{
 					int error;
 					socklen_t len = sizeof(error);
-					timeval timeout;
+					timeval timeout = {};
 					fd_set wset;
 					FD_ZERO(&wset);
 					FD_SET(sd, &wset);
@@ -309,4 +308,19 @@ std::string readLink(const std::string &link)
 	char buf[256];
 	ssize_t size = ::readlink(link.c_str(), buf, sizeof(buf));
 	return std::string(buf, (size > 0) ? size : 0);
+}
+
+bool contains(const std::string &str, const std::string &substr)
+{
+        return substr.size() && str.size() >= substr.size() && str.find(substr) != std::string::npos;
+}
+
+bool endsWith(const std::string &str, const std::string &suffix)
+{
+        return suffix.size() && str.size() >= suffix.size() && str.find(suffix) + suffix.size() == str.size();
+}
+
+bool startsWith(const std::string& str, const std::string& prefix)
+{
+        return prefix.size() && str.size() >= prefix.size() && str.find(prefix) == 0;
 }

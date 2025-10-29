@@ -163,10 +163,10 @@ class MediaPlayer(Screen, InfoBarBase, InfoBarScreenSaver, InfoBarSeek, InfoBarA
 		self.seek_target = None
 
 		try:
-			from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
-			hotplugNotifier.append(self.hotplugCB)
+			from Plugins.SystemPlugins.Liveconnect.plugin import liveconnectNotifier
+			liveconnectNotifier.append(self.liveconnectCB)
 		except Exception as ex:
-			print("[MediaPlayer] No hotplug support", ex)
+			print("[MediaPlayer] No liveconnect support", ex)
 
 		class MoviePlayerActionMap(NumberActionMap):
 			def __init__(self, player, contexts=None, actions=None, prio=0):
@@ -309,8 +309,8 @@ class MediaPlayer(Screen, InfoBarBase, InfoBarScreenSaver, InfoBarSeek, InfoBarA
 				config.mediaplayer.defaultDir.setValue(self.filelist.getCurrentDirectory())
 				config.mediaplayer.defaultDir.save()
 			try:
-				from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
-				hotplugNotifier.remove(self.hotplugCB)
+				from Plugins.SystemPlugins.Liveconnect.plugin import liveconnectNotifier
+				liveconnectNotifier.remove(self.liveconnectCB)
 			except:
 				pass
 			del self["coverArt"].picload
@@ -1075,7 +1075,7 @@ class MediaPlayer(Screen, InfoBarBase, InfoBarScreenSaver, InfoBarSeek, InfoBarA
 		from Screens.AudioSelection import SubtitleSelection
 		self.session.open(SubtitleSelection, self)
 
-	def hotplugCB(self, dev, media_state):
+	def liveconnectCB(self, dev, media_state):
 		if media_state == "audiocd" or media_state == "audiocdadd":
 			self.cdAudioTrackFiles = []
 			if os.path.isfile('/media/audiocd/cdplaylist.cdpls'):
@@ -1211,9 +1211,9 @@ def movielist_open(list, session, **kwargs):
 
 def audiocdscan(menuid, **kwargs):
 	try:
-		from Plugins.SystemPlugins.Hotplug.plugin import AudiocdAdded
+		from Plugins.SystemPlugins.Liveconnect.plugin import AudiocdAdded
 	except Exception as e:
-		print("[Mediaplayer.plugin] no hotplug support", e)
+		print("[Mediaplayer.plugin] no liveconnect support", e)
 		return []
 	if menuid == "mainmenu" and AudiocdAdded() and os.path.isfile('/media/audiocd/cdplaylist.cdpls'):
 		return [(_("Play audio-CD..."), audioCD_open_mn, "play_cd", 45)]

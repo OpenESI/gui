@@ -2,7 +2,7 @@
 
 void PutToDict(ePyObject &dict, const char *key, long value)
 {
-	ePyObject item = PyInt_FromLong(value);
+	ePyObject item = PyLong_FromLong(value);
 	if (item)
 	{
 		if (PyDict_SetItemString(dict, key, item))
@@ -27,7 +27,7 @@ void PutToDict(ePyObject &dict, const char *key, ePyObject item)
 
 void PutToDict(ePyObject &dict, const char *key, const char *value)
 {
-	ePyObject item = PyString_FromString(value);
+	ePyObject item = PyUnicode_FromString(value);
 	if (item)
 	{
 		if (PyDict_SetItemString(dict, key, item))
@@ -41,8 +41,8 @@ void PutToDict(ePyObject &dict, const char *key, const char *value)
 static PyObject *createTuple(int pid, const char *type)
 {
 	PyObject *r = PyTuple_New(2);
-	PyTuple_SET_ITEM(r, 0, PyInt_FromLong(pid));
-	PyTuple_SET_ITEM(r, 1, PyString_FromString(type));
+	PyTuple_SET_ITEM(r, 0, PyLong_FromLong(pid));
+	PyTuple_SET_ITEM(r, 1, PyUnicode_FromString(type));
 	return r;
 }
 
@@ -109,6 +109,8 @@ void transponderDataToDict(ePyObject &dest, ePtr<iDVBTransponderData> data)
 		if (value >= 0) PutToDict(dest, "pls_code", value);
 		value = data->getT2MIPlpId();
 		if (value >= -1) PutToDict(dest, "t2mi_plp_id", value);
+		value = data->getT2MIPid();
+		if (value >= 0) PutToDict(dest, "t2mi_pid", value);
 
 		/* additional terrestrial fields */
 		value = data->getBandwidth();

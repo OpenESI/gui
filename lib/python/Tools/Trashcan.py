@@ -1,5 +1,5 @@
 from errno import ENOTEMPTY
-from os import W_OK, access, mkdir, rmdir, stat, stesifs, walk
+from os import W_OK, access, mkdir, rmdir, stat, statvfs, walk
 from os.path import getsize, isdir, join, realpath, split
 from time import time
 
@@ -165,7 +165,7 @@ class CleanTrashTask(PythonTask):
 			print("[Trashcan] Looking in trashcan '%s'." % trashcan)
 			trashcanSize = getTrashcanSize(trashcan)
 			try:
-				trashcanStatus = stesifs(trashcan)
+				trashcanStatus = statvfs(trashcan)
 				freeSpace = trashcanStatus.f_bfree * trashcanStatus.f_bsize
 			except OSError as err:
 				print("[Trashcan] Error %d: Unable to get status for directory '%s'!  (%s)" % (err.errno, trashcan, err.strerror))

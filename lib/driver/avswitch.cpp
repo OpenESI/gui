@@ -18,81 +18,11 @@ eAVSwitch::eAVSwitch()
 	instance = this;
 	m_video_mode = 0;
 	m_active = false;
-	m_fp_fd = open("/dev/dbox/fp0", O_RDONLY|O_NONBLOCK);
-	if (m_fp_fd == -1)
-	{
-		eDebug("[eAVSwitch] failed to open /dev/dbox/fp0 to monitor vcr scart slow blanking changed: %m");
-		m_fp_notifier=0;
-	}
-	else
-	{
-		m_fp_notifier = eSocketNotifier::create(eApp, m_fp_fd, eSocketNotifier::Read|POLLERR);
-		CONNECT(m_fp_notifier->activated, eAVSwitch::fp_event);
-	}
 }
 
-#ifndef FP_IOCTL_GET_EVENT
-#define FP_IOCTL_GET_EVENT 20
-#endif
-
-#ifndef FP_IOCTL_GET_VCR
-#define FP_IOCTL_GET_VCR 7
-#endif
-
-#ifndef FP_EVENT_VCR_SB_CHANGED
-#define FP_EVENT_VCR_SB_CHANGED 1
-#endif
-
-int eAVSwitch::getVCRSlowBlanking()
-{
-	int val=0;
-	if (m_fp_fd >= 0)
-	{
-		CFile f("/proc/stb/fp/vcr_fns", "r");
-		if (f)
-		{
-			if (fscanf(f, "%d", &val) != 1)
-				eDebug("[eAVSwitch] read /proc/stb/fp/vcr_fns failed: %m");
-		}
-		else if (ioctl(m_fp_fd, FP_IOCTL_GET_VCR, &val) < 0)
-			eDebug("[eAVSwitch] FP_GET_VCR failed: %m");
-	}
-	return val;
-}
-
-void eAVSwitch::fp_event(int what)
-{
-	if (what & POLLERR) // driver not ready for fp polling
-	{
-		eDebug("[eAVSwitch] fp driver not read for polling.. so disable polling");
-		m_fp_notifier->stop();
-	}
-	else
-	{
-		CFile f("/proc/stb/fp/events", "r");
-		if (f)
-		{
-			int events;
-			if (fscanf(f, "%d", &events) != 1)
-				eDebug("[eAVSwitch] read /proc/stb/fp/events failed: %m");
-			else if (events & FP_EVENT_VCR_SB_CHANGED)
-				/* emit */ vcr_sb_notifier(getVCRSlowBlanking());
-		}
-		else
-		{
-			int val = FP_EVENT_VCR_SB_CHANGED;  // ask only for this event
-			if (ioctl(m_fp_fd, FP_IOCTL_GET_EVENT, &val) < 0)
-				eDebug("[eAVSwitch] FP_IOCTL_GET_EVENT failed: %m");
-			else if (val & FP_EVENT_VCR_SB_CHANGED)
-				/* emit */ vcr_sb_notifier(getVCRSlowBlanking());
-		}
-	}
-}
 
 eAVSwitch::~eAVSwitch()
 {
-	if ( m_fp_fd >= 0 )
-		close(m_fp_fd);
 }
 
 eAVSwitch *eAVSwitch::getInstance()
@@ -108,7 +38,10 @@ bool eAVSwitch::haveScartSwitch()
 		eDebug("[eAVSwitch] cannot open /proc/stb/avs/0/input_choices: %m");
 		return false;
 	}
-	read(fd, tmp, 255);
+	if (read(fd, tmp, 255) < 1)
+	{
+		eDebug("[eAVSwitch] failed to read data from /proc/stb/avs/0/input_choices: %m");
+	}
 	close(fd);
 	return !!strstr(tmp, "scart");
 }
@@ -132,7 +65,10 @@ void eAVSwitch::setInput(int val)
 		return;
 	}
 
-	write(fd, input[val], strlen(input[val]));
+	if (write(fd, input[val], strlen(input[val])) < 0)
+	{
+		eDebug("[eAVSwitch] setInput failed %m");
+	}
 	close(fd);
 }
 
@@ -163,11 +99,15 @@ void eAVSwitch::setColorFormat(int format)
 	if (*fmt == '\0')
 		return; // invalid format
 
-	if ((fd = open("/proc/stb/avs/0/colorformat", O_WRONLY)) < 0) {
+	if ((fd = open("/proc/stb/avs/0/colorformat", O_WRONLY)) < 0) {  //NOSONAR
 		eDebug("[eAVSwitch] cannot open /proc/stb/avs/0/colorformat: %m");
 		return;
 	}
-	write(fd, fmt, strlen(fmt));
+
+	if (write(fd, fmt, strlen(fmt)) < 1)
+	{
+		eDebug("[eAVSwitch] setColorFormat failed %m");
+	}
 	close(fd);
 }
 
@@ -186,12 +126,23 @@ void eAVSwitch::setAspectRatio(int ratio)
 	const char *policy[] = {"letterbox", "panscan", "bestfit", "panscan", "letterbox", "panscan", "letterbox"};
 
 	int fd;
+#ifdef DREAMNEXTGEN
+	if((fd = open("/sys/class/video/screen_mode", O_WRONLY)) < 0) {
+		eDebug("[eAVSwitch] cannot open /sys/class/video/screen_mode: %m");
+		return;
+	}
+#else
 	if((fd = open("/proc/stb/video/aspect", O_WRONLY)) < 0) {
 		eDebug("[eAVSwitch] cannot open /proc/stb/video/aspect: %m");
 		return;
 	}
+#endif
+
 //	eDebug("set aspect to %s", aspect[ratio]);
-	write(fd, aspect[ratio], strlen(aspect[ratio]));
+	if (write(fd, aspect[ratio], strlen(aspect[ratio])) < 1)
+	{
+		eDebug("[eAVSwitch] setAspectRatio failed %m");
+	}
 	close(fd);
 
 	if((fd = open("/proc/stb/video/policy", O_WRONLY)) < 0) {
@@ -199,7 +150,10 @@ void eAVSwitch::setAspectRatio(int ratio)
 		return;
 	}
 //	eDebug("set ratio to %s", policy[ratio]);
-	write(fd, policy[ratio], strlen(policy[ratio]));
+	if (write(fd, policy[ratio], strlen(policy[ratio])) < 1)
+	{
+		eDebug("[eAVSwitch] setAspectRatio policy failed %m");
+	}
 	close(fd);
 
 //	if((fd = open("/proc/stb/video/policy2", O_WRONLY)) < 0) {
@@ -231,24 +185,44 @@ void eAVSwitch::setVideomode(int mode)
 			close(fd1);
 			return;
 		}
-		write(fd1, pal, strlen(pal));
-		write(fd2, ntsc, strlen(ntsc));
+		if (write(fd1, pal, strlen(pal)) < 1)
+		{
+			eDebug("[eAVSwitch] setVideomode pal failed %m");
+		}
+		if (write(fd2, ntsc, strlen(ntsc)) < 1)
+		{
+			eDebug("[eAVSwitch] setVideomode ntsc failed %m");
+		}
 		close(fd1);
 		close(fd2);
 	}
 	else
 	{
+#ifdef DREAMNEXTGEN
+		int fd = open("/sys/class/display/mode", O_WRONLY);
+		if(fd < 0) {
+			eDebug("[eAVSwitch] cannot open /sys/class/display/mode: %m");
+			return;
+		}
+#else
 		int fd = open("/proc/stb/video/videomode", O_WRONLY);
 		if(fd < 0) {
 			eDebug("[eAVSwitch] cannot open /proc/stb/video/videomode: %m");
 			return;
 		}
+#endif
 		switch(mode) {
 			case 0:
-				write(fd, pal, strlen(pal));
+				if (write(fd, pal, strlen(pal)) < 1)
+				{
+					eDebug("[eAVSwitch] setVideomode pal failed %m");
+				}
 				break;
 			case 1:
-				write(fd, ntsc, strlen(ntsc));
+				if (write(fd, ntsc, strlen(ntsc)) < 1)
+				{
+					eDebug("[eAVSwitch] setVideomode ntsc failed %m");
+				}
 				break;
 			default:
 				eDebug("[eAVSwitch] unknown videomode %d", mode);
@@ -271,7 +245,10 @@ void eAVSwitch::setWSS(int val) // 0 = auto, 1 = auto(4:3_off)
 		"14:9_letterbox_center", "14:9_letterbox_top", "16:9_letterbox_center",
 		"16:9_letterbox_top", ">16:9_letterbox_center", "14:9_full_format"
 	};
-	write(fd, wss[val], strlen(wss[val]));
+	if (write(fd, wss[val], strlen(wss[val])) < 1)
+	{
+		eDebug("[eAVSwitch] setWSS failed %m");
+	}
 //	eDebug("set wss to %s", wss[val]);
 	close(fd);
 }

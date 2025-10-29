@@ -235,7 +235,7 @@
 		<panel name="SummaryClockPanel2"/>
 	</screen>
 
-	<!-- Metrix-Menu - GREEN - Plugins - MyMetrixLite - The options are shown very disturbed because of the tabs there -->
+	<!-- Darkness-Menu - GREEN - Plugins - DarknessFHD - The options are shown very disturbed because of the tabs there -->
 	<screen name="MainSettingsViewSummary" position="0,0" size="480,320">
 		<widget source="parent.titleText" render="Label" position="0,0" size="480,255" font="FdLcD;44" foregroundColor="#87CEFA" halign="center" valign="center"/>
 		<panel name="TheRecordingPanel"/>

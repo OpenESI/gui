@@ -464,7 +464,7 @@ class DiskspacePrecondition(Condition):
 	def check(self, task):
 		import os
 		try:
-			s = os.stesifs(task.job.workspace)
+			s = os.statvfs(task.job.workspace)
 			self.diskspace_available = s.f_bsize * s.f_bavail
 			return self.diskspace_available >= self.diskspace_required
 		except OSError:

@@ -648,13 +648,13 @@ class EPGSelection(Screen):
 					self.activeList = (self.Fields - 1)
 					self.updateVerticalEPG()
 				self.gotoLasttime()
-		elif self.type in (EPG_TYPE_GRAPH, EPG_TYPE_INFOBARGRAPH) and self["list"].listFirstServiceIndex != 0:  # Workaround for https://github.com/openesi/enigma2/issues/3006#issuecomment-1751998017.
+		elif self.type in (EPG_TYPE_GRAPH, EPG_TYPE_INFOBARGRAPH) and self["list"].listFirstServiceIndex != 0:  
 			self["list"].prevPage()
 		else:
 			self["list"].moveTo(self["list"].instance.pageUp)
 
 	def toTop(self):
-		if self.type in (EPG_TYPE_GRAPH, EPG_TYPE_INFOBARGRAPH):  # Dirty workaround for #3006. (Pressing '0' no longer goes to first channel in bouquet.)
+		if self.type in (EPG_TYPE_GRAPH, EPG_TYPE_INFOBARGRAPH):  
 			self.BouquetOK()
 		else:
 			self["list"].moveTo(self["list"].instance.moveTop)

@@ -1,5 +1,5 @@
 from math import ceil
-from os import W_OK, access,listdir , remove, stat, stesifs
+from os import W_OK, access,listdir , remove, stat, statvfs
 from os.path import exists, isdir, join, realpath
 from re import compile
 from shlex import split
@@ -481,7 +481,7 @@ class KexecSlotManager(Setup):
 				elif not access(mountPoint, W_OK):
 					footnote = _("Directory '%s' not writable!") % mountPoint
 				else:
-					status = stesifs(mountPoint)
+					status = statvfs(mountPoint)
 					self.freespace = status.f_bavail * status.f_bsize / 1024 / 1024 / 1024
 					footnote = None
 			else:

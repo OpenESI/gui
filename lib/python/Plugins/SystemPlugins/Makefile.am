@@ -1,10 +1,11 @@
 installdir = $(pkglibdir)/python/Plugins/SystemPlugins
 
 SUBDIRS = PositionerSetup Satfinder SoftwareManager \
-	VideoTune CableScan \
+	VideoTune LiveConnect CableScan \
 	DefaultServicesScanner CommonInterfaceAssignment \
-	VideoEnhancement WirelessLan NetworkWizard VideoClippingSetup \
-	SatelliteEquipmentControl DiseqcTester OSD3DSetup HdmiCEC FastScan LCNScanner
+	WirelessLan NetworkWizard VideoClippingSetup \
+	SatelliteEquipmentControl DiseqcTester FastScan LCNScanner IceTV \
+	FastChannelChange vps
 
 if HAVE_LIBVUGLES2
 SUBDIRS += AnimationSetup
@@ -15,7 +16,13 @@ SUBDIRS += AnimationSetup
 endif
 
 if DREAMBOX
-SUBDIRS += FrontprocessorUpgrade NFIFlash
+SUBDIRS += FrontprocessorUpgrade
+endif
+
+if DREAMNEXTGEN
+SUBDIRS += AmlFRQ VideoEnhancementAML
+else
+SUBDIRS += VideoEnhancement
 endif
 
 if DM900
@@ -24,6 +31,10 @@ endif
 
 if DM920
 SUBDIRS += FSBLUpdater
+endif
+
+if HAVE_FCC
+SUBDIRS += FastChannelChange
 endif
 
 install_PYTHON = __init__.py

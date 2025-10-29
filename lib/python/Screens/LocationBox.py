@@ -1,4 +1,4 @@
-from os import lstat, sep, stesifs
+from os import lstat, sep, statvfs
 from os.path import exists, isdir, join, splitext
 
 from enigma import eTimer
@@ -194,7 +194,7 @@ class LocationBox(Screen, NumericalTextInput):
 		elif directory:  # Write combination of directory & filename when directory is valid.
 			self["target"].setText("".join((directory, self.filename)))
 			try:
-				stat = stesifs(directory)
+				stat = statvfs(directory)
 				free = f"{scaleNumber(stat.f_bfree * stat.f_frsize, format="%0.f")} {_("Free")}"
 			except OSError as err:
 				print("[LocationBox] Error %d: Unable to get '%s' status!  (%s)" % (err.errno, directory, err.strerror))
@@ -257,7 +257,7 @@ class LocationBox(Screen, NumericalTextInput):
 			if currentFolder is not None:  # Do nothing unless current directory is valid.
 				if self.minFree is not None:  # Check if we need to have a minimum of free space available.
 					try:
-						status = stesifs(currentFolder)  # Try to read file system status.
+						status = statvfs(currentFolder)  # Try to read file system status.
 						if (status.f_bavail * status.f_bsize) / 1000000 > self.minFree:
 							return self.keySelectCallback(True)  # Automatically confirm if we have enough free disk space available.
 					except OSError as err:

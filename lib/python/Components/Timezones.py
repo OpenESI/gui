@@ -20,7 +20,7 @@ MODULE_NAME = __name__.split(".")[-1]
 #
 # The DEFAULT_ZONE is used to select the default time zone if the "Time zone
 # area" is selected to be "Europe".  This allows OpenViX to have the
-# European default of "London" while OpenESI and OpenPLi can select "Berlin",
+# European default of "London" while OpenATV and OpenPLi can select "Berlin",
 # etc. (These are only examples.)  Images can select any defaults they deem
 # appropriate.
 #
@@ -29,10 +29,10 @@ MODULE_NAME = __name__.split(".")[-1]
 #
 # For images that use both the "Time zone area" and "Time zone" configuration
 # options then the DEFAULT_AREA can be set to an area most appropriate for
-# the image.  For example, Beyonwiz would use "Australia", OpenESI, OpenViX
+# the image.  For example, Beyonwiz would use "Australia", OpenATV, OpenViX
 # and OpenPLi would use "Europe".  If the "Europe" option is selected then
 # the DEFAULT_ZONE can be used to select a more appropriate time zone
-# selection for the image.  For example, OpenESI and OpenPLi may prefer
+# selection for the image.  For example, OpenATV and OpenPLi may prefer
 # "Berlin" while OpenViX may prefer "London".
 #
 # Please ensure that any defaults selected are valid, unique and available
@@ -45,9 +45,9 @@ MODULE_NAME = __name__.split(".")[-1]
 #
 # DEFAULT_AREA = "Classic"  # Use the classic time zone based list of time zones.
 # DEFAULT_AREA = "Australia"  # Beyonwiz
-DEFAULT_AREA = "Europe"  # OpenESI, OpenPLi, OpenViX
+DEFAULT_AREA = "Europe"  # OpenATV, OpenPLi, OpenViX
 # DEFAULT_ZONE = "Amsterdam"  # OpenPLi
-DEFAULT_ZONE = "Berlin"  # OpenESI
+DEFAULT_ZONE = "Berlin"  # OpenATV
 # DEFAULT_ZONE = "London"  # OpenViX
 TIMEZONE_FILE = "/etc/timezone.xml"  # This should be SCOPE_TIMEZONES_FILE!  This file moves arond the file system!!!  :(
 TIMEZONE_DATA = "/usr/share/zoneinfo/"  # This should be SCOPE_TIMEZONES_DATA!

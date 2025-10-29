@@ -18,8 +18,8 @@ class VtiImageVersion(VariableText, Renderer):
 
     def changed(self, what):
         if what[0] != self.CHANGED_CLEAR:
-            self.text = self.ATVImageVersion()
+            self.text = self.ESIImageVersion()
 
-    def ATVImageVersion(self):
+    def ESIImageVersion(self):
         esiversion = BoxInfo.getItem("imageversion")
         return f"OpenESI Image Release v. {esiversion}"
