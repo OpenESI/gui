@@ -984,7 +984,7 @@ lib/python/Plugins/SystemPlugins/FastChannelChange/Makefile
 lib/python/Plugins/SystemPlugins/FastScan/Makefile
 lib/python/Plugins/SystemPlugins/FrontprocessorUpgrade/Makefile
 lib/python/Plugins/SystemPlugins/FSBLUpdater/Makefile
-lib/python/Plugins/SystemPlugins/Liveconnect/Makefile
+lib/python/Plugins/SystemPlugins/LiveConnect/Makefile
 lib/python/Plugins/SystemPlugins/IceTV/Makefile
 lib/python/Plugins/SystemPlugins/LCNScanner/Makefile
 lib/python/Plugins/SystemPlugins/NetworkWizard/Makefile
