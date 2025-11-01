@@ -53,7 +53,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 
 	def __init__(self, session):
 		Screen.__init__(self, session, enableHelp=True)
-		if config.usage.show_infobar_lite.value and (config.skin.primary_skin.value == "DMConcinnity-HD/skin.xml" or config.skin.primary_skin.value.startswith('DarknessHD/')):
+		if config.usage.show_infobar_lite.value and (config.skin.primary_skin.value == "Elgato-HD-CN/skin.xml" or config.skin.primary_skin.value.startswith('Elgato-HD-CN/')):
 			self.skinName = "InfoBarLite"
 
 		self["actions"] = HelpableActionMap(self, "InfobarActions", {

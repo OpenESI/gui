@@ -43,7 +43,7 @@ def InitConfig():
         "/usr/lib/enigma2/python/Plugins/Extensions/VMC/DB/",
         "/usr/lib/enigma2/python/Plugins/Extensions/VMC/youtv.pwd",
         "/usr/lib/enigma2/python/Plugins/Extensions/VMC/vod.config",
-        "/usr/share/enigma2/darknessfhd/skinparts/",
+        "/usr/share/enigma2/Elgato-HD-CN/skinparts/",
         "/usr/share/enigma2/display/skin_display_usr.xml",
         "/usr/share/enigma2/display/userskin.png",
         "/usr/lib/enigma2/python/Plugins/Extensions/SpecialJump/keymap_user.xml",
