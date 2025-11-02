@@ -46,18 +46,18 @@ def checkBackupFile():
 
 class ImageWizard(Wizard, ShowRemoteControl):
 	skin = """
-		<screen name="ImageWizard" position="0,0" size="720,576" title="Welcome..." flags="wfNoBorder" resolution="720,576">
+		<screen name="ImageWizard" position="0,0" size="720,576" title="Benvenuto..." flags="wfNoBorder" resolution="720,576">
 			<widget name="text" position="153,40" size="340,330" font="Regular;22" />
 			<widget source="list" render="Listbox" position="43,340" size="490,180" scrollbarMode="showOnDemand">
 				<convert type="StringList" />
 			</widget>
 			<widget name="config" position="53,340" zPosition="1" size="440,180" transparent="1" scrollbarMode="showOnDemand" />
-			<widget name="wizard" pixmap="wizard.png" position="40,50" zPosition="10" size="110,174" alphatest="on" />
-			<widget name="rc" pixmaps="rc.png,rcold.png" position="530,50" zPosition="10" size="154,500" alphatest="on" />
-			<widget name="arrowdown" pixmap="arrowdown.png" position="-100,-100" zPosition="11" size="37,70" alphatest="on" />
-			<widget name="arrowdown2" pixmap="arrowdown.png" position="-100,-100" zPosition="11" size="37,70" alphatest="on" />
-			<widget name="arrowup" pixmap="arrowup.png" position="-100,-100" zPosition="11" size="37,70" alphatest="on" />
-			<widget name="arrowup2" pixmap="arrowup.png" position="-100,-100" zPosition="11" size="37,70" alphatest="on" />
+			<widget name="wizard" pixmap="/usr/share/enigma2/Maxy-FHD/wizard.png" position="40,50" zPosition="10" size="110,174" alphatest="on" />
+			<widget name="rc" pixmaps="/usr/share/enigma2/Maxy-FHD/rc.png,/usr/share/enigma2/Maxy-FHD/rcold.png" position="530,50" zPosition="10" size="154,500" alphatest="on" />
+			<widget name="arrowdown" pixmap="/usr/share/enigma2/Maxy-FHD/arrowdown.png" position="-100,-100" zPosition="11" size="37,70" alphatest="on" />
+			<widget name="arrowdown2" pixmap="/usr/share/enigma2/Maxy-FHD/arrowdown.png" position="-100,-100" zPosition="11" size="37,70" alphatest="on" />
+			<widget name="arrowup" pixmap="/usr/share/enigma2/Maxy-FHD/arrowup.png" position="-100,-100" zPosition="11" size="37,70" alphatest="on" />
+			<widget name="arrowup2" pixmap="/usr/share/enigma2/Maxy-FHD/arrowup.png" position="-100,-100" zPosition="11" size="37,70" alphatest="on" />
 		</screen>"""
 
 	def __init__(self, session):
@@ -68,7 +68,7 @@ class ImageWizard(Wizard, ShowRemoteControl):
 		self["wizard"] = Pixmap()
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
-		self.setTitle(_("ImageWizard"))
+		self.setTitle(_("Procedura Aggiornamento"))
 		self.selectedDevice = None
 
 	def markDone(self):

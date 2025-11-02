@@ -11,7 +11,8 @@ MANDATORY_RIGHTS = "chown -R root:root /home/root /etc/auto.network /etc/default
 # BLACKLISTED lists all files/folders that MUST NOT be backed up or restored in order for the image to work properly
 BLACKLISTED = ['home/root/.cache', 'etc/passwd', 'etc/shadow', 'etc/group', 'etc/samba/distro', 'etc/samba/smb.conf', 'home/root/FastRestore.log', 'etc/enigma2/profile']
 
-IMAGE_INSTALL = ['openesi-base', 'enigma2-plugin-settings-defaultsat', 'run-postinsts']
+# IMAGE_INSTALL contains base packages that are considered part of the base image
+IMAGE_INSTALL = ['enigma2-base', 'enigma2-plugin-settings-defaultsat', 'run-postinsts']  # Modificato per rimuovere riferimento openatv
 
 PACKAGES = '/var/lib/opkg/lists'
 INSTALLEDPACKAGES = '/var/lib/opkg/status'

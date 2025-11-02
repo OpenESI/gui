@@ -5,11 +5,11 @@ from Plugins.SystemPlugins.SoftwareManager.ImageWizard import checkConfigBackup
 self.backuppath = checkConfigBackup()
 self.condition = (self.backuppath is not None and config.misc.firstrun.value)
 		</condition>
-		<text value="Do you want to restore your settings?" />
-		<displaytext value="Do you want to restore your settings?" />
+		<text value="Vuoi ripristinare le tue impostazioni?" />
+		<displaytext value="Vuoi ripristinare le tue impostazioni?" />
 		<list>
-			<listentry caption="Yes, restore the settings now" step="restore" />
-			<listentry caption="No, just start my %s %s" step="end" />
+			<listentry caption="Sì, ripristina le impostazioni ora" step="restore" />
+			<listentry caption="No, avvia il mio %s %s" step="end" />
 		</list>
 		<code>
 self.clearSelectedKeys()
@@ -20,11 +20,11 @@ self.selectKey("DOWN")
 	</step>
 
 	<step id="welcome">
-		<text value="Welcome to the image upgrade wizard. The wizard will assist you in upgrading the firmware of the %s %s by providing a backup facility for the current settings and a short explanation of how to upgrade the firmware." />
-		<displaytext value="Do you want the upgrade guide?" />
+		<text value="Benvenuto nella procedura di aggiornamento firmware. Questa guida ti assisterà nell'aggiornamento del tuo %s %s fornendo un sistema di backup delle impostazioni e spiegazioni per l'aggiornamento." />
+		<displaytext value="Vuoi la guida all'aggiornamento?" />
 		<list>
-			<listentry caption="OK, guide me through the upgrade process" step="backupquestion" />
-			<listentry caption="Exit the wizard" step="end" />
+			<listentry caption="OK, guidami nell'aggiornamento" step="backupquestion" />
+			<listentry caption="Esci dalla procedura" step="end" />
 		</list>
 		<code>
 self.clearSelectedKeys()
@@ -35,11 +35,11 @@ self.selectKey("DOWN")
 	</step>
 
 	<step id="backupquestion">
-		<text value="The wizard can backup your current settings. Do you want to start a backup now?" />
-		<displaytext value="Do you want to start a backup now?" />
+		<text value="La procedura può salvare le tue impostazioni attuali. Vuoi eseguire un backup ora?" />
+		<displaytext value="Vuoi eseguire un backup ora?" />
 		<list>
-			<listentry caption="Yes, backup my settings!" step="backupwhere" />
-			<listentry caption="No backup needed" step="upgrade" />
+			<listentry caption="Sì, salva le mie impostazioni!" step="backupwhere" />
+			<listentry caption="Non serve backup" step="upgrade" />
 		</list>
 		<code>
 self.clearSelectedKeys()
@@ -50,8 +50,8 @@ self.selectKey("DOWN")
 	</step>
 
 	<step id="backupwhere" nextstep="backup">
-		<text value="Where do you want to backup your settings?" />
-		<displaytext value="Where do you want to backup your settings?" />
+		<text value="Dove vuoi salvare il backup delle impostazioni?" />
+		<displaytext value="Dove vuoi salvare il backup?" />
 		<list type="dynamic" source="listDevices" evaluation="deviceSelectionMade" onselect="deviceSelectionMoved" />
 		<code>
 self.clearSelectedKeys()
@@ -62,8 +62,8 @@ self.selectKey("DOWN")
 	</step>
 
 	<step id="backup" nextstep="backupresult">
-		<text value="You have chosen to backup your settings. Press OK to start the backup now." />
-		<displaytext value="Press OK to start the backup now" />
+		<text value="Hai scelto di salvare le impostazioni. Premi OK per avviare il backup." />
+		<displaytext value="Premi OK per avviare il backup" />
 		<config screen="BackupScreen" module="Plugins.SystemPlugins.SoftwareManager.BackupRestore" type="ConfigList" />
 		<code>
 self.clearSelectedKeys()
@@ -85,8 +85,8 @@ from Plugins.SystemPlugins.SoftwareManager.ImageWizard import checkBackupFile
 self.backuppath = checkBackupFile()
 self.condition = (self.backuppath is True)
 		</condition>
-		<text value="The backup succeeded. We will now continue to explain the upgrade process." />
-		<displaytext value="The backup succeeded" />
+		<text value="Backup eseguito con successo. Procediamo con le spiegazioni per l'aggiornamento." />
+		<displaytext value="Backup completato" />
 		<code>
 self.clearSelectedKeys()
 self.selectKey("OK")
@@ -99,8 +99,8 @@ from Plugins.SystemPlugins.SoftwareManager.ImageWizard import checkBackupFile
 self.backuppath = checkBackupFile()
 self.condition = (self.backuppath is False)
 		</condition>
-		<text value="The backup failed! Choose a different backup location." />
-		<displaytext value="The backup failed" />
+		<text value="Backup fallito! Scegli un'altra posizione per il backup." />
+		<displaytext value="Backup fallito" />
 		<code>
 self.clearSelectedKeys()
 self.selectKey("OK")
@@ -108,8 +108,8 @@ self.selectKey("OK")
 	</step>
 
 	<step id="restore" nextstep="backupresult">
-		<text value="You have chosen to restore the settings. Enigma2 will restart after restore. Press OK to start the restore now." />
-		<displaytext value="Restore settings now" />
+		<text value="Hai scelto di ripristinare le impostazioni. Enigma2 si riavvierà dopo il ripristino. Premi OK per iniziare." />
+		<displaytext value="Ripristina impostazioni ora" />
 		<config screen="RestoreScreen" module="Plugins.SystemPlugins.SoftwareManager.BackupRestore" type="ConfigList" />
 		<code>
 self.clearSelectedKeys()
@@ -122,11 +122,11 @@ self.selectKey("RIGHT")
 	</step>
 
 	<step id="upgradehow">
-		<text value="Select the source location from where to obtain the upgrade files." />
-		<displaytext value="Select update source location" />
+		<text value="Seleziona la posizione da cui ottenere i file di aggiornamento." />
+		<displaytext value="Seleziona sorgente aggiornamento" />
 		<list>
-			<listentry caption="Install a new image with your web browser" step="upgrade" />
-			<listentry caption="Install a new image with a USB stick" step="upgradeUSB" />
+			<listentry caption="Installa nuova immagine via browser web" step="upgrade" />
+			<listentry caption="Installa nuova immagine via USB" step="upgradeUSB" />
 		</list>
 		<code>
 self.clearSelectedKeys()
@@ -137,11 +137,11 @@ self.selectKey("DOWN")
 	</step>
 
 	<step id="upgrade">
-		<text value="You need a PC connected to your %s %s. Visit the website https://www.openesi.eu/ for further instructions.\nThe %s %s will now be halted. After you have performed the update instructions from the website, the new firmware will ask you to restore the settings." />
-		<displaytext value="Perform the upgrade?" />
+		<text value="Ti serve un PC connesso al tuo %s %s. Visita il sito https://www.openesi.eu/ per le istruzioni complete.\nIl %s %s si spegnerà. Dopo aver seguito le istruzioni sul sito, il nuovo firmware ti chiederà di ripristinare le impostazioni." />
+		<displaytext value="Procedere con l'aggiornamento?" />
 		<list>
-			<listentry caption="Yes, shut down now." step="shutdown" />
-			<listentry caption="No, do nothing." step="end" />
+			<listentry caption="Sì, spegni ora" step="shutdown" />
+			<listentry caption="No, non fare nulla" step="end" />
 		</list>
 		<code>
 self.clearSelectedKeys()
@@ -157,16 +157,16 @@ from enigma import quitMainloop
 from Screens.Standby import QUIT_SHUTDOWN
 quitMainloop(QUIT_SHUTDOWN)
 		</code>
-		<text value="The %s %s is shutting down. Please wait..." />
-		<displaytext value="Shutting down. Please wait..." />
+		<text value="Il %s %s si sta spegnendo. Attendere..." />
+		<displaytext value="Spegnimento in corso..." />
 	</step>
 
 	<step id="end" laststep="true">
 		<condition>
 self.condition = self.isLastWizard
 		</condition>
-		<text value="This wizard has finished." />
-		<displaytext value="This wizard has finished" />
+		<text value="Procedura guidata terminata." />
+		<displaytext value="Procedura completata" />
 		<code>
 self.clearSelectedKeys()
 self.selectKey("OK")
