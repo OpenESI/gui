@@ -148,7 +148,7 @@ class LCN():
 		self.newlist = []
 		count = 0
 		#for x in self.lcnlist:
-			#print " LISTA LCN:", x
+			#print(" LISTA LCN:"), x
 			
 		for x in self.lcnlist:
 			count += 1
@@ -159,13 +159,13 @@ class LCN():
 				self.newlist.append(x)
 
 		#for x in self.e2services:
-			#print " self.e2services:", x
+			#print(" self.e2services:"), x
 
 
 		#for x in self.newlist:
-			#print " NEW LIST LCN :", x
+			#print(" NEW LIST LCN :"), x
 			
-		#print " New LIST LEN: " , len(self.newlist)
+		#print(" New LIST LEN: ") , len(self.newlist)
 			
 		f.write("#NAME Terrestrial TV LCN\n")
 		f.write("#SERVICE 1:64:0:0:0:0:0:0:0:0::Terrestrial TV LCN\n")
@@ -226,7 +226,7 @@ class LCN():
 		self.newlist = []
 		count = 0
 		#for x in self.lcnlist:
-			#print " LISTA LCN:", x
+			#print(" LISTA LCN:"), x
 			
 		for x in self.lcnlist:
 			count += 1
@@ -237,13 +237,13 @@ class LCN():
 				self.newlist.append(x)
 
 		#for x in self.e2services:
-			#print " self.e2services:", x
+			#print(" self.e2services:"), x
 
 
 		#for x in self.newlist:
-			#print " NEW LIST LCN :", x
+			#print(" NEW LIST LCN :"), x
 			
-		#print " New LIST LEN: " , len(self.newlist)
+		#print(" New LIST LEN: ") , len(self.newlist)
 			
 		f.write("#NAME Terrestrial Radio LCN\n")
 		f.write("#SERVICE 1:64:0:0:0:0:0:0:0:0::Terrestrial RADIO LCN\n")

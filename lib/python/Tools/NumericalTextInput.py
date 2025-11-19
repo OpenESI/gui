@@ -179,7 +179,7 @@ class NumericalTextInput:
 			self.mapping = MAPPINGS.get(language.getLanguage(), MAP_DEFAULT)
 
 	def setUseableChars(self, useable):
-		self.useableChars = unicode(useable)
+		self.useableChars = str(useable)
 
 	def getKey(self, num):
 		cnt=0

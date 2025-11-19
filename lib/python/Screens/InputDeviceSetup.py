@@ -27,7 +27,7 @@ class InputDeviceSelection(Screen, HelpableScreen):
 		self["introduction"] = StaticText(self.edittext)
 
 		self.devices = [(iInputDevices.getDeviceName(x),x) for x in iInputDevices.getDeviceList()]
-		print "[InputDeviceSelection] found devices :->", len(self.devices),self.devices
+		print("[InputDeviceSelection] found devices :->"), len(self.devices),self.devices
 
 		self["OkCancelActions"] = HelpableActionMap(self, "OkCancelActions",
 			{
@@ -216,7 +216,7 @@ class InputDeviceSetup(Screen, ConfigListScreen):
 
 	def confirm(self, confirmed):
 		if not confirmed:
-			print "not confirmed"
+			print("not confirmed")
 			return
 		else:
 			self.nameEntry[1].setValue(iInputDevices.getDeviceAttribute(self.inputDevice, 'name'))
@@ -451,11 +451,11 @@ class RemoteControlType(Screen, ConfigListScreen):
 		boxtype = getBoxType()
 		boxtypecompat = self.getBoxTypeCompatible() 
 		self.defaultRcType = 0
-		#print "Boxtype is %s" % boxtype         
+		#print("Boxtype is %s") % boxtype         
 		for x in self.defaultRcList:
 			if x[0] in boxtype:
 				self.defaultRcType = x[1]
-				#print "Selecting %d as defaultRcType" % self.defaultRcType               
+				#print("Selecting %d as defaultRcType") % self.defaultRcType               
 				break
 		
 		# boxtypecompat should be removed in the future                
@@ -463,7 +463,7 @@ class RemoteControlType(Screen, ConfigListScreen):
 			for x in self.defaultRcList:
 				if x[0] in boxtypecompat:
 					self.defaultRcType = x[1]
-					#print "Selecting %d as defaultRcType" % self.defaultRcType               
+					#print("Selecting %d as defaultRcType") % self.defaultRcType               
 					break
 
 	def setDefaultRcType(self):

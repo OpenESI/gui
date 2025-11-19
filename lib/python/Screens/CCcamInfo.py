@@ -88,7 +88,7 @@ def getPage(url, contextFactory=None, *args, **kwargs):
 		authHeader = "Basic " + basicAuth.strip()
 		AuthHeaders = {"Authorization": authHeader}
 
-		if kwargs.has_key("headers"):
+		if "headers" in kwargs:
 			kwargs["headers"].update(AuthHeaders)
 		else:
 			kwargs["headers"] = AuthHeaders
@@ -111,7 +111,7 @@ class HelpableNumberActionMap(NumberActionMap):
 	def __init__(self, parent, context, actions, prio):
 		alist = []
 		adict = {}
-		for (action, funchelp) in actions.iteritems():
+		for (action, funchelp) in actions.items():
 			alist.append((action, funchelp[1]))
 			adict[action] = funchelp[0]
 		NumberActionMap.__init__(self, [context], adict, prio)
@@ -1001,7 +1001,7 @@ class CCcamShareViewMenu(Screen, HelpableScreen):
 											reshare = reshareList[i]
 											reshare += 1
 											#if caidprovider == "05021700":
-											#	print "re: %d" %(reshare)
+											#	print("re: %d") %(reshare)
 											reshareList[i] = reshare
 											numberofreshare = 0
 											numberofreshare = reshare

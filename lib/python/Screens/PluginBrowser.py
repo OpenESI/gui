@@ -649,8 +649,8 @@ class PluginDownloadBrowser(Screen):
 		if hasattr(self, 'postInstallCall'):
 			try:
 				self.postInstallCall()
-			except Exception, ex:
-				print "[PluginBrowser] postInstallCall failed:", ex
+			except Exception as ex:
+				print("[PluginBrowser] postInstallCall failed:"), ex
 			self.resetPostInstall()
 		try:
 			os.unlink('/tmp/opkg.conf')
@@ -769,7 +769,7 @@ class PluginDownloadBrowser(Screen):
 			elif x[0][0:15] == 'enigma2-locale-':
 				split[0] = "languages"
 
-			if not self.plugins.has_key(split[0]):
+			if not self.split[0] in plugins:
 				self.plugins[split[0]] = []
 
 			if split[0] == "kernel modules":

@@ -214,10 +214,10 @@ class Volume_adjust(Screen):
 			fp.close()
 		except:
 			#os.unlink(self.filename) # gives a GS WHY ???
-			print "[Volume Adjust] error writing xml..."
+			print("[Volume Adjust] error writing xml...")
 
 	def loadXML(self):
-		print "[Volume Adjust] load xml..."
+		print("[Volume Adjust] load xml...")
 		if not os_path.exists(self.filename):
 			return
 		self.read_services=[]
@@ -232,7 +232,7 @@ class Volume_adjust(Screen):
 					self.read_services.append (read_service_ref)
 					self.read_volume.append (read_service_volume)
 		except:
-			print "[Volume Adjust] error parsing xml..."
+			print("[Volume Adjust] error parsing xml...")
 
 		for item in self.read_services:
 			if len(item):
@@ -443,7 +443,7 @@ class Volume:
 
 	def loadXML(self):
 		# load the list
-		print "[Volume Adjust] load xml..."
+		print("[Volume Adjust] load xml...")
 		if not os_path.exists(self.filen):
 			return
 		self.read_services=[]
@@ -458,18 +458,18 @@ class Volume:
 					self.read_services.append (read_service_ref)
 					self.read_volume.append (read_service_volume)
 		except:
-			print "[Volume Adjust] error parsing xml..."
+			print("[Volume Adjust] error parsing xml...")
 		for i in self.read_services:
 			print i
 
 
 	def __evUpdatedInfo(self):
 		# here it starts the actual routine to change the volume offset
-		print "[Volume Adjust] Update Info"
+		print("[Volume Adjust] Update Info")
 		if not self.startonce:
 			self.setvolume()
 		vol = self.volctrl.getVolume()
-		print "[Volume Adjust] Volume = " + str(vol)
+		print("[Volume Adjust] Volume = ") + str(vol)
 		global ListChange
 		# Check if list is updated (new save) or no list loaded
 		if ListChange or len(self.read_services) == 0:

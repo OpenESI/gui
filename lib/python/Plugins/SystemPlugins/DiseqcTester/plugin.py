@@ -302,11 +302,11 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 		if index not in self.indexlist:
 			self.indexlist[index] = []
 		self.indexlist[index].append(transponder)
-		#print "self.indexlist:", self.indexlist
+		#print("self.indexlist:"), self.indexlist
 
 	# returns a string for the user representing a human readable output for index
 	def getTextualIndexRepresentation(self, index):
-		print "getTextualIndexRepresentation:", index
+		print("getTextualIndexRepresentation:"), index
 		text = ""
 
 		text += nimmanager.getSatDescription(index[2]) + ", "
@@ -324,14 +324,14 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 
 	def fillTransponderList(self):
 		self.clearTransponder()
-		print "----------- fillTransponderList"
-		print "index:", self.currentlyTestedIndex
+		print("----------- fillTransponderList")
+		print("index:"), self.currentlyTestedIndex
 		keys = self.indexlist.keys()
 		if self.getContinueScanning():
-			print "index:", self.getTextualIndexRepresentation(self.currentlyTestedIndex)
+			print("index:"), self.getTextualIndexRepresentation(self.currentlyTestedIndex)
 			for transponder in self.indexlist[self.currentlyTestedIndex]:
 				self.addTransponder(transponder)
-			print "transponderList:", self.transponderlist
+			print("transponderList:"), self.transponderlist
 			return True
 		else:
 			return False
@@ -361,7 +361,7 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 			return self.randomkeys[0]
 		elif self.test_type == self.TEST_TYPE_COMPLETE:
 			keys = self.indexlist.keys()
-			print "keys:", keys
+			print("keys:"), keys
 			successorindex = {}
 			for index in keys:
 				successorindex[index] = []
@@ -385,7 +385,7 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 				else:
 					currindex = successorindex[currindex].pop()
 					self.keylist.append(currindex)
-			print "self.keylist:", self.keylist
+			print("self.keylist:"), self.keylist
 			self.myindex = 0
 			self["overall_progress"].setRange(len(self.keylist))
 			self["overall_progress"].setValue(self.myindex)
@@ -477,10 +477,10 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 		self.resultsstatus[status].append(index)
 
 	def finishedChecking(self):
-		print "finishedChecking"
+		print("finishedChecking")
 		TuneTest.finishedChecking(self)
 
-		if not self.results.has_key(self.currentlyTestedIndex):
+		if not self.self.currentlyTestedIndex in results:
 			self.results[self.currentlyTestedIndex] = {"failed": [], "successful": [], "status": None, "internalstatus": None}
 
 		if len(self.failedTune) > 0 and len(self.successfullyTune) > 0:
@@ -516,8 +516,8 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 		else:
 			self.running = False
 			self["progress_list"].setIndex(0)
-			print "results:", self.results
-			print "resultsstatus:", self.resultsstatus
+			print("results:"), self.results
+			print("resultsstatus:"), self.resultsstatus
 			if self.log:
 				file = open("/media/hdd/diseqctester.log", "w")
 				self.setResultType(ResultParser.TYPE_ALL)
@@ -542,7 +542,7 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 		self.close()
 
 	def select(self):
-		print "selectedIndex:", self["progress_list"].getCurrent()[0]
+		print("selectedIndex:"), self["progress_list"].getCurrent()[0]
 		if not self.running:
 			index = self["progress_list"].getCurrent()[0]
 			#self.setResultType(ResultParser.TYPE_BYORBPOS)
@@ -553,7 +553,7 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 			self.session.open(TextBox, self.getTextualResult())
 
 	def selectionChanged(self):
-		print "selection changed"
+		print("selection changed")
 		if len(self.list) > 0 and not self.running:
 			self["CmdText"].setText(_("Press OK to get further details for %s") % str(self["progress_list"].getCurrent()[1]))
 

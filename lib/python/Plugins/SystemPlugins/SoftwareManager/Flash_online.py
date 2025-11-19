@@ -22,7 +22,7 @@ from Tools.Downloader import downloadWithProgress
 from enigma import fbClass
 import urllib
 from urllib2 import Request, urlopen, URLError, HTTPError
-import urllib2
+import urllib.request as urllib2
 import os
 import shutil
 import math
@@ -184,12 +184,12 @@ class FlashOnline(Screen, ConfigListScreen):
 
     def keyLeft(self):
             ConfigListScreen.keyLeft(self)
-            print "current selection:", self["config"].l.getCurrentSelection()
+            print("current selection:"), self["config"].l.getCurrentSelection()
             self.createSetup()
 
     def keyRight(self):
             ConfigListScreen.keyRight(self)
-            print "current selection:", self["config"].l.getCurrentSelection()
+            print("current selection:"), self["config"].l.getCurrentSelection()
             self.createSetup()
         
     def createSetup(self):

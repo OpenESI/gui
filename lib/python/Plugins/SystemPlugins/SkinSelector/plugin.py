@@ -97,7 +97,7 @@ class SkinSelector(Screen):
 		else:
 			skinfile = self["SkinList"].getCurrent()+"/skin.xml"
 
-		print "Skinselector: Selected Skin: "+self.root+skinfile
+		print("Skinselector: Selected Skin: ")+self.root+skinfile
 		config.skin.primary_skin.setValue(skinfile)
 		config.skin.primary_skin.save()
 		restartbox = self.session.openWithCallback(self.restartGUI,MessageBox,_("GUI needs a restart to apply a new skin\nDo you want to Restart the GUI now?"), MessageBox.TYPE_YESNO)

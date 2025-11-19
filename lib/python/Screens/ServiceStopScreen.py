@@ -5,7 +5,7 @@ class ServiceStopScreen:
 		try:
 			self.session
 		except:
-			print "[ServiceStopScreen] ERROR: no self.session set"
+			print("[ServiceStopScreen] ERROR: no self.session set")
 		self.oldref = None
 		self.onClose.append(self.__onClose)
 

@@ -37,7 +37,7 @@ class SetupSummary(Screen):
 		self["SetupValue"].text = self.parent.getCurrentValue()
 		if hasattr(self.parent,"getCurrentDescription"):
 			self.parent["description"].text = self.parent.getCurrentDescription()
-		if self.parent.has_key('footnote'):
+		if self.'footnote' in parent:
 			if self.parent.getCurrentEntry().endswith('*'):
 				self.parent['footnote'].text = (_("* = Restart Required"))
 			else:
@@ -96,7 +96,7 @@ class RecordingSettings(Screen,ConfigListScreen):
 		self.onLayoutFinish.append(self.layoutFinished)
 
 	def checkReadWriteDir(self, configele):
-# 		print "checkReadWrite: ", configele.value
+# 		print("checkReadWrite: "), configele.value
 		if configele.value in [x[0] for x in self.styles] or fileExists(configele.value, "w"):
 			configele.last_value = configele.value
 			return True
@@ -118,21 +118,21 @@ class RecordingSettings(Screen,ConfigListScreen):
 		if default not in tmp:
 			tmp = tmp[:]
 			tmp.append(default)
-# 		print "DefaultPath: ", default, tmp
+# 		print("DefaultPath: "), default, tmp
 		self.default_dirname = ConfigSelection(default = default, choices = tmp)
 		tmp = config.movielist.videodirs.value
 		default = config.usage.timer_path.value
 		if default not in tmp and default not in styles_keys:
 			tmp = tmp[:]
 			tmp.append(default)
-# 		print "TimerPath: ", default, tmp
+# 		print("TimerPath: "), default, tmp
 		self.timer_dirname = ConfigSelection(default = default, choices = self.styles+tmp)
 		tmp = config.movielist.videodirs.value
 		default = config.usage.instantrec_path.value
 		if default not in tmp and default not in styles_keys:
 			tmp = tmp[:]
 			tmp.append(default)
-# 		print "InstantrecPath: ", default, tmp
+# 		print("InstantrecPath: "), default, tmp
 		self.instantrec_dirname = ConfigSelection(default = default, choices = self.styles+tmp)
 		self.default_dirname.addNotifier(self.checkReadWriteDir, initial_call=False, immediate_feedback=False)
 		self.timer_dirname.addNotifier(self.checkReadWriteDir, initial_call=False, immediate_feedback=False)

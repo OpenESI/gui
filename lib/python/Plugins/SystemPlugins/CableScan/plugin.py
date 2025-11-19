@@ -180,7 +180,7 @@ class CableScanScreen(ConfigListScreen, Screen):
 class CableScanAutoScreen(CableScanScreen):
 
 	def __init__(self, session, nimlist):
-		print "[AutoCableScan] start"
+		print("[AutoCableScan] start")
 		Screen.__init__(self, session)
 		self.skinName="Standby"
 
@@ -202,14 +202,14 @@ class CableScanAutoScreen(CableScanScreen):
 			del self.scan
 
 	def scanCompleted(self, result):
-		print "[AutoCableScan] completed result = ", result
+		print("[AutoCableScan] completed result = "), result
 		refreshServiceList()
 		self.close(result>0)
 
 	def Power(self):
 		from Screens.Standby import inStandby
 		inStandby.Power()
-		print "[AutoCableScan] aborted due to power button pressed"
+		print("[AutoCableScan] aborted due to power button pressed")
 		self.close(True)
 
 	def createSummary(self):
@@ -235,7 +235,7 @@ CableScanAutoStartTimer = eTimer()
 
 def restartScanAutoStartTimer(reply=False):
 	if not reply:
-		print "[AutoCableScan] Scan was not succesfully retry in one hour"
+		print("[AutoCableScan] Scan was not succesfully retry in one hour")
 		CableScanAutoStartTimer.startLongTimer(3600)
 	else:
 		CableScanAutoStartTimer.startLongTimer(86400)

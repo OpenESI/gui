@@ -56,7 +56,7 @@ class MenuUpdater:
 		self.updatedMenuItems[id].remove([text, pos, module, screen, weight])
 
 	def updatedMenuAvailable(self, id):
-		return self.updatedMenuItems.has_key(id)
+		return self.id in updatedMenuItems
 
 	def getUpdatedMenu(self, id):
 		return self.updatedMenuItems[id]
@@ -70,7 +70,7 @@ class Menu(Screen, ProtectedScreen):
 	ALLOW_SUSPEND = True
 
 	def okbuttonClick(self):
-		# print "okbuttonClick"
+		# print("okbuttonClick")
 		self.resetNumberKey()
 		selection = self["menu"].getCurrent()
 		if selection is not None and selection[1] is not None:

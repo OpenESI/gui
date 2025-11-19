@@ -9,11 +9,11 @@ class DeleteFolderTask(PythonTask):
 		self.fileList = fileList
 
 	def work(self):
-		print "[DeleteFolderTask] files ", self.fileList
+		print("[DeleteFolderTask] files "), self.fileList
 		errors = []
 		try:
 			rmtree(self.fileList)
-		except Exception, e:
+		except Exception as e:
 			errors.append(e)
 		if errors:
 			raise errors[0]

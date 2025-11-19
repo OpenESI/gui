@@ -132,8 +132,8 @@ def saveResumePoints():
 		f = open('/etc/enigma2/resumepoints.pkl', 'wb')
 		cPickle.dump(resumePointCache, f, cPickle.HIGHEST_PROTOCOL)
 		f.close()
-	except Exception, ex:
-		print "[InfoBar] Failed to write resumepoints:", ex
+	except Exception as ex:
+		print("[InfoBar] Failed to write resumepoints:"), ex
 	resumePointCacheLast = int(time())
 
 def loadResumePoints():
@@ -142,8 +142,8 @@ def loadResumePoints():
 		PickleFile = cPickle.load(file)
 		file.close()
 		return PickleFile
-	except Exception, ex:
-		print "[InfoBar] Failed to load resumepoints:", ex
+	except Exception as ex:
+		print("[InfoBar] Failed to load resumepoints:"), ex
 		return {}
 
 def updateresumePointCache():
@@ -482,7 +482,7 @@ class SecondInfoBar(Screen):
 			self.session.openWithCallback(self.finishedAdd, TimerEntry, newEntry)
 
 	def finishedAdd(self, answer):
-		# print "finished add"
+		# print("finished add")
 		if answer[0]:
 			entry = answer[1]
 			simulTimerList = self.session.nav.RecordTimer.record(entry)
@@ -511,7 +511,7 @@ class SecondInfoBar(Screen):
 		else:
 			self["key_green"].setText(_("Add timer"))
 			self.key_green_choice = self.ADD_TIMER
-			# print "Timeredit aborted"
+			# print("Timeredit aborted")
 
 	def finishSanityCorrection(self, answer):
 		self.finishedAdd(answer)
@@ -878,8 +878,8 @@ class InfoBarShowHide(InfoBarScreenSaver):
 				if isinstance(self, InfoBarEPG):
 					if config.plisettings.InfoBarEpg_mode.value == "1":
 						self.openInfoBarEPG()
-		except Exception, e:
-			print "[InfoBarGenerics] 'toggleShowLong' failed:", e
+		except Exception as e:
+			print("[InfoBarGenerics] 'toggleShowLong' failed:"), e
 
 	def lockShow(self):
 		try:
@@ -1195,7 +1195,7 @@ class InfoBarNumberZap:
 			})
 
 	def keyNumberGlobal(self, number):
-		if self.pvrStateDialog.has_key("PTSSeekPointer") and self.timeshiftEnabled() and self.isSeekable():
+		if self."PTSSeekPointer" in pvrStateDialog and self.timeshiftEnabled() and self.isSeekable():
 			InfoBarTimeshiftState._mayShow(self)
 			self.pvrStateDialog["PTSSeekPointer"].setPosition((self.pvrStateDialog["PTSSeekBack"].instance.size().width()-4)/2, self.pvrStateDialog["PTSSeekPointer"].position[1])
 			if self.seekstate != self.SEEK_STATE_PLAY:
@@ -1216,7 +1216,7 @@ class InfoBarNumberZap:
 			elif len(self.servicelist.history) > 1 or config.usage.panicbutton.value:
 				self.checkTimeshiftRunning(self.recallPrevService)
 		else:
-			if self.has_key("TimeshiftActions") and self.timeshiftEnabled():
+			if "TimeshiftActions" in self and self.timeshiftEnabled():
 				ts = self.getTimeshift()
 				if ts and ts.isTimeshiftActive():
 					return
@@ -1634,7 +1634,7 @@ class InfoBarMenu:
 		self.session.infobar = None
 
 	def mainMenu(self):
-		# print "loading mainmenu XML..."
+		# print("loading mainmenu XML...")
 		menu = mdom.getroot()
 		assert menu.tag == "menu", "root element in menu must be 'menu'!"
 
@@ -2329,7 +2329,7 @@ class InfoBarSeek:
 				self.screen = screen
 
 			def action(self, contexts, action):
-				# print "action:", action
+				# print("action:"), action
 				if action[:5] == "seek:":
 					time = int(action[5:])
 					self.screen.doSeekRelative(time * 90000)
@@ -2462,11 +2462,11 @@ class InfoBarSeek:
 				f = open("/proc/stb/lcd/symbol_hddprogress", "w")
 				f.write("0")
 				f.close()
-#			print "not seekable, return to play"
+#			print("not seekable, return to play")
 			self["SeekActions"].setEnabled(False)
 			self.setSeekState(self.SEEK_STATE_PLAY)
 		else:
-#			print "seekable"
+#			print("seekable")
 			self["SeekActions"].setEnabled(True)
 			self.activityTimer.start(int(config.seek.withjumps_repeat_ms.getValue()), False)
 			for c in self.onPlayStateChanged:
@@ -2474,7 +2474,7 @@ class InfoBarSeek:
 
 		global seek_withjumps_muted
 		if seek_withjumps_muted and eDVBVolumecontrol.getInstance().isMuted():
-			print "STILL MUTED AFTER FFWD/FBACK !!!!!!!! so we unMute"
+			print("STILL MUTED AFTER FFWD/FBACK !!!!!!!! so we unMute")
 			seek_withjumps_muted = False
 			eDVBVolumecontrol.getInstance().volumeUnMute()
 
@@ -2533,35 +2533,35 @@ class InfoBarSeek:
 		pauseable = service.pause()
 
 		if pauseable is None:
-#			print "not pauseable."
+#			print("not pauseable.")
 			state = self.SEEK_STATE_PLAY
 
 		self.seekstate = state
 
 		if pauseable is not None:
 			if self.seekstate[0] and self.seekstate[3] == '||':
-#				print "resolved to PAUSE"
+#				print("resolved to PAUSE")
 				self.activityTimer.stop()
 				pauseable.pause()
 			elif self.seekstate[0] and self.seekstate[3] == 'END':
-#				print "resolved to STOP"
+#				print("resolved to STOP")
 				self.activityTimer.stop()
 			elif self.seekstate[1]:
 				if not pauseable.setFastForward(self.seekstate[1]):
 					pass
-					# print "resolved to FAST FORWARD"
+					# print("resolved to FAST FORWARD")
 				else:
 					self.seekstate = self.SEEK_STATE_PLAY
-					# print "FAST FORWARD not possible: resolved to PLAY"
+					# print("FAST FORWARD not possible: resolved to PLAY")
 			elif self.seekstate[2]:
 				if not pauseable.setSlowMotion(self.seekstate[2]):
 					pass
-					# print "resolved to SLOW MOTION"
+					# print("resolved to SLOW MOTION")
 				else:
 					self.seekstate = self.SEEK_STATE_PAUSE
-					# print "SLOW MOTION not possible: resolved to PAUSE"
+					# print("SLOW MOTION not possible: resolved to PAUSE")
 			else:
-#				print "resolved to PLAY"
+#				print("resolved to PLAY")
 				self.activityTimer.start(int(config.seek.withjumps_repeat_ms.getValue()), False)
 				pauseable.unpause()
 
@@ -2683,7 +2683,7 @@ class InfoBarSeek:
 						return
 		except:
 			from sys import exc_info
-			print "[InfoBarGenerics] error in 'def doSeekRelative'", exc_info()[:2]
+			print("[InfoBarGenerics] error in 'def doSeekRelative'"), exc_info()[:2]
 
 		seekable = self.getSeek()
 		if seekable is None or int(seekable.getLength()[1]) < 1:
@@ -2878,7 +2878,7 @@ class InfoBarSeek:
 			self.session.openWithCallback(self.rwdSeekTo, MinuteInput)
 
 	def rwdSeekTo(self, minutes):
-#		print "rwdSeekTo"
+#		print("rwdSeekTo")
 		self.doSeekRelative(-minutes * 60 * 90000)
 
 	def checkSkipShowHideLock(self):
@@ -2927,7 +2927,7 @@ class InfoBarSeek:
 
 		global seek_withjumps_muted
 		if seek_withjumps_muted and eDVBVolumecontrol.getInstance().isMuted():
-			print "STILL MUTED AFTER FFWD/FBACK !!!!!!!! so we unMute"
+			print("STILL MUTED AFTER FFWD/FBACK !!!!!!!! so we unMute")
 			seek_withjumps_muted = False
 			eDVBVolumecontrol.getInstance().volumeUnMute()
 
@@ -2967,7 +2967,7 @@ class InfoBarPVRState:
 		return InfoBarMoviePlayerSummary
 
 	def _mayShow(self):
-		if self.has_key("state") and not config.usage.movieplayer_pvrstate.value:
+		if "state" in self and not config.usage.movieplayer_pvrstate.value:
 			self["state"].setText("")
 			self["statusicon"].setPixmapNum(6)
 			self["speed"].setText("")
@@ -2980,14 +2980,14 @@ class InfoBarPVRState:
 	def __playStateChanged(self, state):
 		playstateString = state[3]
 		state_summary = playstateString
-		if self.pvrStateDialog.has_key("statusicon"):
+		if self."statusicon" in pvrStateDialog:
 			self.pvrStateDialog["state"].setText(playstateString)
 			if playstateString == '>':
 				self.pvrStateDialog["statusicon"].setPixmapNum(0)
 				self.pvrStateDialog["speed"].setText("")
 				speed_summary = self.pvrStateDialog["speed"].text
 				statusicon_summary = 0
-				if self.has_key("state") and config.usage.movieplayer_pvrstate.value:
+				if "state" in self and config.usage.movieplayer_pvrstate.value:
 					self["state"].setText(playstateString)
 					self["statusicon"].setPixmapNum(0)
 					self["speed"].setText("")
@@ -2996,7 +2996,7 @@ class InfoBarPVRState:
 				self.pvrStateDialog["speed"].setText("")
 				speed_summary = self.pvrStateDialog["speed"].text
 				statusicon_summary = 1
-				if self.has_key("state") and config.usage.movieplayer_pvrstate.value:
+				if "state" in self and config.usage.movieplayer_pvrstate.value:
 					self["state"].setText(playstateString)
 					self["statusicon"].setPixmapNum(1)
 					self["speed"].setText("")
@@ -3005,7 +3005,7 @@ class InfoBarPVRState:
 				self.pvrStateDialog["speed"].setText("")
 				speed_summary = self.pvrStateDialog["speed"].text
 				statusicon_summary = 2
-				if self.has_key("state") and config.usage.movieplayer_pvrstate.value:
+				if "state" in self and config.usage.movieplayer_pvrstate.value:
 					self["state"].setText(playstateString)
 					self["statusicon"].setPixmapNum(2)
 					self["speed"].setText("")
@@ -3015,7 +3015,7 @@ class InfoBarPVRState:
 				self.pvrStateDialog["speed"].setText(speed[1])
 				speed_summary = self.pvrStateDialog["speed"].text
 				statusicon_summary = 3
-				if self.has_key("state") and config.usage.movieplayer_pvrstate.value:
+				if "state" in self and config.usage.movieplayer_pvrstate.value:
 					self["state"].setText(playstateString)
 					self["statusicon"].setPixmapNum(3)
 					self["speed"].setText(speed[1])
@@ -3025,7 +3025,7 @@ class InfoBarPVRState:
 				self.pvrStateDialog["speed"].setText(speed[1])
 				speed_summary = self.pvrStateDialog["speed"].text
 				statusicon_summary = 4
-				if self.has_key("state") and config.usage.movieplayer_pvrstate.value:
+				if "state" in self and config.usage.movieplayer_pvrstate.value:
 					self["state"].setText(playstateString)
 					self["statusicon"].setPixmapNum(4)
 					self["speed"].setText(speed[1])
@@ -3034,7 +3034,7 @@ class InfoBarPVRState:
 				self.pvrStateDialog["speed"].setText(playstateString)
 				speed_summary = self.pvrStateDialog["speed"].text
 				statusicon_summary = 5
-				if self.has_key("state") and config.usage.movieplayer_pvrstate.value:
+				if "state" in self and config.usage.movieplayer_pvrstate.value:
 					self["state"].setText(playstateString)
 					self["statusicon"].setPixmapNum(5)
 					self["speed"].setText(playstateString)
@@ -3153,7 +3153,7 @@ class InfoBarExtensions:
 			else:
 				self.showExtensionSelection()
 		except:
-			print "[INFOBARGENERICS] EsiMenu: error pipshow, starting Esi Menu"
+			print("[INFOBARGENERICS] EsiMenu: error pipshow, starting Esi Menu")
 			from Plugins.Extensions.Esipanel.EsiMenu import EsiMenu
 			self.session.open(EsiMenu)
 
@@ -3228,12 +3228,12 @@ class InfoBarExtensions:
 	def updateExtension(self, extension, key = None):
 		self.extensionsList.append(extension)
 		if key is not None:
-			if self.extensionKeys.has_key(key):
+			if self.key in extensionKeys:
 				key = None
 
 		if key is None:
 			for x in self.availableKeys:
-				if not self.extensionKeys.has_key(x):
+				if not self.x in extensionKeys:
 					key = x
 					break
 
@@ -3259,7 +3259,7 @@ class InfoBarExtensions:
 		list = []
 		colorlist = []
 		for x in self.availableKeys:
-			if self.extensionKeys.has_key(x):
+			if self.x in extensionKeys:
 				entry = self.extensionKeys[x]
 				extension = self.extensionsList[entry]
 				if extension[2]():
@@ -3413,7 +3413,7 @@ class InfoBarExtensions:
 					from Plugins.Extensions.MediaPlayer.plugin import MediaPlayer
 					self.session.open(MediaPlayer)
 					no_plugin = False
-				except Exception, e:
+				except Exception as e:
 					self.session.open(MessageBox, _("The MediaPlayer plugin is not installed!\nPlease install it."), type = MessageBox.TYPE_INFO,timeout = 10 )
 
 	def showDreamPlex(self):
@@ -3449,7 +3449,7 @@ class InfoBarPlugins:
 		else:
 			try:
 				plugin(session = self.session)
-			except Exception, err:
+			except Exception as err:
 				print '[InfoBarGenerics] Error: ', err
 
 from Components.Task import job_manager
@@ -3728,7 +3728,7 @@ class InfoBarESIpanel:
 				self.StartPlugin(config.plugins.esipanel_redpanel.selection.value)
 
 		except:
-			print "Error on RedKeyTask !!"
+			print("Error on RedKeyTask !!")
 		
 	def softcamPanel(self):
 		try:
@@ -3747,7 +3747,7 @@ class InfoBarESIpanel:
 				self.StartPlugin(config.plugins.esipanel_redpanel.selectionLong.value)
 
 		except:
-			print "Error on RedKeyTask Long!!"
+			print("Error on RedKeyTask Long!!")
 			
 	def StartsoftcamPanel(self):
 		try:
@@ -3784,7 +3784,7 @@ class InfoBarEsiMenu:
 			else:
 				self.showExtensionSelection()
 		except:
-			print "[INFOBARGENERICS] EsiMenu: error pipshow, starting Esi Menu"
+			print("[INFOBARGENERICS] EsiMenu: error pipshow, starting Esi Menu")
 			from Plugins.Extensions.Esipanel.EsiMenu import EsiMenu
 			self.session.open(EsiMenu)
 
@@ -3877,7 +3877,7 @@ class InfoBarInstantRecord:
 			if len(simulTimerList) > 1: # with other recording
 				name = simulTimerList[1].name
 				name_date = ' '.join((name, strftime('%F %T', localtime(simulTimerList[1].begin))))
-				# print "[TIMER] conflicts with", name_date
+				# print("[TIMER] conflicts with"), name_date
 				recording.autoincrease = True	# start with max available length, then increment
 				if recording.setAutoincreaseEnd():
 					self.session.nav.RecordTimer.record(recording)
@@ -3890,7 +3890,7 @@ class InfoBarInstantRecord:
 			recording.autoincrease = False
 
 	def isInstantRecordRunning(self):
-#		print "self.recording:", self.recording
+#		print("self.recording:"), self.recording
 		if self.recording:
 			for x in self.recording:
 				if x.isRunning():
@@ -3899,7 +3899,7 @@ class InfoBarInstantRecord:
 
 	def recordQuestionCallback(self, answer):
 		# print 'recordQuestionCallback'
-#		print "pre:\n", self.recording
+#		print("pre:\n"), self.recording
 
 		# print 'test1'
 		if answer is None or answer[1] == "no":
@@ -3970,7 +3970,7 @@ class InfoBarInstantRecord:
 	def TimeDateInputClosed(self, ret):
 		if len(ret) > 1:
 			if ret[0]:
-#				print "stopping recording at", strftime("%F %T", localtime(ret[1]))
+#				print("stopping recording at"), strftime("%F %T", localtime(ret[1]))
 				if self.recording[self.selectedEntry].end != ret[1]:
 					self.recording[self.selectedEntry].autoincrease = False
 				self.recording[self.selectedEntry].end = ret[1]
@@ -3986,7 +3986,7 @@ class InfoBarInstantRecord:
 			self.session.openWithCallback(self.inputCallback, InputBox, title=_("How many minutes do you want to record?"), text="5  ", maxSize=True, type=Input.NUMBER)
 
 	def inputCallback(self, value):
-#		print "stopping recording after", int(value), "minutes."
+#		print("stopping recording after"), int(value), "minutes."
 		entry = self.recording[self.selectedEntry]
 		if value is not None:
 			value = value.replace(" ", "")
@@ -4106,7 +4106,7 @@ class InfoBarAudioSelection:
 		self.session.openWithCallback(self.audioSelected, AudioSelection, infobar=self)
 
 	def audioSelected(self, ret=None):
-		print "[infobar::audioSelected]", ret
+		print("[infobar::audioSelected]"), ret
 
 	def audioDownmixToggle(self, popup = True):
 		if SystemInfo["CanDownmixAC3"]:
@@ -4303,7 +4303,7 @@ class InfoBarRedButton:
 		for x in self.onReadyForAIT:
 			try:
 				x(orgId)
-			except Exception, ErrMsg:
+			except Exception as ErrMsg:
 				print ErrMsg
 				#self.onReadyForAIT.remove(x)
 
@@ -4311,7 +4311,7 @@ class InfoBarRedButton:
 		try:
 			self["HbbtvApplication"].setApplicationName("")
 			self.updateAIT()
-		except Exception, ErrMsg:
+		except Exception as ErrMsg:
 			pass
 
 	def detectedHbbtvApplication(self):
@@ -4324,7 +4324,7 @@ class InfoBarRedButton:
 					self.updateAIT(x[3])
 					self["HbbtvApplication"].setApplicationName(x[1])
 					break
-		except Exception, ErrMsg:
+		except Exception as ErrMsg:
 			pass
 
 	def activateRedButton(self):
@@ -4361,29 +4361,29 @@ class InfoBarAspectSelection:
 		self.__ExGreen_state = self.STATE_HIDDEN
 
 	def ExGreen_doAspect(self):
-		print "do self.STATE_ASPECT"
+		print("do self.STATE_ASPECT")
 		self.__ExGreen_state = self.STATE_ASPECT
 		self.aspectSelection()
 
 	def ExGreen_doResolution(self):
-		print "do self.STATE_RESOLUTION"
+		print("do self.STATE_RESOLUTION")
 		self.__ExGreen_state = self.STATE_RESOLUTION
 		self.resolutionSelection()
 		
 	def ExGreen_doHide(self):
-		print "do self.STATE_HIDDEN"
+		print("do self.STATE_HIDDEN")
 		self.__ExGreen_state = self.STATE_HIDDEN 
 
 	def ExGreen_toggleGreen(self, arg=""):
 		print self.__ExGreen_state
 		if self.__ExGreen_state == self.STATE_HIDDEN:
-			print "self.STATE_HIDDEN"
+			print("self.STATE_HIDDEN")
 			self.ExGreen_doAspect()
 		elif self.__ExGreen_state == self.STATE_ASPECT:
-			print "self.STATE_ASPECT"
+			print("self.STATE_ASPECT")
 			self.ExGreen_doResolution()
 		elif self.__ExGreen_state == self.STATE_RESOLUTION:
-			print "self.STATE_RESOLUTION"
+			print("self.STATE_RESOLUTION")
 			self.ExGreen_doHide()
 
 	def aspectSelection(self):
@@ -4560,14 +4560,14 @@ class InfoBarNotifications:
 			del notifications[0]
 			cb = n[0]
 
-			if n[3].has_key("onSessionOpenCallback"):
+			if "onSessionOpenCallback" in n[3]:
 				n[3]["onSessionOpenCallback"]()
 				del n[3]["onSessionOpenCallback"]
 
 			if cb:
 				dlg = self.session.openWithCallback(cb, n[1], *n[2], **n[3])
 			elif not Notifications.current_notifications and n[4] == "ZapError":
-				if n[3].has_key("timeout"):
+				if "timeout" in n[3]:
 					del n[3]["timeout"]
 				n[3]["enable_input"] = False
 				dlg = self.session.instantiateDialog(n[1], *n[2], **n[3])
@@ -4604,7 +4604,7 @@ class InfoBarServiceNotifications:
 			})
 
 	def serviceHasEnded(self):
-#		print "service end!"
+#		print("service end!")
 		try:
 			self.setSeekState(self.SEEK_STATE_PLAY)
 		except:
@@ -4637,7 +4637,7 @@ class InfoBarCueSheetSupport:
 	def __serviceStarted(self):
 		if self.is_closing:
 			return
-#		print "new service started! trying to download cuts!"
+#		print("new service started! trying to download cuts!")
 		self.downloadCuesheet()
 
 		self.resume_point = None
@@ -4655,7 +4655,7 @@ class InfoBarCueSheetSupport:
 			if seekable is None:
 				return # Should not happen?
 			length = seekable.getLength() or (None,0)
-#			print "seekable.getLength() returns:", length
+#			print("seekable.getLength() returns:"), length
 			# Hmm, this implies we don't resume if the length is unknown...
 			if (last > 900000) and (not length[1]  or (last < length[1] - 900000)):
 				self.resume_point = last
@@ -4758,7 +4758,7 @@ class InfoBarCueSheetSupport:
 	def toggleMark(self, onlyremove=False, onlyadd=False, tolerance=5*90000, onlyreturn=False):
 		current_pos = self.cueGetCurrentPosition()
 		if current_pos is None:
-#			print "not seekable"
+#			print("not seekable")
 			return
 
 		nearest_cutpoint = self.getNearestCutPoint(current_pos)
@@ -4798,7 +4798,7 @@ class InfoBarCueSheetSupport:
 		cue = self.__getCuesheet()
 
 		if cue is None:
-#			print "upload failed, no cuesheet interface"
+#			print("upload failed, no cuesheet interface")
 			return
 		cue.setCutList(self.cut_list)
 
@@ -4806,7 +4806,7 @@ class InfoBarCueSheetSupport:
 		cue = self.__getCuesheet()
 
 		if cue is None:
-#			print "download failed, no cuesheet interface"
+#			print("download failed, no cuesheet interface")
 			self.cut_list = [ ]
 		else:
 			self.cut_list = cue.getCutList()
@@ -4896,7 +4896,7 @@ class InfoBarTeletextPlugin:
 					"startTeletext": (self.startTeletext, _("View teletext..."))
 				})
 		else:
-			print "no teletext plugin found!"
+			print("no teletext plugin found!")
 
 	def startTeletext(self):
 		self.teletext_plugin and self.teletext_plugin(session=self.session, service=self.session.nav.getCurrentService())
@@ -5066,8 +5066,8 @@ class InfoBarZoom:
 			zoomval=abs(self.zoomrate)+10
 		else:
 			zoomval=self.zoomrate
-		# print "zoomRate:", self.zoomrate
-		# print "zoomval:", zoomval
+		# print("zoomRate:"), self.zoomrate
+		# print("zoomval:"), zoomval
 		file = open("/proc/stb/vmpeg/0/zoomrate", "w")
 		file.write('%d' % int(zoomval))
 		file.close()
@@ -5237,7 +5237,7 @@ class InfoBarSleepTimer:
 		return 0
 
 	def setSleepTimer(self, sleepTime, showMessage = True):
-		print "[InfoBarSleepTimer] set sleeptimer", sleepTime
+		print("[InfoBarSleepTimer] set sleeptimer"), sleepTime
 		if sleepTime:
 			m = abs(sleepTime / 60)
 			message = _("The sleep timer has been activated.") + "\n" + _("Delay:") + " " + _("%d minutes") % m
@@ -5283,15 +5283,15 @@ class InfoBarSleepTimer:
 	def goStandby(self, answer = None):
 		if config.usage.sleep_timer_action.value == "standby" or answer:
 			if not Screens.Standby.inStandby:
-				print "[InfoBarSleepTimer] goto standby"
+				print("[InfoBarSleepTimer] goto standby")
 				self.session.open(Screens.Standby.Standby)
 		elif answer is None:
 			if not Screens.Standby.inStandby:
 				if not Screens.Standby.inTryQuitMainloop:
-					print "[InfoBarSleepTimer] goto deep standby"
+					print("[InfoBarSleepTimer] goto deep standby")
 					self.session.open(Screens.Standby.TryQuitMainloop, 1)
 			else:
-				print "[InfoBarSleepTimer] goto deep standby"
+				print("[InfoBarSleepTimer] goto deep standby")
 				quitMainloop(1)
 
 #########################################################################################
@@ -5304,14 +5304,14 @@ class InfoBarOpenOnTopHelper:
 	def openInfoBarMessage(self, message, messageboxtyp, timeout=-1):
 		try:
 			self.session.open(MessageBox, message, messageboxtyp, timeout=timeout)
-		except Exception, e:
-			print "[InfoBarOpenMessage] Exception:", e
+		except Exception as e:
+			print("[InfoBarOpenMessage] Exception:"), e
 
 	def openInfoBarMessageWithCallback(self, callback, message, messageboxtyp, timeout=-1, default=True):
 		try:
 			self.session.openWithCallback(callback, MessageBox, message, messageboxtyp, timeout=timeout, default=default)
-		except Exception, e:
-			print "[openInfoBarMessageWithCallback] Exception:", e
+		except Exception as e:
+			print("[openInfoBarMessageWithCallback] Exception:"), e
 
 	def openInfoBarSession(self, session, option=None):
 		try:
@@ -5319,8 +5319,8 @@ class InfoBarOpenOnTopHelper:
 				self.session.open(session)
 			else:
 				self.session.open(session, option)
-		except Exception, e:
-			print "[openInfoBarSession] Exception:", e
+		except Exception as e:
+			print("[openInfoBarSession] Exception:"), e
 
 #########################################################################################
 # handle bsod (python crashes) and show information after crash                         #
@@ -5361,8 +5361,8 @@ class InfoBarHandleBsod:
 			try:
 				self.session.openWithCallback(self.infoBsodCallback, MessageBox, txt, type=MessageBox.TYPE_ERROR, default = False, close_on_any_key=not self.lastestBsodWarning, showYESNO = self.lastestBsodWarning)
 				self.infoBsodIsShown = True
-			except Exception, e:
-				#print "[InfoBarHandleBsod] Exception:", e
+			except Exception as e:
+				#print("[InfoBarHandleBsod] Exception:"), e
 				self.checkBsodTimer.stop()
 				self.checkBsodTimer.start(5000, True)
 				self.infoBsodCallback(False)

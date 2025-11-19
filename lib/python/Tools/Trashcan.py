@@ -71,7 +71,7 @@ class Trashcan:
 		# RecordTimer calls this when preparing a recording. That is a
 		# nice moment to clean up.
 		if self.recordings:
-			print "[Trashcan] Recording in progress", self.recordings
+			print("[Trashcan] Recording in progress"), self.recordings
 			return
 		ctimeLimit = time.time() - (config.usage.movielist_trashcan_days.value * 3600 * 24)
 		reserveBytes = 1024*1024*1024 * int(config.usage.movielist_trashcan_reserve.value)
@@ -92,22 +92,22 @@ def clean(ctimeLimit, reserveBytes):
 		task.openFiles(ctimeLimit, reserveBytes)
 		Components.Task.job_manager.AddJob(job)
 	elif isCleaning:
-		print "[Trashcan] Cleanup already running"
+		print("[Trashcan] Cleanup already running")
 	else:
-		print "[Trashcan] Disabled skipping check."
+		print("[Trashcan] Disabled skipping check.")
 
 def cleanAll(path=None):
 	trash = getTrashFolder(path)
 	if not os.path.isdir(trash):
-		print "[Trashcan] No trash.", trash
+		print("[Trashcan] No trash."), trash
 		return 0
 	for root, dirs, files in os.walk(trash, topdown=False):
 		for name in files:
 			fn = os.path.join(root, name)
 			try:
 				enigma.eBackgroundFileEraser.getInstance().erase(fn)
-			except Exception, e:
-				print "[Trashcan] Failed to erase %s:"% name, e
+			except Exception as e:
+				print("[Trashcan] Failed to erase %s:")% name, e
 		# Remove empty directories if possible
 		for name in dirs:
 			try:
@@ -127,7 +127,7 @@ class CleanTrashTask(Components.Task.PythonTask):
 	def work(self):
 		mounts=[]
 		matches = []
-		print "[Trashcan] probing folders"
+		print("[Trashcan] probing folders")
 		f = open('/proc/mounts', 'r')
 		for line in f.readlines():
 			parts = line.strip().split()
@@ -147,15 +147,15 @@ class CleanTrashTask(Components.Task.PythonTask):
 			if os.path.isdir(os.path.join(mount,'movie/.Trash')):
 				matches.append(os.path.join(mount,'movie/.Trash'))
 
-		print "[Trashcan] found following trashcan's:",matches
+		print("[Trashcan] found following trashcan's:"),matches
 		if len(matches):
 			for trashfolder in matches:
-				print "[Trashcan] looking in trashcan",trashfolder
+				print("[Trashcan] looking in trashcan"),trashfolder
 				trashsize = get_size(trashfolder)
 				diskstat = os.statvfs(trashfolder)
 				free = diskstat.f_bfree * diskstat.f_bsize
 				bytesToRemove = self.reserveBytes - free
-				print "[Trashcan] " + str(trashfolder) + ": Size:",trashsize
+				print("[Trashcan] ") + str(trashfolder) + ": Size:",trashsize
 				candidates = []
 				size = 0
 				for root, dirs, files in os.walk(trashfolder, topdown=False):
@@ -169,8 +169,8 @@ class CleanTrashTask(Components.Task.PythonTask):
 							else:
 								candidates.append((st.st_ctime, fn, st.st_size))
 								size += st.st_size
-						except Exception, e:
-							print "[Trashcan] Failed to stat %s:"% name, e
+						except Exception as e:
+							print("[Trashcan] Failed to stat %s:")% name, e
 					# Remove empty directories if possible
 					for name in dirs:
 						try:
@@ -189,7 +189,7 @@ class CleanTrashTask(Components.Task.PythonTask):
 							pass
 						bytesToRemove -= st_size
 						size -= st_size
-					print "[Trashcan] " + str(trashfolder) + ": Size now:",size
+					print("[Trashcan] ") + str(trashfolder) + ": Size now:",size
 
 class TrashInfo(VariableText, GUIComponent):
 	FREE = 0

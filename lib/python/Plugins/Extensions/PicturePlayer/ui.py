@@ -357,7 +357,7 @@ class Pic_Thumb(Screen):
 		self.paintFrame()
 
 	def paintFrame(self):
-		#print "index=" + str(self.index)
+		#print("index=") + str(self.index)
 		if self.maxentry < self.index or self.index < 0:
 			return
 
@@ -573,7 +573,7 @@ class Pic_Full_View(Screen):
 			self.index = self.maxentry
 
 	def slidePic(self):
-		print "slide to next Picture index=" + str(self.lastindex)
+		print("slide to next Picture index=") + str(self.lastindex)
 		if config.pic.loop.value == False and self.lastindex == self.maxentry:
 			self.PlayPause()
 		self.shownow = True

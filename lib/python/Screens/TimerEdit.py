@@ -98,17 +98,17 @@ class TimerEditList(Screen):
 		if cur:
 			t = cur
 			if t.disabled:
-# 				print "try to ENABLE timer"
+# 				print("try to ENABLE timer")
 				t.enable()
 				timersanitycheck = TimerSanityCheck(self.session.nav.RecordTimer.timer_list, cur)
 				if not timersanitycheck.check():
 					t.disable()
-					print "Sanity check failed"
+					print("Sanity check failed")
 					simulTimerList = timersanitycheck.getSimulTimerList()
 					if simulTimerList is not None:
 						self.session.openWithCallback(self.finishedEdit, TimerSanityConflict, simulTimerList)
 				else:
-					print "Sanity check passed"
+					print("Sanity check passed")
 					if timersanitycheck.doubleCheck():
 						t.disable()
 			else:
@@ -460,7 +460,7 @@ class TimerEditList(Screen):
 			else:
 				success = True
 			if success:
-				print "Sanity check passed"
+				print("Sanity check passed")
 				self.session.nav.RecordTimer.timeChanged(entry)
 
 			self.fillTimerList()
@@ -502,7 +502,7 @@ class TimerSanityConflict(Screen):
 	def __init__(self, session, timer):
 		Screen.__init__(self, session)
 		self.timer = timer
-		print "TimerSanityConflict"
+		print("TimerSanityConflict")
 
 		self["timer1"] = TimerList(self.getTimerList(timer[0]))
 		self.list = []

@@ -152,7 +152,7 @@ class PinInput(InputBox):
 				pass
 
 	def closePinWrong(self, *args):
-		print "args:", args
+		print("args:"), args
 		self.close(False)
 
 	def closePinCorrect(self, *args):

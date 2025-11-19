@@ -10,7 +10,7 @@ print
 os.system("clear")
 dirlist = []
 count = 0
-print "Plugin categories:"
+print("Plugin categories:")
 for dir in os.listdir("."):
 	if os.path.isdir(dir):
 		count += 1
@@ -39,17 +39,17 @@ stop = False
 
 while not stop:
 	os.system("clear")
-	print "selected targets:"
+	print("selected targets:")
 	for where in targetlist:
 		print where[0]
 
 	print
-	print "available targets:"
+	print("available targets:")
 	count = 0
 	for where in wherelist:
 		count += 1
 		print count, where[0]
-	print "x break"
+	print("x break")
 
 	target = raw_input("Select WHERE-target: ")
 	if target == "x":
@@ -76,7 +76,7 @@ makefile.write(lines)
 makefile.close()
 
 lines = []
-print "open"
+print("open")
 configure = open("../../../configure.ac", "r")
 while True:
 	line = configure.readline()
@@ -86,7 +86,7 @@ while True:
 	if line.strip() == "lib/python/Plugins/" + category + "/Makefile":
 		lines.append("lib/python/Plugins/" + pluginpath + "/Makefile\n")
 configure.close()
-print "close"
+print("close")
 
 configure = open("../../../configure.ac", "w")
 configure.writelines(lines)
@@ -119,7 +119,7 @@ descriptorlist = []
 for count in range(len(targetlist)):
 	os.system("clear")
 	where = targetlist[count]
-	print "Options for target %s" % where[0]
+	print("Options for target %s") % where[0]
 	descriptorlist.append(where[1](name, mainlist[count]))
 
 if len(descriptorlist) == 1:

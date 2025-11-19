@@ -204,7 +204,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 				self.nimConfig.dvbs.configMode.setChoices(choices, default = "simple")
 
 	def createSetup(self):
-		print "Creating setup"
+		print("Creating setup")
 		self.list = [ ]
 
 		self.multiType = None
@@ -286,7 +286,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 				self.list.append(getConfigListEntry(_("Tuner"), nimConfig.connectedTo))
 			elif nimConfig.configMode.value == "loopthrough":
 				choices = []
-				print "connectable to:", nimmanager.canConnectTo(self.slotid)
+				print("connectable to:"), nimmanager.canConnectTo(self.slotid)
 				connectable = nimmanager.canConnectTo(self.slotid)
 				for id in connectable:
 					choices.append((str(id), nimmanager.getNimDescription(id)))

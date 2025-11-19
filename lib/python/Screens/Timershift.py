@@ -36,7 +36,7 @@ class SetupSummary(Screen):
 		self["SetupValue"].text = self.parent.getCurrentValue()
 		if hasattr(self.parent,"getCurrentDescription"):
 			self.parent["description"].text = self.parent.getCurrentDescription()
-		if self.parent.has_key('footnote'):
+		if self.'footnote' in parent:
 			if self.parent.getCurrentEntry().endswith('*'):
 				self.parent['footnote'].text = (_("* = Restart Required"))
 			else:
@@ -169,7 +169,7 @@ class TimeshiftSettings(Screen,ConfigListScreen):
 		if cooldefault not in cooltmp:
 			cooltmp = cooltmp[:]
 			cooltmp.append(cooldefault)
-# 		print "TimeshiftPath: ", default, tmp
+# 		print("TimeshiftPath: "), default, tmp
 		self.timeshift_dirname = ConfigSelection(default = default, choices = tmp)
 		self.autorecord_dirname = ConfigSelection(default = cooldefault, choices = cooltmp)
 		self.timeshift_dirname.addNotifier(self.checkReadWriteDir, initial_call=False, immediate_feedback=False)

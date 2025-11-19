@@ -65,14 +65,14 @@ class QuadPipChannelEntry:
 		return self.idx
 
 	def setChannel(self, idx, chName, sref):
-		if self.channel.has_key(idx):
+		if self.idx in channel:
 			self.channel[idx] = (chName, sref)
 			return True
 
 		return False
 
 	def deleteChannel(self, idx):
-		if self.channel.has_key(idx):
+		if self.idx in channel:
 			self.channel[idx] = None
 			return True
 
@@ -115,7 +115,7 @@ class QuadPipChannelData:
 		fd = open(self.pipChannelDataPath, "w")
 		pickle.dump(self.PipChannelList, fd)
 		fd.close()
-		#print "[*] dataSave"
+		#print("[*] dataSave")
 
 	def dataLoad(self):
 		if not os.access(self.pipChannelDataPath, os.R_OK):
@@ -124,7 +124,7 @@ class QuadPipChannelData:
 		fd = open(self.pipChannelDataPath, "r")
 		self.PipChannelList = pickle.load(fd)
 		fd.close()
-		#print "[*] dataLoad"
+		#print("[*] dataLoad")
 
 	def getPipChannels(self):
 		return self.PipChannelList
@@ -910,7 +910,7 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 		return channel
 
 	def playChannel(self, channel):
-		print "[playChannel] channel : ", channel
+		print("[playChannel] channel : "), channel
 
 		if self.curChannel and self.curChannel == channel.channel:
 			return
@@ -932,12 +932,12 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 
 			decoderIdx = self.decoderIdxMap[idx]
 			pos = self.eVideoPosMap[idx]
-			#print "===================================================================="
-			#print "sname : ", sname
-			#print "sref : ", sref
-			#print "decoderIdx : " , decoderIdx
-			#print "pos : ", pos
-			#print "===================================================================="
+			#print("====================================================================")
+			#print("sname : "), sname
+			#print("sref : "), sref
+			#print("decoderIdx : ") , decoderIdx
+			#print("pos : "), pos
+			#print("====================================================================")
 
 			qPipInstance =  self.session.instantiateDialog(QuadPiP, decoderIdx, pos)
 			qPipInstance.setAnimationMode(0)
@@ -951,7 +951,7 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 			if qPipInstance.playService(eServiceReference(sref), isPlayAudio):
 				self.session.qPips.append(qPipInstance)
 			else:
-				print "play failed, ", sref
+				print("play failed, "), sref
 				del qPipInstance
 
 		self.updateChannelName(channel)

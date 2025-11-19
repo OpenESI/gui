@@ -225,11 +225,11 @@ class PositionerSetup(Screen):
 				if self.frontend:
 					return True
 				else:
-					print "getFrontend failed"
+					print("getFrontend failed")
 			else:
-				print "getRawChannel failed"
+				print("getRawChannel failed")
 		else:
-			print "getResourceManager instance failed"
+			print("getResourceManager instance failed")
 		return False
 
 	def setLNB(self, lnb):
@@ -986,7 +986,7 @@ class Diseqc:
 			else:
 				string = 'E03160' #positioner stop
 
-			print "diseqc command:",
+			print("diseqc command:"),
 			print string
 			cmd.setCommandString(string)
 			self.frontend.setTone(iDVBFrontend.toneOff)

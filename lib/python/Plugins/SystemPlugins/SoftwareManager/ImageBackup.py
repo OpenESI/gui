@@ -31,7 +31,7 @@ if SystemInfo["HasRootSubdir"] or getMachineBuild() in ('gbmv200','vuduo4k','mul
 def Freespace(dev):
 	statdev = statvfs(dev)
 	space = (statdev.f_bavail * statdev.f_frsize) / 1024
-	print "[FULL BACKUP] Free space on %s = %i kilobytes" %(dev, space)
+	print("[FULL BACKUP] Free space on %s = %i kilobytes") %(dev, space)
 	return space
 
 class ImageBackup(Screen):
@@ -87,23 +87,23 @@ class ImageBackup(Screen):
 		else:
 			self.MTDBOOT = "none"
 			self.EMMCIMG = "none"
-		print "[FULL BACKUP] BOX MACHINEBUILD = >%s<" %self.MACHINEBUILD
-		print "[FULL BACKUP] BOX MACHINENAME = >%s<" %self.MACHINENAME
-		print "[FULL BACKUP] BOX MACHINEBRAND = >%s<" %self.MACHINEBRAND
-		print "[FULL BACKUP] BOX MODEL = >%s<" %self.MODEL
-		print "[FULL BACKUP] OEM MODEL = >%s<" %self.OEM
-		print "[FULL BACKUP] IMAGEFOLDER = >%s<" %self.IMAGEFOLDER
-		print "[FULL BACKUP] UBINIZE = >%s<" %self.UBINIZE_ARGS
-		print "[FULL BACKUP] MKUBIFS = >%s<" %self.MKUBIFS_ARGS
-		print "[FULL BACKUP] MTDBOOT = >%s<" %self.MTDBOOT
-		print "[FULL BACKUP] MTDKERNEL = >%s<" %self.MTDKERNEL
-		print "[FULL BACKUP] MTDROOTFS = >%s<" %self.MTDROOTFS
-		print "[FULL BACKUP] ROOTFSBIN = >%s<" %self.ROOTFSBIN
-		print "[FULL BACKUP] KERNELBIN = >%s<" %self.KERNELBIN
-		print "[FULL BACKUP] ROOTFSTYPE = >%s<" %self.ROOTFSTYPE
-		print "[FULL BACKUP] EMMCIMG = >%s<" %self.EMMCIMG
-		print "[FULL BACKUP] IMAGEDISTRO = >%s<" %self.IMAGEDISTRO
-		print "[FULL BACKUP] DISTROVERSION = >%s<" %self.DISTROVERSION
+		print("[FULL BACKUP] BOX MACHINEBUILD = >%s<") %self.MACHINEBUILD
+		print("[FULL BACKUP] BOX MACHINENAME = >%s<") %self.MACHINENAME
+		print("[FULL BACKUP] BOX MACHINEBRAND = >%s<") %self.MACHINEBRAND
+		print("[FULL BACKUP] BOX MODEL = >%s<") %self.MODEL
+		print("[FULL BACKUP] OEM MODEL = >%s<") %self.OEM
+		print("[FULL BACKUP] IMAGEFOLDER = >%s<") %self.IMAGEFOLDER
+		print("[FULL BACKUP] UBINIZE = >%s<") %self.UBINIZE_ARGS
+		print("[FULL BACKUP] MKUBIFS = >%s<") %self.MKUBIFS_ARGS
+		print("[FULL BACKUP] MTDBOOT = >%s<") %self.MTDBOOT
+		print("[FULL BACKUP] MTDKERNEL = >%s<") %self.MTDKERNEL
+		print("[FULL BACKUP] MTDROOTFS = >%s<") %self.MTDROOTFS
+		print("[FULL BACKUP] ROOTFSBIN = >%s<") %self.ROOTFSBIN
+		print("[FULL BACKUP] KERNELBIN = >%s<") %self.KERNELBIN
+		print("[FULL BACKUP] ROOTFSTYPE = >%s<") %self.ROOTFSTYPE
+		print("[FULL BACKUP] EMMCIMG = >%s<") %self.EMMCIMG
+		print("[FULL BACKUP] IMAGEDISTRO = >%s<") %self.IMAGEDISTRO
+		print("[FULL BACKUP] DISTROVERSION = >%s<") %self.DISTROVERSION
 
 		self.error_files = ''
 		self.list = self.list_files("/boot")
@@ -212,9 +212,9 @@ class ImageBackup(Screen):
 			cmdline = cmdline.lstrip("/dev/")
 			self.MTDROOTFS = cmdline
 			self.MTDKERNEL = cmdline[:-1] + str(int(cmdline[-1:]) -1)
-		print "[FULL BACKUP] Multiboot rootfs ", self.MTDROOTFS
-		print "[FULL BACKUP] Multiboot kernel ", self.MTDKERNEL
-		print "[FULL BACKUP] rootfssubdir: ",self.ROOTFSSUBDIR
+		print("[FULL BACKUP] Multiboot rootfs "), self.MTDROOTFS
+		print("[FULL BACKUP] Multiboot kernel "), self.MTDKERNEL
+		print("[FULL BACKUP] rootfssubdir: "),self.ROOTFSSUBDIR
 
 	def read_startup(self, FILE):
 		self.file = FILE
@@ -223,7 +223,7 @@ class ImageBackup(Screen):
 				data=myfile.read().replace('\n', '')
 			myfile.close()
 		except IOError:
-			print "[ERROR] failed to open file %s" % file
+			print("[ERROR] failed to open file %s") % file
 			data = " "
 		return data
 
@@ -286,7 +286,7 @@ class ImageBackup(Screen):
 				if not dir == 'hdd' and not dir == 'net':
 					for file in listdir("/media/" + dir):
 						if file.find("backupstick") > -1:
-							print "USB-DEVICE found on: /media/%s" % dir
+							print("USB-DEVICE found on: /media/%s") % dir
 							return "/media/" + dir
 			break
 		return "XX"
@@ -633,8 +633,8 @@ class ImageBackup(Screen):
 				brand.close()
 			else:
 				self.backupbuild = "-"
-			print "self.backupbuild: %s" %self.backupbuild
-			print "selectionmultiboot: %s" %self.selectionmultiboot
+			print("self.backupbuild: %s") %self.backupbuild
+			print("selectionmultiboot: %s") %self.selectionmultiboot
 			cmdlist.append('opkg install p7zip > /dev/null 2>&1')
 			cmdlist.append('7za a -r -bt -bd -bb0 %s/full_backups/%s-multiboot-%s-%s-%s-backup-%s.zip %s/*' %(self.DIRECTORY, self.IMAGEDISTRO, self.selectionmultiboot, self.MODEL, self.backupbuild, self.DATE, self.MAINDESTROOT))
 		elif SystemInfo["HasRootSubdir"]:
@@ -648,7 +648,7 @@ class ImageBackup(Screen):
 		file_found = True
 
 		if not path.exists("%s/%s" % (self.MAINDEST, self.ROOTFSBIN)):
-			print "%s/%s not found" % (self.MAINDEST, self.ROOTFSBIN)
+			print("%s/%s not found") % (self.MAINDEST, self.ROOTFSBIN)
 			print 'ROOTFS bin file not found'
 			file_found = False
 

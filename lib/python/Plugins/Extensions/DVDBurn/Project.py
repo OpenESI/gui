@@ -57,7 +57,7 @@ class Project:
 		list.append('<?xml version="1.0" encoding="utf-8" ?>\n')
 		list.append('<DreamDVDBurnerProject>\n')
 		list.append('\t<settings ')
-		for key, val in self.settings.dict().iteritems():
+		for key, val in self.settings.dict().items():
 			list.append( key + '="' + str(val.getValue()) + '" ' )
 		list.append('/>\n')
 		list.append('\t<titles>\n')
@@ -68,12 +68,12 @@ class Project:
 			list.append('</path>\n')
 			list.append('\t\t\t<properties ')
 			audiotracks = []
-			for key, val in title.properties.dict().iteritems():
+			for key, val in title.properties.dict().items():
 				if type(val) is ConfigSubList:
 					audiotracks.append('\t\t\t<audiotracks>\n')
 					for audiotrack in val:
 						audiotracks.append('\t\t\t\t<audiotrack ')
-						for subkey, subval in audiotrack.dict().iteritems():
+						for subkey, subval in audiotrack.dict().items():
 							audiotracks.append( subkey + '="' + str(subval.getValue()) + '" ' )
 						audiotracks.append(' />\n')
 					audiotracks.append('\t\t\t</audiotracks>\n')
@@ -118,7 +118,7 @@ class Project:
 			file.close()
 			projectfiledom = xml.dom.minidom.parseString(data)
 			for node in projectfiledom.childNodes[0].childNodes:
-			  print "node:", node
+			  print("node:"), node
 			  if node.nodeType == xml.dom.minidom.Element.nodeType:
 			    if node.tagName == 'settings':
 				self.xmlAttributesToConfig(node, self.settings)
@@ -138,7 +138,7 @@ class Project:
 							continue
 					self.error += "\n%s '%s' not found" % (key, val)
 		#except AttributeError:
-		  	#print "loadProject AttributeError", self.error
+		  	#print("loadProject AttributeError"), self.error
 			#self.error += (" in project '%s'") % (filename)
 			#return False
 			return True
@@ -157,11 +157,11 @@ class Project:
 				except (NameError, SyntaxError):
 					val = item.nodeValue.encode("utf-8")
 				try:
-					print "config[%s].setValue(%s)" % (key, val)
+					print("config[%s].setValue(%s)") % (key, val)
 					config.dict()[key].setValue(val)
 				except (KeyError):
 					self.error = "unknown attribute '%s'" % (key)
-					print "KeyError", self.error
+					print("KeyError"), self.error
 					raise AttributeError
 				i += 1
 		except AttributeError:
@@ -169,10 +169,10 @@ class Project:
 			return False
 
 	def xmlGetTitleNodeRecursive(self, node, title_idx = -1):
-		print "[xmlGetTitleNodeRecursive]", title_idx, node
+		print("[xmlGetTitleNodeRecursive]"), title_idx, node
 		print node.childNodes
 		for subnode in node.childNodes:
-		  print "xmlGetTitleNodeRecursive subnode:", subnode
+		  print("xmlGetTitleNodeRecursive subnode:"), subnode
 		  if subnode.nodeType == xml.dom.minidom.Element.nodeType:
 		    if subnode.tagName == 'title':
 			title_idx += 1
@@ -180,7 +180,7 @@ class Project:
 			self.titles.append(title)
 			self.xmlGetTitleNodeRecursive(subnode, title_idx)
 		    if subnode.tagName == 'path':
-			print "path:", subnode.firstChild.data
+			print("path:"), subnode.firstChild.data
 			filename = subnode.firstChild.data
 			self.titles[title_idx].addFile(filename.encode("utf-8"))
 		    if subnode.tagName == 'properties':
@@ -188,7 +188,7 @@ class Project:
 		    if subnode.tagName == 'audiotracks':
 			self.xmlGetTitleNodeRecursive(subnode, title_idx)
 		    if subnode.tagName == 'audiotrack':
-			print "audiotrack...", subnode.toxml()
+			print("audiotrack..."), subnode.toxml()
 
 	def getSize(self):
 		totalsize = 0

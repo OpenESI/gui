@@ -214,7 +214,7 @@ class ChoiceBox(Screen):
 
 	# lookups a key in the keymap, then runs it
 	def goKey(self, key):
-		if self.keymap.has_key(key):
+		if self.key in keymap:
 			entry = self.keymap[key]
 			self.goEntry(entry)
 

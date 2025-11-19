@@ -439,7 +439,7 @@ class RestoreMenu(Screen):
 	def startDelete(self, ret = False):
 		if ret == True:
 			self.exe = True
-			print "removing:",self.val
+			print("removing:"),self.val
 			if path.exists(self.val) == True:
 				remove(self.val)
 			self.exe = False
@@ -715,7 +715,7 @@ class RestorePlugins(Screen):
 		self.index = 0
 		self.list = menulist
 		for r in menulist:
-			print "[SOFTWARE MANAGER] Plugin to restore: %s" % r[0]
+			print("[SOFTWARE MANAGER] Plugin to restore: %s") % r[0]
 		self.container = eConsoleAppContainer()
 		self["menu"] = List(list())
 		self["menu"].onSelectionChanged.append(self.selectionChanged)
