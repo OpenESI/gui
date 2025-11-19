@@ -3,3 +3,6 @@ backup/
 __pycache__/
 *.so
 *.o
+*.backup
+*~
+*.orig
