@@ -1,0 +1,5 @@
+backup/
+*.pyc
+__pycache__/
+*.so
+*.o
