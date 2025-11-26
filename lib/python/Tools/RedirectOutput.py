@@ -7,7 +7,7 @@ class EnigmaOutput:
 		self.isTraceback = False
 
 	def write(self, data):
-		if isinstance(data, unicode):
+		if isinstance(data, str):
 			data = data.encode("UTF-8")
 		self.buf += data
 		if '\n' in data:

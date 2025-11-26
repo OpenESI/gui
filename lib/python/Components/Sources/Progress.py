@@ -1,4 +1,4 @@
-from Source import Source
+from .Source import Source
 
 class Progress(Source):
 	def __init__(self, value = 0, valuerange = 100):

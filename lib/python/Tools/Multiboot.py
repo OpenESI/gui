@@ -136,11 +136,11 @@ class GetImagelist():
 					self.OsPath = "/tmp/testmount/linuxrootfs1"
 				elif os.path.isfile("/tmp/testmount/linuxrootfs%s/usr/bin/enigma2" % self.slot):
 					self.OsPath = "/tmp/testmount/linuxrootfs%s" % self.slot
-					print("multiboot tools 1 slots"), self.slot, self.slot2
+					print((("multiboot tools 1 slots"), self.slot, self.slot2))
 			else:
 				if os.path.isfile("/tmp/testmount/usr/bin/enigma2"):
 					self.OsPath = '/tmp/testmount'
-			print("Tools/Multiboot OsPath %s ") %self.OsPath
+			print((("Tools/Multiboot OsPath %s ") %self.OsPath))
 			if self.OsPath != "NoPath":
 				try:
 					Creator = open("%s/etc/issue" %self.OsPath).readlines()[-2].capitalize().strip()[:-6].replace("-release", " rel")
@@ -236,14 +236,14 @@ class boxbranding_reader:		# many thanks to Huevos for creating this reader - we
 	def readBrandingFile(self): # reads boxbranding.so and updates self.output
 		output = eval(subprocess.check_output(['python', self.tmp_path + self.helper_file]))
 		if output:
-			for att in self.output.keys():
+			for att in list(self.output.keys()):
 				self.output[att] = output[att]
 
 	def addBrandingMethods(self): # this creates reader.getBoxType(), reader.getImageDevBuild(), etc
 		l =  {}                
-		for att in self.output.keys():
+		for att in list(self.output.keys()):
 			exec("def %s(self): return self.output['%s']" % (att, att), None, l)
-		for name, value in l.items():
+		for name, value in list(l.items()):
 			setattr(boxbranding_reader, name, value)
 
 	def createHelperFile(self):
@@ -270,12 +270,12 @@ class boxbranding_reader:		# many thanks to Huevos for creating this reader - we
 		out.append("try:%s" % eol)
 		out.append("\timport boxbranding%s" % eol)
 		out.append("\toutput = {%s" % eol)
-		for att in self.output.keys():
+		for att in list(self.output.keys()):
 			out.append('\t\t"%s": boxbranding.%s(),%s' % (att, att, eol))
 		out.append("\t}%s" % eol)
 		out.append("except:%s" % eol)
 		out.append("\t\toutput = None%s" % eol)
-		out.append("print output%s" % eol)
+		out.append("print(output%s" % eol)
 		return ''.join(out)
 
 

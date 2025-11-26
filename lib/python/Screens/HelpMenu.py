@@ -28,7 +28,7 @@ class HelpMenu(Screen, Rc):
 		if selection:
 			selection = selection[3]
 		#arrow = self["arrowup"]
-		print("selection:"), selection
+		print((("selection:"), selection))
 
 		longText = ""
 		if selection and len(selection) > 1:

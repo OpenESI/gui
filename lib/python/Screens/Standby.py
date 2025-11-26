@@ -45,7 +45,7 @@ class TVstate: #load in Navigation
 			self.hdmicec_ok = False
 
 		if not self.hdmicec_ok:
-			print '[Standby] HDMI-CEC is not enabled or unavailable !!!'
+			print('[Standby] HDMI-CEC is not enabled or unavailable !!!')
 
 	def skipHdmiCecNow(self, value):
 		if self.hdmicec_ok:

@@ -9,11 +9,11 @@ from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Plugins.Plugin import PluginDescriptor
 from enigma import *
-from downloader import DownloadSetting, ConverDate
+from .downloader import DownloadSetting, ConverDate
 from Components.NimManager import nimmanager
-from settinglist import *
-from restore import *
-from history import *
+from .settinglist import *
+from .restore import *
+from .history import *
 import os
 import skin
 

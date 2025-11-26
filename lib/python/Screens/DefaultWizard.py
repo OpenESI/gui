@@ -1,4 +1,4 @@
-from Wizard import wizardManager
+from .Wizard import wizardManager
 from Screens.WizardLanguage import WizardLanguage
 from Tools.Directories import pathExists, resolveFilename, SCOPE_DEFAULTDIR, SCOPE_DEFAULTPARTITIONMOUNTDIR, SCOPE_DEFAULTPARTITION
 
@@ -37,7 +37,7 @@ class DefaultWizard(WizardLanguage, DreamInfoHandler):
 		configfile.save()
 
 	def statusCallback(self, status, progress):
-		print("statusCallback:"), status, progress
+		print((("statusCallback:"), status, progress))
 		if status == DreamInfoHandler.STATUS_DONE:
 			self["text"].setText(_("The installation of the default settings is finished. You can now continue configuring your %s %s by pressing the OK button on the remote control.") % (getMachineBrand(), getMachineName()))
 			self.markDone()
@@ -93,7 +93,7 @@ def filescan_open(list, session, **kwargs):
 	from Screens.ChoiceBox import ChoiceBox
 	print("open default wizard")
 	filelist = [(os_path.split(x.path)[1], x.path, session) for x in list]
-	print filelist
+	print(filelist)
 	session.openWithCallback(install, ChoiceBox, title = _("Please choose he package..."), list=filelist)
 
 def filescan(**kwargs):

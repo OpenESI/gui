@@ -23,7 +23,7 @@ from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Tools.Directories import fileExists, SCOPE_ACTIVE_SKIN, resolveFilename
 from twisted.internet import reactor
 from twisted.web.client import HTTPClientFactory
-from urlparse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse
 import skin
 
 #TOGGLE_SHOW = InfoBar.toggleShow
@@ -111,7 +111,7 @@ class HelpableNumberActionMap(NumberActionMap):
 	def __init__(self, parent, context, actions, prio):
 		alist = []
 		adict = {}
-		for (action, funchelp) in actions.items():
+		for (action, funchelp) in list(actions.items()):
 			alist.append((action, funchelp[1]))
 			adict[action] = funchelp[0]
 		NumberActionMap.__init__(self, [context], adict, prio)
@@ -554,7 +554,7 @@ class CCcamInfoMain(Screen):
 			self["menu"].pageDown()
 
 	def getWebpageError(self, error=""):
-		print str(error)
+		print((str(error)))
 		self.session.openWithCallback(self.workingFinished, MessageBox, _("Error reading webpage!"), MessageBox.TYPE_ERROR)
 
 	def showFile(self, file):
@@ -909,7 +909,7 @@ class CCcamShareViewMenu(Screen, HelpableScreen):
 									numberofcards = count
 									providername = self.providers.get(caidprovider, 'Multiple Providers given')
 									#if providername == 'Multiple Providers given':
-									#	print caidprovider
+									#	print(caidprovider)
 									numberofreshare = 0
 									if int(down)>0:
 										resharecards += 1
@@ -978,7 +978,7 @@ class CCcamShareViewMenu(Screen, HelpableScreen):
 										numberofcards = count
 										providername = self.providers.get(caidprovider, 'Multiple Providers given')
 										#if providername == 'Multiple Providers given':
-										#	print caidprovider
+										#	print(caidprovider)
 
 										numberofreshare = 0
 										if int(down)>0:

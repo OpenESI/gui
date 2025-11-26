@@ -1,24 +1,24 @@
-import re, os, urllib2, sys
+import re, os, urllib.request, urllib.error, urllib.parse, sys
 
 
 def DownloadSetting(url):
     list = []
     try:
-        req = urllib2.Request(url)
+        req = urllib.request.Request(url)
         req.add_header('User-Agent', 'VAS')
-        response = urllib2.urlopen(req)
+        response = urllib.request.urlopen(req)
         link = response.read()
         response.close()
         xx = re.compile('<td><a href="(.+?)">(.+?)</a></td>.*?<td>(.+?)</td>', re.DOTALL).findall(link)
         for link, name, date in xx:
-            print link, name, date
+            print((link, name, date))
             prelink = ''
             if not link.startswith("http://"):
                 prelink = url.replace('asd.php','')
             list.append((date, name, prelink + link))
 
     except:
-        print"ERROR DownloadSetting %s" %(url)
+        print(("ERROR DownloadSetting %s" %(url)))
 
     return list
 

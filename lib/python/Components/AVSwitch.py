@@ -168,7 +168,7 @@ class AVSwitch:
 				modes = f.read()[:-1]
 				f.close()
 				self.modes_preferred = modes.split(' ')
-				print("[AVSwitch] reading edid modes: ", self.modes_preferred)
+				print(("[AVSwitch] reading edid modes: ", self.modes_preferred))
 			except IOError:
 				print("[AVSwitch] reading edid modes failed, using all modes")
 				try:
@@ -176,16 +176,16 @@ class AVSwitch:
 					modes = f.read()[:-1]
 					f.close()
 					self.modes_preferred = modes.split(' ')
-					print("[AVSwitch] reading _preferred modes: ", self.modes_preferred)
+					print(("[AVSwitch] reading _preferred modes: ", self.modes_preferred))
 				except IOError:
 					print("[AVSwitch] reading preferred modes failed, using all modes")
 					self.modes_preferred = self.modes_available
 		else:
 			self.modes_preferred = self.modes_available
-			print("[AVSwitch] used default modes: ", self.modes_preferred)
+			print(("[AVSwitch] used default modes: ", self.modes_preferred))
 			
 		if len(self.modes_preferred) <= 2:
-			print("[AVSwitch] preferend modes not ok, possible driver failer, len=", len(self.modes_preferred))
+			print(("[AVSwitch] preferend modes not ok, possible driver failer, len=", len(self.modes_preferred)))
 			self.modes_preferred = self.modes_available
 
 		if self.modes_preferred != self.last_modes_preferred:
@@ -220,7 +220,7 @@ class AVSwitch:
 		return mode in self.widescreen_modes
 
 	def setMode(self, port, mode, rate, force = None):
-		print("[AVSwitch] setMode - port: %s, mode: %s, rate: %s" % (port, mode, rate))
+		print(("[AVSwitch] setMode - port: %s, mode: %s, rate: %s" % (port, mode, rate)))
 
 		# config.av.videoport.setValue(port)
 		# we can ignore "port"
@@ -392,7 +392,7 @@ class AVSwitch:
 		self.setMode(port, mode, rate)
 
 	def setAspect(self, cfgelement):
-		print("[AVSwitch] setting aspect: %s" % cfgelement.value)
+		print(("[AVSwitch] setting aspect: %s" % cfgelement.value))
 		try:
 			f = open("/proc/stb/video/aspect", "w")
 			f.write(cfgelement.value)
@@ -406,13 +406,13 @@ class AVSwitch:
 		else:
 			wss = "auto"
 		if os.path.exists("/proc/stb/denc/0/wss"):
-			print("[AVSwitch] setting wss: %s" % wss)
+			print(("[AVSwitch] setting wss: %s" % wss))
 			f = open("/proc/stb/denc/0/wss", "w")
 			f.write(wss)
 			f.close()
 
 	def setPolicy43(self, cfgelement):
-		print("[AVSwitch] setting policy: %s" % cfgelement.value)
+		print(("[AVSwitch] setting policy: %s" % cfgelement.value))
 		arw = "0"
 		try:
 			if about.getChipSetString() in ('meson-6', 'meson-64'):
@@ -429,7 +429,7 @@ class AVSwitch:
 
 	def setPolicy169(self, cfgelement):
 		if os.path.exists("/proc/stb/video/policy2"):
-			print("[AVSwitch] setting policy2: %s" % cfgelement.value)
+			print(("[AVSwitch] setting policy2: %s" % cfgelement.value))
 			f = open("/proc/stb/video/policy2", "w")
 			f.write(cfgelement.value)
 			f.close()
@@ -1215,7 +1215,7 @@ def InitAVSwitch():
 		def setScaler_sharpness(config):
 			myval = int(config.value)
 			try:
-				print("[AVSwitch] setting scaler_sharpness to: %0.8X" % myval)
+				print(("[AVSwitch] setting scaler_sharpness to: %0.8X" % myval))
 				f = open("/proc/stb/vmpeg/0/pep_scaler_sharpness", "w")
 				f.write("%0.8X\n" % myval)
 				f.close()
@@ -1246,20 +1246,20 @@ class VideomodeHotplug:
 		iAVSwitch.on_hotplug.remove(self.hotplug)
 
 	def hotplug(self, what):
-		print("[AVSwitch] hotplug detected on port '%s'" % what)
+		print(("[AVSwitch] hotplug detected on port '%s'" % what))
 		port = config.av.videoport.value
 		mode = config.av.videomode[port].value
 		rate = config.av.videorate[mode].value
 
 		if not iAVSwitch.isModeAvailable(port, mode, rate):
-			print("[AVSwitch] mode %s/%s/%s went away!" % (port, mode, rate))
+			print(("[AVSwitch] mode %s/%s/%s went away!" % (port, mode, rate)))
 			modelist = iAVSwitch.getModeList(port)
 			if not len(modelist):
 				print("[AVSwitch] sorry, no other mode is available (unplug?). Doing nothing.")
 				return
 			mode = modelist[0][0]
 			rate = modelist[0][1]
-			print("[AVSwitch] setting %s/%s/%s" % (port, mode, rate))
+			print(("[AVSwitch] setting %s/%s/%s" % (port, mode, rate)))
 			iAVSwitch.setMode(port, mode, rate)
 
 hotplug = None

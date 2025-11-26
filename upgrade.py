@@ -25,7 +25,7 @@ def opkgAddDestination(mountpoint):
 	global opkgDestinations
 	if mountpoint not in opkgDestinations:
 		opkgDestinations.append(mountpoint)
-		print("[Ipkg] Added to OPKG destinations:"), mountpoint
+		print(("[Ipkg] Added to OPKG destinations:"), mountpoint)
 
 mounts = os.listdir('/media')
 for mount in mounts:
@@ -57,7 +57,7 @@ p = Popen("opkg list-upgradable", stdout=PIPE, stderr=PIPE, shell=True)
 stdout, stderr = p.communicate()
 
 if stderr != "":
-	print("Error occured:"), stderr
+	print(("Error occured:"), stderr)
 	exit
 
 # read configuration

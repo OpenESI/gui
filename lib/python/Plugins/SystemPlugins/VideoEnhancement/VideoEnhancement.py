@@ -19,7 +19,7 @@ class VideoEnhancement:
 			def setContrast(config):
 				myval = int(config.value * 256)
 				try:
-					print("--> setting contrast to: %0.8X") % myval
+					print((("--> setting contrast to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_contrast", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -38,7 +38,7 @@ class VideoEnhancement:
 			def setSaturation(config):
 				myval = int(config.value * 256)
 				try:
-					print("--> setting saturation to: %0.8X") % myval
+					print((("--> setting saturation to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_saturation", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -57,7 +57,7 @@ class VideoEnhancement:
 			def setHue(config):
 				myval = int(config.value * 256)
 				try:
-					print("--> setting hue to: %0.8X") % myval
+					print((("--> setting hue to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_hue", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -76,7 +76,7 @@ class VideoEnhancement:
 			def setBrightness(config):
 				myval = int(config.value * 256)
 				try:
-					print("--> setting brightness to: %0.8X") % myval
+					print((("--> setting brightness to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_brightness", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -94,7 +94,7 @@ class VideoEnhancement:
 			def setBlock_noise_reduction(config):
 				myval = int(config.value)
 				try:
-					print("--> setting block_noise_reduction to: %0.8X") % myval
+					print((("--> setting block_noise_reduction to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_block_noise_reduction", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -113,7 +113,7 @@ class VideoEnhancement:
 			def setMosquito_noise_reduction(config):
 				myval = int(config.value)
 				try:
-					print("--> setting mosquito_noise_reduction to: %0.8X") % myval
+					print((("--> setting mosquito_noise_reduction to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_mosquito_noise_reduction", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -132,7 +132,7 @@ class VideoEnhancement:
 			def setDigital_contour_removal(config):
 				myval = int(config.value)
 				try:
-					print("--> setting digital_contour_removal to: %0.8X") % myval
+					print((("--> setting digital_contour_removal to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_digital_contour_removal", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -150,7 +150,7 @@ class VideoEnhancement:
 		if os_path.exists("/proc/stb/vmpeg/0/pep_split"):
 			def setSplitMode(config):
 				try:
-					print("--> setting splitmode to:"),str(config.value)
+					print((("--> setting splitmode to:"),str(config.value)))
 					f = open("/proc/stb/vmpeg/0/pep_split", "w")
 					f.write(str(config.value))
 					f.close()
@@ -173,7 +173,7 @@ class VideoEnhancement:
 			def setSharpness(config):
 				myval = int(config.value * 256)
 				try:
-					print("--> setting sharpness to: %0.8X") % myval
+					print((("--> setting sharpness to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_sharpness", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -195,7 +195,7 @@ class VideoEnhancement:
 			def setAutoflesh(config):
 				myval = int(config.value)
 				try:
-					print("--> setting auto_flesh to: %0.8X") % myval
+					print((("--> setting auto_flesh to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_auto_flesh", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -214,7 +214,7 @@ class VideoEnhancement:
 			def setGreenboost(config):
 				myval = int(config.value)
 				try:
-					print("--> setting green_boost to: %0.8X") % myval
+					print((("--> setting green_boost to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_green_boost", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -233,7 +233,7 @@ class VideoEnhancement:
 			def setBlueboost(config):
 				myval = int(config.value)
 				try:
-					print("--> setting blue_boost to: %0.8X") % myval
+					print((("--> setting blue_boost to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_blue_boost", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -252,7 +252,7 @@ class VideoEnhancement:
 			def setDynamic_contrast(config):
 				myval = int(config.value)
 				try:
-					print("--> setting dynamic_contrast to: %0.8X") % myval
+					print((("--> setting dynamic_contrast to: %0.8X") % myval))
 					f = open("/proc/stb/vmpeg/0/pep_dynamic_contrast", "w")
 					f.write("%0.8X\n" % myval)
 					f.close()
@@ -277,7 +277,7 @@ class VideoEnhancement:
 				def setScaler_sharpness(config):
 					myval = int(config.value)
 					try:
-						print("--> setting scaler_sharpness to: %0.8X") % myval
+						print((("--> setting scaler_sharpness to: %0.8X") % myval))
 						f = open("/proc/stb/vmpeg/0/pep_scaler_sharpness", "w")
 						f.write("%0.8X\n" % myval)
 						f.close()
@@ -296,7 +296,7 @@ class VideoEnhancement:
 			def setColour_space(config):
 				myval = config.value
 				try:
-					print("--> setting color_soace to:"), myval
+					print((("--> setting color_soace to:"), myval))
 					f = open("/proc/stb/video/hdmi_colorspace", "w")
 					f.write(myval)
 					f.close()
@@ -318,7 +318,7 @@ class VideoEnhancement:
 			def setScaler_vertical_dejagging(configElement):
 				myval = configElement.value and "enable" or "disable"
 				try:
-					print("--> setting scaler_vertical_dejagging to: %s") % myval
+					print((("--> setting scaler_vertical_dejagging to: %s") % myval))
 					open("/proc/stb/vmpeg/0/pep_scaler_vertical_dejagging", "w").write(myval)
 				except IOError:
 					print("couldn't write pep_scaler_vertical_dejagging.")
@@ -335,7 +335,7 @@ class VideoEnhancement:
 			def setSmooth(configElement):
 				myval = configElement.value and "enable" or "disable"
 				try:
-					print("--> setting smooth to: %s") % myval
+					print((("--> setting smooth to: %s") % myval))
 					open("/proc/stb/vmpeg/0/smooth", "w").write(myval)
 				except IOError:
 					print("couldn't write smooth.")

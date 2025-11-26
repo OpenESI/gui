@@ -204,21 +204,21 @@ class Timer:
 #			lst = [ ]
 #			cnt = 0
 #			for timer in self.timer_list:
-#				print "timer", cnt
+#				print("timer", cnt)
 #				cnt += 1
 #				if timer.state == 0: #waiting
 #					lst.append(NavigationInstance.instance.recordService(timer.service_ref))
 #				else:
-#					print "STATE: ", timer.state
+#					print("STATE: ", timer.state)
 #
 #			for rec in lst:
 #				if rec.start(True): #simulate
-#					print "FAILED!!!!!!!!!!!!"
+#					print("FAILED!!!!!!!!!!!!")
 #				else:
-#					print "OK!!!!!!!!!!!!!!"
+#					print("OK!!!!!!!!!!!!!!")
 #				NavigationInstance.instance.stopRecordService(rec)
 #		else:
-#			print "no NAV"
+#			print("no NAV")
 
 	def setNextActivation(self, now, when):
 		delay = int((when - now) * 1000)
@@ -251,7 +251,7 @@ class Timer:
 		if int(now) < 1072224000 and min > now + 5:
 			# system time has not yet been set (before 0o1.0o1.2004), keep a short poll interval
 			min = now + 5
-		# print "[TIMER] self.timer_list = %s" % self.timer_list
+		# print("[TIMER] self.timer_list = %s" % self.timer_list)
 		self.setNextActivation(now, min)
 
 	def timeChanged(self, timer):

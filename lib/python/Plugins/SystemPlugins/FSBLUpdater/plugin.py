@@ -3,7 +3,7 @@ from Screens.ChoiceBox import ChoiceBox
 from Plugins.Plugin import PluginDescriptor
 from Tools.HardwareInfo import HardwareInfo
 
-from FSBLUpdater import FSBLUpdater
+from .FSBLUpdater import FSBLUpdater
 
 from Tools.Log import Log
 from Tools import Notifications

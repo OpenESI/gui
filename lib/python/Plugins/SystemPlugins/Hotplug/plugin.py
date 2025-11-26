@@ -15,7 +15,7 @@ def AudiocdAdded():
 		return False
 
 def processHotplugData(self, v):
-	print("[Hotplug.plugin.py]:"), v
+	print((("[Hotplug.plugin.py]:"), v))
 	action = v.get("ACTION")
 	device = v.get("DEVPATH")
 	physdevpath = v.get("PHYSDEVPATH")
@@ -74,7 +74,7 @@ class Hotplug(Protocol):
 
 	def dataReceived(self, data):
 		self.received += data
-		print("[Hotplug.plugin.py] complete"), self.received
+		print((("[Hotplug.plugin.py] complete"), self.received))
 
 	def connectionLost(self, reason):
 		print("[Hotplug.plugin.py] connection lost!")

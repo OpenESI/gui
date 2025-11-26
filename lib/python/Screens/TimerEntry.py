@@ -5,7 +5,7 @@ from datetime import datetime
 from enigma import eEPGCache
 
 from Screens.Screen import Screen
-import ChannelSelection
+from . import ChannelSelection
 from ServiceReference import ServiceReference
 from Components.config import config, ConfigSelection, ConfigText, ConfigSubList, ConfigDateTime, ConfigClock, ConfigYesNo, getConfigListEntry
 from Components.ActionMap import NumberActionMap, ActionMap

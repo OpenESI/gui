@@ -202,7 +202,7 @@ class CableScanAutoScreen(CableScanScreen):
 			del self.scan
 
 	def scanCompleted(self, result):
-		print("[AutoCableScan] completed result = "), result
+		print((("[AutoCableScan] completed result = "), result))
 		refreshServiceList()
 		self.close(result>0)
 

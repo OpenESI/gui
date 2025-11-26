@@ -198,7 +198,7 @@ class Dish(Screen):
 					return nim.turningspeedH.float
 			elif nimConfig.configMode.value == "advanced":
 				if self.cur_orbpos != INVALID_POSITION:
-					satlist = nimConfig.advanced.sat.keys()
+					satlist = list(nimConfig.advanced.sat.keys())
 					if self.cur_orbpos in satlist:
 						currSat = nimConfig.advanced.sat[self.cur_orbpos]
 						lnbnum = int(currSat.lnb.value)
@@ -226,9 +226,9 @@ class Dish(Screen):
 			nims = nimmanager.nimList()
 			if nr < len(nims) and nr >= 0:
 				return "".join(nims[nr].split(':')[:1])
-			print("[Dish.py] bug hunting nr: %s\n") %nr
+			print((("[Dish.py] bug hunting nr: %s\n") %nr))
 			print("[Dish.py] bug hunting nims:\n")
-			print nims
+			print(nims)
 			raise
 #			return " ".join((_("Tuner"),str(nr)))
 		return ""

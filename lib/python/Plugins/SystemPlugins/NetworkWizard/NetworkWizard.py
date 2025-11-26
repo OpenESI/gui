@@ -297,7 +297,7 @@ class NetworkWizard(WizardLanguage, Rc):
 			self.newAPlist.append(newentry)
 
 		if len(self.newAPlist):
-			if self.wizard[self.currStep] in "dynamiclist"):
+			if self.wizard[self.currStep] in "dynamiclist":
 				currentListEntry = self["list"].getCurrent()
 				if currentListEntry is not None:
 					idx = 0

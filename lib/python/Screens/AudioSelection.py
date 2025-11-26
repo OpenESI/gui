@@ -42,8 +42,7 @@ class AudioSelection(Screen, ConfigListScreen):
 		ConfigListScreen.__init__(self, [])
 		self.infobar = infobar or self.session.infobar
 
-		self.__event_tracker = ServiceEventTracker(screen=self, eventmap=
-			{
+		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
 				iPlayableService.evUpdatedInfo: self.__updatedInfo
 			})
 		self.cached_subtitle_checked = False
@@ -77,8 +76,8 @@ class AudioSelection(Screen, ConfigListScreen):
 		}, -2)
 
 		self.settings = ConfigSubsection()
-		choicelist = [(PAGE_AUDIO,""), (PAGE_SUBTITLES,"")]
-		self.settings.menupage = ConfigSelection(choices = choicelist, default=page)
+		choicelist = [(PAGE_AUDIO, ""), (PAGE_SUBTITLES, "")]
+		self.settings.menupage = ConfigSelection(choices=choicelist, default=page)
 		self.onLayoutFinish.append(self.__layoutFinished)
 
 	def __layoutFinished(self):
@@ -186,12 +185,12 @@ class AudioSelection(Screen, ConfigListScreen):
 			if n > 0:
 				self.audioChannel = service.audioChannel()
 				if self.audioChannel:
-					choicelist = [("0",_("left")), ("1",_("stereo")), ("2", _("right"))]
-					self.settings.channelmode = ConfigSelection(choices = choicelist, default = str(self.audioChannel.getCurrentChannel()))
-					self.settings.channelmode.addNotifier(self.changeMode, initial_call = False)
+					choicelist = [("0", _("left")), ("1", _("stereo")), ("2", _("right"))]
+					self.settings.channelmode = ConfigSelection(choices=choicelist, default=str(self.audioChannel.getCurrentChannel()))
+					self.settings.channelmode.addNotifier(self.changeMode, initial_call=False)
 					conflist.append(getConfigListEntry(_("Audio Channel"), self.settings.channelmode, None))
 				selectedAudio = self.audioTracks.getCurrentTrack()
-				for x in range(n):
+				for x in list(range(n)):
 					number = str(x + 1)
 					i = audio.getTrackInfo(x)
 					languages = i.getLanguage().split('/')
@@ -207,7 +206,7 @@ class AudioSelection(Screen, ConfigListScreen):
 					for lang in languages:
 						if cnt:
 							language += ' / '
-						if LanguageCodes in lang):
+						if lang in LanguageCodes:
 							language += _(LanguageCodes[lang][0])
 						else:
 							language += lang
@@ -244,14 +243,15 @@ class AudioSelection(Screen, ConfigListScreen):
 					def __init__(self, fnc, *args):
 						self.fnc = fnc
 						self.args = args
+
 					def __call__(self, *args, **kwargs):
 						self.fnc(*self.args)
 
-				Plugins = [ (p.name, PluginCaller(self.infobar.runPlugin, p)) for p in plugins.getPlugins(where = PluginDescriptor.WHERE_AUDIOMENU) ]
+				Plugins = [(p.name, PluginCaller(self.infobar.runPlugin, p)) for p in plugins.getPlugins(where=PluginDescriptor.WHERE_AUDIOMENU)]
 				if len(Plugins):
 					for x in Plugins:
-						if x[0] != 'AudioEffect': # always make AudioEffect Blue button.
-							conflist.append(getConfigListEntry(x[0], ConfigNothing(),x[1]))
+						if x[0] != 'AudioEffect':  # always make AudioEffect Blue button.
+							conflist.append(getConfigListEntry(x[0], ConfigNothing(), x[1]))
 
 		elif self.settings.menupage.value == PAGE_SUBTITLES:
 
@@ -271,7 +271,7 @@ class AudioSelection(Screen, ConfigListScreen):
 
 					try:
 						if x[4] != "und":
-							if LanguageCodes in x[4]):
+							if x[4] in LanguageCodes:
 								language = _(LanguageCodes[x[4]][0])
 							else:
 								language = x[4]
@@ -284,7 +284,7 @@ class AudioSelection(Screen, ConfigListScreen):
 
 					elif x[0] == 1:
 						description = "teletext"
-						number = "%x%02x" %(x[3] and x[3] or 8, x[2])
+						number = "%x%02x" % (x[3] and x[3] or 8, x[2])
 
 					elif x[0] == 2:
 						types = ("unknown", "embedded", "SSA file", "ASS file",
@@ -298,7 +298,7 @@ class AudioSelection(Screen, ConfigListScreen):
 					streams.append((x, "", number, description, language, selected))
 					idx += 1
 
-			if self.infobar.selected_subtitle and self.infobar.selected_subtitle != (0,0,0,0)  and not ".DVDPlayer'>" in `self.infobar`:
+			if self.infobar.selected_subtitle and self.infobar.selected_subtitle != (0, 0, 0, 0) and not ".DVDPlayer'>" in repr(self.infobar):
 				conflist.append(getConfigListEntry(_("Subtitle Quickmenu"), ConfigNothing(), None))
 
 		if len(conflist) > 0 and conflist[0][0]:
@@ -326,7 +326,7 @@ class AudioSelection(Screen, ConfigListScreen):
 		self.selectedSubtitle = None
 		if self.subtitlesEnabled():
 			self.selectedSubtitle = self.infobar.selected_subtitle
-			if self.selectedSubtitle and self.selectedSubtitle[:4] == (0,0,0,0):
+			if self.selectedSubtitle and self.selectedSubtitle[:4] == (0, 0, 0, 0):
 				self.selectedSubtitle = None
 			elif self.selectedSubtitle and not self.selectedSubtitle[:4] in (x[:4] for x in subtitlelist):
 				subtitlelist.append(self.selectedSubtitle)
@@ -417,7 +417,7 @@ class AudioSelection(Screen, ConfigListScreen):
 		config.av.downmix_dts.save()
 
 	def setAACTranscode(self, transcode):
-		config.av.transcodeaac.setValue(transcode)
+		config.av.transcodeaac.setValue(transcode.value)
 		config.av.transcodeaac.save()
 
 	def changeMode(self, mode):
@@ -436,11 +436,11 @@ class AudioSelection(Screen, ConfigListScreen):
 		elif self.focus == FOCUS_STREAMS:
 			self.keyAudioSubtitle()
 
-	def keyRight(self, config = False):
+	def keyRight(self, config=False):
 		if config or self.focus == FOCUS_CONFIG:
 			if self.settings.menupage.value == PAGE_AUDIO and self["config"].getCurrent()[2]:
 				self["config"].getCurrent()[2]()
-			elif self.settings.menupage.value == PAGE_SUBTITLES and self.infobar.selected_subtitle and self.infobar.selected_subtitle != (0,0,0,0):
+			elif self.settings.menupage.value == PAGE_SUBTITLES and self.infobar.selected_subtitle and self.infobar.selected_subtitle != (0, 0, 0, 0):
 				self.session.open(QuickSubtitlesConfigMenu, self.infobar)
 			else:
 				ConfigListScreen.keyRight(self)
@@ -492,14 +492,14 @@ class AudioSelection(Screen, ConfigListScreen):
 				self["key_right"].hide()
 				self["config"].instance.setSelectionEnable(True)
 				self["streams"].style = "notselected"
-				self["config"].setCurrentIndex(len(self["config"].getList())-1)
+				self["config"].setCurrentIndex(len(self["config"].getList()) - 1)
 				self.focus = FOCUS_CONFIG
 			else:
 				self["streams"].selectPrevious()
 
 	def keyDown(self):
 		if self.focus == FOCUS_CONFIG:
-			if self["config"].getCurrentIndex() < len(self["config"].getList())-1:
+			if self["config"].getCurrentIndex() < len(self["config"].getList()) - 1:
 				self["config"].instance.moveSelection(self["config"].instance.moveDown)
 			else:
 				self["switchdescription"].show()
@@ -522,7 +522,7 @@ class AudioSelection(Screen, ConfigListScreen):
 
 	def keyNumberGlobal(self, number):
 		if number <= len(self["streams"].list):
-			self["streams"].setIndex(number-1)
+			self["streams"].setIndex(number - 1)
 			self.keyOk()
 
 	def keyOk(self):
@@ -560,10 +560,12 @@ class AudioSelection(Screen, ConfigListScreen):
 	def cancel(self):
 		self.close(0)
 
+
 class SubtitleSelection(AudioSelection):
 	def __init__(self, session, infobar=None):
 		AudioSelection.__init__(self, session, infobar, page=PAGE_SUBTITLES)
 		self.skinName = ["AudioSelection"]
+
 
 class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 	def __init__(self, session, infobar):
@@ -588,7 +590,7 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 				getConfigMenuItem("config.subtitles.subtitle_bad_timing_delay"),
 				getConfigMenuItem("config.subtitles.subtitle_noPTSrecordingdelay"),
 			]
-		elif sub[0] == 1: # teletext
+		elif sub[0] == 1:  # teletext
 			menu = [
 				getConfigMenuItem("config.subtitles.ttx_subtitle_colors"),
 				getConfigMenuItem("config.subtitles.subtitle_borderwidth"),
@@ -618,7 +620,7 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 			]
 			self["videofps"].setText(_("Video: %s fps") % (self.getFps().rstrip(".000")))
 
-		ConfigListScreen.__init__(self, menu, self.session, on_change = self.changedEntry)
+		ConfigListScreen.__init__(self, menu, self.session, on_change=self.changedEntry)
 
 		self["actions"] = NumberActionMap(["SetupActions"],
 		{
@@ -631,13 +633,13 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 			"7": self.keyNumber,
 			"9": self.keyNumber,
 			"0": self.keyNumber,
-		},-2)
+		}, -2)
 
 		self.onLayoutFinish.append(self.layoutFinished)
 
 	def layoutFinished(self):
 		if not self["videofps"].text:
-			self.instance.resize(eSize(self.instance.size().width(), self["config"].l.getItemSize().height()*len(self["config"].getList()) + 10))
+			self.instance.resize(eSize(self.instance.size().width(), self["config"].l.getItemSize().height() * len(self["config"].getList()) + 10))
 
 	def keyNumber(self, number):
 		menuEntry = getConfigMenuItem("config.subtitles.pango_subtitles_delay")
@@ -649,20 +651,20 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 		maxDelay = int(configItem.choices[len(configItem.choices) - 1])
 
 		if number == 1:
-			delay -= 45000 # -0.5sec
+			delay -= 45000  # -0.5sec
 		elif number == 3:
-			delay += 45000 # +0.5sec
+			delay += 45000  # +0.5sec
 		elif number == 4:
-			delay -= 90000 * 5 # -5sec
+			delay -= 90000 * 5  # -5sec
 		elif number == 6:
-			delay += 90000 * 5 # +5sec
+			delay += 90000 * 5  # +5sec
 		elif number == 7:
-			delay -= 90000 * 30 # -30sec
+			delay -= 90000 * 30  # -30sec
 		elif number == 9:
-			delay += 90000 * 30 # +30sec
+			delay += 90000 * 30  # +30sec
 		elif number == 0:
-			delay = 0 # reset to "No delay"
-			
+			delay = 0  # reset to "No delay"
+
 		delay = min(max(delay, minDelay), maxDelay)
 
 		configItem.setValue(str(delay))
@@ -670,7 +672,7 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 		self.wait.start(500, True)
 
 	def changedEntry(self):
-		if self["config"].getCurrent() in [getConfigMenuItem("config.subtitles.pango_subtitles_delay"),getConfigMenuItem("config.subtitles.pango_subtitles_fps")]:
+		if self["config"].getCurrent() in [getConfigMenuItem("config.subtitles.pango_subtitles_delay"), getConfigMenuItem("config.subtitles.pango_subtitles_fps")]:
 			self.wait.start(500, True)
 
 	def resyncSubtitles(self):
@@ -688,7 +690,7 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 			return ""
 		fps = info.getInfo(iServiceInformation.sFrameRate)
 		if fps > 0:
-			return "%6.3f" % (fps/1000.)
+			return "%6.3f" % (fps / 1000.)
 		return ""
 
 	def cancel(self):

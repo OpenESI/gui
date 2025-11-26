@@ -123,7 +123,7 @@ class Network:
 		ipLinePattern = re.compile(ipRegexp)
 
 		for line in result.splitlines():
-			print(line[0:7])
+			print((line[0:7]))
 			if line[0:7] == "0.0.0.0":
 				gateway = self.regExpMatch(ipPattern, line[16:31])
 				if gateway:
@@ -706,7 +706,7 @@ class Network:
 		cidr_range = list(range(0, 32))
 		cidr = int(nmask)
 		if cidr not in cidr_range:
-			print('cidr invalid: %d' % cidr)
+			print(('cidr invalid: %d' % cidr))
 			return None
 		else:
 			nm = ((1<<cidr)-1)<<(32-cidr)
@@ -724,10 +724,10 @@ class Network:
 			return
 		action = event['ACTION']
 		if action == "add":
-			print("[Network] Add new interface:", interface)
+			print(("[Network] Add new interface:", interface))
 			self.getAddrInet(interface, None)
 		elif action == "remove":
-			print("[Network] Removed interface:", interface)
+			print(("[Network] Removed interface:", interface))
 			try:
 				del self.ifaces[interface]
 			except KeyError:

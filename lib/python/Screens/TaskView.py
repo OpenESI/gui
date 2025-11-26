@@ -3,7 +3,7 @@ from Components.ConfigList import ConfigListScreen
 from Components.config import ConfigSubsection, ConfigSelection, getConfigListEntry
 from Components.SystemInfo import SystemInfo
 from Components.Task import job_manager
-from InfoBarGenerics import InfoBarNotifications
+from .InfoBarGenerics import InfoBarNotifications
 import Screens.Standby
 from Tools import Notifications
 from boxbranding import getMachineBrand, getMachineName

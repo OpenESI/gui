@@ -65,7 +65,7 @@ class LanguageSelection(Screen):
 		}, -1)
 
 	def updateCache(self):
-		print"updateCache"
+		print("updateCache")
 		self["languages"].setList([('update cache',_('Updating cache, please wait...'),None)])
 		self.updateTimer = eTimer()
 		self.updateTimer.callback.append(self.startupdateCache)
@@ -142,7 +142,7 @@ class LanguageSelection(Screen):
 		self["key_red"].setText(_cached("T3"))
 		self["key_green"].setText(_cached("T4"))
 # 		index = self["languages"].getCurrent()[2]
-# 		print 'INDEX:',index
+# 		print('INDEX:',index)
 # 		self["flag"].instance.setPixmap(self["languages"].getCurrent()[2])
 
 		if justlocal:

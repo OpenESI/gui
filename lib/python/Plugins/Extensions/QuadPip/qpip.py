@@ -910,7 +910,7 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 		return channel
 
 	def playChannel(self, channel):
-		print("[playChannel] channel : "), channel
+		print((("[playChannel] channel : "), channel))
 
 		if self.curChannel and self.curChannel == channel.channel:
 			return
@@ -951,7 +951,7 @@ class QuadPipScreen(Screen, FocusShowHide, HelpableScreen):
 			if qPipInstance.playService(eServiceReference(sref), isPlayAudio):
 				self.session.qPips.append(qPipInstance)
 			else:
-				print("play failed, "), sref
+				print((("play failed, "), sref))
 				del qPipInstance
 
 		self.updateChannelName(channel)

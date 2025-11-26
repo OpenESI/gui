@@ -68,11 +68,11 @@ class LogManagerPoller:
 		self.TrashTimer.stop()
 
 	def TrimTimerJob(self):
-		print '[LogManager] Trim Poll Started'
+		print('[LogManager] Trim Poll Started')
 		Components.Task.job_manager.AddJob(self.createTrimJob())
 
 	def TrashTimerJob(self):
-		print '[LogManager] Trash Poll Started'
+		print('[LogManager] Trash Poll Started')
 		self.JobTrash()
 		# Components.Task.job_manager.AddJob(self.createTrashJob())
 
@@ -136,10 +136,10 @@ class LogManagerPoller:
 			#small JobTrash (in selected log file dir only) twice a day
 			matches.append(config.crash.debug_path.value)
 
-		print("[LogManager] found following log's:"), matches
+		print((("[LogManager] found following log's:"), matches))
 		if len(matches):
 			for logsfolder in matches:
-				print("[LogManager] looking in:"), logsfolder
+				print((("[LogManager] looking in:"), logsfolder))
 				logssize = get_size(logsfolder)
 				bytesToRemove = logssize - allowedBytes
 				candidates = []
@@ -153,14 +153,14 @@ class LogManagerPoller:
 							#print("Last created: %s") % ctime(st.st_ctime)
 							#print("Last modified: %s") % ctime(st.st_mtime)
 							if st.st_mtime < ctimeLimit:
-								print("[LogManager] ") + str(fn) + ": Too old:", ctime(st.st_mtime)
+								print((("[LogManager] ") + str(fn) + ": Too old:", ctime(st.st_mtime)))
 								eBackgroundFileEraser.getInstance().erase(fn)
 								bytesToRemove -= st.st_size
 							else:
 								candidates.append((st.st_mtime, fn, st.st_size))
 								size += st.st_size
 						except Exception as e:
-							print("[LogManager] Failed to stat %s:")% name, e
+							print((("[LogManager] Failed to stat %s:")% name, e))
 					# Remove empty directories if possible
 					for name in dirs:
 						try:
@@ -170,7 +170,7 @@ class LogManagerPoller:
 					candidates.sort()
 					# Now we have a list of ctime, candidates, size. Sorted by ctime (=deletion time)
 					for st_ctime, fn, st_size in candidates:
-						print("[LogManager] ") + str(logsfolder) + ": bytesToRemove", bytesToRemove
+						print((("[LogManager] ") + str(logsfolder) + ": bytesToRemove", bytesToRemove))
 						if bytesToRemove < 0:
 							break
 						eBackgroundFileEraser.getInstance().erase(fn)
@@ -474,7 +474,7 @@ class LogManager(Screen):
 					s.sendmail(fromlogman, tocrashlogs, msg.as_string())
 					s.quit()
 					self.session.open(MessageBox, sentfiles + ' ' + _('has been sent to the SVN team team.\nplease quote') + ' ' + str(ref) + ' ' + _('when asking question about this log'), MessageBox.TYPE_INFO)
-			except Exception,e:
+			except Exception as e:
 				self.session.open(MessageBox, _("Error:\n%s" % e), MessageBox.TYPE_INFO, timeout = 10)
 		else:
 			self.session.open(MessageBox, _('You have not setup your user info in the setup screen\nPress MENU, and enter your info, then try again'), MessageBox.TYPE_INFO, timeout = 10)

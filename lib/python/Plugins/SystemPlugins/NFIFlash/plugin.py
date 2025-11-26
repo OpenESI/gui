@@ -1,6 +1,6 @@
 from Plugins.Plugin import PluginDescriptor
 from Tools.HardwareInfo import HardwareInfo
-from downloader import NFIDownload, filescan
+from .downloader import NFIDownload, filescan
 
 
 def NFIFlasherMain(session, tmp = None, **kwargs):

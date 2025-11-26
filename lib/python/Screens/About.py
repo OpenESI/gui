@@ -1,4 +1,4 @@
-from Screen import Screen
+from .Screen import Screen
 from skin import isVTISkin
 from Components.ActionMap import ActionMap
 from Components.Button import Button
@@ -41,7 +41,7 @@ def parseFile(filename):
 		ret = f.read().strip()
 		f.close()
 	except IOError:
-		print("[ERROR] failed to open file %s") % filename
+		print((("[ERROR] failed to open file %s") % filename))
 	return ret
 
 def parseLines(filename):
@@ -51,7 +51,7 @@ def parseLines(filename):
 		ret = f.readlines()
 		f.close()
 	except IOError:
-		print("[ERROR] failed to open file %s") % filename
+		print((("[ERROR] failed to open file %s") % filename))
 	return ret
 
 def MyDateConverter(StringDate):
@@ -267,7 +267,7 @@ def read_startup(FILE):
 			data=myfile.read().replace('\n', '')
 		myfile.close()
 	except IOError:
-		print("[ERROR] failed to open file %s") % file
+		print((("[ERROR] failed to open file %s") % file))
 		data = " "
 	return data
 
@@ -1010,7 +1010,7 @@ class TranslationInfo(Screen):
 				continue
 			(type, value) = l
 			infomap[type] = value
-		print infomap
+		print(infomap)
 
 		self["key_red"] = Button(_("Cancel"))
 		self["TranslationInfo"] = StaticText(info)

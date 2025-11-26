@@ -254,7 +254,7 @@ class ServiceList(HTMLComponent, GUIComponent):
 				index = indexup
 
 		self.instance.moveSelectionTo(index)
-		print("Moving to character " + str(char))
+		print(("Moving to character " + str(char)))
 
 	def moveToNextMarker(self):
 		idx = self.l.getNextMarkerPos()

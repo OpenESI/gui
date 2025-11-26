@@ -206,7 +206,7 @@ class FastScanScreen(ConfigListScreen, Screen):
 		self.createSetup()
 
 	def saveConfiguration(self):
-		config.misc.fastscan.last_configuration.value = `(self.scan_nims.value, self.scan_provider.value, self.scan_hd.value, self.scan_keepnumbering.value, self.scan_keepsettings.value, self.scan_create_radio_bouquet.value)`
+		config.misc.fastscan.last_configuration.value = repr((self.scan_nims.value, self.scan_provider.value, self.scan_hd.value, self.scan_keepnumbering.value, self.scan_keepsettings.value, self.scan_create_radio_bouquet.value))
 		auto_providers = []
 		for provider in self.providers:
 			if self.config_autoproviders[provider[0]].value:
@@ -257,7 +257,7 @@ class FastScanScreen(ConfigListScreen, Screen):
 class FastScanAutoScreen(FastScanScreen):
 
 	def __init__(self, session, lastConfiguration):
-		print("[AutoFastScan] start %s") % lastConfiguration[1]
+		print((("[AutoFastScan] start %s") % lastConfiguration[1]))
 		Screen.__init__(self, session)
 		self.skinName="Standby"
 
@@ -288,7 +288,7 @@ class FastScanAutoScreen(FastScanScreen):
 			del self.scan
 
 	def scanCompleted(self, result):
-		print("[AutoFastScan] completed result = "), result
+		print((("[AutoFastScan] completed result = "), result))
 		refreshServiceList()
 		self.close(result)
 

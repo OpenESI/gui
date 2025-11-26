@@ -1,6 +1,6 @@
 # the implementation here is a bit crappy.
 import time
-from Directories import resolveFilename, SCOPE_CONFIG
+from .Directories import resolveFilename, SCOPE_CONFIG
 from boxbranding import getBoxType
 
 boxtype = getBoxType()

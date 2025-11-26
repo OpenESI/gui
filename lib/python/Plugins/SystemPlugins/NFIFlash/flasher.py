@@ -19,7 +19,7 @@ class md5Postcondition(Condition):
 		pass
 
 	def check(self, task):
-		print("md5Postcondition::check"), task.returncode
+		print(("md5Postcondition::check"), task.returncode)
 		return task.returncode == 0
 
 	def getErrorMessage(self, task):
@@ -39,14 +39,14 @@ class md5verify(Task):
 
 	def writeInput(self, input):
 		self.container.dataSent.append(self.md5ready)
-		print("[writeInput]"), input
+		print(("[writeInput]"), input)
 		Task.writeInput(self, input)
 
 	def md5ready(self, retval):
 		self.container.sendEOF()
 
 	def processOutput(self, data):
-		print("[md5sum]"),
+		print(("[md5sum]"), end=' ')
 
 class writeNAND(Task):
 	def __init__(self, job, param, box):
@@ -60,7 +60,7 @@ class writeNAND(Task):
 		self.weighting = 95
 
 	def processOutput(self, data):
-		print("[writeNand] ") + data
+		print(("[writeNand] ") + data)
 		if data == "." or data.endswith(" ."):
 			self.progress += 1
 		elif data.find("*** done!") > 0:
@@ -121,7 +121,7 @@ class NFIFlash(Screen):
 	def autostart(self):
 		self.onShown.remove(self.autostart)
 		self.check_for_NFO()
-		print("[[layoutFinished]]"), len(self["filelist"].getFileList())
+		print(("[[layoutFinished]]"), len(self["filelist"].getFileList()))
 		if len(self["filelist"].getFileList()) == 1:
 			print("==1")
 			self.keyOk()
@@ -151,7 +151,7 @@ class NFIFlash(Screen):
 				self.session.openWithCallback(self.queryCB, MessageBox, _("Shall the USB stick wizard proceed and program the image file %s into flash memory?" % self.nfifile.rsplit('/',1)[-1]), MessageBox.TYPE_YESNO)
 
 	def check_for_NFO(self, nfifile=None):
-		print("check_for_NFO"), self["filelist"].getFilename(), self["filelist"].getCurrentDirectory()
+		print(("check_for_NFO"), self["filelist"].getFilename(), self["filelist"].getCurrentDirectory())
 		self["infolabel"].text = ""
 		self["key_green"].text = ""
 
@@ -166,10 +166,10 @@ class NFIFlash(Screen):
 		if self.nfifile.upper().endswith(".NFI"):
 			self["key_green"].text = _("Flash")
 			nfofilename = self.nfifile[0:-3]+"nfo"
-			print nfofilename, fileExists(nfofilename)
+			print(nfofilename, fileExists(nfofilename))
 			if fileExists(nfofilename):
 				nfocontent = open(nfofilename, "r").read()
-				print("nfocontent:"), nfocontent
+				print(("nfocontent:"), nfocontent)
 				self["infolabel"].text = nfocontent
 				pos = nfocontent.find("MD5:")
 				if pos > 0:

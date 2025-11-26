@@ -66,7 +66,7 @@ while len(f) > 2:
 	except:
 		pass
 
-	print sat[0:2] + '.' + sat[-1:] + 'E' + '_' + "%X" % ref[0] + '.png'
+	print(sat[0:2] + '.' + sat[-1:] + 'E' + '_' + "%X" % ref[0] + '.png')
 	try:
 		os.rename(sat[0:-1] + 'E' + '_' + "%X" % ref[0] + '.png', sat + '/' + servicetype + '/' + filename)
 	except:

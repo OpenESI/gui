@@ -539,7 +539,7 @@ class Pic_Full_View(Screen):
 			self["pic"].instance.setPixmap(self.currPic[2].__deref__())
 			self.currPic = []
 
-			self.next()
+			next(self)
 			self.start_decode()
 
 	def finish_decode(self, picInfo=""):
@@ -562,7 +562,7 @@ class Pic_Full_View(Screen):
 		self.picload.startDecode(self.filelist[self.index])
 		self["point"].show()
 
-	def next(self):
+	def __next__(self):
 		self.index += 1
 		if self.index > self.maxentry:
 			self.index = 0
@@ -573,7 +573,7 @@ class Pic_Full_View(Screen):
 			self.index = self.maxentry
 
 	def slidePic(self):
-		print("slide to next Picture index=") + str(self.lastindex)
+		print((("slide to next Picture index=") + str(self.lastindex)))
 		if config.pic.loop.value == False and self.lastindex == self.maxentry:
 			self.PlayPause()
 		self.shownow = True

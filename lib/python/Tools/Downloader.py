@@ -13,7 +13,7 @@ class HTTPProgressDownloader(client.HTTPDownloader):
 
 	def noPage(self, reason):
 		if self.status == "304":
-			print reason.getErrorMessage()
+			print((reason.getErrorMessage()))
 			client.HTTPDownloader.page(self, "")
 		else:
 			client.HTTPDownloader.noPage(self, reason)

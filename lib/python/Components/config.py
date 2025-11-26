@@ -40,7 +40,7 @@ class ConfigElement(object):
 		self.callNotifiersOnSaveAndCancel = False
 
 	def getNotifiers(self):
-		return [func for (func, val, call_on_save_and_cancel) in self.__notifiers.values()]
+		return [func for (func, val, call_on_save_and_cancel) in list(self.__notifiers.values())]
 
 	def setNotifiers(self, val):
 		print("just readonly access to notifiers is allowed! append/remove doesnt work anymore! please use addNotifier, removeNotifier, clearNotifiers")
@@ -48,7 +48,7 @@ class ConfigElement(object):
 	notifiers = property(getNotifiers, setNotifiers)
 
 	def getNotifiersFinal(self):
-		return [func for (func, val, call_on_save_and_cancel) in self.__notifiers_final.values()]
+		return [func for (func, val, call_on_save_and_cancel) in list(self.__notifiers_final.values())]
 
 	def setNotifiersFinal(self, val):
 		print("just readonly access to notifiers_final is allowed! append/remove doesnt work anymore! please use addNotifier, removeNotifier, clearNotifiers")
@@ -1988,7 +1988,7 @@ class Config(ConfigSubsection):
 			f.close()
 			os.rename(filename + ".writing", filename)
 		except IOError:
-			print("Config: Couldn't write %s" % filename)
+			print(("Config: Couldn't write %s" % filename))
 
 	def loadFromFile(self, filename, base_file=True):
 		self.unpickle(open(filename, "r"), base_file)
@@ -2006,7 +2006,7 @@ class ConfigFile:
 		try:
 			config.loadFromFile(self.CONFIG_FILE, True)
 		except IOError as e:
-			print("unable to load config (%s), assuming defaults..." % str(e))
+			print(("unable to load config (%s), assuming defaults..." % str(e)))
 
 	def save(self):
 #		config.save()
@@ -2028,7 +2028,7 @@ class ConfigFile:
 				ret = self.__resolveValue(names[1:], config.content.items)
 				if ret and len(ret) or ret == "":
 					return ret
-		print("getResolvedKey", key, "failed !! (Typo??)")
+		print(("getResolvedKey", key, "failed !! (Typo??)"))
 		return ""
 
 def NoSave(element):

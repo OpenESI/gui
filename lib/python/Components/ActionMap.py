@@ -43,14 +43,14 @@ class ActionMap:
 		self.checkBind()
 
 	def action(self, context, action):
-		print(" ".join(("action -> ", context, action)))
+		print((" ".join(("action -> ", context, action))))
 		if action in self.actions:
 			res = self.actions[action]()
 			if res is not None:
 				return res
 			return 1
 		else:
-			print("unknown action %s/%s! typo in keymap?" % (context, action))
+			print(("unknown action %s/%s! typo in keymap?" % (context, action)))
 			return 0
 
 	def destroy(self):
@@ -84,7 +84,7 @@ class HelpableActionMap(ActionMap):
 		if not actions: actions = {}
 		alist = [ ]
 		adict = { }
-		for (action, funchelp) in actions.items():
+		for (action, funchelp) in list(actions.items()):
 			# check if this is a tuple
 			if isinstance(funchelp, tuple):
 				alist.append((action, funchelp[1]))
@@ -113,7 +113,7 @@ class HelpableNumberActionMap(ActionMap):
 		if not actions: actions = {}
 		alist = [ ]
 		adict = { }
-		for (action, funchelp) in actions.items():
+		for (action, funchelp) in list(actions.items()):
 			# check if this is a tuple
 			if isinstance(funchelp, tuple):
 				alist.append((action, funchelp[1]))

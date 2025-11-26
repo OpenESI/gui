@@ -286,7 +286,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 				self.list.append(getConfigListEntry(_("Tuner"), nimConfig.connectedTo))
 			elif nimConfig.configMode.value == "loopthrough":
 				choices = []
-				print("connectable to:"), nimmanager.canConnectTo(self.slotid)
+				print((("connectable to:"), nimmanager.canConnectTo(self.slotid)))
 				connectable = nimmanager.canConnectTo(self.slotid)
 				for id in connectable:
 					choices.append((str(id), nimmanager.getNimDescription(id)))
@@ -305,7 +305,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 					self.fillListWithAdvancedSatEntrys(nimConfig.advanced.sat[int(current_config_sats)])
 				else:
 					cur_orb_pos = nimConfig.advanced.sats.orbital_position
-					satlist = nimConfig.advanced.sat.keys()
+					satlist = list(nimConfig.advanced.sat.keys())
 					if cur_orb_pos is not None:
 						if cur_orb_pos not in satlist:
 							cur_orb_pos = satlist[0]
@@ -652,7 +652,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 		self.list.append(self.configMode)
 		self.advancedSatsEntry = getConfigListEntry(_("Satellite"), self.nimConfig.dvbs.advanced.sats)
 		self.list.append(self.advancedSatsEntry)
-		for x in self.nimConfig.dvbs.advanced.sat.keys():
+		for x in list(self.nimConfig.dvbs.advanced.sat.keys()):
 			Sat = self.nimConfig.dvbs.advanced.sat[x]
 			self.fillListWithAdvancedSatEntrys(Sat)
 		self["config"].list = self.list
@@ -679,7 +679,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 		self.slot_dest_list = []
 		def checkRecursiveConnect(slot_id):
 			if slot_id in self.slot_dest_list:
-				print slot_id
+				print(slot_id)
 				return False
 			self.slot_dest_list.append(slot_id)
 			slot_config = nimmanager.nim_slots[slot_id].config.dvbs
@@ -1053,7 +1053,7 @@ class NimSelection(Screen):
 						text = _("Enabled") + ":" + text[:-1]
 					else:
 						text = _("nothing connected")
-					text = _("Switchable tuner types:") + "(" + ','.join(x.getMultiTypeList().values()) + ")" + "\n" + text
+					text = _("Switchable tuner types:") + "(" + ','.join(list(x.getMultiTypeList().values())) + ")" + "\n" + text
 				elif x.isCompatible("DVB-S"):
 					nimConfig = nimmanager.getNimConfig(x.slot).dvbs
 					text = nimConfig.configMode.value

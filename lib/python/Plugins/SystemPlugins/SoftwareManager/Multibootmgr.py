@@ -142,9 +142,9 @@ class MultiBootWizard(Screen):
 				elif (size / 1024) >= 1:
 					des = _("Size: ") + str(round((float(size) / 1024), 2)) + _("GB")
 				if "GB" in des:
-					print("Multibootmgr1"), des, "%s" %des[6], size
+					print((("Multibootmgr1"), des, "%s" %des[6], size))
 					if size/1024 < 6:
-						print("Multibootmgr2"), des, "%s" %des[6], size/1024 
+						print((("Multibootmgr2"), des, "%s" %des[6], size/1024)) 
 						self.session.open(MessageBox, _("Multiboot manager - The SDcard must be at least 8MB."), MessageBox.TYPE_INFO, timeout=10)
 						self.close
 					else:
@@ -170,7 +170,7 @@ class MultiBootWizard(Screen):
 						#cmdlist.append("parted -s /dev/%s unit KiB mkpart rootfs2 ext4 %s %s "%(sda,PARTED_START_ROOTFS2,PARTED_END_ROOTFS2))
 						#cmdlist.append("parted -s /dev/%s unit KiB mkpart kernel3 ext4 %s %s"%(sda,PARTED_START_KERNEL3,PARTED_END_KERNEL3))
 						#cmdlist.append("parted -s /dev/%s unit KiB mkpart rootfs3 ext4 %s %s "%(sda,PARTED_START_ROOTFS3,PARTED_END_ROOTFS3))
-						#cmdlist.append("parted -s /dev/%s print free"%sda)
+						#cmdlist.append("parted -s /dev/%s print(free"%sda))
 						cmdlist.append("dd if=/dev/zero of=/dev/%s bs=512 count=1 conv=notrunc"%sda)
 						cmdlist.append("rm -f /tmp/init.sh")
 						cmdlist.append("echo -e 'sfdisk /dev/%s <<EOF' >> /tmp/init.sh"%sda)

@@ -3,7 +3,7 @@ import xml.etree.cElementTree
 from datetime import datetime
 from time import localtime, strftime, ctime, time
 from bisect import insort
-from sys import maxint
+from sys import maxsize
 import os
 from enigma import eEPGCache, getBestPlayableServiceReference, eStreamServer, eServiceReference, iRecordableService, quitMainloop, eActionMap, setPreferredTuner, eServiceCenter
 
@@ -36,7 +36,7 @@ InfoBar = False
 #try:
 #	from Screens.InfoBar import InfoBar
 #except Exception as e:
-#	print "[RecordTimer] import from 'Screens.InfoBar import InfoBar' failed:", e
+#	print("[RecordTimer] import from 'Screens.InfoBar import InfoBar' failed:", e)
 #	InfoBar = False
 #//
 
@@ -94,13 +94,13 @@ def findSafeRecordPath(dirname):
 	dirname = os.path.realpath(dirname)
 	mountpoint = Harddisk.findMountPoint(dirname)
 	if not os.path.ismount(mountpoint):
-		print('[RecordTimer] media is not mounted:', dirname)
+		print(('[RecordTimer] media is not mounted:', dirname))
 		return None
 	if not os.path.isdir(dirname):
 		try:
 			os.makedirs(dirname)
 		except Exception as ex:
-			print('[RecordTimer] Failed to create dir "%s":' % dirname, ex)
+			print(('[RecordTimer] Failed to create dir "%s":' % dirname, ex))
 			return None
 	return dirname
 
@@ -216,7 +216,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 
 	def log(self, code, msg):
 		self.log_entries.append((int(time()), code, msg))
-		print("[TIMER]"), msg
+		print(("[TIMER]"), msg)
 
 	def freespace(self):
 		self.MountPath = None
@@ -251,10 +251,10 @@ class RecordTimerEntry(timer.TimerEntry, object):
 		name = name or self.name
 		filename = begin_date + " - " + service_name
 
-#		print "begin_date: ", begin_date
-#		print "service_name: ", service_name
-#		print "name:", name
-#		print "description: ", self.description
+#		print("begin_date: ", begin_date)
+#		print("service_name: ", service_name)
+#		print("name:", name)
+#		print("description: ", self.description)
 #
 		if name:
 			if config.recording.filename_composition.value == "veryveryshort":
@@ -367,7 +367,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 			try:
 				from Screens.InfoBar import InfoBar
 			except Exception as e:
-				print("[RecordTimer] import from 'Screens.InfoBar import InfoBar' failed:"), e
+				print(("[RecordTimer] import from 'Screens.InfoBar import InfoBar' failed:"), e)
 
 		if os.path.exists("/tmp/was_rectimer_wakeup") and not wasRecTimerWakeup:
 			wasRecTimerWakeup = int(open("/tmp/was_rectimer_wakeup", "r").read()) and True or False
@@ -376,7 +376,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 		if debug:
 			self.log(5, "activating state %d" % next_state)
 
-		# print "[TIMER] activate called",time(),next_state,self.first_try_prepare,' pending ',self.messageBoxAnswerPending,' justTried ',self.justTriedFreeingTuner,' show ',self.messageStringShow,self.messageString #TODO remove
+		# print("[TIMER] activate called",time(),next_state,self.first_try_prepare,' pending ',self.messageBoxAnswerPending,' justTried ',self.justTriedFreeingTuner,' show ',self.messageStringShow,self.messageString #TODO remove)
 
 		if next_state == self.StatePrepared:
 			if self.messageBoxAnswerPending:
@@ -443,7 +443,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 						Trashcan.instance.cleanIfIdle()
 					except Exception as e:
 						print("[TIMER] Failed to call Trashcan.instance.cleanIfIdle()")
-						print("[TIMER] Error:"), e
+						print(("[TIMER] Error:"), e)
 				# fine. it worked, resources are allocated.
 				self.next_activation = self.begin
 				self.backoff = 0
@@ -686,7 +686,7 @@ class RecordTimerEntry(timer.TimerEntry, object):
 			tv_notactive = Screens.Standby.TVinStandby.getTVstate('notactive')
 			isRecordTime = abs(NavigationInstance.instance.RecordTimer.getNextRecordingTime() - time()) <= 900 or NavigationInstance.instance.RecordTimer.getStillRecording()
 
-			if debug: print("[RECORDTIMER] box_instandby=%s" % box_instandby, "tv_notactive=%s" % tv_notactive, "wasRecTimerWakeup=%s" % wasRecTimerWakeup, "self.wasInStandby=%s" % self.wasInStandby, "self.afterEvent=%s" % self.afterEvent, "isRecordTime=%s") % isRecordTime
+			if debug: print(("[RECORDTIMER] box_instandby=%s" % box_instandby, "tv_notactive=%s" % tv_notactive, "wasRecTimerWakeup=%s" % wasRecTimerWakeup, "self.wasInStandby=%s" % self.wasInStandby, "self.afterEvent=%s" % self.afterEvent, "isRecordTime=%s") % isRecordTime)
 
 			timeout = 180
 			default = True
@@ -1021,13 +1021,13 @@ class RecordTimerEntry(timer.TimerEntry, object):
 	# we have record_service as property to automatically subscribe to record service events
 	def setRecordService(self, service):
 		if self.__record_service is not None:
-#			print "[remove callback]"
+#			print("[remove callback]")
 			NavigationInstance.instance.record_event.remove(self.gotRecordEvent)
 
 		self.__record_service = service
 
 		if self.__record_service is not None:
-#			print "[add callback]"
+#			print("[add callback]")
 			NavigationInstance.instance.record_event.append(self.gotRecordEvent)
 
 	record_service = property(lambda self: self.__record_service, setRecordService)
@@ -1038,10 +1038,10 @@ def createTimer(xml):
 	serviceref = ServiceReference(xml.get("serviceref").encode("utf-8"))
 	description = xml.get("description").encode("utf-8")
 	repeated = xml.get("repeated").encode("utf-8")
-	rename_repeat = long(xml.get("rename_repeat") or "1")
-	disabled = long(xml.get("disabled") or "0")
-	justplay = long(xml.get("justplay") or "0")
-	always_zap = long(xml.get("always_zap") or "0")
+	rename_repeat = int(xml.get("rename_repeat") or "1")
+	disabled = int(xml.get("disabled") or "0")
+	justplay = int(xml.get("justplay") or "0")
+	always_zap = int(xml.get("always_zap") or "0")
 	afterevent = str(xml.get("afterevent") or "nothing")
 	afterevent = {
 		"nothing": AFTEREVENT.NONE,
@@ -1051,7 +1051,7 @@ def createTimer(xml):
 		}[afterevent]
 	eit = xml.get("eit")
 	if eit and eit != "None":
-		eit = long(eit)
+		eit = int(eit)
 	else:
 		eit = None
 	location = xml.get("location")
@@ -1267,7 +1267,7 @@ class RecordTimer(timer.Timer):
 				next_act = timer.getNextActivation(getNextStbPowerOn)
 				if timer.justplay or next_act + 3 < now:
 					continue
-				if debug: print("[recordtimer] next stb power up", strftime("%a, %Y/%m/%d %H:%M"), localtime(next_act))
+				if debug: print(("[recordtimer] next stb power up", strftime("%a, %Y/%m/%d %H:%M"), localtime(next_act)))
 				if save_act[0] == -1:
 					save_act = next_act, int(not timer.always_zap)
 				else:
@@ -1327,7 +1327,7 @@ class RecordTimer(timer.Timer):
 			print("ignore double timer")
 			return None
 		entry.timeChanged()
-		print("[Timer] Record ") + str(entry)
+		print(("[Timer] Record ") + str(entry))
 		entry.Timer = self
 		self.addTimerEntry(entry)
 		if dosave:
@@ -1476,7 +1476,7 @@ class RecordTimer(timer.Timer):
 		return returnValue
 
 	def removeEntry(self, entry):
-		print("[Timer] Remove ") + str(entry)
+		print(("[Timer] Remove ") + str(entry))
 
 		# avoid re-enqueuing
 		entry.repeated = False
@@ -1489,9 +1489,9 @@ class RecordTimer(timer.Timer):
 		if entry.state != entry.StateEnded:
 			self.timeChanged(entry)
 
-#		print "state: ", entry.state
-#		print "in processed: ", entry in self.processed_timers
-#		print "in running: ", entry in self.timer_list
+#		print("state: ", entry.state)
+#		print("in processed: ", entry in self.processed_timers)
+#		print("in running: ", entry in self.timer_list)
 		# autoincrease instanttimer if possible
 		if not entry.dontSave:
 			for x in self.timer_list:

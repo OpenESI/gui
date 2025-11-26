@@ -171,8 +171,8 @@ class OscamInfo:
 		err = False
 		try:
 			data = urllib2.urlopen( request ).read()
-			# print data
-		except urllib2.URLError, e:
+			# print(data)
+		except urllib2.URLError as e:
 			if hasattr(e, "reason"):
 				err = str(e.reason)
 			elif hasattr(e, "code"):
@@ -197,7 +197,7 @@ class OscamInfo:
 			if not self.showLog:
 				data = ElementTree.XML(result[1])
 #				if typ=="version":
-#					if data."version" in attrib:
+#					if hasattr(data, "version") and data.version in attrib:
 #						self.version = data.attrib["version"]
 #					else:
 #						self.version = "n/a"
@@ -207,13 +207,13 @@ class OscamInfo:
 				for cl in clients:
 					name = cl.attrib["name"]
 					proto = cl.attrib["protocol"]
-					if cl."au" in attrib:
+					if hasattr(cl, "au") and cl.au in attrib:
 						au = cl.attrib["au"]
 					else:
 						au = ""
 					caid = cl.find("request").attrib["caid"]
 					srvid = cl.find("request").attrib["srvid"]
-					if cl.find("request")."ecmtime" in attrib:
+					if hasattr(cl.find("request"), "ecmtime") and cl.find("request").ecmtime in attrib:
 						ecmtime = cl.find("request").attrib["ecmtime"]
 						if ecmtime == "0" or ecmtime == "":
 							ecmtime = _("n/a")
@@ -284,7 +284,7 @@ class OscamInfo:
 		xmldata = self.openWebIF()
 		if xmldata[0]:
 			data = ElementTree.XML(xmldata[1])
-			if data."version" in attrib:
+			if hasattr(data, "version") and data.version in attrib:
 				self.version = data.attrib["version"]
 			else:
 				self.version = _("n/a")
@@ -310,7 +310,7 @@ class OscamInfo:
 			status = data.find("status")
 			clients = status.findall("client")
 			for cl in clients:
-				if cl."type" in attrib:
+				if hasattr(cl, "type") and cl.type in attrib:
 					if cl.attrib["type"] == "p" or cl.attrib["type"] == "r":
 						if spec is not None:
 							proto = cl.attrib["protocol"]
@@ -333,7 +333,7 @@ class OscamInfo:
 			status = data.find("status")
 			clients = status.findall("client")
 			for cl in clients:
-				if cl."type" in attrib:
+				if hasattr(cl, "type") and cl.type in attrib:
 					if cl.attrib["type"] == "c":
 						readers.append( (cl.attrib["name"], cl.attrib["name"]) )  # return tuple for later use in Choicebox
 			return clientnames
@@ -477,7 +477,7 @@ class OscamInfoMenu(Screen):
 			self.session.open(OscamInfoConfigScreen)
 
 	def chooseReaderCallback(self, retval):
-		print retval
+		print(retval)
 		if retval is not None:
 			if self.callbackmode == "cccam":
 				self.session.open(oscEntitlements, retval[1])
@@ -485,7 +485,7 @@ class OscamInfoMenu(Screen):
 				self.session.open(oscReaderStats, retval[1])
 
 	def ErrMsgCallback(self, retval):
-		print retval
+		print(retval)
 		self.session.open(OscamInfoConfigScreen)
 
 	def buildMenu(self, mlist):
@@ -910,7 +910,7 @@ class oscEntitlements(Screen, OscamInfo):
 		xmldata_for_reader = self.openWebIF(part = "entitlement", reader = self.cccamreader)
 		xdata = ElementTree.XML(xmldata_for_reader[1])
 		reader = xdata.find("reader")
-		if reader."hostaddress" in attrib:
+		if hasattr(reader, "hostaddress") and reader.hostaddress in attrib:
 			hostadr = reader.attrib["hostaddress"]
 			host_ok = True
 		else:
@@ -1059,13 +1059,13 @@ class oscReaderStats(Screen, OscamInfo):
 				xdata = ElementTree.XML(xmldata[1])
 				rdr = xdata.find("reader")
 #					emms = rdr.find("emmstats")
-#					if emms."totalwritten" in attrib:
+#					if hasattr(emms, "totalwritten") and emms.totalwritten in attrib:
 #						emm_wri = emms.attrib["totalwritten"]
-#					if emms."totalskipped" in attrib:
+#					if hasattr(emms, "totalskipped") and emms.totalskipped in attrib:
 #						emm_ski = emms.attrib["totalskipped"]
-#					if emms."totalblocked" in attrib:
+#					if hasattr(emms, "totalblocked") and emms.totalblocked in attrib:
 #						emm_blk = emms.attrib["totalblocked"]
-#					if emms."totalerror" in attrib:
+#					if hasattr(emms, "totalerror") and emms.totalerror in attrib:
 #						emm_err = emms.attrib["totalerror"]
 
 				ecmstat = rdr.find("ecmstats")
@@ -1085,7 +1085,7 @@ class oscReaderStats(Screen, OscamInfo):
 						if rcs == "found":
 							avg_time = str(float(avgtime) / 1000)[:5]
 							last_time = str(float(lasttime) / 1000)[:5]
-							if j."lastrequest" in attrib:
+							if hasattr(j, "lastrequest") and j.lastrequest in attrib:
 								lastreq = j.attrib["lastrequest"]
 								try:
 									last_req = lastreq.split("T")[1][:-5]

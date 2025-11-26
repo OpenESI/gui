@@ -16,7 +16,7 @@ for line, str in enumerate(source):
 	str = str.replace('dm920N', 'dn920N')
 	
 	if oldstr != str:
-		print("!!! Patch pyo line %d") %(line)
+		print(("!!! Patch pyo line %d") %(line))
 
 	dest.write(str)
 

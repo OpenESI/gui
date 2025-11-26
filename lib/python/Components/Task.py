@@ -324,7 +324,7 @@ class ConditionTask(Task):
 		self.triggerCount += 1
 		try:
 			if (self.timeoutCount is not None) and (self.triggerCount > self.timeoutCount):
-				raise Exception("Timeout elapsed(sorry"))
+				raise Exception("Timeout elapsed(sorry)")
 			res = self.check()
 		except Exception as e:
 			self.postconditions.append(FailedPostcondition(e))

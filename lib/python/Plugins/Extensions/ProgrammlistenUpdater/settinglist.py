@@ -1,9 +1,9 @@
 from enigma import eTimer
-import re, glob, shutil, os, urllib2, urllib, time, sys
+import re, glob, shutil, os, urllib.request, urllib.error, urllib.parse, urllib.request, urllib.parse, urllib.error, time, sys
 from Screens.Screen import Screen
 from Components.config import ConfigSubsection, ConfigYesNo, ConfigText, config, configfile
 from Screens.MessageBox import MessageBox
-from downloader import DownloadSetting, ConverDate, ConverDateBack
+from .downloader import DownloadSetting, ConverDate, ConverDateBack
 from enigma import *
 
 try:
@@ -16,9 +16,9 @@ Directory = os.path.dirname(sys.modules[__name__].__file__)
 def InstallSettings(name, link, date):
 
     def DownloadSetting(link):
-        req = urllib2.Request(link)
+        req = urllib.request.Request(link)
         req.add_header('User-Agent', 'VAS')
-        response = urllib2.urlopen(req)
+        response = urllib.request.urlopen(req)
         newlink = response.read()
         response.close()
         Setting = open(Directory + '/Settings/tmp/listE2.zip', 'w')
@@ -35,7 +35,7 @@ def InstallSettings(name, link, date):
                 try:
                     os.system('unzip ' + Directory + '/Settings/tmp/listE2_unzip/*.zip -d  ' + Directory + '/Settings/tmp/setting')
                 except:
-                    print("ERROR unzip %s.zip"), name
+                    print((("ERROR unzip %s.zip"), name))
         return False
 
     Status = True
@@ -155,7 +155,7 @@ class CheckTimer:
 
         def OnDsl():
             try:
-                urllib2.urlopen('http://www.google.de', None, 3)
+                urllib.request.urlopen('http://www.google.de', None, 3)
                 return (True and config.pud.showmessage.value)
             except:
                 return False

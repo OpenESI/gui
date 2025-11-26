@@ -119,7 +119,7 @@ class Screen(dict, GUISkin):
             val.disconnectAll()
 
         del self.session
-        for (name, val) in self.items():
+        for (name, val) in list(self.items()):
             val.destroy()
             del self[name]
 
@@ -139,7 +139,7 @@ class Screen(dict, GUISkin):
 
     def show(self):
         # Temporarily add to ease up identification of screens
-        print('[SCREENNAME] ', self.skinName)
+        print(('[SCREENNAME] ', self.skinName))
         if (self.shown and self.already_shown) or not self.instance:
             return
         self.shown = True

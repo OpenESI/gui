@@ -76,13 +76,13 @@ class Language:
 				self.langlist.append(str(lang + "_" + country))
 
 		except:
-			print("Language " + str(name) + " not found")
+			print(("Language " + str(name) + " not found"))
 		self.langlistselection.append((str(lang + "_" + country), name))
 
 	def activateLanguage(self, index):
 		try:
 			lang = self.lang[index]
-			print("Activating language " + lang[0])
+			print(("Activating language " + lang[0]))
 			self.catalog = gettext.translation('enigma2', resolveFilename(SCOPE_LANGUAGE, ""), languages=[index], fallback=True)
 			self.catalog.install(names=("ngettext", "pgettext"))
 			self.activeLanguage = index
@@ -180,7 +180,7 @@ class Language:
 		lang = config.osd.language.value
 
 		if delLang:
-			print("DELETE LANG", delLang)
+			print(("DELETE LANG", delLang))
 			if delLang == "en_US" or delLang == "it_IT" or delLang == "fr_FR":
 				print("Default Language can not be deleted !!")
 				return
@@ -191,7 +191,7 @@ class Language:
 			else:
 				os.system("opkg remove --autoremove --force-depends " + Lpackagename + delLang[:2])
 		else:
-			print("Delete all lang except ", lang)
+			print(("Delete all lang except ", lang))
 			ll = os.listdir(LPATH)
 			for x in ll:
 				if len(x) > 2:

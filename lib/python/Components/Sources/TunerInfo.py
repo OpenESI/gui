@@ -1,4 +1,4 @@
-from Source import Source
+from .Source import Source
 from Components.NimManager import nimmanager
 from enigma import eDVBResourceManager
 

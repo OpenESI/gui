@@ -337,8 +337,8 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 			zoomval = abs(self.zoomrate) + 10
 		else:
 			zoomval = self.zoomrate
-		print 'zoomRate:', self.zoomrate
-		print 'zoomval:', zoomval
+		print(('zoomRate:', self.zoomrate))
+		print(('zoomval:', zoomval))
 		if fileExists("/proc/stb/vmpeg/0/zoomrate"):
 			file = open('/proc/stb/vmpeg/0/zoomrate', 'w')
 			file.write('%d' % int(zoomval))
@@ -451,7 +451,7 @@ def setAudioTrack(service):
 			if matchedAc3: return
 			tracks.selectTrack(0)    # fallback to track 1(0)
 	except Exception as e:
-		print("[MoviePlayer] audioTrack exception:\n" + str(e))
+		print(("[MoviePlayer] audioTrack exception:\n" + str(e)))
 
 def tryAudioTrack(tracks, audiolang, caudiolang, trackList, seltrack, useAc3):
 	for entry in audiolang:
@@ -464,19 +464,19 @@ def tryAudioTrack(tracks, audiolang, caudiolang, trackList, seltrack, useAc3):
 			if entry == x[1] and seltrack == x[0]:
 				if useAc3:
 					if x[2].startswith('AC'):
-						print("[MoviePlayer] audio track is current selected track: " + str(x))
+						print(("[MoviePlayer] audio track is current selected track: " + str(x)))
 						return True
 				else:
-					print("[MoviePlayer] audio track is current selected track: " + str(x))
+					print(("[MoviePlayer] audio track is current selected track: " + str(x)))
 					return True
 			elif entry == x[1] and seltrack != x[0]:
 				if useAc3:
 					if x[2].startswith('AC'):
-						print("[MoviePlayer] audio track match: " + str(x))
+						print(("[MoviePlayer] audio track match: " + str(x)))
 						tracks.selectTrack(x[0])
 						return True
 				else:
-					print("[MoviePlayer] audio track match: " + str(x))
+					print(("[MoviePlayer] audio track match: " + str(x)))
 					tracks.selectTrack(x[0])
 					return True
 	return False
@@ -661,7 +661,7 @@ class MoviePlayer(InfoBarAspectSelection, InfoBarSimpleEventView, InfoBarBase, I
 							self.movielistAgain()
 						return
 					except Exception as e:
-						print("[InfoBar] Failed to move to .Trash folder:"), e
+						print((("[InfoBar] Failed to move to .Trash folder:"), e))
 						msg = _("Cannot move to trash can") + "\n" + str(e) + "\n"
 				info = serviceHandler.info(ref)
 				name = info and info.getName(ref) or _("this recording")
@@ -849,7 +849,7 @@ class MoviePlayer(InfoBarAspectSelection, InfoBarSimpleEventView, InfoBarBase, I
 				pass		
 
 	def getPlaylistServiceInfo(self, service):
-		from MovieSelection import playlist
+		from .MovieSelection import playlist
 		for i, item in enumerate(playlist):
 			if item == service:
 				if config.usage.on_movie_eof.value == "repeatcurrent":

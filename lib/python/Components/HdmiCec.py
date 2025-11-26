@@ -157,7 +157,7 @@ class HdmiCec:
 
 			if cmd == 0x00: # feature abort
 				if data[0] == '\x44':
-					print('eHdmiCec: volume forwarding not supported by device %02x'%(address))
+					print(('eHdmiCec: volume forwarding not supported by device %02x'%(address)))
 					self.volumeForwardingEnabled = False
 			elif cmd == 0x46: # request name
 				self.sendMessage(address, 'osdname')
@@ -167,7 +167,7 @@ class HdmiCec:
 				else:
 					self.volumeForwardingDestination = 0 # off: send volume keys to tv
 				if config.hdmicec.volume_forwarding.value:
-					print('eHdmiCec: volume forwarding to device %02x enabled'% self.volumeForwardingDestination)
+					print(('eHdmiCec: volume forwarding to device %02x enabled'% self.volumeForwardingDestination))
 					self.volumeForwardingEnabled = True
 			elif cmd == 0x8f: # request power status
 				if Screens.Standby.inStandby:
@@ -216,7 +216,7 @@ class HdmiCec:
 				oldaddress = hexstring[0] + '.' + hexstring[1] + '.' + hexstring[2] + '.' + hexstring[3]
 				hexstring = '%04x' % newaddress
 				newaddress = hexstring[0] + '.' + hexstring[1] + '.' + hexstring[2] + '.' + hexstring[3]
-				print("[HdmiCec] routing has changed... from '%s' to '%s' (to our address: %s)" %(oldaddress, newaddress, active))
+				print(("[HdmiCec] routing has changed... from '%s' to '%s' (to our address: %s)" %(oldaddress, newaddress, active)))
 			elif cmd in (0x86, 0x82): # set streaming path, active source changed
 				newaddress = ord(data[0]) * 256 + ord(data[1])
 				ouraddress = eHdmiCEC.getInstance().getPhysicalAddress()
@@ -228,7 +228,7 @@ class HdmiCec:
 						txt = 'active source'
 						if cmd == 0x86: txt = 'streaming path'
 						txt += ' has changed... to our address'
-					print('[HdmiCec] %s: %s' %(txt, active))
+					print(('[HdmiCec] %s: %s' %(txt, active)))
 				self.activesource = active
 				if not checkstate:
 					if cmd == 0x86 and not Screens.Standby.inStandby and self.activesource:
@@ -523,7 +523,7 @@ class HdmiCec:
 				target = 'standby'
 				if 'deep' in str(self.handleTimer.callback[0]):
 					target = 'deep ' + target
-				print('[HdmiCec] stopping Timer to %s' %target)
+				print(('[HdmiCec] stopping Timer to %s' %target))
 
 	def handleTVRequest(self, request):
 		if (request == 'activesource' and self.activesource) or (self.tv_lastrequest == 'tvstandby' and request == 'activesource' and self.handleTimer.isActive()):
@@ -559,14 +559,14 @@ class HdmiCec:
 				if int(config.hdmicec.handle_tv_delaytime.value):
 					self.handleTimer.callback.append(self.standby)
 					self.handleTimer.startLongTimer(int(config.hdmicec.handle_tv_delaytime.value))
-					print('[HdmiCec] starting Timer to standby in %s s' %config.hdmicec.handle_tv_delaytime.value)
+					print(('[HdmiCec] starting Timer to standby in %s s' %config.hdmicec.handle_tv_delaytime.value))
 				else:
 					self.standby()
 			elif deepstandby:
 				if int(config.hdmicec.handle_tv_delaytime.value):
 					self.handleTimer.callback.append(self.deepstandby)
 					self.handleTimer.startLongTimer(int(config.hdmicec.handle_tv_delaytime.value))
-					print('[HdmiCec] starting Timer to deep standby in %s s' %config.hdmicec.handle_tv_delaytime.value)
+					print(('[HdmiCec] starting Timer to deep standby in %s s' %config.hdmicec.handle_tv_delaytime.value))
 				else:
 					self.deepstandby()
 
@@ -577,7 +577,7 @@ class HdmiCec:
 		rectimer = abs(NavigationInstance.instance.RecordTimer.getNextRecordingTime() - now) <= 900 or NavigationInstance.instance.RecordTimer.getStillRecording() or abs(NavigationInstance.instance.RecordTimer.getNextZapTime() - now) <= 900
 		pwrtimer = abs(NavigationInstance.instance.PowerTimer.getNextPowerManagerTime() - now) <= 900 or NavigationInstance.instance.PowerTimer.isProcessing(exceptTimer = 0) or not NavigationInstance.instance.PowerTimer.isAutoDeepstandbyEnabled()
 		if recording or rectimer or pwrtimer:
-			print('[HdmiCec] go not into deepstandby... recording=%s, rectimer=%s, pwrtimer=%s' %(recording, rectimer, pwrtimer))
+			print(('[HdmiCec] go not into deepstandby... recording=%s, rectimer=%s, pwrtimer=%s' %(recording, rectimer, pwrtimer)))
 			self.standby()
 		else:
 			from Screens.InfoBar import InfoBar
@@ -596,7 +596,7 @@ class HdmiCec:
 
 	def wakeup(self):
 		if int(config.hdmicec.workaround_turnbackon.value) and self.standbytime > time():
-			print('[HdmiCec] ignore wakeup for %d seconds ...' %int(self.standbytime - time()))
+			print(('[HdmiCec] ignore wakeup for %d seconds ...' %int(self.standbytime - time())))
 			return
 		self.standbytime = 0
 		self.handleTimerStop(True)

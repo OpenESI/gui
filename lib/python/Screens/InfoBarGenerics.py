@@ -152,7 +152,7 @@ def updateresumePointCache():
 
 def ToggleVideo():
 	mode = open("/proc/stb/video/policy").read()[:-1]
-	print mode
+	print(mode)
 	if mode == "letterbox":
 		f = open("/proc/stb/video/policy", "w")
 		f.write("panscan")
@@ -245,12 +245,12 @@ class InfoBarUnhandledKey:
 	#this function is called on every keypress!
 	def actionA(self, key, flag):
 		try:
-			print 'KEY: %s %s %s %s' % (key,flag,(key_name for key_name,value in KEYIDS.items() if value==key).next(),getKeyDescription(key)[0])
+			print('KEY: %s %s %s %s' % (key,flag,(key_name for key_name,value in KEYIDS.items() if value==key).next(),getKeyDescription(key)[0]))
 		except:
 			try:
-				print 'KEY: %s %s %s' % (key,flag,(key_name for key_name,value in KEYIDS.items() if value==key).next()) # inverse dictionary lookup in KEYIDS
+				print('KEY: %s %s %s' % (key,flag,next(key_name for key_name,value in KEYIDS.items() if value==key))) # inverse dictionary lookup in KEYIDS)
 			except:
-				print 'KEY: %s %s' % (key,flag)
+				print('KEY: %s %s' % (key,flag))
 		self.unhandledKeyDialog.hide()
 		if self.closeSIB(key) and self.secondInfoBarScreen and self.secondInfoBarScreen.shown:
 			self.secondInfoBarScreen.hide()
@@ -1195,7 +1195,7 @@ class InfoBarNumberZap:
 			})
 
 	def keyNumberGlobal(self, number):
-		if self."PTSSeekPointer" in pvrStateDialog and self.timeshiftEnabled() and self.isSeekable():
+		if hasattr(self, "PTSSeekPointer") and self.PTSSeekPointer in pvrStateDialog and self.timeshiftEnabled() and self.isSeekable():
 			InfoBarTimeshiftState._mayShow(self)
 			self.pvrStateDialog["PTSSeekPointer"].setPosition((self.pvrStateDialog["PTSSeekBack"].instance.size().width()-4)/2, self.pvrStateDialog["PTSSeekPointer"].position[1])
 			if self.seekstate != self.SEEK_STATE_PLAY:
@@ -2584,7 +2584,7 @@ class InfoBarSeek:
 			self.unPauseService()
 
 	def playpauseService(self):
-		if self.seekAction <> 0:
+		if self.seekAction != 0:
 			self.seekAction = 0
 			self.doPause(False)
 			global seek_withjumps_muted
@@ -2621,7 +2621,7 @@ class InfoBarSeek:
 	def unPauseService(self):
 		SystemInfo["StatePlayPause"] = False
 		if self.seekstate == self.SEEK_STATE_PLAY:
-			if self.seekAction <> 0: self.playpauseService()
+			if self.seekAction != 0: self.playpauseService()
 			#return 0 # if 'return 0', plays timeshift again from the beginning
 			return
 		self.doPause(False)
@@ -2667,7 +2667,7 @@ class InfoBarSeek:
 
 	def doSeekRelative(self, pts):
 		try:
-			if "<class 'Screens.InfoBar.InfoBar'>" in `self`:
+			if "<class 'Screens.InfoBar.InfoBar'>" in repr(self):
 				if InfoBarTimeshift.timeshiftEnabled(self):
 					length = InfoBarTimeshift.ptsGetLength(self)
 					position = InfoBarTimeshift.ptsGetPosition(self)
@@ -2980,7 +2980,7 @@ class InfoBarPVRState:
 	def __playStateChanged(self, state):
 		playstateString = state[3]
 		state_summary = playstateString
-		if self."statusicon" in pvrStateDialog:
+		if hasattr(self, "statusicon") and self.statusicon in pvrStateDialog:
 			self.pvrStateDialog["state"].setText(playstateString)
 			if playstateString == '>':
 				self.pvrStateDialog["statusicon"].setPixmapNum(0)
@@ -3317,7 +3317,7 @@ class InfoBarExtensions:
 			from Plugins.Extensions.Esipanel.RestartNetwork import RestartNetwork
 			self.session.open(RestartNetwork)
 		except:
-			print'[INFOBARGENERICS] failed to restart network'
+			print('[INFOBARGENERICS] failed to restart network')
 
 	def showAutoTimerList(self):
 		if os.path.exists("/usr/lib/enigma2/python/Plugins/Extensions/AutoTimer/plugin.pyo"):
@@ -3450,7 +3450,7 @@ class InfoBarPlugins:
 			try:
 				plugin(session = self.session)
 			except Exception as err:
-				print '[InfoBarGenerics] Error: ', err
+				print('[InfoBarGenerics] Error: ', err)
 
 from Components.Task import job_manager
 class InfoBarJobman:
@@ -3551,7 +3551,7 @@ class InfoBarPiP:
 				del self.session.pip
 				if SystemInfo["LCDMiniTV"]:
 					if config.lcd.modepip.value >= "1":
-						print '[LCDMiniTV] disable PIP'
+						print('[LCDMiniTV] disable PIP')
 						f = open("/proc/stb/lcd/mode", "w")
 						f.write(config.lcd.modeminitv.value)
 						f.close()
@@ -3572,7 +3572,7 @@ class InfoBarPiP:
 					self.session.pipshown = True
 					self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
 					if SystemInfo["LCDMiniTVPiP"] and int(config.lcd.modepip.value) >= 1:
-						print '[LCDMiniTV] enable PIP'
+						print('[LCDMiniTV] enable PIP')
 						f = open("/proc/stb/lcd/mode", "w")
 						f.write(config.lcd.modepip.value)
 						f.close()
@@ -3591,7 +3591,7 @@ class InfoBarPiP:
 						self.session.pipshown = True
 						self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
 						if SystemInfo["LCDMiniTVPiP"] and int(config.lcd.modepip.value) >= 1:
-							print '[LCDMiniTV] enable PIP'
+							print('[LCDMiniTV] enable PIP')
 							f = open("/proc/stb/lcd/mode", "w")
 							f.write(config.lcd.modepip.value)
 							f.close()
@@ -3898,12 +3898,12 @@ class InfoBarInstantRecord:
 		return False
 
 	def recordQuestionCallback(self, answer):
-		# print 'recordQuestionCallback'
+		# print('recordQuestionCallback')
 #		print("pre:\n"), self.recording
 
-		# print 'test1'
+		# print('test1')
 		if answer is None or answer[1] == "no":
-			# print 'test2'
+			# print('test2')
 			self.saveTimeshiftEventPopupActive = False
 			return
 		list = []
@@ -3940,21 +3940,21 @@ class InfoBarInstantRecord:
 			elif answer[1] == "manualendtime":
 				self.setEndtime(len(self.recording)-1)
 		elif answer[1] == "savetimeshift":
-			# print 'test1'
+			# print('test1')
 			if self.isSeekable() and self.pts_eventcount != self.pts_currplaying:
-				# print 'test2'
+				# print('test2')
 				InfoBarTimeshift.SaveTimeshift(self, timeshiftfile="pts_livebuffer_%s" % self.pts_currplaying)
 			else:
-				# print 'test3'
+				# print('test3')
 				Notifications.AddNotification(MessageBox,_("Timeshift will get saved at end of event!"), MessageBox.TYPE_INFO, timeout=5)
 				self.save_current_timeshift = True
 				config.timeshift.isRecording.value = True
 		elif answer[1] == "savetimeshiftEvent":
-			# print 'test4'
+			# print('test4')
 			InfoBarTimeshift.saveTimeshiftEventPopup(self)
 
 		elif answer[1].startswith("pts_livebuffer") is True:
-			# print 'test2'
+			# print('test2')
 			InfoBarTimeshift.SaveTimeshift(self, timeshiftfile=answer[1])
 
 		if answer[1] != "savetimeshiftEvent":
@@ -4090,7 +4090,7 @@ class InfoBarAudioSelection:
 				from Screens.AudioSelection import AudioSelection
 				self.session.openWithCallback(self.audioSelected, AudioSelection, infobar=self)
 			elif config.plugins.esipanel_yellowkey.listLong.value == '2':
-				global AUDIO
+				# global AUDIO
 				AUDIO = True
 				ToggleVideo()
 			elif config.plugins.esipanel_yellowkey.listLong.value == '3':
@@ -4112,12 +4112,12 @@ class InfoBarAudioSelection:
 		if SystemInfo["CanDownmixAC3"]:
 			if config.av.downmix_ac3.value:
 				message = _("Dolby Digital downmix is now") + " " + _("disabled")
-				print '[Audio] Dolby Digital downmix is now disabled'
+				print('[Audio] Dolby Digital downmix is now disabled')
 				config.av.downmix_ac3.setValue(False)
 			else:
 				config.av.downmix_ac3.setValue(True)
 				message = _("Dolby Digital downmix is now") + " " + _("enabled")
-				print '[Audio] Dolby Digital downmix is now enabled'
+				print('[Audio] Dolby Digital downmix is now enabled')
 			if popup:
 				Notifications.AddPopup(text = message, type = MessageBox.TYPE_INFO, timeout = 5, id = "DDdownmixToggle")
 
@@ -4304,7 +4304,7 @@ class InfoBarRedButton:
 			try:
 				x(orgId)
 			except Exception as ErrMsg:
-				print ErrMsg
+				print(ErrMsg)
 				#self.onReadyForAIT.remove(x)
 
 	def updateInfomation(self):
@@ -4319,7 +4319,7 @@ class InfoBarRedButton:
 		info = service and service.info()
 		try:
 			for x in info.getInfoObject(iServiceInformation.sHBBTVUrl):
-				print x
+				print(x)
 				if x[0] in (-1, 1):
 					self.updateAIT(x[3])
 					self["HbbtvApplication"].setApplicationName(x[1])
@@ -4375,7 +4375,7 @@ class InfoBarAspectSelection:
 		self.__ExGreen_state = self.STATE_HIDDEN 
 
 	def ExGreen_toggleGreen(self, arg=""):
-		print self.__ExGreen_state
+		print(self.__ExGreen_state)
 		if self.__ExGreen_state == self.STATE_HIDDEN:
 			print("self.STATE_HIDDEN")
 			self.ExGreen_doAspect()
@@ -4429,7 +4429,7 @@ class InfoBarResolutionSelection:
 				fpsString = f.read()
 				f.close()
 			except:
-				print"[InfoBarResolutionSelection] Error open /proc/stb/vmpeg/0/framerate !!"
+				print("[InfoBarResolutionSelection] Error open /proc/stb/vmpeg/0/framerate !!")
 				fpsString = '50000'
 		
 		xres = int(xresString, 16)
@@ -4462,7 +4462,7 @@ class InfoBarResolutionSelection:
 		keys = ["green", "yellow", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
 
 		mode = open("/proc/stb/video/videomode").read()[:-1]
-		print mode
+		print(mode)
 		for x in range(len(tlist)):
 			if tlist[x][1] == mode:
 				selection = x

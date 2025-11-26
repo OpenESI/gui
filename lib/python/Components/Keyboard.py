@@ -29,7 +29,7 @@ class Keyboard:
 	def activateKeyboardMap(self, index):
 		try:
 			keymap = self.keyboardmaps[index]
-			print("Activating keymap:",keymap[1])
+			print(("Activating keymap:",keymap[1]))
 			keymappath = eEnv.resolve('${datadir}/keymaps/') + keymap[0]
 			if os_path.exists(keymappath):
 				Console().ePopen(("loadkmap < " + str(keymappath)))

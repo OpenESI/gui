@@ -10,33 +10,33 @@ class satxml(datasource):
 		datasource.__init__(self)
 
 		if not os.path.isfile(filename):
-			print "File %s doesn't exist. Creating it." % filename
+			print("File %s doesn't exist. Creating it." % filename)
 
 	def getStatus(self):
 		text = datasource.getStatus(self)
 		return text
 
 	def getCapabilities(self):
-		return [("set filename", self.setFilename), ("read file", self.read), ("write file", self.write), ("print all", self.printAll)]
+		return [("set filename", self.setFilename), ("read file", self.read), ("write file", self.write), ("print(all", self.printAll)]
 
 	def getName(self):
 		return "satellites.xml"
 
 	def setFilename(self):
-		print "Please give a filename <satellites.xml>:"
+		print("Please give a filename <satellites.xml>:")
 		filename = inputText()
 		if filename == "":
 			self.filename = "satellites.xml"
 		else:
 			self.filename = filename
-		print "Filename set to %s" % self.filename
+		print("Filename set to %s" % self.filename)
 
 	def read(self):
 		basicsatxml = minidom.parse(self.filename)
 
 		for sat in basicsatxml.firstChild.childNodes:
 			if sat.nodeType == sat.ELEMENT_NODE and sat.localName == "sat":
-				print sat.localName
+				print(sat.localName)
 				satname = str(sat.getAttribute("name"))
 				satpos = str(sat.getAttribute("position"))
 				self.addSat(satname, satpos)
@@ -48,16 +48,16 @@ class satxml(datasource):
 							entry = str(transponder.getAttribute(param))
 							if entry != "":
 								parameters[param] = entry
-						if len(parameters.keys()) > 1:
+						if len(list(parameters.keys())) > 1:
 							self.addTransponder(satpos, parameters)
-		print self.transponderlist
+		print(self.transponderlist)
 
 	def write(self):
 		satxml = Document()
 		satellites = satxml.createElement("satellites")
 		satxml.appendChild(satellites)
-		satlist = self.transponderlist.keys()
-		print self.transponderlist
+		satlist = list(self.transponderlist.keys())
+		print(self.transponderlist)
 		satlist.sort()
 
 		for sat in satlist:
@@ -73,11 +73,11 @@ class satxml(datasource):
 				xmltransponder = satxml.createElement("transponder")
 				paramlist = ["frequency", "symbol_rate", "polarization", "fec", "system", "modulation", "tsid", "onid"]
 				for param in paramlist:
-					if transponder.has_key(param):
+					if param in transponder:
 						xmltransponder.setAttribute(param, transponder[param])
 				xmlsat.appendChild(xmltransponder)
 		prettyxml = satxml.toprettyxml()
-		print prettyxml
+		print(prettyxml)
 		file = open(self.filename, "w")
 		file.write(prettyxml)
 		file.close()

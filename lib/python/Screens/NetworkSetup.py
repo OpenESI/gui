@@ -626,9 +626,9 @@ class AdapterSetup(Screen, ConfigListScreen, HelpableScreen):
 			for p in plugins.getPlugins(PluginDescriptor.WHERE_NETWORKSETUP):
 				callFnc = p.__call__["ifaceSupported"](self.iface)
 				if callFnc is not None:
-					if p."WlanPluginEntry" in __call__: # internally used only for WLAN Plugin
+					if "WlanPluginEntry" in p.__call__:  # Internally used only for WLAN Plugin.
 						self.extended = callFnc
-						if p."configStrings" in __call__:
+						if "configStrings" in p.__call__:
 							self.configStrings = p.__call__["configStrings"]
 
 						isExistBcmWifi = os_path.exists("/tmp/bcm/" + self.iface)
@@ -912,8 +912,8 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
 			try:
 				ifobj = Wireless(iface) # a Wireless NIC Object
 				wlanresponse = ifobj.getAPaddr()
-			except IOError, (error_no, error_str):
-				if error_no in (errno.EOPNOTSUPP, errno.ENODEV, errno.EPERM):
+			except IOError as e:
+				if e.errno in (errno.EOPNOTSUPP, errno.ENODEV, errno.EPERM):
 					return False
 				else:
 					print("error: "),error_no,error_str
@@ -1046,16 +1046,16 @@ class AdapterSetupConfiguration(Screen, HelpableScreen):
 			callFnc = p.__call__["ifaceSupported"](self.iface)
 			if callFnc is not None:
 				self.extended = callFnc
-				if p."WlanPluginEntry" in __call__: # internally used only for WLAN Plugin
+				if hasattr(p, "WlanPluginEntry") and p.WlanPluginEntry in __call__: # internally used only for WLAN Plugin
 					menu.append((_("Scan wireless networks"), "scanwlan"))
 					if iNetwork.getAdapterAttribute(self.iface, "up"):
 						menu.append((_("Show WLAN status"), "wlanstatus"))
 				else:
-					if p."menuEntryName" in __call__:
+					if hasattr(p, "menuEntryName") and p.menuEntryName in __call__:
 						menuEntryName = p.__call__["menuEntryName"](self.iface)
 					else:
 						menuEntryName = _('Extended setup...')
-					if p."menuEntryDescription" in __call__:
+					if hasattr(p, "menuEntryDescription") and p.menuEntryDescription in __call__:
 						menuEntryDescription = p.__call__["menuEntryDescription"](self.iface)
 					else:
 						menuEntryDescription = _('Extended network setup plugin...')
@@ -1692,11 +1692,11 @@ class NetworkMountsMenu(Screen,HelpableScreen):
 			callFnc = p.__call__["ifaceSupported"](self)
 			if callFnc is not None:
 				self.extended = callFnc
-				if p."menuEntryName" in __call__:
+				if hasattr(p, "menuEntryName") and p.menuEntryName in __call__:
 					menuEntryName = p.__call__["menuEntryName"](self)
 				else:
 					menuEntryName = _('Extended Setup...')
-				if p."menuEntryDescription" in __call__:
+				if hasattr(p, "menuEntryDescription") and p.menuEntryDescription in __call__:
 					menuEntryDescription = p.__call__["menuEntryDescription"](self)
 				else:
 					menuEntryDescription = _('Extended Networksetup Plugin...')
@@ -1869,11 +1869,11 @@ class NetworkSABnzbd(Screen):
 		self.checkSABnzbdService()
 
 	def checkSABnzbdService(self):
-		print 'INSTALL CHECK STARTED',self.service_name
+		print('INSTALL CHECK STARTED',self.service_name)
 		self.Console.ePopen('/usr/bin/opkg list_installed ' + self.service_name, self.checkNetworkState)
 
 	def checkNetworkState(self, str, retval, extra_args):
-		print 'INSTALL CHECK FINISHED',str
+		print('INSTALL CHECK FINISHED',str)
 		if not str:
 			self.feedscheck = self.session.open(MessageBox,_('Please wait whilst feeds state is checked.'), MessageBox.TYPE_INFO, enable_input = False)
 			self.feedscheck.setTitle(_('Checking Feeds'))
@@ -1881,7 +1881,7 @@ class NetworkSABnzbd(Screen):
 			self.CheckConsole = Console()
 			self.CheckConsole.ePopen(cmd1, self.checkNetworkStateFinished)
 		else:
-			print 'INSTALL ALREADY INSTALLED'
+			print('INSTALL ALREADY INSTALLED')
 			self.updateService()
 
 	def checkNetworkStateFinished(self, result, retval,extra_args=None):

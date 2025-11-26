@@ -148,8 +148,9 @@ def getButtonSetupKeys():
 
 config.misc.ButtonSetup = ConfigSubsection()
 config.misc.ButtonSetup.additional_keys = ConfigYesNo(default=True)
-for x in getButtonSetupKeys():
-	exec "config.misc.ButtonSetup." + x[1] + " = ConfigText(default='" + x[2] + "')"
+for button in BUTTON_SETUP_KEYS:
+	# exec("config.misc.ButtonSetup." + button[1] + " = ConfigText(default='" + button[2] + "')")
+	setattr(config.misc.ButtonSetup, button[1], ConfigText(default=button[2]))
 
 def getButtonSetupFunctions():
 	ButtonSetupFunctions = []
@@ -158,22 +159,22 @@ def getButtonSetupFunctions():
 	pluginlist = plugins.getPlugins(PluginDescriptor.WHERE_EVENTINFO)
 	pluginlist.sort(key=lambda p: p.name)
 	for plugin in pluginlist:
-		if plugin.name not in twinPlugins and plugin.path and 'selectedevent' not in plugin.__call__.func_code.co_varnames:
-			if plugin.path[plugin.path.rfind("Plugins" in twinPaths:]):
+		if plugin.name not in twinPlugins and plugin.path and "selectedevent" not in plugin.__call__.__code__.co_varnames:
+			if plugin.path[plugin.path.rfind("Plugins"):] in twinPaths:
 				twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] += 1
 			else:
 				twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] = 1
-			ButtonSetupFunctions.append((plugin.name, plugin.path[plugin.path.rfind("Plugins"):] + "/" + str(twinPaths[plugin.path[plugin.path.rfind("Plugins"):]]) , "EPG"))
+			ButtonSetupFunctions.append((plugin.name, "%s/%s" % (plugin.path[plugin.path.rfind("Plugins"):], str(twinPaths[plugin.path[plugin.path.rfind("Plugins"):]])), "EPG"))
 			twinPlugins.append(plugin.name)
 	pluginlist = plugins.getPlugins([PluginDescriptor.WHERE_PLUGINMENU, PluginDescriptor.WHERE_EXTENSIONSMENU, PluginDescriptor.WHERE_EVENTINFO])
 	pluginlist.sort(key=lambda p: p.name)
 	for plugin in pluginlist:
 		if plugin.name not in twinPlugins and plugin.path:
-			if plugin.path[plugin.path.rfind("Plugins" in twinPaths:]):
+			if plugin.path[plugin.path.rfind("Plugins"):] in twinPaths:
 				twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] += 1
 			else:
 				twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] = 1
-			ButtonSetupFunctions.append((plugin.name, plugin.path[plugin.path.rfind("Plugins"):] + "/" + str(twinPaths[plugin.path[plugin.path.rfind("Plugins"):]]) , "Plugins"))
+			ButtonSetupFunctions.append((plugin.name, "%s/%s" % (plugin.path[plugin.path.rfind("Plugins"):], str(twinPaths[plugin.path[plugin.path.rfind("Plugins"):]])), "Plugins"))
 			twinPlugins.append(plugin.name)
 	ButtonSetupFunctions.append((_("Show graphical multi EPG"), "Infobar/openGraphEPG", "EPG"))
 	ButtonSetupFunctions.append((_("Main menu"), "Infobar/mainMenu", "InfoBar"))
@@ -279,6 +280,7 @@ def getButtonSetupFunctions():
 		ButtonSetupFunctions.append((_("Youtube TV"), "YoutubeTV/", "Plugins"))
 	return ButtonSetupFunctions
 
+
 class ButtonSetup(Screen):
 	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
@@ -305,7 +307,7 @@ class ButtonSetup(Screen):
 		self.onShown.append(self.disableKeyMap)
 		self.onClose.append(self.enableKeyMap)
 
-	def __layoutFinished(self):
+	def layoutFinished(self):
 		self["choosen"].selectionEnabled(0)
 
 	def disableKeyMap(self):
@@ -330,7 +332,7 @@ class ButtonSetup(Screen):
 			if key == x[0][1]:
 				self["list"].moveToIndex(index)
 				if key.endswith("_long"):
-					self.longkeyPressed = True
+					self.longKeyPressed = True
 				break
 			index += 1
 		self.getFunctions()
@@ -368,8 +370,7 @@ class ButtonSetupSelect(Screen):
 		self.prevselected = self.selected[:]
 		self["choosen"] = ChoiceList(list=self.selected, selection=0)
 		self["list"] = ChoiceList(list=self.getFunctionList(), selection=0)
-		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions", "KeyboardInputActions"], 
-		{
+		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", "DirectionActions", "KeyboardInputActions"], {  # No help available, HELP is a changeable button!
 			"ok": self.keyOk,
 			"cancel": self.cancel,
 			"red": self.cancel,
@@ -387,7 +388,7 @@ class ButtonSetupSelect(Screen):
 		self.onClose.append(self.disableKeyMap)
 		self.onLayoutFinish.append(self.__layoutFinished)
 
-	def __layoutFinished(self):
+	def layoutFinished(self):
 		self["choosen"].selectionEnabled(0)
 
 	def disableKeyMap(self):
@@ -405,7 +406,7 @@ class ButtonSetupSelect(Screen):
 		eActionMap.getInstance().bindKey("keymap.xml", "generic", 106, 5, "ListboxActions", "pageDown")
 
 	def getFunctionList(self):
-		functionslist = []
+		functionsList = []
 		catagories = {}
 		for function in self.ButtonSetupFunctions:
 			if not function[2] in catagories:
@@ -576,7 +577,7 @@ class InfoBarButtonSetup():
 				pluginlist.sort(key=lambda p: p.name)
 				for plugin in pluginlist:
 					if plugin.name not in twinPlugins and plugin.path and 'selectedevent' not in plugin.__call__.func_code.co_varnames:	
-						if plugin.path[plugin.path.rfind("Plugins" in twinPaths:]):
+						if plugin.path[plugin.path.rfind("Plugins"):] in twinPaths:
 							twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] += 1
 						else:
 							twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] = 1
@@ -588,7 +589,7 @@ class InfoBarButtonSetup():
 				pluginlist.sort(key=lambda p: p.name)
 				for plugin in pluginlist:
 					if plugin.name not in twinPlugins and plugin.path:
-						if plugin.path[plugin.path.rfind("Plugins" in twinPaths:]):
+						if plugin.path[plugin.path.rfind("Plugins"):] in twinPaths:
 							twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] += 1
 						else:
 							twinPaths[plugin.path[plugin.path.rfind("Plugins"):]] = 1
@@ -603,24 +604,26 @@ class InfoBarButtonSetup():
 						return
 			elif selected[0] == "Infobar":
 				if hasattr(self, selected[1]):
-					exec "self." + ".".join(selected[1:]) + "()"
+					exec("self.%s()" % ".".join(selected[1:]))
 				else:
 					return 0
 			elif selected[0] == "Module":
 				try:
-					exec "from " + selected[1] + " import *"
-					exec "self.session.open(" + ",".join(selected[2:]) + ")"
-				except:
-					print("[ButtonSetup] error during executing module %s, screen %s") % (selected[1], selected[2])
+					exec("from %s import %s\nself.session.open(%s)" % (selected[1], selected[2], ",".join(selected[2:])))
+				except Exception as err:
+					print("[ButtonSetup] Error: Exception raised executing module '%s', screen '%s'!  (%s)" % (selected[1], selected[2], str(err)))
+					import traceback
+					traceback.print_exc()
 			elif selected[0] == "Setup":
-				exec "from Screens.Setup import *"
-				exec "self.session.open(Setup, \"" + selected[1] + "\")"
+				from Screens.Setup import Setup
+				# exec("self.session.open(Setup, \"%s\")" % selected[1])  # DEBUG: What is this trying to do?
+				self.session.open(Setup, selected[1])
 			elif selected[0].startswith("Zap"):
 				if selected[0] == "ZapPanic":
 					self.servicelist.history = []
 					self.pipShown() and self.showPiP()
 				self.servicelist.servicelist.setCurrent(eServiceReference("/".join(selected[1:])))
-				self.servicelist.zap(enable_pipzap = True)
+				self.servicelist.zap(enable_pipzap=True)
 				if hasattr(self, "lastservice"):
 					self.lastservice = eServiceReference("/".join(selected[1:]))
 					self.close()
@@ -642,7 +645,8 @@ class InfoBarButtonSetup():
 					self.session.open(Execute, selected[1] + " shellscript", None, command)
 				else:
 					from Screens.Console import Console
-					exec "self.session.open(Console,_(selected[1]),[command])"
+					# exec("self.session.open(Console, title=_(selected[1]), cmdlist=[command])")  # DEBUG: What is this trying to do?
+					self.session.open(Console, selected[1], [command])
 			elif selected[0] == "EMC":
 				try:
 					from Plugins.Extensions.EnhancedMovieCenter.plugin import showMoviesNew

@@ -2,21 +2,21 @@ from Components.ActionMap import ActionMap
 from Components.ScrollLabel import ScrollLabel
 from Components.Sources.StaticText import StaticText
 from Screens.Screen import Screen
-import re, os, urllib2, sys
+import re, os, urllib.request, urllib.error, urllib.parse, sys
 
 URL ='http://www.sattechnik.de/programmlisten-update/history.txt'
 
 def DownloadInfo(url):
     text = ""
     try:
-        req = urllib2.Request(url)
-        response = urllib2.urlopen(req)
+        req = urllib.request.Request(url)
+        response = urllib.request.urlopen(req)
         link = response.read().decode("windows-1252")
         response.close()
         text = link.encode("utf-8")
 
     except:
-        print"ERROR Download History %s" %(url)
+        print(("ERROR Download History %s" %(url)))
 
     return text
 

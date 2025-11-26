@@ -243,7 +243,7 @@ def InitUsageConfig():
 			if not os.path.exists(tmpvalue):
 				os.system("mkdir -p %s" %tmpvalue)
 		except:
-			print("Failed to create recording path: %s" %tmpvalue)
+			print(("Failed to create recording path: %s" %tmpvalue))
 		if not config.usage.default_path.value.endswith('/'):
 			config.usage.default_path.setValue(tmpvalue + '/')
 			config.usage.default_path.save()
@@ -735,7 +735,7 @@ def InitUsageConfig():
 	try:
 		dateEnabled, timeEnabled = skin.parameters.get("AllowUserDatesAndTimes", (0, 0))
 	except Exception as error:
-		print("[UsageConfig] Error loading 'AllowUserDatesAndTimes' skin parameter! (%s)" % error)
+		print(("[UsageConfig] Error loading 'AllowUserDatesAndTimes' skin parameter! (%s)" % error))
 		dateEnabled, timeEnabled = (0, 0)
 	if dateEnabled:
 		config.usage.date.enabled.value = True
@@ -858,7 +858,7 @@ def InitUsageConfig():
 	try:
 		dateDisplayEnabled, timeDisplayEnabled = skin.parameters.get("AllowUserDatesAndTimesDisplay", (0, 0))
 	except Exception as error:
-		print("[UsageConfig] Error loading 'AllowUserDatesAndTimesDisplay' display skin parameter! (%s)" % error)
+		print(("[UsageConfig] Error loading 'AllowUserDatesAndTimesDisplay' display skin parameter! (%s)" % error))
 		dateDisplayEnabled, timeDisplayEnabled = (0, 0)
 	if dateDisplayEnabled:
 		config.usage.date.enabled_display.value = True
@@ -1090,7 +1090,7 @@ def InitUsageConfig():
 			try:
 				os.mkdir(config.crash.debug_path.value,0o755)
 			except:
-				print("Failed to create log path: %s" %config.crash.debug_path.value)
+				print(("Failed to create log path: %s" %config.crash.debug_path.value))
 	config.crash.debug_path.addNotifier(updatedebug_path, immediate_feedback = False)
 
 	crashlogheader = _("We are really sorry. Your receiver encountered " \
@@ -1597,7 +1597,7 @@ def patchTuxtxtConfFile(dummyConfigElement):
 	try:
 		os.system(command)
 	except:
-		print("Error: failed to patch %s!" % TUXTXT_CFG_FILE)
+		print(("Error: failed to patch %s!" % TUXTXT_CFG_FILE))
 	print("[tuxtxt] patched tuxtxt2.conf")
 
 	config.usage.tuxtxt_ConfFileHasBeenPatched.setValue(True)

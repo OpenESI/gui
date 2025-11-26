@@ -91,12 +91,12 @@ class DefaultServicesScannerPlugin(ScanSetup):
 
 	def scanFinished(self, value = None):
 		print("finished")
-		print("self.scanIndex:"), self.scanIndex
+		print((("self.scanIndex:"), self.scanIndex))
 		db = eDVBDB.getInstance()
-		print("self.multiscanlist:"), self.multiscanlist
+		print((("self.multiscanlist:"), self.multiscanlist))
 		if len(self.multiscanlist) - 1 >= self.scanIndex and len(self.multiscanlist[self.scanIndex]) > 0:
 			satint = self.multiscanlist[self.scanIndex][0]
-			print("scanned sat:"), satint
+			print((("scanned sat:"), satint))
 			db.saveServicelist("/tmp/lamedb." + str(satint))
 			file = open("/tmp/sat" + str(satint) + ".info", "w")
 			xml = """<default>

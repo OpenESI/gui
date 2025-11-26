@@ -652,7 +652,7 @@ class InfoBarTimeshift:
 			try:
 				os.makedirs(timeshiftdir)
 			except:
-				print("[TIMESHIFT] - Failed to create %s !!" %timeshiftdir)
+				print(("[TIMESHIFT] - Failed to create %s !!" %timeshiftdir))
 
 	def restartTimeshift(self):
 		self.activateAutorecordTimeshift()
@@ -1011,7 +1011,7 @@ class InfoBarTimeshift:
 		if freespace < int(config.timeshift.timeshiftCheckFreeSpace.value):
 			for i in range(1,self.pts_eventcount + 1):
 				removeFiles.append(("pts_livebuffer_%s") % i)
-			print("[TIMESHIFT] - less than %s MByte disk space available - try to the deleting all unused timeshift files" % config.timeshift.timeshiftCheckFreeSpace.value)
+			print(("[TIMESHIFT] - less than %s MByte disk space available - try to the deleting all unused timeshift files" % config.timeshift.timeshiftCheckFreeSpace.value))
 		elif self.pts_eventcount - config.timeshift.timeshiftMaxEvents.value >= 0:
 			if self.event_changed or len(lockedFiles) == 0:
 				for i in range(1,self.pts_eventcount - config.timeshift.timeshiftMaxEvents.value + 2):
@@ -1061,7 +1061,7 @@ class InfoBarTimeshift:
 								os.rename("%s%s" % (config.usage.timeshift_path.value,filename), "%s%s.del_again" % (config.usage.timeshift_path.value,filename))
 								self.BgFileEraser.erase("%s%s.del_again" % (config.usage.timeshift_path.value,filename))
 							except:
-								print("[TIMESHIFT] - can't rename %s%s." % (config.usage.timeshift_path.value,filename))
+								print(("[TIMESHIFT] - can't rename %s%s." % (config.usage.timeshift_path.value,filename)))
 								self.BgFileEraser.erase("%s%s" % (config.usage.timeshift_path.value,filename))
 						else:
 							filesize += os.path.getsize("%s%s"  % (config.usage.timeshift_path.value,filename))
@@ -1181,7 +1181,7 @@ class InfoBarTimeshift:
 						metafile.write("%s\n%s\n%s\n%i\nautosaved\n" % (self.pts_curevent_servicerefname,self.pts_curevent_name.replace("\n", ""),self.pts_curevent_description.replace("\n", ""),int(self.pts_starttime)))
 						metafile.close()
 					except Exception as errormsg:
-						print("[TIMESHIFT] - %s" % errormsg)
+						print(("[TIMESHIFT] - %s" % errormsg))
 
 	def ptsRecordCurrentEvent(self):
 		recording = RecordTimerEntry(ServiceReference(self.session.nav.getCurrentlyPlayingServiceOrGroup()), time(), self.pts_curevent_end, self.pts_curevent_name, self.pts_curevent_description, self.pts_curevent_eventid, afterEvent = AFTEREVENT.AUTO, justplay = False, always_zap = False, dirname = config.usage.autorecord_path.value)
@@ -1280,7 +1280,7 @@ class InfoBarTimeshift:
 				serviceref = ServiceReference(self.session.nav.getCurrentlyPlayingServiceOrGroup()).ref.toString()
 				eEPGCache.getInstance().saveEventToFile(filename+".eit", serviceref, self.pts_curevent_eventid, -1, -1)
 			except Exception as errormsg:
-				print("[TIMESHIFT] - %s" % errormsg)
+				print(("[TIMESHIFT] - %s" % errormsg))
 
 	def ptsCopyFilefinished(self, srcfile, destfile):
 		# Erase Source File

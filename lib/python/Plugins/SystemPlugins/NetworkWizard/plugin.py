@@ -13,7 +13,7 @@ def startSetup(menuid):
 	return [(_("Network wizard"), NetworkWizardMain, "nw_wizard", 40)]
 
 def NetworkWizard(*args, **kwargs):
-	from NetworkWizard import NetworkWizard
+	from .NetworkWizard import NetworkWizard
 	return NetworkWizard(*args, **kwargs)
 
 def Plugins(**kwargs):

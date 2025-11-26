@@ -89,7 +89,7 @@ class Satfinder(ScanSetup, ServiceScan):
 	def newConfig(self):
 #		self.transponder = None
 		cur = self["config"].getCurrent()
-		print"cur ", cur
+		print(("cur ", cur))
 
 		if cur == self.tunerEntry:
 			self.feid = int(self.scan_nims.value)
@@ -161,7 +161,7 @@ class Satfinder(ScanSetup, ServiceScan):
 			(system in ('ATSC') and config.Nims[fe_id].atsc.configMode.value == "nothing") :
 			return
 		slot = nimmanager.nim_slots[fe_id]
-		print("dvb_api_version "),iDVBFrontend.dvb_api_version
+		print((("dvb_api_version "),iDVBFrontend.dvb_api_version))
 		self.frontend = None
 		if not self.openFrontend():
 			self.session.nav.stopService()
@@ -176,7 +176,7 @@ class Satfinder(ScanSetup, ServiceScan):
 		if slot.isMultiType():
 			eDVBResourceManager.getInstance().setFrontendType(slot.frontend_id, "dummy", False) #to force a clear of m_delsys_whitelist
 			types = slot.getMultiTypeList()
-			for FeType in types.itervalues():
+			for FeType in list(types.values()):
 				if FeType in ("DVB-S", "DVB-S2", "DVB-S2X") and config.Nims[slot.slot].dvbs.configMode.value == "nothing":
 					continue
 				elif FeType in ("DVB-T", "DVB-T2") and config.Nims[slot.slot].dvbt.configMode.value == "nothing":
@@ -204,11 +204,11 @@ class Satfinder(ScanSetup, ServiceScan):
 			else:
 				ret = False
 			if not ret:
-				print("%d: tunerTypeChange to '%s' failed") %(fe_id, system)
+				print((("%d: tunerTypeChange to '%s' failed") %(fe_id, system)))
 			else:
-				print("new system "),system
+				print((("new system "),system))
 		else:
-			print("%d: tunerTypeChange to '%s' failed (BUSY)") %(fe_id, multiType.getText())
+			print((("%d: tunerTypeChange to '%s' failed (BUSY)") %(fe_id, multiType.getText())))
 		self.retune()
 
 	def createConfig(self):
@@ -254,7 +254,7 @@ class Satfinder(ScanSetup, ServiceScan):
 			return self.retuneATSC()
 		self.frontend = None
 		self.raw_channel = None
-		print("error: tuner not enabled/supported"), nim.getType()
+		print((("error: tuner not enabled/supported"), nim.getType()))
 
 	def retuneCab(self):
 		if self.initcomplete:
@@ -434,7 +434,7 @@ class Satfinder(ScanSetup, ServiceScan):
 				self.transponder[3]  # system
 			)
 		else:
-			print("error: tuner not enabled/supported"), nim.getType()
+			print((("error: tuner not enabled/supported"), nim.getType()))
 		self.startScan(tlist, fe_id)
 
 	def startScan(self, tlist, feid):

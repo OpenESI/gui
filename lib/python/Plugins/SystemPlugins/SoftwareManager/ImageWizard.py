@@ -13,7 +13,7 @@ from Components.Pixmap import Pixmap, MovingPixmap, MultiPixmap
 from os import popen, path, makedirs, listdir, access, stat, rename, remove, W_OK, R_OK
 from enigma import eEnv
 from boxbranding import getBoxType, getImageDistro
-from BackupRestore import InitConfig as BackupRestore_InitConfig
+from .BackupRestore import InitConfig as BackupRestore_InitConfig
 
 from Components.config import config, getConfigListEntry, ConfigSubsection, ConfigText, ConfigLocations, ConfigBoolean
 from Components.Harddisk import harddiskmanager

@@ -53,7 +53,7 @@ class ServiceScan(Screen):
 				lcn = LCNBuildHelper()
 				lcn.buildAfterScan()
 			except Exception as e:
-				print e
+				print(e)
 
 			if self.currentInfobar.__class__.__name__ == "InfoBar":
 				selectedService = self["servicelist"].getCurrentSelection()

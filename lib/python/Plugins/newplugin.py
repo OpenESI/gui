@@ -3,9 +3,9 @@
 import os
 
 os.system("clear")
-internalname = raw_input("Internal plugin name (no whitespaces, plugin directory): ")
-name = raw_input("Visible plugin name: ")
-print
+internalname = eval(input("Internal plugin name (no whitespaces, plugin directory): "))
+name = eval(input("Visible plugin name: "))
+print()
 
 os.system("clear")
 dirlist = []
@@ -15,18 +15,18 @@ for dir in os.listdir("."):
 	if os.path.isdir(dir):
 		count += 1
 		dirlist.append(dir)
-		print count, dir
+		print((count, dir))
 
-category = raw_input("Select plugin category: ")
+category = eval(input("Select plugin category: "))
 category = dirlist[int(category) - 1]
 
 def add_where_extensionsmenu(name, fnc):
-	description = raw_input("Plugin description: ")
+	description = eval(input("Plugin description: "))
 	return 'PluginDescriptor(name = "%s", description = _("%s"), where = PluginDescriptor.WHERE_EXTENSIONSMENU, fnc = %s)' % (name, description, fnc)
 
 def add_where_pluginmenu(name, fnc):
-	description = raw_input("Plugin description: ")
-	icon = raw_input("Icon (default: 'plugin.png': ")
+	description = eval(input("Plugin description: "))
+	icon = eval(input("Icon (default: 'plugin.png': "))
 	if icon == "":
 		icon = "plugin.png"
 	return 'PluginDescriptor(name = "%s", description = _("%s"), icon = "%s", where = PluginDescriptor.WHERE_PLUGINMENU, fnc = %s)' % (name, description, icon, fnc)
@@ -41,17 +41,17 @@ while not stop:
 	os.system("clear")
 	print("selected targets:")
 	for where in targetlist:
-		print where[0]
+		print((where[0]))
 
-	print
+	print()
 	print("available targets:")
 	count = 0
 	for where in wherelist:
 		count += 1
-		print count, where[0]
+		print((count, where[0]))
 	print("x break")
 
-	target = raw_input("Select WHERE-target: ")
+	target = eval(input("Select WHERE-target: "))
 	if target == "x":
 		stop = True
 	else:
@@ -119,7 +119,7 @@ descriptorlist = []
 for count in range(len(targetlist)):
 	os.system("clear")
 	where = targetlist[count]
-	print("Options for target %s") % where[0]
+	print((("Options for target %s") % where[0]))
 	descriptorlist.append(where[1](name, mainlist[count]))
 
 if len(descriptorlist) == 1:

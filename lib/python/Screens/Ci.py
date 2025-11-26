@@ -1,4 +1,4 @@
-from Screen import Screen
+from .Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.ConfigList import ConfigListScreen
 from Components.ActionMap import ActionMap
@@ -170,7 +170,7 @@ class MMIDialog(Screen):
 	def __init__(self, session, slotid, action, handler = eDVBCI_UI.getInstance(), wait_text = "wait for ci...", screen_data = None ):
 		Screen.__init__(self, session)
 
-		print("MMIDialog with action") + str(action)
+		print((("MMIDialog with action") + str(action)))
 
 		self.mmiclosed = False
 		self.tag = None

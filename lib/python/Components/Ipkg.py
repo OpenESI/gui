@@ -25,7 +25,7 @@ def opkgAddDestination(mountpoint):
 	global opkgDestinations
 	if mountpoint not in opkgDestinations:
 		opkgDestinations.append(mountpoint)
-		print("[Ipkg] Added to OPKG destinations:", mountpoint)
+		print(("[Ipkg] Added to OPKG destinations:", mountpoint))
 
 def onPartitionChange(why, part):
 	global opkgDestinations
@@ -44,7 +44,7 @@ def onPartitionChange(why, part):
 		elif why == 'remove':
 			try:
 				opkgDestinations.remove(mountpoint)
-				print("[Ipkg] Removed from OPKG destinations:", mountpoint)
+				print(("[Ipkg] Removed from OPKG destinations:", mountpoint))
 			except:
 				pass
 
@@ -87,7 +87,7 @@ class IpkgComponent:
 		self.runCmd(opkgExtraDestinations() + ' ' + cmd)
 
 	def runCmd(self, cmd):
-		print("executing", self.ipkg, cmd)
+		print(("executing", self.ipkg, cmd))
 		self.cmd.appClosed.append(self.cmdFinished)
 		self.cmd.dataAvail.append(self.cmdData)
 		if self.cmd.execute(self.ipkg + " " + cmd):
@@ -109,7 +109,7 @@ class IpkgComponent:
 				append = " -test"
 			if len(self.excludeList) > 0:
 				for x in self.excludeList:
-					print("[IPKG] exclude Package (hold): '%s'" % x[0])
+					print(("[IPKG] exclude Package (hold): '%s'" % x[0]))
 					os.system("opkg flag hold " + x[0])
 			self.runCmdEx("upgrade" + append)
 		elif cmd == self.CMD_LIST:
@@ -135,7 +135,7 @@ class IpkgComponent:
 		self.cmd.dataAvail.remove(self.cmdData)
 		if len(self.excludeList) > 0:
 			for x in self.excludeList:
-				print("[IPKG] restore Package flag (unhold): '%s'" % x[0])
+				print(("[IPKG] restore Package flag (unhold): '%s'" % x[0]))
 				os.system("opkg flag ok " + x[0])
 
 	def cmdData(self, data):
@@ -212,8 +212,8 @@ class IpkgComponent:
 				# don't necessarily start at the beginning of a line
 				self.callCallbacks(self.EVENT_MODIFIED, data.split(' \'', 3)[1][:-1])
 		except Exception as ex:
-			print("[Ipkg] Failed to parse: '%s'" % data)
-			print("[Ipkg]", ex)
+			print(("[Ipkg] Failed to parse: '%s'" % data))
+			print(("[Ipkg]", ex))
 
 	def callCallbacks(self, event, param = None):
 		for callback in self.callbackList:

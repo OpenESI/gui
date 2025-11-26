@@ -1,4 +1,4 @@
-from Source import Source
+from .Source import Source
 from enigma import eServiceCenter, eServiceReference
 
 class ServiceList(Source):

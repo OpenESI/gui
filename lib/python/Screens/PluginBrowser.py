@@ -1,6 +1,6 @@
 from boxbranding import getImageVersion
 import os
-from Screen import Screen
+from .Screen import Screen
 from Screens.ParentalControlSetup import ProtectedScreen
 from Components.Language import language
 from enigma import eConsoleAppContainer, eDVBDB
@@ -650,7 +650,7 @@ class PluginDownloadBrowser(Screen):
 			try:
 				self.postInstallCall()
 			except Exception as ex:
-				print("[PluginBrowser] postInstallCall failed:"), ex
+				print((("[PluginBrowser] postInstallCall failed:"), ex))
 			self.resetPostInstall()
 		try:
 			os.unlink('/tmp/opkg.conf')
@@ -798,7 +798,7 @@ class PluginDownloadBrowser(Screen):
 					continue
 				self.plugins[split[0]].append((PluginDescriptor(name = x[3], description = x[2], icon = verticallineIcon), split[1], x[1]))
 
-		temp = self.plugins.keys()
+		temp = list(self.plugins.keys())
 		if config.usage.sort_pluginlist.value:
 			temp.sort()
 		for x in temp:

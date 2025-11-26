@@ -81,10 +81,10 @@ config.misc.DeepStandby = NoSave(ConfigYesNo(default=False)) # detect deepstandb
 
 #demo code for use of standby enter leave callbacks
 #def leaveStandby():
-#	print "!!!!!!!!!!!!!!!!!leave standby"
+#	print("!!!!!!!!!!!!!!!!!leave standby")
 
 #def standbyCountChanged(configelement):
-#	print "!!!!!!!!!!!!!!!!!enter standby num", configelement.value
+#	print("!!!!!!!!!!!!!!!!!enter standby num", configelement.value)
 #	from Screens.Standby import inStandby
 #	inStandby.onClose.append(leaveStandby)
 
@@ -152,17 +152,17 @@ had = dict()
 
 def dump(dir, p = ""):
 	if isinstance(dir, dict):
-		for (entry, val) in dir.items():
+		for (entry, val) in list(dir.items()):
 			dump(val, p + "(dict)/" + entry)
 	if hasattr(dir, "__dict__"):
-		for name, value in dir.__dict__.items():
+		for name, value in list(dir.__dict__.items()):
 			if str(value) not in had:
 				had[str(value)] = 1
 				dump(value, p + "/" + str(name))
 			else:
-				print(p + "/" + str(name) + ":" + str(dir.__class__) + "(cycle)")
+				print((p + "/" + str(name) + ":" + str(dir.__class__) + "(cycle)"))
 	else:
-		print(p + ":" + str(dir))
+		print((p + ":" + str(dir)))
 
 # + ":" + str(dir.__class__)
 
@@ -510,7 +510,7 @@ class AutoScartControl:
 		self.VCRSbChanged(self.current_vcr_sb)
 
 	def VCRSbChanged(self, value):
-		#print "vcr sb changed to", value
+		#print("vcr sb changed to", value)
 		self.current_vcr_sb = value
 		if config.av.vcrswitch.value or value > 2:
 			if value:
@@ -631,11 +631,11 @@ def runScreenTest():
 		f.write('-E2-')
 		f.close()
 
-	print("lastshutdown=%s		(True = last shutdown was OK)" % config.usage.shutdownOK.value)
-	print("NOK shutdown action=%s" % config.usage.shutdownNOK_action.value)
-	print("bootup action=%s" % config.usage.boot_action.value)
+	print(("lastshutdown=%s		(True = last shutdown was OK)" % config.usage.shutdownOK.value))
+	print(("NOK shutdown action=%s" % config.usage.shutdownNOK_action.value))
+	print(("bootup action=%s" % config.usage.boot_action.value))
 	if not config.usage.shutdownOK.value and not config.usage.shutdownNOK_action.value == 'normal' or not config.usage.boot_action.value == 'normal':
-		print("last shutdown = %s" % config.usage.shutdownOK.value)
+		print(("last shutdown = %s" % config.usage.shutdownOK.value))
 		import Screens.PowerLost
 		Screens.PowerLost.PowerLost(session)
 
@@ -661,7 +661,7 @@ def runScreenTest():
 	nowTime = time()
 #	if not config.misc.SyncTimeUsing.value == "0" or getBrandOEM() == 'gigablue':
 	if not config.misc.SyncTimeUsing.value == "0" or boxtype.startswith('gb') or getBrandOEM().startswith('ini'):
-		print("dvb time sync disabled... so set RTC now to current linux time!", strftime("%Y/%m/%d %H:%M"), localtime(nowTime))
+		print(("dvb time sync disabled... so set RTC now to current linux time!", strftime("%Y/%m/%d %H:%M"), localtime(nowTime)))
 		setRTCtime(nowTime)
 
 	#recordtimer
@@ -717,7 +717,7 @@ def runScreenTest():
 	]
 	wakeupList.sort()
 
-	print("=" * 100)
+	print(("=" * 100))
 	if wakeupList and wakeupList[0][0] > 0:
 		startTime = wakeupList[0]
 		# wakeup time before timer begins
@@ -740,10 +740,10 @@ def runScreenTest():
 			nextPluginName = " (%s)" % nextPluginName
 		else:
 			nextPluginName = ""
-		print("[mytest.py] set next wakeup type to '%s'%s %s" % ({0:"record-timer",1:"zap-timer",2:"power-timer",3:"plugin-timer"}[startTime[1]], nextPluginName, {0:"and starts normal",1:"and starts in standby"}[setStandby]))
+		print(("[mytest.py] set next wakeup type to '%s'%s %s" % ({0:"record-timer",1:"zap-timer",2:"power-timer",3:"plugin-timer"}[startTime[1]], nextPluginName, {0:"and starts normal",1:"and starts in standby"}[setStandby])))
 		if forceNextRecord:
 			print("[mytest.py] set from 'vps-plugin' or just before a 'record-timer' starts, set 'record-timer' wakeup flag")
-		print("[mytest.py] set next wakeup time to", strftime("%a, %Y/%m/%d %H:%M:%S"), localtime(wptime))
+		print(("[mytest.py] set next wakeup time to", strftime("%a, %Y/%m/%d %H:%M:%S"), localtime(wptime)))
 		#set next wakeup
 		setFPWakeuptime(wptime)
 		#set next standby only after shutdown in deep standby
@@ -756,7 +756,7 @@ def runScreenTest():
 			setFPWakeuptime(int(nowTime) - 3600) #minus one hour -> overwrite old wakeup time
 		print("[mytest.py] no set next wakeup time")
 	config.misc.nextWakeup.save()
-	print("=" * 100)
+	print(("=" * 100))
 
 	profile("stopService")
 	session.nav.stopService()
@@ -884,8 +884,8 @@ try:
 	Components.ParentalControl.parentalControl.save()
 except:
 	print('EXCEPTION IN PYTHON STARTUP CODE:')
-	print('-'*60)
+	print(('-'*60))
 	print_exc(file=stdout)
 	print("[mytest.py] quitMainloop #4")
 	enigma.quitMainloop(5)
-	print('-'*60)
+	print(('-'*60))

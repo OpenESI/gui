@@ -20,8 +20,9 @@ from Screens.HelpMenu import HelpableScreen
 from Screens.TaskView import JobView
 from Tools.Downloader import downloadWithProgress
 from enigma import fbClass
-import urllib
-from urllib2 import Request, urlopen, URLError, HTTPError
+import urllib.request, urllib.parse, urllib.error
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
 import urllib.request as urllib2
 import os
 import shutil
@@ -77,9 +78,9 @@ flashTmp = str(config.plugins.flh_openesi.mnt_flsh.value) +  '/images/tmp'
 try:
     os.mkdir(imagePath)
 except OSError:
-    print ("Creation of the directory %s failed" % imagePath)
+    print(("Creation of the directory %s failed" % imagePath))
 else:
-    print ("Successfully created the directory %s " % imagePath)
+    print(("Successfully created the directory %s " % imagePath))
     
     
     
@@ -94,7 +95,7 @@ ofgwritePath = '/usr/bin/ofgwrite'
 def Freespace(dev):
     statdev = os.statvfs(dev)
     space = statdev.f_bavail * statdev.f_frsize / 1024
-    print '[Flash ESI-Online] Free space on %s = %i kilobytes' % (dev, space)
+    print(('[Flash ESI-Online] Free space on %s = %i kilobytes' % (dev, space)))
     return space
 
 
@@ -152,7 +153,7 @@ class FlashOnline(Screen, ConfigListScreen):
             else:
                 self.multi = self.read_startup('/boot/' + self.list[self.selection]).split('.', 1)[1].split(' ', 1)[0]
             self.multi = self.multi[-1:]
-            print '[Flash Online] MULTI:', self.multi
+            print(('[Flash Online] MULTI:', self.multi))
 ##### edit lululla
         self['description'] = Label('')
         self.onChangedEntry = [ ]
@@ -184,12 +185,12 @@ class FlashOnline(Screen, ConfigListScreen):
 
     def keyLeft(self):
             ConfigListScreen.keyLeft(self)
-            print("current selection:"), self["config"].l.getCurrentSelection()
+            print((("current selection:"), self["config"].l.getCurrentSelection()))
             self.createSetup()
 
     def keyRight(self):
             ConfigListScreen.keyRight(self)
-            print("current selection:"), self["config"].l.getCurrentSelection()
+            print((("current selection:"), self["config"].l.getCurrentSelection()))
             self.createSetup()
         
     def createSetup(self):
@@ -266,9 +267,9 @@ class FlashOnline(Screen, ConfigListScreen):
             else:
                 self.multi = self.read_startup('/boot/' + self.list[self.selection]).split('.', 1)[1].split(' ', 1)[0]
             self.multi = self.multi[-1:]
-            print '[Flash Online] MULTI:', self.multi
+            print(('[Flash Online] MULTI:', self.multi))
             self.devrootfs = self.find_rootfs_dev(self.list[self.selection])
-            print '[Flash Online] MULTI rootfs ', self.devrootfs
+            print(('[Flash Online] MULTI rootfs ', self.devrootfs))
             self.read_current_multiboot()
 
     def read_current_multiboot(self):
@@ -304,8 +305,8 @@ class FlashOnline(Screen, ConfigListScreen):
             cmdline = cmdline.lstrip('/dev/')
             self.MTDROOTFS = cmdline
             self.MTDKERNEL = cmdline[:-1] + str(int(cmdline[-1:]) - 1)
-        print '[Flash Online] kernel device: ', self.MTDKERNEL
-        print '[Flash Online] rootfsdevice: ', self.MTDROOTFS
+        print(('[Flash Online] kernel device: ', self.MTDKERNEL))
+        print(('[Flash Online] rootfsdevice: ', self.MTDROOTFS))
 
     def read_startup(self, FILE):
         file = FILE
@@ -314,7 +315,7 @@ class FlashOnline(Screen, ConfigListScreen):
                 data = myfile.read().replace('\n', '')
             myfile.close()
         except IOError:
-            print '[ERROR] failed to open file %s' % file
+            print(('[ERROR] failed to open file %s' % file))
             data = ' '
 
         return data
@@ -443,7 +444,7 @@ class doFlashImage(Screen):
         else:
             sel = self['imageList'].l.getCurrentSelection()
             if sel == None:
-                print 'Nothing to select !!'
+                print('Nothing to select !!')
                 return
             self.filename = sel
             self.session.openWithCallback(self.RemoveCB, MessageBox, _('Do you really want to delete\n%s ?') % sel, MessageBox.TYPE_YESNO)
@@ -488,7 +489,7 @@ class doFlashImage(Screen):
     def getSel(self):
         self.sel = self['imageList'].l.getCurrentSelection()
         if self.sel == None:
-            print 'Nothing to select !!'
+            print('Nothing to select !!')
             return False
         else:
             self.filename = self.imagePath + '/' + self.sel
@@ -510,7 +511,7 @@ class doFlashImage(Screen):
             self.hide()
             self.session.openWithCallback(self.greenCB, MessageBox, _('Do you want to backup your settings now?'), default=True)
         if sel == None:
-            print 'Nothing to select !!'
+            print('Nothing to select !!')
             return
         else:
             file_name = self.imagePath + '/' + sel
@@ -527,12 +528,12 @@ class doFlashImage(Screen):
                 url = self.feedurl + '/' + brand + '/' + box + '/' + self.sel
             else:
                 url = self.feedurl + '/' + brand + '/' + box + '/' + sel
-            print 'URL:', url
-            u = urllib2.urlopen(url)
+            print(('URL:', url))
+            u = urllib.request.urlopen(url)
             f = open(self.filename, 'wb')
             meta = u.info()
             file_size = int(meta.getheaders('Content-Length')[0])
-            print 'Downloading: %s Bytes: %s' % (self.sel, file_size)
+            print(('Downloading: %s Bytes: %s' % (self.sel, file_size)))
             job = ImageDownloadJob(url, self.filename, self.sel)
             job.afterEvent = 'close'
             job_manager.AddJob(job)
@@ -565,11 +566,11 @@ class doFlashImage(Screen):
 
     def unzip_image(self, filename, path):
         if getBoxType() in 'dm7080dm820dm520dm525':
-            print 'Untaring %s to %s' % (filename, path)
+            print(('Untaring %s to %s' % (filename, path)))
             os.system('mkdir /dbackup.new')
             self.session.openWithCallback(self.cmdFinished, Console, title=_('Untaring files, Please wait ...'), cmdlist=['tar -xJf ' + filename + ' -C ' + '/dbackup.new', 'sleep 3'], closeOnSuccess=True)
         else:
-            print 'Unzip %s to %s' % (filename, path)
+            print(('Unzip %s to %s' % (filename, path)))
             self.session.openWithCallback(self.cmdFinished, Console, title=_('Unzipping files, Please wait ...'), cmdlist=['unzip ' + filename + ' -o -d ' + path, 'sleep 3'], closeOnSuccess=True)
 
     def cmdFinished(self):
@@ -580,35 +581,35 @@ class doFlashImage(Screen):
         try:
             if os.path.exists(flashPath +'/images/esirestore'):
                 os.unlink(flashPath + '/images/esirestore')
-                print 'AfterFlashAction: delete %s/images/esirestore' % flashPath
+                print(('AfterFlashAction: delete %s/images/esirestore' % flashPath))
         except:
-            print 'AfterFlashAction: failed to delete %s/images/esirestore' % flashPath
+            print(('AfterFlashAction: failed to delete %s/images/esirestore' % flashPath))
 
         title = _('Please select what to do after first booting the image:\n')
         list = ((_('Automatic restore of all settings and plugins?'), 'completerestore'), (_("Don't restore settings and plugins!"), 'norestore'))
         self.session.openWithCallback(self.AfterFlashAction, ChoiceBox, title=title, list=list)
 
     def AfterFlashAction(self, answer):
-        print 'starting AfterFlashAction'
+        print('starting AfterFlashAction')
         norestore = False
         completerestore = False
         if answer is not None:
             if answer[1] == 'norestore':
-                print 'norestore: no action required'
+                print('norestore: no action required')
             if answer[1] == 'completerestore':
                 try:
                     if not os.path.exists(flashPath + '/images'):
                         os.makedirs(flashPath + '/images')
-                    print 'AfterFlashAction: create %s/images/esirestore' %flashPath
-                    print 'AfterFlashAction: filename:', self.fullbackupfilename
+                    print(('AfterFlashAction: create %s/images/esirestore' %flashPath))
+                    print(('AfterFlashAction: filename:', self.fullbackupfilename))
                     backupsourcefile = self.fullbackupfilename
                     backupdestfile = flashPath + '/images/esirestore'
                     if not os.path.exists(backupsourcefile):
-                        print 'AfterFlashAction: No settings found.'
+                        print('AfterFlashAction: No settings found.')
                     else:
                         shutil.copyfile(backupsourcefile, backupdestfile)
                 except:
-                    print 'AfterFlashAction: failed to create %s/images/esirestore' %flashPath
+                    print(('AfterFlashAction: failed to create %s/images/esirestore' %flashPath))
 
         message = _('Do you want to start flashing now?\nEnigma2 is stopped and then automatically restarted.\nPlease check in advance for ongoing recordings!')
         self.session.openWithCallback(self.initFlashing, MessageBox, message, MessageBox.TYPE_YESNO, timeout=20)
@@ -621,7 +622,7 @@ class doFlashImage(Screen):
             self.close()
 
     def Start_Flashing(self):
-        print 'Start Flashing'
+        print('Start Flashing')
         cmdlist = []
         os.system('rm /sbin/init;ln -sfn /sbin/init.sysvinit /sbin/init')
         if os.path.exists(ofgwritePath):
@@ -749,7 +750,7 @@ class doFlashImage(Screen):
 
     def DeviceBrowserClosed(self, path, filename, binorzip):
         if path:
-            print path, filename, binorzip
+            print((path, filename, binorzip))
             strPath = str(path)
             if strPath[-1] == '/':
                 strPath = strPath[:-1]
@@ -776,7 +777,7 @@ class doFlashImage(Screen):
         brand = getMachineBrand()
         box = getBoxType()
         self.imagelist = []
-        print 'Self.online= ', self.Online                                                      
+        print(('Self.online= ', self.Online))                                                      
         if self.Online:
             self['key_yellow'].setText('Backup&Flash') #edit lululla
             self.feedurl = images[self.imagesCounter][1]
@@ -785,18 +786,18 @@ class doFlashImage(Screen):
                 url = '%s/%s/%s/' % (self.feedurl, brand, box)
             else:
                 url = '%s/%s/%s/' % (self.feedurl, brand, box)
-            print 'URL:', url
-            req = urllib2.Request(url)
+            print(('URL:', url))
+            req = urllib.request.Request(url)
             try:
-                response = urllib2.urlopen(req)
-            except urllib2.URLError as e:
-                print 'URL ERROR: %s' % e
+                response = urllib.request.urlopen(req)
+            except urllib.error.URLError as e:
+                print(('URL ERROR: %s' % e))
                 return
 
             try:
                 the_page = response.read()
-            except urllib2.HTTPError as e:
-                print 'HTTP download ERROR: %s' % e.code
+            except urllib.error.HTTPError as e:
+                print(('HTTP download ERROR: %s' % e.code))
                 return
 
             lines = the_page.split('\n')
@@ -874,10 +875,10 @@ class ImageDownloadTask(Task):
         self.download = downloadWithProgress(self.url, self.path)
         self.download.addProgress(self.download_progress)
         self.download.start().addCallback(self.download_finished).addErrback(self.download_failed)
-        print '[ImageDownloadTask] downloading', self.url, 'to', self.path
+        print(('[ImageDownloadTask] downloading', self.url, 'to', self.path))
 
     def abort(self):
-        print '[ImageDownloadTask] aborting', self.url
+        print(('[ImageDownloadTask] aborting', self.url))
         if self.download:
             self.download.stop()
         self.aborted = True
@@ -929,7 +930,7 @@ class DeviceBrowser(Screen, HelpableScreen):
         self.onClose.append(self.removeHotplug)
 
     def hotplugCB(self, dev, action):
-        print '[hotplugCB]', dev, action
+        print(('[hotplugCB]', dev, action))
         self.updateButton()
 
     def updateButton(self):
@@ -944,7 +945,7 @@ class DeviceBrowser(Screen, HelpableScreen):
             self['key_green'].setText('')  
             
     def removeHotplug(self):
-        print '[removeHotplug]'
+        print('[removeHotplug]')
         hotplugNotifier.remove(self.hotplugCB)
 
     def ok(self):
@@ -955,7 +956,7 @@ class DeviceBrowser(Screen, HelpableScreen):
                 self.filelist.descent()
 
     def use(self):
-        print '[use]', self['filelist'].getCurrentDirectory(), self['filelist'].getFilename()
+        print(('[use]', self['filelist'].getCurrentDirectory(), self['filelist'].getFilename()))
         if self['filelist'].getFilename() is not None and self['filelist'].getCurrentDirectory() is not None:
             if self['filelist'].getFilename().endswith('.bin') or self['filelist'].getFilename().endswith('.ubi') or self['filelist'].getFilename().endswith('.jffs2'):
                 self.close(self['filelist'].getCurrentDirectory(), self['filelist'].getFilename(), 0)
