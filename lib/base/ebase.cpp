@@ -30,7 +30,7 @@ void eSocketNotifier::start()
 	if (eMainloop::isValid(&context))
 	{
 		context.addSocketNotifier(this);
-		state=2;
+		state=2;  // running but not in poll yet
 	}
 }
 
@@ -56,7 +56,9 @@ void eTimer::start(long msek, bool singleShot)
 		bSingleShot = singleShot;
 		interval = msek;
 		clock_gettime(CLOCK_MONOTONIC, &nextActivation);
+//		eDebug("[eTimer] this = %p\nnow sec = %d, nsec = %d\nadd %d msec", this, nextActivation.tv_sec, nextActivation.tv_nsec, msek);
 		nextActivation += (msek<0 ? 0 : msek);
+//		eDebug("[eTimer] next Activation sec = %d, nsec = %d", nextActivation.tv_sec, nextActivation.tv_nsec );
 		context.addTimer(this);
 	}
 }
@@ -71,8 +73,10 @@ void eTimer::startLongTimer(int seconds)
 		bActive = bSingleShot = true;
 		interval = 0;
 		clock_gettime(CLOCK_MONOTONIC, &nextActivation);
+//		eDebug("[eTimer] this = %p\nnow sec = %d, nsec = %d\nadd %d sec", this, nextActivation.tv_sec, nextActivation.tv_nsec, seconds);
 		if ( seconds > 0 )
 			nextActivation.tv_sec += seconds;
+//		eDebug("[eTimer] next Activation sec = %d, nsec = %d", nextActivation.tv_sec, nextActivation.tv_nsec );
 		context.addTimer(this);
 	}
 }
@@ -88,22 +92,24 @@ void eTimer::stop()
 
 void eTimer::changeInterval(long msek)
 {
-	if (bActive)
+	if (bActive)  // Timer is running?
 	{
-		context.removeTimer(this);
-		nextActivation -= interval;
+		context.removeTimer(this);	 // then stop
+		nextActivation -= interval;  // sub old interval
 	}
 	else
-		bActive=true;
+		bActive=true; // then activate Timer
 
-	interval = msek;
-	nextActivation += interval;
+	interval = msek;	 			// set new Interval
+	nextActivation += interval;		// calc nextActivation
 
-	context.addTimer(this);
+	context.addTimer(this);				// add Timer to context TimerList
 }
 
-void eTimer::activate()
+void eTimer::activate()   // Internal Funktion... called from eApplication
 {
+	/* timer has already been removed from the context, when activate is called */
+
 	if (!bSingleShot)
 	{
 		nextActivation += interval;
@@ -112,9 +118,10 @@ void eTimer::activate()
 	else
 		bActive=false;
 
-	timeout();
+	/*emit*/ timeout();
 }
 
+// mainloop
 ePtrList<eMainloop> eMainloop::existing_loops;
 
 bool eMainloop::isValid(eMainloop *ml)
@@ -136,6 +143,13 @@ void eMainloop::addSocketNotifier(eSocketNotifier *sn)
 	int fd = sn->getFD();
 	if (m_inActivate && m_inActivate->ref == 1)
 	{
+		/*  when the current active SocketNotifier's refcount is one,
+			then no more external references are existing.
+			So it gets destroyed when the activate callback is finished (->AddRef() / ->Release() calls in processOneEvent).
+			But then the sn->stop() is called to late for the next Asserion.
+			Thus we call sn->stop() here (this implicitly calls eMainloop::removeSocketNotifier) and we don't get trouble
+			with the next Assertion.
+		*/
 		m_inActivate->stop();
 	}
 	ASSERT(notifiers.find(fd) == notifiers.end());
@@ -165,15 +179,17 @@ int eMainloop::processOneEvent(long user_timeout, PyObject **res, ePyObject addi
 	if (additional && !res)
 		eFatal("[eMainloop::processOneEvent] additional, but no res");
 
-	long poll_timeout = -1;
+	long poll_timeout = -1; /* infinite in case of empty timer list */
 
 	{
 		ePtrList<eTimer>::iterator it = m_timer_list.begin();
 		if (it != m_timer_list.end())
 		{
 			eTimer *tmr = *it;
-			timespec now;
+			/* get current time */
+			timespec now = {};
 			clock_gettime(CLOCK_MONOTONIC, &now);
+			/* process all timers which are ready. first remove them out of the list. */
 			while (tmr->needsActivation(now))
 			{
 				m_timer_list.erase(it);
@@ -188,7 +204,7 @@ int eMainloop::processOneEvent(long user_timeout, PyObject **res, ePyObject addi
 			if (it != m_timer_list.end()) poll_timeout = timeout_usec((*it)->getNextActivation());
 			if (poll_timeout < 0)
 				poll_timeout = 0;
-			else
+			else /* convert us to ms */
 				poll_timeout /= 1000;
 		}
 	}
@@ -206,34 +222,32 @@ int eMainloop::processOneEvent(long user_timeout, PyObject **res, ePyObject addi
 	if (additional)
 		fdcount += PyDict_Size(additional);
 
-	pollfd pfd[fdcount];
+		// build the poll aray
+	pollfd pfd[fdcount] = {};  // make new pollfd array
 	std::map<int,eSocketNotifier*>::iterator it = notifiers.begin();
 
 	int i=0;
 	for (; i < nativecount; ++i, ++it)
 	{
-		it->second->state = 1;
+		it->second->state = 1; // running and in poll
 		pfd[i].fd = it->first;
 		pfd[i].events = it->second->getRequested();
 	}
 
 	if (additional)
 	{
-#if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
-		typedef int Py_ssize_t;
-# define PY_SSIZE_T_MAX INT_MAX
-# define PY_SSIZE_T_MIN INT_MIN
-#endif
 		PyObject *key, *val;
 		Py_ssize_t pos=0;
 		while (PyDict_Next(additional, &pos, &key, &val)) {
 			pfd[i].fd = PyObject_AsFileDescriptor(key);
-			pfd[i++].events = PyInt_AsLong(val);
+			pfd[i++].events = PyLong_AsLong(val);
 		}
 	}
 
+
 	ret = _poll(pfd, fdcount, poll_timeout);
 
+	/* ret > 0 means that there are some active poll entries. */
 	if (ret > 0)
 	{
 		int i=0;
@@ -244,7 +258,7 @@ int eMainloop::processOneEvent(long user_timeout, PyObject **res, ePyObject addi
 			{
 				it = notifiers.find(pfd[i].fd);
 				if (it != notifiers.end()
-					&& it->second->state == 1)
+					&& it->second->state == 1) // added and in poll
 				{
 					m_inActivate = it->second;
 					int req = m_inActivate->getRequested();
@@ -264,11 +278,11 @@ int eMainloop::processOneEvent(long user_timeout, PyObject **res, ePyObject addi
 		{
 			if (pfd[i].revents)
 			{
-				if (!*res)
+				if (!*res)  // NOSONAR
 					*res = PyList_New(0);
 				ePyObject it = PyTuple_New(2);
-				PyTuple_SET_ITEM(it, 0, PyInt_FromLong(pfd[i].fd));
-				PyTuple_SET_ITEM(it, 1, PyInt_FromLong(pfd[i].revents));
+				PyTuple_SET_ITEM(it, 0, PyLong_FromLong(pfd[i].fd));
+				PyTuple_SET_ITEM(it, 1, PyLong_FromLong(pfd[i].revents));
 				PyList_Append(*res, it);
 				Py_DECREF(it);
 			}
@@ -276,10 +290,11 @@ int eMainloop::processOneEvent(long user_timeout, PyObject **res, ePyObject addi
 	}
 	else if (ret < 0)
 	{
+			/* when we got a signal, we get EINTR. */
 		if (errno != EINTR)
 			eDebug("[eMainloop::processOneEvent] poll made error: %m");
 		else
-			return_reason = 2;
+			return_reason = 2; /* don't assume the timeout has passed when we got a signal */
 	}
 	return return_reason;
 }
@@ -291,6 +306,7 @@ void eMainloop::addTimer(eTimer* e)
 
 void eMainloop::removeTimer(eTimer* e)
 {
+	/* use singleremove, timers never occur in our list multiple times, and remove() is a lot more expensive */
 	m_timer_list.singleremove(e);
 }
 
@@ -304,6 +320,7 @@ int eMainloop::iterate(unsigned int twisted_timeout, PyObject **res, ePyObject d
 		m_twisted_timer += twisted_timeout;
 	}
 
+		/* TODO: this code just became ugly. fix that. */
 	do
 	{
 		if (m_interrupt_requested)
@@ -318,9 +335,9 @@ int eMainloop::iterate(unsigned int twisted_timeout, PyObject **res, ePyObject d
 		int to = -1;
 		if (twisted_timeout)
 		{
-			timespec now, timeout;
+			timespec now = {}, timeout = {};
 			clock_gettime(CLOCK_MONOTONIC, &now);
-			if (m_twisted_timer<=now)
+			if (m_twisted_timer<=now) // timeout
 				return 0;
 			timeout = m_twisted_timer - now;
 			to = timeout.tv_sec * 1000 + timeout.tv_nsec / 1000000;
@@ -350,13 +367,13 @@ PyObject *eMainloop::poll(ePyObject timeout, ePyObject dict)
 	if (app_quit_now)
 		Py_RETURN_NONE;
 
-	int twisted_timeout = (timeout == Py_None) ? 0 : PyInt_AsLong(timeout);
+	int twisted_timeout = (timeout == Py_None) ? 0 : PyLong_AsLong(timeout);
 
 	iterate(twisted_timeout, &res, dict);
 	if (res)
 		return res;
 
-	return PyList_New(0);
+	return PyList_New(0); /* return empty list on timeout */
 }
 
 void eMainloop::interruptPoll()
@@ -381,6 +398,8 @@ int eApplication::_poll(struct pollfd *fds, nfds_t nfds, int timeout)
 
 	m_is_idle = 1;
 	++m_idle_count;
+	/* Py_BEGIN_ALLOW_THREADS contains a memory barrier, and that will
+	 * make the idleCount() and isIdle() interfaces work properly */
 	Py_BEGIN_ALLOW_THREADS
 	result = ::poll(fds, nfds, timeout);
 	Py_END_ALLOW_THREADS
