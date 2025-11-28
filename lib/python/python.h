@@ -269,7 +269,7 @@ inline ePyObject Impl_PyString_FromFormat(const char* file, int line, const char
 {
 	va_list ap;
 	va_start(ap, fmt);
-	PyObject *ob = PyUnicode_FromFormESI(fmt, ap);
+	PyObject *ob = PyUnicode_FromFormatV(fmt, ap);
 	va_end(ap);
 	return ePyObject(ob, file, line);
 }
@@ -366,7 +366,7 @@ inline ePyObject Impl_PyString_FromFormat(const char *fmt, ...)
 {
 	va_list ap;
 	va_start(ap, fmt);
-	PyObject *ob = PyUnicode_FromFormESI(fmt, ap);
+	PyObject *ob = PyUnicode_FromFormatV(fmt, ap);
 	va_end(ap);
 	return ePyObject(ob);
 }
