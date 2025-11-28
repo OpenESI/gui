@@ -1,25 +1,28 @@
 # takes a header file, outputs action ids
+from __future__ import print_function
+import tokenize
+import sys
 
-import tokenize, sys, string
 
 def filter(g):
-	while 1:
+	while True:
 		t = next(g)
 		if t[1] == "/*":
-			while g.next()[1] != "*/":
+			while next(g)[1] != "*/":
 				pass
 			continue
 		if t[1] == "//":
-			while g.next()[1] != "\n":
+			while next(g)[1] != "\n":
 				pass
 			continue
 
 		if t[1] != "\n":
-#			print(t)
+#			print t
 			yield t[1]
 
+
 def do_file(f, mode):
-	tokens = list(filter(tokenize.generate_tokens(open(f, 'r').readline)))
+	tokens = filter(tokenize.generate_tokens(open(f, 'r').readline))
 
 	sys.stderr.write("parsing %s\n" % f)
 
@@ -29,10 +32,10 @@ def do_file(f, mode):
 
 	firsthit = 1
 
-	while 1:
+	while True:
 		try:
 			t = next(tokens)
-		except:
+		except Exception as e:
 			break
 
 		if t == "class":
@@ -61,7 +64,7 @@ def do_file(f, mode):
 						pass
 
 					try:
-						print(actionname)
+						print(classname)
 					except:
 						pass
 
@@ -69,7 +72,7 @@ def do_file(f, mode):
 
 				counter = 0
 
-				while 1:
+				while True:
 
 					t = next(tokens)
 
@@ -89,16 +92,17 @@ def do_file(f, mode):
 
 						if mode == "include":
 							# hack hack hack!!
-							print(("#include <lib/" + '/'.join(f.split('/')[-2:]) + ">"))
+							print("#include <lib/" + '/'.join(f.split('/')[-2:]) + ">")
 						else:
-							print(("\t// " + f))
+							print("\t// " + f)
 
 						firsthit = 0
 
 					if mode == "parse":
-						print(("{\"" + actionname + "\", \"" + t + "\", " + string.join((classname, t), "::") + "},"))
+						print("{\"" + actionname + "\", \"" + t + "\", " + "::".join((classname, t)) + "},")
 
 					counter += 1
+
 
 mode = sys.argv[1]
 
