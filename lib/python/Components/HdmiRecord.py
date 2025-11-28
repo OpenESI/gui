@@ -1,9 +1,10 @@
-from .config import config, ConfigSelection, ConfigSubsection
-from boxbranding import getBoxType, getMachineBuild
+from __future__ import absolute_import
+from Components.config import config, ConfigSelection, ConfigSubsection
+from Components.SystemInfo import BoxInfo
 
 
 def InitHdmiRecord():
-    full_hd = getMachineBuild() in ('et10000','dm900', 'dm920', 'et13000', 'sf5008', 'vuuno4kse', 'vuduo4k') or getBoxType() in ('spycat4k','spycat4kcombo','gbquad4k')
+    full_hd = BoxInfo.getItem("model") in ('et10000', 'dm900', 'dm920', 'et13000', 'sf5008', 'vuuno4kse', 'vuduo4k') or BoxInfo.getItem("machinebuild") in ('spycat4k', 'spycat4kcombo', 'gbquad4k')
 
     config.hdmirecord = ConfigSubsection()
 
@@ -73,8 +74,8 @@ def InitHdmiRecord():
     # Intentionally not a boolean because the API expects an integer parsed from the string
     config.hdmirecord.interlaced = ConfigSelection(
         choices=[
-            ("0", "No"),
-            ("1", "Yes"),
+            ("0", _("No")),
+            ("1", _("Yes")),
         ], default="0")
 
     config.hdmirecord.aspectratio = ConfigSelection(

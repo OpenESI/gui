@@ -1,7 +1,9 @@
+from __future__ import print_function
 from datasource import datasource
 
+
 class lamedb(datasource):
-	def __init__(self, filename = "lamedb"):
+	def __init__(self, filename="lamedb"):
 		datasource.__init__(self)
 		self.setFilename(filename)
 
@@ -12,7 +14,7 @@ class lamedb(datasource):
 		return "lamedb"
 
 	def getCapabilities(self):
-		return [("read file", self.read), ("print(all", self.printAll)]
+		return [("read file", self.read), ("print all", self.printAll)]
 
 	def read(self):
 		inputfile = open(self.filename, "r")
@@ -48,14 +50,14 @@ class lamedb(datasource):
 					data = line.strip().split(":")
 					tsid = str(int(data[1], 16))
 					onid = str(int(data[2], 16))
-		satlist = list(sats.keys())
+		satlist = sats.keys()
 		satlist.sort()
 
 		for sat in satlist:
 			print(sat)
 			self.addSat(sat, sat)
 			transponders = sats[sat]
-			transponders.sort(key = lambda a: a[0])
+			transponders.sort(key=lambda a: a[0])
 			for transpondertuple in transponders:
 				transponder = transpondertuple[0]
 				tsid = transpondertuple[1]

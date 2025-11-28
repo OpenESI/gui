@@ -14,8 +14,8 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 */
-#include "freesatv2.h"
-#ifdef FREESATV2_DEBUG
+#include "freesESI2.h"
+#ifdef FREESESI2_DEBUG
 #	include "eerror.h"
 #endif
 #include <asm/types.h>
@@ -176,7 +176,7 @@ static void loadFile(huffTableEntry **table, const char *filename)
 			}
 		}
 	}
-#ifdef FREESATV2_DEBUG
+#ifdef FREESESI2_DEBUG
 	else
 	{
 		eDebug("[FREESAT] Cannot load '%s'",filename);
@@ -277,7 +277,7 @@ std::string freesatHuffmanDecoder::decode(const unsigned char *src, size_t size)
 			}
 			else
 			{
-#ifdef FREESATV2_DEBUG
+#ifdef FREESESI2_DEBUG
 				eDebug("[FREESAT] Missing table %d entry: <%s>", table_index + 1, uncompressed.c_str());
 #endif
 				return uncompressed;

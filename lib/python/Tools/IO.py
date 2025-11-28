@@ -1,5 +1,7 @@
+from __future__ import print_function
 from os import fchmod, fsync, path, rename, unlink
 from tempfile import NamedTemporaryFile
+
 
 def saveFile(filename, data, mode=0o644):
 	tmpFilename = None
@@ -17,7 +19,7 @@ def saveFile(filename, data, mode=0o644):
 		f.close()
 		rename(tmpFilename, filename)
 	except Exception as e:
-		print(('saveFile: failed to write to %s: %s' % (filename, e)))
+		print('saveFile: failed to write to %s: %s' % (filename, e))
 		if tmpFilename and path.exists(tmpFilename):
 			unlink(tmpFilename)
 		return False

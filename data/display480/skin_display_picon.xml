@@ -37,7 +37,7 @@
 		</widget>
 	</screen>
 <!-- Tuner Panel -->	
-	<screen name="MeinTunerESIteam">
+	<screen name="MeinTunerInfoPanel">
 		<widget source="session.FrontendInfo" render="FixedLabel" position="5,285" size="28,32" text="A" foregroundColor="#04B404" font="FdLcD;24" zPosition="1" transparent="1" halign="center" >
 			<convert type="FrontendInfo">NUMBER</convert>
 			<convert type="ValueRange">0,0</convert>
@@ -103,7 +103,7 @@
 	</screen>
 <!-- main-->
 	<screen name="InfoBarSummary" position="5,0" size="471,320">
-		<widget source="session.CurrentService" render="LcdPicon" position="118,0" zPosition="2" size="236,160" alphatest="on">
+		<widget source="session.CurrentService" render="LcdPicon" position="118,0" zPosition="2" size="236,142" alphatest="on">
 			<convert type="ServiceName">Reference</convert>
 		</widget>
 		<widget source="session.Event_Now" render="Label" position="0,111" size="115,51" font="FdLcD;38" foregroundColor="#87CEFA" valign="center" halign="center">
@@ -125,7 +125,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>
 <!-- Movieplayer auch MediaPortal-->
 	<screen name="InfoBarMoviePlayerSummary" position="5,0" size="471,320">
@@ -142,7 +142,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>
 
 	<screen name="MovieContextMenuSummary" position="5,0" size="471,320">
@@ -177,7 +177,7 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>		
 <!-- channelselection -->
 	<screen name="ChannelSelection_summary" position="5,0" size="471,320">
@@ -224,7 +224,7 @@
 	</screen>
 <!-- menus-->
 	<screen name="MenuSummary" position="fill">
-		<widget source="parent.title" render="Label" position="top" size="*,105" font="FdLcD;38" foregroundColor="#87CEFA" halign="center" valign="center" />
+		<widget source="Title" render="Label" position="top" size="*,105" font="FdLcD;38" foregroundColor="#87CEFA" halign="center" valign="center" />
 		<eLabel position="top" size="*,1" backgroundColor="white" />
 		<widget source="parent.menu" render="Label" position="top" size="*,115" font="FdLcD;38" halign="center" valign="center">
 			<convert type="StringListSelection" />
@@ -236,13 +236,13 @@
 		<eLabel position="0,116" size="471,1" backgroundColor="white" />
 		<widget source="parent.summary_description" render="Label" position="0,117" size="471,203" zPosition="1" font="FdLcD;35" halign="center" valign="center" />
 	</screen>
-<!-- AeonFHD_MOD-Menu -->
+<!-- DarknessHD-Menu -->
 	<screen name="MainSettingsView_summary" position="5,0" size="471,320">
 		<widget source="parent.titleText" render="Label" position="0,0" size="471,237" font="FdLcD;35" foregroundColor="#87CEFA" halign="center" valign="center" />
 		<panel name="SummaryClockPanel" />
 	</screen>
-<!-- ESIteam -->
-	<screen name="ESIteam_summary" position="5,0" size="471,320">
+<!-- Infopanel -->
+	<screen name="Infopanel_summary" position="5,0" size="471,320">
 		<widget source="parent.Title" render="Label" position="0,0" size="471,113" font="FdLcD;38" foregroundColor="#87CEFA" halign="center" valign="center" />
 		<eLabel position="0,116" size="471,1" backgroundColor="white" />
 		<widget source="parent.summary_description" render="Label" position="0,117" size="471,203" zPosition="1" font="FdLcD;35" halign="center" valign="center" />
@@ -303,7 +303,7 @@
 			<convert type="ClockToText">Format:%d.%m.%Y</convert>
 		</widget>
 		<panel name="MeinRecordingPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>
 <!-- Plugin browser -->
 	<screen name="PluginBrowserSummary" position="fill">
@@ -371,16 +371,15 @@
 	<screen name="ChoiceBox_summary" position="fill" >
 		<widget source="parent.summary_list" render="Label" position="fill" font="FdLcD;21" noWrap="1" valign="top" />
 	</screen>
-	<screen name="MessageBox_summary" position="5,0" size="471,320">
-		<widget source="parent.Text" render="Label" position="0,0" size="471,320" font="FdLcD;24" halign="center" />
-		<widget source="parent.selectedChoice" render="Label" position="0,180" size="471,37" font="FdLcD;26" foregroundColor="#F4FA58" halign="center" noWrap="1" />
+	<screen name="MessageBoxSummary" position="5,0" size="471,320">
+		<widget source="text" render="Label" position="0,0" size="471,320" font="FdLcD;24" halign="center" />
+		<widget source="option" render="Label" position="0,180" size="471,37" font="FdLcD;26" foregroundColor="#F4FA58" halign="center" noWrap="1" />
 	</screen>
-	<screen name="MessageBoxSimple_summary" position="5,0" size="471,320">
-		<widget source="parent.Text" render="Label" position="0,0" size="471,320" font="FdLcD;24" halign="center" />
-		<widget source="parent.selectedChoice" render="Label" position="0,180" size="471,37" font="FdLcD;26" foregroundColor="#F4FA58" halign="center" noWrap="1" />
+	<screen name="MessageBoxSimpleSummary" position="5,0" size="471,320">
+		<panel name="MessageBoxSummary" />
 	</screen>
 	<screen name="AboutSummary" position="5,0" size="471,320">
-		<widget source="AboutText" render="Label" position="0,0" size="471,320" font="FdLcD;11" />
+		<widget source="parent.Title" render="Label" position="0,0" size="471,320" font="FdLcD;34" foregroundColor="#F4FA58" halign="center" valign="center" />
 	</screen>
 <!-- LocationBox_summary -->
 	<screen name="LocationBox_summary" position="5,0" size="471,320">
@@ -444,10 +443,6 @@
 		<widget source="parent.list" render="Label" position="0,113" size="471,165" font="FdLcD;24" halign="center" >
 			<convert type="StringListSelection" />
 		</widget>
-	</screen>
-	<screen name="LanguageWizardSummary" position="5,0" size="471,320">
-		<widget source="parent.summarytext" render="Label" position="0,0" size="471,73" font="FdLcD;24" halign="center" />
-		<widget source="parent.summarylangname" render="Label" position="0,113" size="471,165" font="FdLcD;24" halign="center" />
 	</screen>
 	<screen name="VideoWizardSummary" position="fill">
 		<widget source="text" render="Label" position="0,0" size="471,67" font="FdLcD;24" halign="center" />
@@ -540,6 +535,6 @@
 		</widget>
 		<panel name="MeinRecordingPanel" />
 		<panel name="SummaryClockPanel" />
-		<panel name="MeinTunerESIteam" />
+		<panel name="MeinTunerInfoPanel" />
 	</screen>	
 </skin>

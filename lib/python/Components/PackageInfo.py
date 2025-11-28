@@ -1,17 +1,21 @@
+from __future__ import absolute_import
 import xml.sax
-from Tools.Directories import crawlDirectory, resolveFilename, SCOPE_CONFIG, SCOPE_SKIN, copyfile, copytree
+from Tools.Directories import crawlDirectory, resolveFilename, SCOPE_CONFIG, SCOPE_SKINS, copyfile, copytree
 from Components.NimManager import nimmanager
-from Components.Ipkg import IpkgComponent
+from Components.Opkg import OpkgComponent
 from Components.config import config, configfile
-from boxbranding import getBoxType
+from Components.SystemInfo import BoxInfo
 from enigma import eConsoleAppContainer, eDVBDB
 import os
+
 
 class InfoHandlerParseError(Exception):
 	def __init__(self, value):
 		self.value = value
+
 	def __str__(self):
 		return repr(self.value)
+
 
 class InfoHandler(xml.sax.ContentHandler):
 	def __init__(self, prerequisiteMet, directory):
@@ -100,9 +104,9 @@ class InfoHandler(xml.sax.ContentHandler):
 						directory = self.directory + directory
 				else:
 					directory = self.directory
-				self.attributes[self.filetype].append({ "name": str(self.fileattrs["name"]), "directory": directory })
+				self.attributes[self.filetype].append({"name": str(self.fileattrs["name"]), "directory": directory})
 
-		if name in ( "default", "package" ):
+		if name in ("default", "package"):
 			self.list.append({"attributes": self.attributes, 'prerequisites': self.globalprerequisites})
 			self.attributes = {}
 			self.globalprerequisites = {}
@@ -129,7 +133,7 @@ class PackageInfoHandler:
 	STATUS_ERROR = 2
 	STATUS_INIT = 4
 
-	def __init__(self, statusCallback, blocking = False, neededTag = None, neededFlag = None):
+	def __init__(self, statusCallback, blocking=False, neededTag=None, neededFlag=None):
 		self.directory = "/"
 
 		self.neededTag = neededTag
@@ -157,7 +161,7 @@ class PackageInfoHandler:
 		try:
 			xml.sax.parse(file, handler)
 			for entry in handler.list:
-				self.packageslist.append((entry,file))
+				self.packageslist.append((entry, file))
 		except InfoHandlerParseError:
 			pass
 
@@ -166,7 +170,7 @@ class PackageInfoHandler:
 		try:
 			xml.sax.parse(file, handler)
 			for entry in handler.list:
-				self.packagesIndexlist.append((entry,file))
+				self.packagesIndexlist.append((entry, file))
 		except InfoHandlerParseError:
 			pass
 
@@ -176,11 +180,11 @@ class PackageInfoHandler:
 		try:
 			xml.sax.parse(file, handler)
 			for entry in handler.list:
-				self.packageDetails.append((entry,file))
+				self.packageDetails.append((entry, file))
 		except InfoHandlerParseError:
 			pass
 
-	def fillPackagesList(self, prerequisites = True):
+	def fillPackagesList(self, prerequisites=True):
 		self.packageslist = []
 		packages = []
 		if not isinstance(self.directory, list):
@@ -198,7 +202,7 @@ class PackageInfoHandler:
 					self.packageslist.remove(package)
 		return self.packageslist
 
-	def fillPackagesIndexList(self, prerequisites = True):
+	def fillPackagesIndexList(self, prerequisites=True):
 		self.packagesIndexlist = []
 		indexfileList = []
 
@@ -215,7 +219,7 @@ class PackageInfoHandler:
 			for file in indexfileList:
 				neededFile = self.directory[0] + "/" + file
 				if os.path.isfile(neededFile):
-					self.readIndex(self.directory[0] + "/" , neededFile)
+					self.readIndex(self.directory[0] + "/", neededFile)
 
 		if prerequisites:
 			for package in self.packagesIndexlist[:]:
@@ -223,7 +227,7 @@ class PackageInfoHandler:
 					self.packagesIndexlist.remove(package)
 		return self.packagesIndexlist
 
-	def fillPackageDetails(self, details = None):
+	def fillPackageDetails(self, details=None):
 		self.packageDetails = []
 		detailsfile = details
 		if not isinstance(self.directory, list):
@@ -269,7 +273,7 @@ class PackageInfoHandler:
 		if "hardware" in prerequisites:
 			hardware_found = False
 			for hardware in prerequisites["hardware"]:
-				if hardware == getBoxType():
+				if hardware == BoxInfo.getItem("machinebuild"):
 					hardware_found = True
 			if not hardware_found:
 				return False
@@ -337,7 +341,6 @@ class PackageInfoHandler:
 			self.installSkin(skin["directory"], skin["name"])
 		elif currentAttribute == "config":
 			if self.currentIndex == 0:
-				from Components.config import configfile
 				configfile.save()
 			config = attributes["config"][self.currentIndex]
 			self.mergeConfig(config["directory"], config["name"])
@@ -359,7 +362,7 @@ class PackageInfoHandler:
 		fd.close()
 		return lines
 
-	def mergeConfig(self, directory, name, merge = True):
+	def mergeConfig(self, directory, name, merge=True):
 		if os.path.isfile(directory + name):
 			config.loadFromFile(directory + name, base_file=False)
 			configfile.save()
@@ -370,25 +373,25 @@ class PackageInfoHandler:
 			os.system("opkg install " + directory + name)
 			self.installNext()
 		else:
-			self.ipkg = IpkgComponent()
-			self.ipkg.addCallback(self.ipkgCallback)
-			self.ipkg.startCmd(IpkgComponent.CMD_INSTALL, {'package': directory + name})
+			self.opkg = OpkgComponent()
+			self.opkg.addCallback(self.opkgCallback)
+			self.opkg.startCmd(OpkgComponent.CMD_INSTALL, {'package': directory + name})
 
-	def ipkgCallback(self, event, param):
-		if event == IpkgComponent.EVENT_DONE:
+	def opkgCallback(self, event, param):
+		if event == OpkgComponent.EVENT_DONE:
 			self.installNext()
-		elif event == IpkgComponent.EVENT_ERROR:
+		elif event == OpkgComponent.EVENT_ERROR:
 			self.installNext()
 
 	def installSkin(self, directory, name):
 		if self.blocking:
-			copytree(directory, resolveFilename(SCOPE_SKIN))
+			copytree(directory, resolveFilename(SCOPE_SKINS))
 			self.installNext()
 		else:
-			if self.console.execute("cp -a %s %s" % (directory, resolveFilename(SCOPE_SKIN))):
+			if self.console.execute("cp -a %s %s" % (directory, resolveFilename(SCOPE_SKINS))):
 				self.installNext()
 
-	def mergeServices(self, directory, name, merge = False):
+	def mergeServices(self, directory, name, merge=False):
 		if os.path.isfile(directory + name):
 			db = eDVBDB.getInstance()
 			db.reloadServicelist()

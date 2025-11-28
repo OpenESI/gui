@@ -1,4 +1,6 @@
+from __future__ import print_function
 from input import inputChoices
+
 
 class datasource:
 	def __init__(self):
@@ -14,11 +16,11 @@ class datasource:
 		return "N/A"
 
 	def getStatus(self):
-		text = str(len(list(self.transponderlist.keys()))) + " Satellites" + "\n"
+		text = str(len(self.transponderlist.keys())) + " Satellites" + "\n"
 		return text
 
 	def printAll(self):
-		for sat in list(self.transponderlist.keys()):
+		for sat in self.transponderlist.keys():
 			print("***********")
 			print("sat:", sat, self.satnames[sat])
 			for transponder in self.transponderlist[sat]:
@@ -40,8 +42,9 @@ class datasource:
 			self.satnames[satpos] = satname
 
 	def addTransponder(self, satpos, transponder):
-		if len(list(transponder.keys())) >= 6:
+		if len(transponder.keys()) >= 6:
 			self.transponderlist[satpos].append(transponder)
+
 
 class genericdatasource(datasource):
 	def __init__(self):
@@ -55,12 +58,12 @@ class genericdatasource(datasource):
 		return [("copy data from one source to another", self.copy), ("merge data from one source into another", self.merge)]
 
 	def copy(self):
-		self.copymerge(action = "copy")
+		self.copymerge(action="copy")
 
 	def merge(self):
-		self.copymerge(action = "merge")
+		self.copymerge(action="merge")
 
-	def copymerge(self, action = "copy"):
+	def copymerge(self, action="copy"):
 		choice = -1
 		while choice is not None:
 			choice = inputChoices(["select source", "select destination", "copy now!"])
@@ -73,7 +76,7 @@ class genericdatasource(datasource):
 			elif choice == 2:
 				self.docopymerge(action)
 
-	def docopymerge(self, action = "copy"):
+	def docopymerge(self, action="copy"):
 		if self.source is None:
 			print("select a source first!")
 		elif self.destination is None:
@@ -88,7 +91,7 @@ class genericdatasource(datasource):
 			counttransponder = 0
 			if action == "copy":
 				self.destination.clear()
-			for satpos in list(self.source.transponderlist.keys()):
+			for satpos in self.source.transponderlist.keys():
 				countsat += 1
 				self.destination.addSat(self.source.satnames[satpos], satpos)
 				for transponder in self.source.transponderlist[satpos]:
@@ -101,7 +104,7 @@ class genericdatasource(datasource):
 		sources = []
 		for source in self.datasources:
 			if source != self:
-				list.append(source.getName() + (" (%d sats)" % len(list(source.transponderlist.keys()))))
+				list.append(source.getName() + (" (%d sats)" % len(source.transponderlist.keys())))
 				sources.append(source)
 		choice = inputChoices(list)
 		if choice is None:

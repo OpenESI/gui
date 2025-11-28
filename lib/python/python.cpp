@@ -2,9 +2,9 @@
                 /* avoid warnigs :) */
 #undef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 200112L
-extern "C" void init_enigma();
-extern "C" void eBaseInit(void);
-extern "C" void eConsoleInit(void);
+extern "C" PyObject* PyInit__enigma(void);
+extern "C" PyObject* PyInit_eBaseImpl(void);
+extern "C" PyObject* PyInit_eConsoleImpl(void);
 extern void quitMainloop(int exitCode);
 extern void bsodFatal(const char *component);
 extern bool bsodRestart();
@@ -124,12 +124,12 @@ ePython::ePython()
 
 //	Py_OptimizeFlag = 1;
 
-	Py_Initialize();
-	PyEval_InitThreads();
+	PyImport_AppendInittab("_enigma", PyInit__enigma);
+	PyImport_AppendInittab("eBaseImpl", PyInit_eBaseImpl);
+	PyImport_AppendInittab("eConsoleImpl", PyInit_eConsoleImpl);
 
-	init_enigma();
-	eBaseInit();
-	eConsoleInit();
+	Py_Initialize();
+
 }
 
 ePython::~ePython()
@@ -207,7 +207,7 @@ int ePython::call(ePyObject pFunc, ePyObject pArgs)
 		 	PyErr_Print();
 			ePyObject FuncStr = PyObject_Str(pFunc);
 			ePyObject ArgStr = PyObject_Str(pArgs);
-		 	eDebug("[ePyObject] (PyObject_CallObject(%s,%s) failed)", PyString_AS_STRING(FuncStr), PyString_AS_STRING(ArgStr));
+			eLog(lvlFatal, "[ePyObject] (PyObject_CallObject(%s,%s) failed)", PyString_AS_STRING(FuncStr), PyString_AS_STRING(ArgStr));
 			Py_DECREF(FuncStr);
 			Py_DECREF(ArgStr);
 			/* immediately show BSOD, so we have the actual error at the bottom */

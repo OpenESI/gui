@@ -9,12 +9,12 @@
 #include <sys/vfs.h> // for statfs
 #include <lib/base/encoding.h>
 #include <lib/base/estring.h>
-#include <lib/base/esimpleconfig.h>
 #include <lib/dvb/db.h>
 #include <lib/dvb/dvb.h>
 #include <lib/dvb/epgchanneldata.h>
 #include <lib/dvb/epgtransponderdatareader.h>
 #include <lib/dvb/lowlevel/eit.h>
+#include <lib/base/nconfig.h>
 #include <dvbsi++/content_identifier_descriptor.h>
 #include <dvbsi++/descriptor_tag.h>
 #include <unordered_set>
@@ -289,7 +289,7 @@ eventData::~eventData()
 			DescriptorPair &p = it->second;
 			if (p.reference_count == 0)
 			{
-				eDebug("[eEPGCache] Event data reference count is already zero!");
+				eDebug("[eEPGCache] Eventdata reference count is already zero!");
 			}
 			if (!--p.reference_count) // no more used descriptor
 			{
@@ -313,7 +313,7 @@ void eventData::load(FILE *f)
 	int id=0;
 	DescriptorPair p;
 	uint8_t header[2];
-	[[maybe_unused]] size_t ret; /* dummy value to store fread return values */
+	size_t ret; /* dummy value to store fread return values */
 	ret = fread(&size, sizeof(int), 1, f);
 	descriptors.rehash(size);
 	while(size)
@@ -335,6 +335,7 @@ void eventData::load(FILE *f)
 		descriptors[id] = p;
 		--size;
 	}
+	(void)ret;
 }
 
 void eventData::save(FILE *f)
@@ -357,7 +358,7 @@ void eventData::save(FILE *f)
 void eventData::cacheCorrupt(const char* context)
 {
 
-	eDebug("[eEPGCache] EPG eventData cache is corrupt (%s), you should restart Enigma!", context);
+	eDebug("[eventData] EPG Cache is corrupt (%s), you should restart Enigma!", context);
 	if (!isCacheCorrupt)
 	{
 		isCacheCorrupt = true;
@@ -376,9 +377,9 @@ DEFINE_REF(eEPGCache)
 eEPGCache::eEPGCache()
 	:messages(this,1,"eEPGCache"), m_running(false), m_enabledEpgSources(0), cleanTimer(eTimer::create(this)), m_debug(false), m_timeQueryRef(nullptr)
 {
-	eDebug("[eEPGCache] Initialized EPG cache (wait for setCacheFile).");
+	eDebug("[eEPGCache] Initialized EPGCache (wait for setCacheFile call now)");
 
-	load_epg = eSimpleConfig::getString("config.usage.remote_fallback_import", "").find("epg") == std::string::npos;
+	load_epg = eConfigManager::getConfigValue("config.usage.remote_fallback_import").find("epg") == std::string::npos;
 
 	historySeconds = 0;
 	maxdays = 7;
@@ -395,10 +396,8 @@ eEPGCache::eEPGCache()
 		onid_blacklist.insert(onid_blacklist.end(),1,tmp_onid);
 	onid_file.close();
 
-	m_debug = eSimpleConfig::getBool("config.crash.debugEPG", false);
-	m_saveepg = eSimpleConfig::getBool("config.epg.saveepg", true);
-	m_icetv_enabled = eSimpleConfig::getBool("config.plugins.icetv.configured", false) && eSimpleConfig::getBool("config.plugins.icetv.enable_epg", false);
-
+	m_debug = eConfigManager::getConfigBoolValue("config.crash.debugEPG");
+	
 	instance = this;
 }
 
@@ -408,7 +407,7 @@ void eEPGCache::setCacheFile(const char *path)
 	m_filename = path;
 	if (!inited)
 	{
-		eDebug("[eEPGCache] EPG setCacheFile read/write data from/to '%s'.", m_filename.c_str());
+		eDebug("[eEPGCache] setCacheFile read/write epg data from/to '%s'", m_filename.c_str());
 		if (eDVBLocalTimeHandler::getInstance()->ready())
 			timeUpdated();
 	}
@@ -420,14 +419,14 @@ void eEPGCache::timeUpdated()
 	{
 		if (!m_running)
 		{
-			eDebug("[eEPGCache] Time updated, start EPG main loop.");
+			eDebug("[eEPGCache] time updated.. start EPG Mainloop");
 			run();
 			m_running = true;
 		} else
 			messages.send(Message(Message::timeChanged));
 	}
 	else
-		eDebug("[eEPGCache] Time updated, cache file not set yet. Don't start EPG!");
+		eDebug("[eEPGCache] time updated.. but cache file not set yet.. dont start epg!!");
 }
 
 /**
@@ -499,24 +498,21 @@ void eEPGCache::sectionRead(const uint8_t *data, int source, eEPGChannelData *ch
 	eventMap &eventmap = servicemap.byEvent;
 	timeMap &timemap = servicemap.byTime;
 
-	if(m_icetv_enabled) 
+	if (!(source & EPG_IMPORT) && (servicemap.sources & EPG_IMPORT))
+		return;
+	else if ((source & EPG_IMPORT) && !(servicemap.sources & EPG_IMPORT))
 	{
-		if (!(source & EPG_IMPORT) && (servicemap.sources & EPG_IMPORT))
-			return;
-		else if ((source & EPG_IMPORT) && !(servicemap.sources & EPG_IMPORT))
+		if (!eventmap.empty() || !timemap.empty())
 		{
-			if (!eventmap.empty() || !timemap.empty())
-			{
-				flushEPG(service);
-				servicemap = eventDB[service];
-				eventmap = servicemap.byEvent;
-				timemap = servicemap.byTime;
-			}
-			servicemap.sources = source;
+			flushEPG(service);
+			servicemap = eventDB[service];
+			eventmap = servicemap.byEvent;
+			timemap = servicemap.byTime;
 		}
-		else
-			servicemap.sources |= source;
+		servicemap.sources = source;
 	}
+	else
+		servicemap.sources |= source;
 
 	while (ptr<len)
 	{
@@ -555,7 +551,7 @@ void eEPGCache::sectionRead(const uint8_t *data, int source, eEPGChannelData *ch
 			}
 
 //			if(m_debug)
-//				eDebug("[eEPGCache] Created event %04X at %ld.", new_evt->getEventID(), new_start);
+//				eDebug("[eEPGCache] created event %04x at %ld", new_evt->getEventID(), new_start);
 
 			// Remove existing event if the id matches
 			eventMap::iterator ev_it = eventmap.find(event_id);
@@ -564,18 +560,18 @@ void eEPGCache::sectionRead(const uint8_t *data, int source, eEPGChannelData *ch
 				if ((source & ~EPG_IMPORT) > (ev_it->second->type & ~EPG_IMPORT))
 				{
 					if(m_debug)
-						eDebug("[eEPGCache] Event %04X skip update: source=0x%X > type=0x%X.", event_id, source, ev_it->second->type);
+						eDebug("[eEPGCache] event %04x skip update: source=0x%x > type=0x%x", event_id, source, ev_it->second->type);
 					delete new_evt;
 					goto next;
 				}
 
 				if(m_debug)
-					eDebug("[eEPGCache] Removing event %04X at %ld.", ev_it->second->getEventID(), ev_it->second->getStartTime());
+					eDebug("[eEPGCache] removing event %04x at %ld", ev_it->second->getEventID(), ev_it->second->getStartTime());
 
 				// Remove existing event
 				if (timemap.erase(ev_it->second->getStartTime()) == 0)
 				{
-					eDebug("[eEPGCache] Event %04X not found in time map at %ld.", event_id, ev_it->second->getStartTime());
+					eDebug("[eEPGCache] Event %04x not found in timeMap at %ld", event_id, ev_it->second->getStartTime());
 				}
 				eventData *data = ev_it->second;
 				eventmap.erase(ev_it);
@@ -600,13 +596,13 @@ void eEPGCache::sectionRead(const uint8_t *data, int source, eEPGChannelData *ch
 				time_t old_end = old_start + it->second->getDuration();
 
 //				if(m_debug)
-//					eDebug("[eEPGCache] Checking against event %04X at %ld.", it->second->getEventID(), it->second->getStartTime());
+//					eDebug("[eEPGCache] checking against event %04x at %ld", it->second->getEventID(), it->second->getStartTime());
 
 				if ((old_start < new_end) && (old_end > new_start))
 				{
 
 					if(m_debug) {
-						eDebug("[eEPGCache] Removing old overlapping event %04X:\n"
+						eDebug("[eEPGCache] removing old overlapping event %04x\n"
 								"       old %ld ~ %ld\n"
 								"       new %ld ~ %ld",
 								it->second->getEventID(), old_start, old_end, new_start, new_end);
@@ -614,7 +610,7 @@ void eEPGCache::sectionRead(const uint8_t *data, int source, eEPGChannelData *ch
 
 					if (eventmap.erase(it->second->getEventID()) == 0)
 					{
-						eDebug("[eEPGCache] Event %04X not found in event map at %ld.", it->second->getEventID(), it->second->getStartTime());
+						eDebug("[eEPGCache] Event %04x not found in eventMap at %ld", it->second->getEventID(), it->second->getStartTime());
 					}
 					delete it->second;
 					timemap.erase(it++);
@@ -628,7 +624,7 @@ void eEPGCache::sectionRead(const uint8_t *data, int source, eEPGChannelData *ch
 			}
 
 			if(m_debug)
-				eDebug("[eEPGCache] Inserting event %04X at %ld.", event_id, new_start);
+				eDebug("[eEPGCache] Inserting event %04x at %ld", event_id, new_start);
 
 			eventmap[event_id] = new_evt;
 			timemap[new_start] = new_evt;
@@ -637,7 +633,7 @@ next:
 #ifdef EPG_DEBUG
 		if (eventmap.size() != timemap.size())
 		{
-			eDebug("[eEPGCache] Service (%04X:%04X:%04X) eventmap.size(%d) != timemap.size(%d)!",
+			eDebug("[eEPGCache] svc(%04x:%04x:%04x) eventmap.size(%d) != timemap.size(%d)",
 					service.onid, service.tsid, service.sid, eventmap.size(), timemap.size());
 			{
 				CFile f("/hdd/event_map.txt", "w+");
@@ -657,7 +653,7 @@ next:
 						i++, (int)it->first, (long)it->second->getStartTime(), (int)it->second->getEventID(), it->second);
 				}
 			}
-			eFatal("[eEPGCache] '/hdd/event_map.txt' and '/hdd/time_map.txt' generated for debugging purposes.");
+			eFatal("[eEPGCache] /hdd/event_map.txt and /hdd/time_map.txt generated for debugging purposes");
 		}
 #endif
 		ptr += eit_event_size;
@@ -692,11 +688,11 @@ void eEPGCache::clearCompleteEPGCache()
 
 void eEPGCache::flushEPG(const uniqueEPGKey & s, bool lock) // lock only affects complete flush
 {
-	eDebug("[eEPGCache] Flush EPG %d.", (int)(bool)s);
+	eDebug("[eEPGCache] flushEPG %d", (int)(bool)s);
 	if (s)  // clear only this service
 	{
 		singleLock l(cache_lock);  // TODO : Probably double lock ( Sonar : This lock has already been acquired elock.h line 13)
-		eDebug("[eEPGCache] Flush EPG service (%04X:%04X:%04X).", s.onid, s.tsid, s.sid);
+		eDebug("[eEPGCache] flushEPG svc(%04x:%04x:%04x)", s.onid, s.tsid, s.sid);
 		eventCache::iterator it = eventDB.find(s);
 		if (it != eventDB.end())
 		{
@@ -717,12 +713,34 @@ void eEPGCache::flushEPG(const uniqueEPGKey & s, bool lock) // lock only affects
 				content_time_tables.erase(it);
 			}
 #endif
-			// TODO .. search corresponding channel for removed service and remove this channel from lastupdated map
+			// remove this service's channel from lastupdated map
+			{
+				singleLock l(eEPGTransponderDataReader::last_channel_update_lock);
+				for (updateMap::iterator it = eEPGTransponderDataReader::getInstance()->m_channelLastUpdated.begin(); it != eEPGTransponderDataReader::getInstance()->m_channelLastUpdated.end(); )
+				{
+					const eDVBChannelID &chid = it->first;
+					if(chid.original_network_id == s.onid && chid.transport_stream_id == s.tsid)
+						it = eEPGTransponderDataReader::getInstance()->m_channelLastUpdated.erase(it);
+					else
+						++it;
+				}
+			}
+
+			singleLock m(eEPGTransponderDataReader::known_channel_lock);
+			for (ChannelMap::const_iterator it(eEPGTransponderDataReader::getInstance()->m_knownChannels.begin()); it != eEPGTransponderDataReader::getInstance()->m_knownChannels.end(); ++it)
+			{
+				const eDVBChannelID chid = it->second->channel->getChannelID();
+				if(chid.original_network_id == s.onid && chid.transport_stream_id == s.tsid)
+				{
+					it->second->abortEPG();
+					it->second->startChannel();
+				}
+			}
 		}
 	}
 	else // clear complete EPG Cache
 	{
-		eDebug("[eEPGCache] Flush EPG all services.");
+		eDebug("[eEPGCache] flushEPG all services");
 		if (lock)
 		{
 			singleLock l(cache_lock);
@@ -758,14 +776,14 @@ void eEPGCache::cleanLoop()
 				if (end_time < now)
 				{
 					if(m_debug) {
-						eDebug("[eEPGCache] cleanLoop: Service (%04X:%04X:%04X) delete old event %04X at time %ld.",
+						eDebug("[eEPGCache] cleanLoop: svc(%04x:%04x:%04x) delete old event %04x at time %ld",
 							DBIt->first.onid, DBIt->first.tsid, DBIt->first.sid,
 							It->second->getEventID(), (long)start_time);
 					}
 
 					if (eventmap.erase(It->second->getEventID()) == 0)
 					{
-						eDebug("[eEPGCache] Event %04X not found in time map at %ld.", It->second->getEventID(), start_time);
+						eDebug("[eEPGCache] Event %04x not found in timeMap at %ld", It->second->getEventID(), start_time);
 					}
 					delete It->second;
 					timemap.erase(It++);
@@ -828,7 +846,7 @@ void eEPGCache::gotMessage( const Message &msg )
 			cleanLoop();
 			break;
 		default:
-			eDebug("[eEPGCache] Unhandled EPG cache message!");
+			eDebug("[eEPGCache] unhandled EPGCache Message!!");
 			break;
 	}
 }
@@ -838,7 +856,7 @@ void eEPGCache::thread()
 	hasStarted();
 	if (nice(4) == -1)
 	{
-		eDebug("[eEPGCache] Thread failed to modify scheduling priority!  (%m)");
+		eDebug("[eEPGCache] thread failed to modify scheduling priority (%m)");
 	}
 	if (load_epg) { load(); }
 	/*emit*/ epgCacheStarted();
@@ -859,7 +877,7 @@ const static unsigned int EPG_MAGIC = 0x98765432;
 void eEPGCache::load()
 {
 	if(m_debug)
-		eDebug("[eEPGCache] Starting EPG cache load.");
+		eDebug("[eEPGCache] load()");
 
 	if (m_filename.empty())
 		m_filename = "/hdd/epg.dat";
@@ -874,16 +892,16 @@ void eEPGCache::load()
 
 	FILE *f = fopen(EPGDAT, "rb");
 	int renameResult;
-	[[maybe_unused]] size_t ret; /* dummy value to store fread return values */
+	size_t ret; /* dummy value to store fread return values */
 	if (f == NULL)
 	{
 		/* No EPG on harddisk, so try internal flash */
-		eDebug("[eEPGCache] '%s' not found, try '%s'.", EPGDAT, EPGDAT_IN_FLASH);
+		eDebug("[eEPGCache] %s not found, try %s", EPGDAT, EPGDAT_IN_FLASH);
 		EPGDAT = EPGDAT_IN_FLASH;
 		f = fopen(EPGDAT, "rb");
 		if (f == NULL)
 		{
-			eDebug("[eEPGCache] '%s' not found, giving up!", EPGDAT);
+			eDebug("[eEPGCache] %s not found, giving up", EPGDAT);
 			return;
 		}
 		renameResult = -1;
@@ -892,7 +910,7 @@ void eEPGCache::load()
 	{
 		unlink(EPGDATX);
 		renameResult = rename(EPGDAT, EPGDATX);
-		if (renameResult) eDebug("[eEPGCache] Failed to rename '%s' to '%s'!  (%m)", EPGDAT, EPGDATX);
+		if (renameResult) eDebug("[eEPGCache] failed to rename %s to %s: %m", EPGDAT, EPGDATX);
 	}
 	{
 		int size=0;
@@ -902,7 +920,7 @@ void eEPGCache::load()
 		ret = fread( &magic, sizeof(int), 1, f);
 		if (magic != EPG_MAGIC)
 		{
-			eDebug("[eEPGCache] EPG file load failed magic test. Expected 0x%08X got 0x%08X.  (%m)", EPG_MAGIC, magic);
+			eDebug("[eEPGCache] epg file load failed magic test expected 0x%08x, got 0x%08x (%m)", EPG_MAGIC, magic);
 			fclose(f);
 			return;
 		}
@@ -965,7 +983,7 @@ void eEPGCache::load()
 					overlaps.insert(key);
 			}
 			eventData::load(f);
-			eDebug("[eEPGCache] %d events read from '%s'.", cnt, EPGDAT);
+			eDebug("[eEPGCache] %d events read from %s", cnt, EPGDAT);
 #ifdef ENABLE_PRIVATE_EPG
 			char text2[11];
 			ret = fread( text2, 11, 1, f);
@@ -1018,13 +1036,13 @@ void eEPGCache::load()
 					if (start_time < last_end || start_time == end_time)
 					{
 						if(m_debug) {
-							eDebug("[eEPGCache] load: Service (%04X:%04X:%04X) delete overlapping/zero-length event %04X at time %ld.",
+							eDebug("[eEPGCache] load: svc(%04x:%04x:%04x) delete overlapping/zero-length event %04x at time %ld",
 								it->onid, it->tsid, it->sid,
 								It->second->getEventID(), (long)start_time);
 						}
 						if (eventmap.erase(It->second->getEventID()) == 0)
 						{
-							eDebug("[eEPGCache] Event %04X not found in time map at %ld.", It->second->getEventID(), start_time);
+							eDebug("[eEPGCache] Event %04x not found in timeMap at %ld", It->second->getEventID(), start_time);
 						}
 						delete It->second;
 						timemap.erase(It++);
@@ -1038,26 +1056,28 @@ void eEPGCache::load()
 			}
 		}
 		else
-			eDebug("[eEPGCache] Don't read old EPG database!");
+			eDebug("[eEPGCache] don't read old epg database");
 		posix_fadvise(fileno(f), 0, 0, POSIX_FADV_DONTNEED);
 		fclose(f);
 		// We got this far, so the EPG file is okay.
 		if (renameResult == 0)
 		{
 			renameResult = rename(EPGDATX, EPGDAT);
-			if (renameResult) eDebug("[eEPGCache] Failed to rename 'epg.dat' back.");
+			if (renameResult) eDebug("[eEPGCache] failed to rename epg.dat back");
 		}
 	}
+	(void)ret;
 	if(m_debug)
-		eDebug("[eEPGCache] Finishing loading EPG cache.");
+		eDebug("[eEPGCache] load() - finished");
 }
 
 void eEPGCache::save()
 {
 	if(m_debug)
-		eDebug("[eEPGCache] Starting EPG cache save.");
+		eDebug("[eEPGCache] save()");
 
-	if (m_saveepg)
+	bool save_epg = eConfigManager::getConfigBoolValue("config.epg.saveepg", true);
+	if (save_epg)
 	{
 		if (eventData::isCacheCorrupt)
 			return;
@@ -1073,12 +1093,12 @@ void eEPGCache::save()
 		FILE *f = fopen(EPGDAT, "wb");
 		if (!f)
 		{
-			eDebug("[eEPGCache] Failed to open '%s'!  (%m)", EPGDAT);
+			eDebug("[eEPGCache] Failed to open %s: %m", EPGDAT);
 			EPGDAT = EPGDAT_IN_FLASH;
 			f = fopen(EPGDAT, "wb");
 			if (!f)
 			{
-				eDebug("[eEPGCache] Failed to open '%s'!  (%m)", EPGDAT);
+				eDebug("[eEPGCache] Failed to open '%s' (%m)", EPGDAT);
 				return;
 			}
 		}
@@ -1086,18 +1106,18 @@ void eEPGCache::save()
 		char* buf = realpath(EPGDAT, NULL);
 		if (!buf)
 		{
-			eDebug("[eEPGCache] Applying realpath to '%s' failed in save!  (%m)", EPGDAT);
+			eDebug("[eEPGCache] realpath to '%s' failed in save (%m)", EPGDAT);
 			fclose(f);
 			return;
 		}
 
 		if(m_debug)
-			eDebug("[eEPGCache] Store EPG to realpath '%s'.", buf);
+			eDebug("[eEPGCache] store epg to realpath '%s'", buf);
 
-		struct statfs st = {};
+		struct statfs st;
 		off64_t tmp;
 		if (statfs(buf, &st) < 0) {
-			eDebug("[eEPGCache] Applying statfs '%s' failed in save!  (%m)", buf);
+			eDebug("[eEPGCache] statfs '%s' failed in save (%m)", buf);
 			fclose(f);
 			free(buf);
 			return;
@@ -1108,7 +1128,7 @@ void eEPGCache::save()
 		tmp*=st.f_bsize;
 		if ( tmp < (eventData::CacheSize*12)/10 ) // 20% overhead
 		{
-			eDebug("[eEPGCache] Not enough free space at '%s' %jd bytes available but %u needed!", buf, (intmax_t)tmp, (eventData::CacheSize*12)/10);
+			eDebug("[eEPGCache] not enough free space at '%s' %jd bytes available but %u needed", buf, (intmax_t)tmp, (eventData::CacheSize*12)/10);
 			fclose(f);
 			free(buf);
 			return;
@@ -1143,7 +1163,7 @@ void eEPGCache::save()
 		}
 
 		if(m_debug)
-			eDebug("[eEPGCache] %d events written to %s.", cnt, EPGDAT);
+			eDebug("[eEPGCache] %d events written to %s", cnt, EPGDAT);
 
 		eventData::save(f);
 #ifdef ENABLE_PRIVATE_EPG
@@ -1297,7 +1317,7 @@ RESULT eEPGCache::lookupEventId(const eServiceReference &service, int event_id, 
 		{
 			result = 0;
 			if(m_debug)
-				eDebug("[eEPGCache] Event %04X not found in EPG cache.", event_id);
+				eDebug("[eEPGCache] event %04x not found in epgcache", event_id);
 		}
 	}
 	return -1;
@@ -1310,7 +1330,7 @@ RESULT eEPGCache::saveEventToFile(const char* filename, const eServiceReference 
 	const eventData *data = NULL;
 	if ( eit_event_id != -1 )
 	{
-		eDebug("[eEPGCache] %s EPG event id %X.", __func__, eit_event_id);
+		eDebug("[eEPGCache] %s epg event id %x", __func__, eit_event_id);
 		ret = lookupEventId(service, eit_event_id, data);
 	}
 	if ( (ret != 0) && (begTime != -1) )
@@ -1325,7 +1345,7 @@ RESULT eEPGCache::saveEventToFile(const char* filename, const eServiceReference 
 		int fd = open(filename, O_CREAT|O_WRONLY, 0666);
 		if (fd < 0)
 		{
-			eDebug("[eEPGCache] Failed to create file '%s'!", filename);
+			eDebug("[eEPGCache] Failed to create file: %s", filename);
 			return fd;
 		}
 		const eit_event_struct *event = data->get();
@@ -1335,7 +1355,7 @@ RESULT eEPGCache::saveEventToFile(const char* filename, const eServiceReference 
 		if ( wr != evLen )
 		{
 			::unlink(filename); /* Remove faulty file */
-			eDebug("[eEPGCache] EIT write error on '%s'!  (%m)", filename);
+			eDebug("[eEPGCache] eit write error on %s: %m", filename);
 			ret = (wr < 0) ? wr : -1;
 		}
 	}
@@ -1507,20 +1527,16 @@ RESULT eEPGCache::getNextTimeEntry(ePtr<eServiceEvent> &result)
 	return -1;
 }
 
-void fillTuple(ePyObject tuple, const char *argstring, int argcount, ePyObject service_reference, eServiceEvent *ptr, ePyObject service_name, ePyObject nowTime, eventData *evData)
+void fillTuple(ePyObject tuple, const char *argstring, int argcount, ePyObject service_reference, eServiceEvent *ptr, ePyObject service_name, ePyObject nowTime, eventData *evData )
 {
 	// eDebug("[eEPGCache] fillTuple arg=%s argcnt=%d, ptr=%d evData=%d", argstring, argcount, ptr ? 1 : 0, evData ? 1 : 0);
 	ePyObject tmp;
-	int spos = 0, tpos = 0;
+	int spos=0, tpos=0;
 	char c;
-	while (spos < argcount)
+	while(spos < argcount)
 	{
-		bool inc_refcount = false;
-		c = argstring[spos++];
-		if (c > '0' && c <= '9') // ignore 1-9 that's only for the amount of items
-			continue;
-
-		switch (c)
+		bool inc_refcount=false;
+		switch((c=argstring[spos++]))
 		{
 			case '0': // PyLong 0
 				tmp = PyLong_FromLong(0);
@@ -1535,13 +1551,13 @@ void fillTuple(ePyObject tuple, const char *argstring, int argcount, ePyObject s
 				tmp = ptr ? PyLong_FromLong(ptr->getDuration()) : (evData ? PyLong_FromLong(evData->getDuration()) : ePyObject());
 				break;
 			case 'T': // Event Title
-				tmp = ptr ? ePyObject(PyUnicode_FromString(ptr->getEventName().c_str())) : ePyObject();
+				tmp = ptr ? PyString_FromString(ptr->getEventName().c_str()) : ePyObject();
 				break;
 			case 'S': // Event Short Description
-				tmp = ptr ? ePyObject(PyUnicode_FromString(ptr->getShortDescription().c_str())) : ePyObject();
+				tmp = ptr ? PyString_FromString(ptr->getShortDescription().c_str()) : ePyObject();
 				break;
 			case 'E': // Event Extended Description
-				tmp = ptr ? ePyObject(PyUnicode_FromString(ptr->getExtendedDescription().c_str())) : ePyObject();
+				tmp = ptr ? PyString_FromString(ptr->getExtendedDescription().c_str()) : ePyObject();
 				break;
 			case 'P': // Event Parental Rating
 				tmp = ptr ? ePyObject(ptr->getParentalData()) : ePyObject();
@@ -1567,9 +1583,9 @@ void fillTuple(ePyObject tuple, const char *argstring, int argcount, ePyObject s
 				continue;
 			case 'M': // GN return 10 items only
 				continue;
-			default: // ignore unknown
+			default:  // ignore unknown
 				tmp = ePyObject();
-				eDebug("[eEPGCache] For fillTuple, unknown '%c'. Insert 'None' in result.", c);
+				eDebug("[eEPGCache] fillTuple unknown '%c'... insert 'None' in result", c);
 		}
 		if (!tmp)
 		{
@@ -1596,8 +1612,8 @@ int handleEvent(eServiceEvent *ptr, ePyObject dest_list, const char* argstring, 
 				Py_DECREF(nowTime);
 			Py_DECREF(convertFuncArgs);
 			Py_DECREF(dest_list);
-			PyErr_SetString(PyExc_Exception, "[eEPGCache] handleEvent: Error in convertFunc execute!");
-			//eDebug("[eEPGCache] handleEvent: Error in convertFunc execute!");
+			PyErr_SetString(PyExc_Exception, "[eEPGCache] handleEvent: error in convertFunc execute");
+			//eDebug("[eEPGCache] handleEvent: error in convertFunc execute");
 			return -1;
 		}
 		PyList_Append(dest_list, result);
@@ -1632,7 +1648,6 @@ int handleEvent(eServiceEvent *ptr, ePyObject dest_list, const char* argstring, 
 //       The returned tuple is filled with all available infos... non avail is filled as None
 //       The position and existence of 'X' in the format string has no influence on the result tuple... its completely ignored..
 //   M = see X just 10 items are returned
-//   1-9 = see X just 1-9 items are returned ( this must be the last item )
 // then for each service follows a tuple
 //   first tuple entry is the servicereference (as string... use the ref.toString() function)
 //   the second is the type of query
@@ -1648,34 +1663,34 @@ int handleEvent(eServiceEvent *ptr, ePyObject dest_list, const char* argstring, 
 PyObject *eEPGCache::lookupEvent(ePyObject list, ePyObject convertFunc)
 {
 	ePyObject convertFuncArgs;
-	int argcount = 0;
-	const char *argstring = NULL;
+	int argcount=0;
+	const char *argstring=NULL;
 	if (!PyList_Check(list))
 	{
-		PyErr_SetString(PyExc_TypeError, "[eEPGCache] Argument 0 is not a list!");
-		// eDebug("[eEPGCache] No list!");
+		PyErr_SetString(PyExc_TypeError, "[eEPGCache] arg 0 is not a list");
+		//eDebug("[eEPGCache] no list");
 		return NULL;
 	}
-	int listIt = 0;
-	int listSize = PyList_Size(list);
+	int listIt=0;
+	int listSize=PyList_Size(list);
 	if (!listSize)
 	{
-		PyErr_SetString(PyExc_TypeError, "[eEPGCache] No parameters given!");
-		// eDebug("[eEPGCache] No parameters given!");
+		PyErr_SetString(PyExc_TypeError, "[eEPGCache] no params given");
+		//eDebug("[eEPGCache] no params given");
 		return NULL;
 	}
 	else
 	{
-		ePyObject argv = PyList_GET_ITEM(list, 0); // borrowed reference!
-		if (PyUnicode_Check(argv))
+		ePyObject argv=PyList_GET_ITEM(list, 0); // borrowed reference!
+		if (PyString_Check(argv))
 		{
-			argstring = PyUnicode_AsUTF8(argv);
+			argstring = PyString_AS_STRING(argv);
 			++listIt;
 		}
 		else
 			argstring = "I"; // just event id as default
 		argcount = strlen(argstring);
-		//		eDebug("[eEPGCache] Have %d arguments ('%s'.)", argcount, argstring);
+//		eDebug("[eEPGCache] have %d args('%s')", argcount, argstring);
 	}
 
 	bool forceReturnOne = strchr(argstring, 'X') ? true : false;
@@ -1683,78 +1698,71 @@ PyObject *eEPGCache::lookupEvent(ePyObject list, ePyObject convertFunc)
 		--argcount;
 
 	bool forceReturnTen = strchr(argstring, 'M') ? true : false;
-	int forceMaxItems = (forceReturnTen) ? 10 : 0;
-	if (!forceReturnTen && !forceReturnOne && argcount > 0)
-	{
-		char lastarg = argstring[argcount - 1];
-		if (lastarg > '0' && lastarg <= '9')
-		{
-			forceMaxItems = lastarg - '0';
-		}
-	}
-	int returnMaxItemsCount = 1;
+	int returnTenItemsCount=1;
 
 	if (convertFunc)
 	{
 		if (!PyCallable_Check(convertFunc))
 		{
-			PyErr_SetString(PyExc_TypeError, "[eEPGCache] The convertFunc is not callable!");
-			// eDebug("[eEPGCache] The convertFunc is not callable!");
+			PyErr_SetString(PyExc_TypeError, "[eEPGCache] convertFunc is not callable");
+			//eDebug("[eEPGCache] convertFunc is not callable");
 			return NULL;
 		}
 		convertFuncArgs = PyTuple_New(argcount);
 	}
 
-	ePyObject nowTime = strchr(argstring, 'C') ? PyLong_FromLong(::time(0)) : ePyObject();
+	ePyObject nowTime = strchr(argstring, 'C') ?
+		PyLong_FromLong(::time(0)) :
+		ePyObject();
 
 	int must_get_service_name = strchr(argstring, 'N') ? 1 : strchr(argstring, 'n') ? 2 : 0;
 
 	// create dest list
-	ePyObject dest_list = PyList_New(0);
-	while (listSize > listIt)
+	ePyObject dest_list=PyList_New(0);
+	while(listSize > listIt)
 	{
-		ePyObject item = PyList_GET_ITEM(list, listIt++); // borrowed reference!
+		ePyObject item=PyList_GET_ITEM(list, listIt++); // borrowed reference!
 		if (PyTuple_Check(item))
 		{
-			bool service_changed = false;
-			int type = 0;
-			long event_id = -1;
-			time_t stime = -1;
-			int minutes = 0;
-			int tupleSize = PyTuple_Size(item);
-			int tupleIt = 0;
+			bool service_changed=false;
+			int type=0;
+			long event_id=-1;
+			time_t stime=-1;
+			int minutes=0;
+			int tupleSize=PyTuple_Size(item);
+			int tupleIt=0;
 			ePyObject service;
-			while (tupleSize > tupleIt) // parse query args
+			while(tupleSize > tupleIt)  // parse query args
 			{
-				ePyObject entry = PyTuple_GET_ITEM(item, tupleIt); // borrowed reference!
-				switch (tupleIt++)
+				ePyObject entry=PyTuple_GET_ITEM(item, tupleIt); // borrowed reference!
+				switch(tupleIt++)
 				{
 					case 0:
 					{
-						if (!PyUnicode_Check(entry))
+						if (!PyString_Check(entry))
 						{
-							eDebug("[eEPGCache] Tuple entry 0 is not a string!");
+							eDebug("[eEPGCache] tuple entry 0 is not a string");
 							goto skip_entry;
 						}
 						service = entry;
 						break;
 					}
 					case 1:
-						type = PyLong_AsLong(entry);
+						type=PyInt_AsLong(entry);
 						if (type < -1 || type > 2)
 						{
-							eDebug("[eEPGCache] Unknown type %d!", type);
+							eDebug("[eEPGCache] unknown type %d", type);
 							goto skip_entry;
 						}
 						break;
 					case 2:
-						event_id = stime = PyLong_AsLong(entry);
+						event_id=stime=PyInt_AsLong(entry);
 						break;
 					case 3:
-						minutes = PyLong_AsLong(entry);
+						minutes=PyInt_AsLong(entry);
 						break;
 					default:
-						eDebug("[eEPGCache] Unneeded extra argument!");
+						eDebug("[eEPGCache] unneeded extra argument");
 						break;
 				}
 			}
@@ -1762,21 +1770,21 @@ PyObject *eEPGCache::lookupEvent(ePyObject list, ePyObject convertFunc)
 			if (minutes && stime == -1)
 				stime = ::time(0);
 
-			eServiceReference ref(handleGroup(eServiceReference(PyUnicode_AsUTF8(service))));
+			eServiceReference ref(handleGroup(eServiceReference(PyString_AS_STRING(service))));
 
 			// redirect subservice querys to parent service
-			eServiceReferenceDVB &dvb_ref = (eServiceReferenceDVB &)ref;
+			eServiceReferenceDVB &dvb_ref = (eServiceReferenceDVB&)ref;
 			if (dvb_ref.getParentTransportStreamID().get()) // linkage subservice
 			{
 				eServiceCenterPtr service_center;
 				if (!eServiceCenter::getPrivInstance(service_center))
 				{
-					dvb_ref.setTransportStreamID(dvb_ref.getParentTransportStreamID());
-					dvb_ref.setServiceID(dvb_ref.getParentServiceID());
+					dvb_ref.setTransportStreamID( dvb_ref.getParentTransportStreamID() );
+					dvb_ref.setServiceID( dvb_ref.getParentServiceID() );
 					dvb_ref.setParentTransportStreamID(eTransportStreamID(0));
 					dvb_ref.setParentServiceID(eServiceID(0));
-					dvb_ref.name = "";
-					service = PyUnicode_FromString(dvb_ref.toString().c_str());
+					dvb_ref.name="";
+					service = PyString_FromString(dvb_ref.toString().c_str());
 					service_changed = true;
 				}
 			}
@@ -1799,48 +1807,48 @@ PyObject *eEPGCache::lookupEvent(ePyObject list, ePyObject convertFunc)
 						{
 							size_t pos;
 							// filter short name brakets
-							while ((pos = name.find("\xc2\x86")) != std::string::npos)
-								name.erase(pos, 2);
-							while ((pos = name.find("\xc2\x87")) != std::string::npos)
-								name.erase(pos, 2);
+							while((pos = name.find("\xc2\x86")) != std::string::npos)
+								name.erase(pos,2);
+							while((pos = name.find("\xc2\x87")) != std::string::npos)
+								name.erase(pos,2);
 						}
 						else
 							name = buildShortName(name);
 
 						if (name.length())
-							service_name = PyUnicode_FromString(name.c_str());
+							service_name = PyString_FromString(name.c_str());
 					}
 				}
 				if (!service_name)
-					service_name = PyUnicode_FromString("<n/a>");
+					service_name = PyString_FromString("<n/a>");
 			}
 			if (minutes)
 			{
 				if (!startTimeQuery(ref, stime, minutes))
 				{
 					ePtr<eServiceEvent> evt;
-					while (getNextTimeEntry(evt) != -1)
+					while ( getNextTimeEntry(evt) != -1 )
 					{
-						if (forceMaxItems) // GN return only X items
+						if (forceReturnTen)  // GN return only 10 items
 						{
-							if (returnMaxItemsCount > forceMaxItems)
+							if (returnTenItemsCount > 10)
 							{
-								// eDebug("[eEPGCache] Tuple entry number x is reached.");
+								//eDebug("[eEPGCache] tuple entry no 10 is reached");
 								break;
 							}
-							returnMaxItemsCount++;
+							returnTenItemsCount++;
 						}
 						if (handleEvent(evt, dest_list, argstring, argcount, service, nowTime, service_name, convertFunc, convertFuncArgs))
-							return 0; // error
+							return 0;  // error
 					}
 				}
 				else if (forceReturnOne && handleEvent(0, dest_list, argstring, argcount, service, nowTime, service_name, convertFunc, convertFuncArgs))
-					return 0; // error
+					return 0;  // error
 			}
 			else
 			{
 				eServiceEvent evt;
-				const eventData *ev_data = 0;
+				const eventData *ev_data=0;
 				if (stime)
 				{
 					singleLock s(cache_lock);
@@ -1850,9 +1858,9 @@ PyObject *eEPGCache::lookupEvent(ePyObject list, ePyObject convertFunc)
 						lookupEventTime(ref, stime, ev_data, type);
 					if (ev_data)
 					{
-						const eServiceReferenceDVB &dref = (const eServiceReferenceDVB &)ref;
-						Event ev((uint8_t *)ev_data->get());
-						evt.parseFrom(&ev, (dref.getTransportStreamID().get() << 16) | dref.getOriginalNetworkID().get(), dref.getServiceID().get());
+						const eServiceReferenceDVB &dref = (const eServiceReferenceDVB&)ref;
+						Event ev((uint8_t*)ev_data->get());
+						evt.parseFrom(&ev, (dref.getTransportStreamID().get()<<16)|dref.getOriginalNetworkID().get(), dref.getServiceID().get());
 					}
 				}
 				if (ev_data)
@@ -1960,7 +1968,7 @@ void eEPGCache::submitEventData(const std::vector<int>& sids, const std::vector<
 	{
 		event_types.push_back(event_type);
 	}
-	submitEventData(sids, chids, start, duration, title, short_summary, long_description, event_types, parental_ratings, source, event_id);
+	submitEventData(sids, chids, start, duration, title, short_summary, long_description, event_types, parental_ratings, EPG_IMPORT, event_id);
 }
 
 void eEPGCache::submitEventData(const std::vector<int>& sids, const std::vector<eDVBChannelID>& chids, long start,
@@ -2165,9 +2173,9 @@ unsigned int eEPGCache::getEpgmaxdays()
 static const char* getStringFromPython(ePyObject obj)
 {
 	const char *result = 0;
-	if (PyUnicode_Check(obj))
+	if (PyString_Check(obj))
 	{
-		result = PyUnicode_AsUTF8(obj);
+		result = PyString_AS_STRING(obj);
 	}
 	return result;
 }
@@ -2204,13 +2212,13 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 {
 	std::vector<eServiceReferenceDVB> refs;
 
-	if (PyUnicode_Check(serviceReferences))
+	if (PyString_Check(serviceReferences))
 	{
 		const char *refstr;
-		refstr = PyUnicode_AsUTF8(serviceReferences);
+		refstr = PyString_AS_STRING(serviceReferences);
 		if (!refstr)
 		{
-			eDebug("[eEPGCache] The import serviceReferences string is 0, aborting!");
+			eDebug("[EPG:import] serviceReferences string is 0, aborting");
 			return;
 		}
 		refs.push_back(eServiceReferenceDVB(refstr));
@@ -2219,12 +2227,12 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 	{
 		if (PyTuple_Size(serviceReferences) != 3)
 		{
-			eDebug("[eEPGCache] The import serviceReferences tuple must contain 3 numbers (tsid, onid, sid), aborting!");
+			eDebug("[EPG:import] serviceReferences tuple must contain 3 numbers (tsid, onid, sid), aborting");
 			return;
 		}
-		int onid = PyLong_AsLong(PyTuple_GET_ITEM(serviceReferences, 0));
-		int tsid = PyLong_AsLong(PyTuple_GET_ITEM(serviceReferences, 1));
-		int sid = PyLong_AsLong(PyTuple_GET_ITEM(serviceReferences, 2));
+		int onid = PyInt_AsLong(PyTuple_GET_ITEM(serviceReferences, 0));
+		int tsid = PyInt_AsLong(PyTuple_GET_ITEM(serviceReferences, 1));
+		int sid = PyInt_AsLong(PyTuple_GET_ITEM(serviceReferences, 2));
 		refs.push_back(eServiceReferenceDVB(0, tsid, onid, sid, 0));
 	}
 	else if (PyList_Check(serviceReferences))
@@ -2233,13 +2241,13 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 		for (int i = 0; i < nRefs; ++i)
 		{
 			PyObject* item = PyList_GET_ITEM(serviceReferences, i);
-			if (PyUnicode_Check(item))
+			if (PyString_Check(item))
 			{
 				const char *refstr;
-				refstr = PyUnicode_AsUTF8(item);
+				refstr = PyString_AS_STRING(item);
 				if (!refstr)
 				{
-					eDebug("[eEPGCache] The import serviceReferences[%d] is not a string!", i);
+					eDebug("[EPG:import] serviceReferences[%d] is not a string", i);
 				}
 				else
 				{
@@ -2250,28 +2258,28 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 			{
 				if (PyTuple_Size(item) != 3)
 				{
-					eDebug("[eEPGCache] The import serviceReferences[%d] tuple must contain 3 numbers (tsid, onid, sid)!", i);
+					eDebug("[EPG:import] serviceReferences[%d] tuple must contain 3 numbers (tsid, onid, sid)", i);
 				}
-				int onid = PyLong_AsLong(PyTuple_GET_ITEM(item, 0));
-				int tsid = PyLong_AsLong(PyTuple_GET_ITEM(item, 1));
-				int sid = PyLong_AsLong(PyTuple_GET_ITEM(item, 2));
+				int onid = PyInt_AsLong(PyTuple_GET_ITEM(item, 0));
+				int tsid = PyInt_AsLong(PyTuple_GET_ITEM(item, 1));
+				int sid = PyInt_AsLong(PyTuple_GET_ITEM(item, 2));
 				refs.push_back(eServiceReferenceDVB(0, tsid, onid, sid, 0));
 			}
 			else
 			{
-				eDebug("[eEPGCache] The import serviceReferences[%d] is not a string or a tuple!", i);
+				eDebug("[EPG:import] serviceReferences[%d] is not a string or a tuple", i);
 			}
 		}
 	}
 	else
 	{
-		eDebug("[eEPGCache] The import serviceReferences is not a string, a list of strings, a tuple or a list of tuples, aborting!");
+		eDebug("[EPG:import] serviceReferences is not a string, a list of strings, a tuple or a list of tuples, aborting");
 		return;
 	}
 
 	if (refs.empty())
 	{
-		eDebug("[eEPGCache] No valid import serviceReferences found, aborting!");
+		eDebug("[EPG:import] no valid serviceReferences found, aborting");
 		return;
 	}
 
@@ -2279,7 +2287,7 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 	if (!isTuple && !PyList_Check(list))
 	{
 
-		eDebug("[eEPGCache] The import argument 'list' is neither a list nor a tuple!");
+		eDebug("[eEPGCache:import] argument 'list' is neither list nor tuple.");
 		return;
 	}
 
@@ -2290,18 +2298,18 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 		ePyObject singleEvent = isTuple ? PyTuple_GET_ITEM(list, i) : PyList_GET_ITEM(list, i);
 		if (!PyTuple_Check(singleEvent))
 		{
-			eDebug("[eEPGCache] The import event data tuple does not pass PyTuple_Check, aborting!");
+			eDebug("[eEPGCache:import] eventdata tuple does not pass PyTuple_Check, aborting");
 			return;
 		}
 		int tupleSize = PyTuple_Size(singleEvent);
 		if (tupleSize < 6)
 		{
-			eDebug("[eEPGCache] The import event data tuple does not contain enough fields, aborting!");
+			eDebug("[eEPGCache:import] eventdata tuple does not contain enough fields, aborting");
 			return;
 		}
 
 		long start = PyLong_AsLong(PyTuple_GET_ITEM(singleEvent, 0));
-		long duration = PyLong_AsLong(PyTuple_GET_ITEM(singleEvent, 1));
+		long duration = PyInt_AsLong(PyTuple_GET_ITEM(singleEvent, 1));
 		const char *title = getStringFromPython(PyTuple_GET_ITEM(singleEvent, 2));
 		const char *short_summary = getStringFromPython(PyTuple_GET_ITEM(singleEvent, 3));
 		const char *long_description = getStringFromPython(PyTuple_GET_ITEM(singleEvent, 4));
@@ -2313,21 +2321,21 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 			event_types.reserve(numberOfEventTypes);
 			for (int j = 0; j < numberOfEventTypes;  ++j)
 			{
-				uint8_t event_type = (uint8_t) PyLong_AsLong(eventTypeIsTuple ? PyTuple_GET_ITEM(eventTypeList, j) : PyList_GET_ITEM(eventTypeList, j));
+				uint8_t event_type = (uint8_t) PyInt_AsLong(eventTypeIsTuple ? PyTuple_GET_ITEM(eventTypeList, j) : PyList_GET_ITEM(eventTypeList, j));
 				event_types.push_back(event_type);
 			}
-		} else if (PyLong_Check(eventTypeList)) {
-			uint8_t event_type = (uint8_t) PyLong_AsLong(eventTypeList);
+		} else if (PyInt_Check(eventTypeList)) {
+			uint8_t event_type = (uint8_t) PyInt_AsLong(eventTypeList);
 			event_types.push_back(event_type);
 		} else {
-			eDebug("[eEPGCache] The import event type must be a single integer or a list or tuple of integers, aborting!");
+			eDebug("[eEPGCache:import] event type must be a single integer or a list or tuple of integers, aborting");
 			return;
 		}
 
 		uint16_t eventId = 0;
 		if (tupleSize >= 7)
 		{
-			eventId = (uint16_t) PyLong_AsLong(PyTuple_GET_ITEM(singleEvent, 6));
+			eventId = (uint16_t) PyInt_AsLong(PyTuple_GET_ITEM(singleEvent, 6));
 		}
 		std::vector<eit_parental_rating> parental_ratings;
 		if (tupleSize >= 8)
@@ -2342,23 +2350,23 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 					ePyObject parentalInfo = parentalInfoIsTuple ? PyTuple_GET_ITEM(parentalInfoList, j) :  PyList_GET_ITEM(parentalInfoList, j);
 					if (!PyTuple_Check(parentalInfo) || PyTuple_Size(parentalInfo) != 2)
 					{
-						eDebug("[eEPGCache] The import parental rating must be a tuple of length 2, aborting!");
+						eDebug("[eEPGCache:import] parental rating must be a tuple of length 2, aborting");
 						return;
 					}
 					const char* country = getStringFromPython(PyTuple_GET_ITEM(parentalInfo, 0));
 					if (strlen(country) != 3)
 					{
-						eDebug("[eEPGCache] The import parental rating country code must be of length 3, aborting!");
+						eDebug("[eEPGCache:import] parental rating country code must be of length 3, aborting");
 						return;
 					}
 					eit_parental_rating p_rating;
 					memcpy(p_rating.country_code, country, 3);
-					u_char rating = (u_char) PyLong_AsLong(PyTuple_GET_ITEM(parentalInfo, 1));
+					u_char rating = (u_char) PyInt_AsLong(PyTuple_GET_ITEM(parentalInfo, 1));
 					p_rating.rating = rating;
 					parental_ratings.push_back(p_rating);
 				}
 			} else {
-				eDebug("[eEPGCache] The import parental ratings must be a list or tuple of parental rating tuples, aborting!");
+				eDebug("[eEPGCache:import] parental ratings must be a list or tuple of parental rating tuples, aborting");
 			}
 		}
 		Py_BEGIN_ALLOW_THREADS;
@@ -2443,7 +2451,7 @@ PyObject *eEPGCache::search(ePyObject arg)
 		if (tuplesize > 0)
 		{
 			ePyObject obj = PyTuple_GET_ITEM(arg,0);
-			if (PyUnicode_Check(obj))
+			if (PyString_Check(obj))
 			{
 				argstring = PyUnicode_AsUTF8AndSize(obj, &argcount);
 				for (int i=0; i < argcount; ++i)
@@ -2471,8 +2479,8 @@ PyObject *eEPGCache::search(ePyObject arg)
 			}
 			else
 			{
-				PyErr_SetString(PyExc_TypeError, "[eEPGCache] Tuple argument 0 is not a string!");
-				//eDebug("[eEPGCache] Tuple argument 0 is not a string!");
+				PyErr_SetString(PyExc_TypeError, "[eEPGCache] tuple arg 0 is not a string");
+				//eDebug("[eEPGCache] tuple arg 0 is not a string");
 				return NULL;
 			}
 		}
@@ -2484,9 +2492,9 @@ PyObject *eEPGCache::search(ePyObject arg)
 			if (tuplesize > 4 && querytype == SIMILAR_BROADCASTINGS_SEARCH)
 			{
 				ePyObject obj = PyTuple_GET_ITEM(arg, 3);
-				if (PyUnicode_Check(obj))
+				if (PyString_Check(obj))
 				{
-					const char *refstr = PyUnicode_AsUTF8(obj);
+					const char *refstr = PyString_AS_STRING(obj);
 					eServiceReferenceDVB ref(refstr);
 					if (ref.valid())
 					{
@@ -2517,26 +2525,26 @@ PyObject *eEPGCache::search(ePyObject arg)
 							}
 						}
 						if (descr.empty())
-							eDebug("[eEPGCache] Event not found.");
+							eDebug("[eEPGCache] event not found");
 					}
 					else
 					{
-						PyErr_SetString(PyExc_TypeError, "[eEPGCache] Tuple argument 4 is not a valid service reference string!");
-						//eDebug("[eEPGCache] Tuple argument 4 is not a valid service reference string!");
+						PyErr_SetString(PyExc_TypeError, "[eEPGCache] tuple arg 4 is not a valid service reference string");
+						//eDebug("[eEPGCache] tuple arg 4 is not a valid service reference string");
 						return NULL;
 					}
 				}
 				else
 				{
-					PyErr_SetString(PyExc_TypeError, "[eEPGCache] Tuple argument 4 is not a string!");
-					//eDebug("[eEPGCache] Tuple argument 4 is not a string!");
+					PyErr_SetString(PyExc_TypeError, "[eEPGCache] tuple arg 4 is not a string");
+					//eDebug("[eEPGCache] tuple arg 4 is not a string");
 					return NULL;
 				}
 			}
 			else if (tuplesize > 4 && ((querytype == EXAKT_TITLE_SEARCH) || (querytype==START_TITLE_SEARCH)  || (querytype==END_TITLE_SEARCH) || (querytype==PARTIAL_TITLE_SEARCH) || (querytype==CRID_SEARCH)))
 			{
 				ePyObject obj = PyTuple_GET_ITEM(arg, 3);
-				if (PyUnicode_Check(obj))
+				if (PyString_Check(obj))
 				{
 					int casetype = PyLong_AsLong(PyTuple_GET_ITEM(arg, 4));
 					ssize_t textlen;
@@ -2545,19 +2553,19 @@ PyObject *eEPGCache::search(ePyObject arg)
 					switch (querytype)
 					{
 						case EXAKT_TITLE_SEARCH:
-							eDebug("[eEPGCache] Lookup events with '%s' as title (%s).", str, ctype);
+							eDebug("[eEPGCache] lookup events with '%s' as title (%s)", str, ctype);
 							break;
 						case PARTIAL_TITLE_SEARCH:
-							eDebug("[eEPGCache] Lookup events with '%s' in title (%s).", str, ctype);
+							eDebug("[eEPGCache] lookup events with '%s' in title (%s)", str, ctype);
 							break;
 						case START_TITLE_SEARCH:
-							eDebug("[eEPGCache] Lookup event titles starting with '%s' (%s).", str, ctype);
+							eDebug("[eEPGCache] lookup events, title starting with '%s' (%s)", str, ctype);
 							break;
 						case END_TITLE_SEARCH:
-							eDebug("[eEPGCache] Lookup event titles ending with '%s' (%s).", str, ctype);
+							eDebug("[eEPGCache] lookup events, title ending with '%s' (%s)", str, ctype);
 							break;
 						case CRID_SEARCH:
-							eDebug("[eEPGCache] Lookup events with '%s' in CRID %02X.", str, casetype);
+							eDebug("[eEPGCache] lookup events with '%s' in CRID %02x", str, casetype);
 							break;
 					}
 					Py_BEGIN_ALLOW_THREADS; /* No Python code in this section, so other threads can run */
@@ -2583,7 +2591,7 @@ PyObject *eEPGCache::search(ePyObject arg)
 											if(cridData.find(str)!=std::string::npos)
 											{
 												if(m_debug)
-													eDebug("[eEPGCache] CRID casetype=%X gridtype=%X crid=%s.", casetype, (*crid)->getType(), cridData.c_str());
+													eDebug("[eEPGCache] crid casetype=%X gridtype=%X crid=%s", casetype, (*crid)->getType(), cridData.c_str());
 												descr.push_back(it->first);
 											}
 										}
@@ -2667,22 +2675,22 @@ PyObject *eEPGCache::search(ePyObject arg)
 				}
 				else
 				{
-					PyErr_SetString(PyExc_TypeError, "[eEPGCache] Tuple argument 4 is not a string!");
-					//eDebug("[eEPGCache] Tuple argument 4 is not a string!");
+					PyErr_SetString(PyExc_TypeError, "[eEPGCache] tuple arg 4 is not a string");
+					//eDebug("[eEPGCache] tuple arg 4 is not a string");
 					return NULL;
 				}
 			}
 			else if (tuplesize > 4 && (querytype == PARTIAL_DESCRIPTION_SEARCH) )
 			{
 				ePyObject obj = PyTuple_GET_ITEM(arg, 3);
-				if (PyUnicode_Check(obj))
+				if (PyString_Check(obj))
 				{
 					int casetype = PyLong_AsLong(PyTuple_GET_ITEM(arg, 4));
 					ssize_t textlen;
 					const char *str = PyUnicode_AsUTF8AndSize(obj, &textlen);
 					int lloop=0;
 					const char *ctype = casetypestr(casetype);
-					eDebug("[eEPGCache] Lookup events with '%s' in description (%s).", str, ctype);
+					eDebug("[eEPGCache] lookup events with '%s' in description (%s)", str, ctype);
 					Py_BEGIN_ALLOW_THREADS; /* No Python code in this section, so other threads can run */
 					{
 						singleLock s(cache_lock);
@@ -2718,9 +2726,7 @@ PyObject *eEPGCache::search(ePyObject arg)
 										{
 											descr.push_back(it->first);
 											#ifdef DEBUG
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-security"
-											eDebug("[eEPGCache] IC Debug: Content length %X, Content %s.",content_len,contentptr);
+											eDebug("[eEPGCache] IC Debug: Content length %x, Content %s\n",content_len,contentptr);
 											char buff[1000]={0};
 											eDebug("[eEPGCache] EIT data:\n");
 			 								std::string tmp="";
@@ -2728,11 +2734,10 @@ PyObject *eEPGCache::search(ePyObject arg)
 											for (lloop=0x0;lloop<(dbglen+EIT_EXTENDED_EVENT_DESCRIPTOR_SIZE+2);lloop++)
 											{
 												if ((lloop>0) && (lloop%16==0)) { eDebug(buff); z=0; }
-												snprintf(&buff[z*3], sizeof(buff), "%02X ", data[lloop]); //NOSONAR
+												snprintf(&buff[z*3], sizeof(buff), "%02X ", data[lloop]);
 												z++;
 											}
 											if (z>1) { eDebug(buff);}
-#pragma GCC diagnostic pop
 											#endif
 											break;
 										}
@@ -2748,9 +2753,7 @@ PyObject *eEPGCache::search(ePyObject arg)
 										{
 											descr.push_back(it->first);
 											#ifdef DEBUG
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat-security"
-											eDebug("[eEPGCache] CC Debug: Content length %X, Content %s.",content_len,contentptr);
+											eDebug("[eEPGCache] CC Debug: Content length %x, Content %s\n",content_len,contentptr);
 											char buff[1000]={0};
 											eDebug("[eEPGCache] EIT data:\n");
 			 								std::string tmp="";
@@ -2758,11 +2761,10 @@ PyObject *eEPGCache::search(ePyObject arg)
 											for (lloop=0x0;lloop<(dbglen+EIT_EXTENDED_EVENT_DESCRIPTOR_SIZE+2);lloop++)
 											{
 												if ((lloop>0) && (lloop%16==0)) { eDebug(buff); z=0; }
-												snprintf(&buff[z*3], sizeof(buff), "%02X ", data[lloop]); //NOSONAR
+												snprintf(&buff[z*3], sizeof(buff), "%02X ", data[lloop]);
 												z++;
 											}
 											if (z>1) { eDebug(buff);}
-#pragma GCC diagnostic pop
 											#endif
 											break;
 										}
@@ -2786,31 +2788,31 @@ PyObject *eEPGCache::search(ePyObject arg)
 				}
 				else
 				{
-					PyErr_SetString(PyExc_TypeError, "[eEPGCache] Tuple argument 4 is not a string!");
-					//eDebug("[eEPGCache] Tuple argument 4 is not a string!");
+					PyErr_SetString(PyExc_TypeError, "[eEPGCache] tuple arg 4 is not a string");
+					//eDebug("[eEPGCache] tuple arg 4 is not a string");
 					return NULL;
 				}
 			}
 			else
 			{
 				char tmp[255];
-				snprintf(tmp, 255, "[eEPGCache] Tuple argument 3 (%d) is not a known querytype(0..3)!", querytype);
+				snprintf(tmp, 255, "[eEPGCache] tuple arg 3(%d) is not a known querytype(0..3)", querytype);
 				PyErr_SetString(PyExc_TypeError, tmp);
-				//eDebug("[eEPGCache] Tuple argument 3 (%d) is not a known querytype(0..3)!", querytype);
+				//eDebug("[eEPGCache] tuple arg 3(%d) is not a known querytype(0..3)", querytype);
 				return NULL;
 			}
 		}
 		else
 		{
-			PyErr_SetString(PyExc_TypeError, "[eEPGCache] Not enough arguments in tuple!");
-			//eDebug("[eEPGCache] Not enough arguments in tuple!");
+			PyErr_SetString(PyExc_TypeError, "[eEPGCache] not enough args in tuple");
+			//eDebug("[eEPGCache] not enough args in tuple");
 			return NULL;
 		}
 	}
 	else
 	{
-		PyErr_SetString(PyExc_TypeError, "[eEPGCache] Argument 0 is not a tuple!");
-		//eDebug("[eEPGCache] Argument 0 is not a tuple!");
+		PyErr_SetString(PyExc_TypeError, "[eEPGCache] arg 0 is not a tuple");
+		//eDebug("[eEPGCache] arg 0 is not a tuple");
 		return NULL;
 	}
 
@@ -2880,7 +2882,7 @@ PyObject *eEPGCache::search(ePyObject arg)
 							if (needServiceEvent)
 							{
 								if (lookupEventId(ref, evit->second->getEventID(), ev_data))
-									eDebug("[eEPGCache] Event %04X not found!", evit->second->getEventID());
+									eDebug("[eEPGCache] event %04x not found !!!!!!!!!!!", evit->second->getEventID());
 								else
 								{
 									const eServiceReferenceDVB &dref = (const eServiceReferenceDVB&)ref;
@@ -2915,15 +2917,15 @@ PyObject *eEPGCache::search(ePyObject arg)
 											name = buildShortName(name);
 
 										if (name.length())
-											service_name = PyUnicode_FromString(name.c_str());
+											service_name = PyString_FromString(name.c_str());
 									}
 								}
 								if (!service_name)
-									service_name = PyUnicode_FromString("<n/a>");
+									service_name = PyString_FromString("<n/a>");
 							}
 						// create servicereference string
 							if (must_get_service_reference && !service_reference)
-								service_reference = PyUnicode_FromString(ref.toString().c_str());
+								service_reference = PyString_FromString(ref.toString().c_str());
 						// create list
 							if (!ret)
 								ret = PyList_New(0);
@@ -3205,15 +3207,15 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 	char aliases_file[dbroot.length()+21];
 	int channels_count, events_count = 0, aliases_groups_count;
 	unsigned char revision;
-	[[maybe_unused]] size_t ret; /* dummy value to store fread return values */
+	size_t ret; /* dummy value to store fread return values */
 
-	eDebug("[eEPGCache] Starting CrossEPG import.");
+	eDebug("[eEPGCache] start crossepg import");
 
 	sprintf(headers_file, "%s/crossepg.headers.db", dbroot.c_str());
 	headers = fopen(headers_file, "r");
 	if (!headers)
 	{
-		eDebug("[eEPGCache] Can't open CrossEPG headers db!");
+		eDebug("[eEPGCache] cannot open crossepg headers db");
 		return;
 	}
 
@@ -3221,7 +3223,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 	descriptors = fopen (descriptors_file, "r");
 	if (!descriptors)
 	{
-		eDebug("[eEPGCache] Can't open CrossEPG descriptors db!");
+		eDebug("[eEPGCache] cannot open crossepg descriptors db");
 		fclose(headers);
 		return;
 	}
@@ -3230,7 +3232,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 	aliases = fopen(aliases_file, "r");
 	if (!aliases)
 	{
-		eDebug("[eEPGCache] Can't open CrossEPG aliases db!");
+		eDebug("[eEPGCache] cannot open crossepg aliases db");
 		fclose(headers);
 		fclose(descriptors);
 		return;
@@ -3240,7 +3242,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 	ret = fread(tmp, 13, 1, headers);
 	if (memcmp (tmp, "_xEPG_HEADERS", 13) != 0)
 	{
-		eDebug("[eEPGCache] CrossEPG db invalid magic!");
+		eDebug("[eEPGCache] crossepg db invalid magic");
 		fclose(headers);
 		fclose(descriptors);
 		fclose(aliases);
@@ -3250,7 +3252,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 	ret = fread(&revision, sizeof (unsigned char), 1, headers);
 	if (revision != 0x07)
 	{
-		eDebug("[eEPGCache] CrossEPG db invalid revision!");
+		eDebug("[eEPGCache] crossepg db invalid revision");
 		fclose(headers);
 		fclose(descriptors);
 		fclose(aliases);
@@ -3261,7 +3263,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 	ret = fread(tmp, 13, 1, aliases);
 	if (memcmp (tmp, "_xEPG_ALIASES", 13) != 0)
 	{
-		eDebug("[eEPGCache] CrossEPG aliases db invalid magic!");
+		eDebug("[eEPGCache] crossepg aliases db invalid magic");
 		fclose(headers);
 		fclose(descriptors);
 		fclose(aliases);
@@ -3270,7 +3272,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 	ret = fread(&revision, sizeof (unsigned char), 1, aliases);
 	if (revision != 0x07)
 	{
-		eDebug("[eEPGCache] CrossEPG aliases db invalid revision!");
+		eDebug("[eEPGCache] crossepg aliases db invalid revision");
 		fclose(headers);
 		fclose(descriptors);
 		fclose(aliases);
@@ -3312,7 +3314,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 		}
 	}
 
-	eDebug("[eEPGCache] %d aliases groups in CrossEPG db.", aliases_groups_count);
+	eDebug("[eEPGCache] %d aliases groups in crossepg db", aliases_groups_count);
 
 	/* import data */
 	fseek(headers, sizeof(time_t)*2, SEEK_CUR);
@@ -3446,10 +3448,7 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 				data_tmp += 2 + data_eit_short_event->descriptor_length;
 			}
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmismatched-new-delete"
 			delete ldescription;
-#pragma GCC diagnostic pop
 
 			int descriptors_length = data_tmp - ((uint8_t*)data_eit_event + EIT_LOOP_SIZE);
 			data_eit_event->descriptors_loop_length_hi = descriptors_length >> 8;
@@ -3500,6 +3499,6 @@ void eEPGCache::crossepgImportEPGv21(std::string dbroot)
 	fclose(descriptors);
 	fclose(aliases);
 
-	eDebug("[eEPGCache] Imported %d events from CrossEPG db.", events_count);
-	eDebug("[eEPGCache] %i bytes for cache used.", eventData::CacheSize);
+	eDebug("[eEPGCache] imported %d events from crossepg db", events_count);
+	eDebug("[eEPGCache] %i bytes for cache used", eventData::CacheSize);
 }

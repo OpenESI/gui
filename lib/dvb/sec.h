@@ -34,7 +34,8 @@ public:
 		WAIT_TAKEOVER,
 		RELEASE_TAKEOVER,
 		IF_TUNER_UNLOCKED_GOTO,
-		CHANGE_TUNER_TYPE
+		CHANGE_TUNER_TYPE,
+		IF_EXTERNAL_ROTOR_MOVING_GOTO
 	};
 	int cmd;
 	struct rotor
@@ -158,7 +159,7 @@ class eDVBSatelliteDiseqcParameters
 #endif
 public:
 	enum { AA=0, AB=1, BA=2, BB=3, SENDNO=4 /* and 0xF0 .. 0xFF*/  };	// DiSEqC Parameter
-	enum t_diseqc_mode { NONE=0, V1_0=1, V1_1=2, V1_2=3, SMATV=4 };	// DiSEqC Mode
+	enum t_diseqc_mode { NONE=0, V1_0=1, V1_1=2, V1_2=3, SMESI=4 };	// DiSEqC Mode
 	enum t_toneburst_param { NO=0, A=1, B=2 };
 #ifndef SWIG
 	uint8_t m_committed_cmd;

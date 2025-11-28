@@ -1,11 +1,13 @@
+from __future__ import print_function
 import os
 from datasource import datasource
 from xml.dom import minidom
 from xml.dom.minidom import Document
 from input import inputText
 
+
 class satxml(datasource):
-	def __init__(self, filename = "satellites.xml"):
+	def __init__(self, filename="satellites.xml"):
 		self.filename = filename
 		datasource.__init__(self)
 
@@ -17,7 +19,7 @@ class satxml(datasource):
 		return text
 
 	def getCapabilities(self):
-		return [("set filename", self.setFilename), ("read file", self.read), ("write file", self.write), ("print(all", self.printAll)]
+		return [("set filename", self.setFilename), ("read file", self.read), ("write file", self.write), ("print all", self.printAll)]
 
 	def getName(self):
 		return "satellites.xml"
@@ -48,7 +50,7 @@ class satxml(datasource):
 							entry = str(transponder.getAttribute(param))
 							if entry != "":
 								parameters[param] = entry
-						if len(list(parameters.keys())) > 1:
+						if len(parameters.keys()) > 1:
 							self.addTransponder(satpos, parameters)
 		print(self.transponderlist)
 
@@ -56,7 +58,7 @@ class satxml(datasource):
 		satxml = Document()
 		satellites = satxml.createElement("satellites")
 		satxml.appendChild(satellites)
-		satlist = list(self.transponderlist.keys())
+		satlist = self.transponderlist.keys()
 		print(self.transponderlist)
 		satlist.sort()
 
@@ -67,7 +69,7 @@ class satxml(datasource):
 			xmlsat.setAttribute("position", sat)
 			satellites.appendChild(xmlsat)
 			transponders = self.transponderlist[sat]
-			transponders.sort(key = lambda a: a["frequency"])
+			transponders.sort(key=lambda a: a["frequency"])
 
 			for transponder in transponders:
 				xmltransponder = satxml.createElement("transponder")
@@ -81,6 +83,3 @@ class satxml(datasource):
 		file = open(self.filename, "w")
 		file.write(prettyxml)
 		file.close()
-
-
-

@@ -1,11 +1,16 @@
+# -*- coding: utf-8 -*-
+from __future__ import print_function
 from Plugins.Plugin import PluginDescriptor
 from Components.Harddisk import harddiskmanager
 from twisted.internet.protocol import Protocol, Factory
-import os, os.path
+import os
+import os.path
+import six
 
 # globals
 hotplugNotifier = []
 audiocd = False
+
 
 def AudiocdAdded():
 	global audiocd
@@ -14,8 +19,9 @@ def AudiocdAdded():
 	else:
 		return False
 
+
 def processHotplugData(self, v):
-	print((("[Hotplug.plugin.py]:"), v))
+	print("[Hotplug.plugin.py]:", v)
 	action = v.get("ACTION")
 	device = v.get("DEVPATH")
 	physdevpath = v.get("PHYSDEVPATH")
@@ -64,6 +70,7 @@ def processHotplugData(self, v):
 		except AttributeError:
 			hotplugNotifier.remove(callback)
 
+
 class Hotplug(Protocol):
 	def __init__(self):
 		pass
@@ -73,8 +80,9 @@ class Hotplug(Protocol):
 		self.received = ""
 
 	def dataReceived(self, data):
+		data = six.ensure_str(data)
 		self.received += data
-		print((("[Hotplug.plugin.py] complete"), self.received))
+		print("[Hotplug.plugin.py] complete", self.received)
 
 	def connectionLost(self, reason):
 		print("[Hotplug.plugin.py] connection lost!")
@@ -82,9 +90,10 @@ class Hotplug(Protocol):
 		v = {}
 		for x in data:
 			i = x.find('=')
-			var, val = x[:i], x[i+1:]
+			var, val = x[:i], x[i + 1:]
 			v[var] = val
 		processHotplugData(self, v)
+
 
 def autostart(reason, **kwargs):
 	if reason == 0:
@@ -97,5 +106,6 @@ def autostart(reason, **kwargs):
 		factory.protocol = Hotplug
 		reactor.listenUNIX("/tmp/hotplug.socket", factory)
 
+
 def Plugins(**kwargs):
-	return PluginDescriptor(name = "Hotplug", description = "listens to hotplug events", where = PluginDescriptor.WHERE_AUTOSTART, needsRestart = True, fnc = autostart)
+	return PluginDescriptor(name="Hotplug", description="listens to hotplug events", where=PluginDescriptor.WHERE_AUTOSTART, needsRestart=True, fnc=autostart)

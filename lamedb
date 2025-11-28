@@ -1497,7 +1497,7 @@ p:Tatlises Medya
 APTN1 GVW +442074827430
 p:APTN LONDON
 0001:01a4b159:0001:0001:1:0
-atv
+ESI
 p:Service Provider
 0001:01a4af64:0001:0001:1:0
 EAS PROMO
@@ -1735,7 +1735,7 @@ MTV Polska
 p:MTV Networks
 0002:01a4b159:0001:0001:1:0
 YENI TV
-p:ATV
+p:ESI
 0002:01a4af64:0001:0001:1:0
 SU TV TEST
 p:EAS
@@ -3864,7 +3864,7 @@ p:GCE
 TV5 Orient
 p:TV5 MONDE,C:0500
 1d23:00820000:2fa8:013e:1:0
-DMC TV
+DarknessHD TV
 p:Globecast UK
 2523:00820000:13ef:013e:1:0
 AL FAYHAA TV
@@ -5037,7 +5037,7 @@ p:,C:0100,C:0500
 SVT2 Östnytt
 p:,C:090f
 1842:00320000:000d:0055:1:0
-1st Baltic Ch. Latvia
+1st Baltic Ch. LESIia
 p:,C:0500,C:090f
 1d42:011c0000:07de:0002:1:0
 L!VE TV
@@ -6231,7 +6231,7 @@ p:SkyItalia
 SKY Calcio 1
 p:SkyItalia
 4f65:00c00000:044b:0001:1:0
-Magyar ATV
+Magyar ESI
 p:UPC Direct
 7565:00c00000:0412:0001:1:0
 TAQUILLA 5
@@ -8370,7 +8370,7 @@ p:,C:090f
 Veronica/JETIX
 p:CANALDIGITAAL
 189c:00320000:000e:0055:1:0
-TV3 Latvia
+TV3 LESIia
 p:,C:090f
 1c9c:00820000:332c:013e:1:0
 ANN
@@ -9078,7 +9078,7 @@ c6b1:011c0000:0969:0002:1:0
 PTV Prime
 p:BSkyB
 ccb1:011c0000:0901:0002:1:0
-MATV National
+MESI National
 p:BSkyB
 01b2:0ce4aec4:000e:0001:1:0
 Buzz
@@ -10200,7 +10200,7 @@ p:,C:090f
 24 SydNytt
 p:Telenor
 10ce:00460000:c670:007e:1:0
-ATV
+ESI
 p:Digital Platform
 10ce:011c0000:07d7:0002:1:0
 Sky Movies 2
@@ -10440,8 +10440,8 @@ p:NSAB
 Telegenova
 p:Scopus Network Technologies
 32d4:00c00000:045d:0001:1:0
-ATV+
-p:ATV+,C:0d05,C:1702,C:1762,C:1801
+ESI+
+p:ESI+,C:0d05,C:1702,C:1762,C:1801
 32d4:00820000:0190:013e:1:0
 CNBC
 p:CYFRA +
@@ -10530,7 +10530,7 @@ p:Telespazio
 ITV Channel Is
 p:BSkyB
 31d8:00c00000:045c:0001:1:0
-GigaTV
+GigESI
 p:DFA,c:0010cc,c:0110cd,c:0310cc
 32d8:00c00000:045d:0001:1:0
 easy.TV hotX
@@ -15975,10 +15975,10 @@ p:T-Systems
 Tenfore
 p:T-Systems
 1cd4:00c00000:045c:0001:12:0
-GigaTV FST
+GigESI FST
 p:SES ASTRA
 1cd5:00c00000:045c:0001:12:0
-GigaTV FPH
+GigESI FPH
 p:SES ASTRA
 0ce5:0dde0000:23f1:0801:12:0
 RF unicast

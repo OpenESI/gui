@@ -1,9 +1,12 @@
+from __future__ import print_function
+from __future__ import absolute_import
 import os
 from threading import Thread, current_thread
 from sys import _current_frames
 from traceback import extract_stack
 from time import sleep
-from Components.config import config, ConfigYesNo
+from Components.config import config
+
 
 class StackTracePrinter(Thread):
 	@classmethod
